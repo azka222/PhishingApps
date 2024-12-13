@@ -11,10 +11,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        // Middleware global
-        $middleware->add(\Illuminate\Session\Middleware\StartSession::class);
-        $middleware->add(\Illuminate\View\Middleware\ShareErrorsFromSession::class);
+
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        // Handler exception jika diperlukan
     })->create();
