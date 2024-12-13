@@ -1,15 +1,18 @@
 <?php
 
+use App\Http\Controllers\AuthenticateController;
 use Illuminate\Support\Facades\Route;
 
-// $app->router->get('/', function () {
-//     return redirect('/login'); // Redirect ke halaman login
-// })->middleware('auth');
-
-// $app->router->get('/login', function () {
-//     return view('auth.login'); // Halaman login
-// });
-
 Route::get('/', function () {
-    return redirect('/login'); 
-})->middleware('auth');
+    return view('welcome');
+});
+
+Route::get('/login', [AuthenticateController::class, 'loginView'])->name('login');
+
+Route::group(['middleware' => 'auth'], function () {
+    Route::get('/dashboard', function () {
+        return view('contents.dashboard');
+    })->name('dashboard');
+});
+
+
