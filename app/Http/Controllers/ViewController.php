@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class AuthenticateController extends Controller
+class ViewController extends Controller
 {
-    
+    //
 }
