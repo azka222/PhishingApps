@@ -9,4 +9,10 @@ Route::get('/', function () {
 
 Route::get('/login', [AuthenticateController::class, 'loginView'])->name('login');
 
+Route::group(['middleware' => 'auth'], function () {
+    Route::get('/dashboard', function () {
+        return view('contents.dashboard');
+    })->name('dashboard');
+});
+
 
