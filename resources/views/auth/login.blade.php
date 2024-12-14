@@ -3,41 +3,35 @@
 @section('content')
     <div class="grid grid-cols-3">
         <fieldset id="login" class="lg:col-span-2 col-span-3">
-            <div class="min-h-screen flex items-center justify-center bg-gray-100">
-                <div class="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md">
-                    <h2 class="text-2xl font-bold mb-6 text-center">Login</h2>
-                    <div class="mb-4">
-                        <label for="email" class="block text-gray-700">Email</label>
-                        <input type="email" id="email" name="email" placeholder="Enter your email"
-                            class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                            required>
-                    </div>
-                    <div class="mb-4">
-                        <label for="password" class="block text-gray-700">Password</label>
-                        <input type="password" id="password" name="password" placeholder="Enter your password"
-                            class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                            required>
-                    </div>
-                    <div class="flex items-center justify-between mb-4">
-                        <div>
-                            <input type="checkbox" id="remember" name="remember" class="mr-2">
-                            <label for="remember" class="text-gray-700">Remember Me</label>
+            <!-- <div class='flex items-center justify-center min-h-screen bg-skyBlue'>
+                <div class="w-full max-w-md bg-grey-200">
+                    <div class='grid grid-cols-10 gap-5 bg-darkerBlue/75 rounded-3xl min-h-[800px] max-2-[980px] min-w-[560px] max-2-[650px]'>
+                         <div class='col-start-2 col-span-3 text-white pt-16'>
+                            <span class="text-3xl font-normal font-sans">Login to </span>
+                            <span class="text-3xl font-bold font-sans">FischSim</span>
                         </div>
-                        <a href="#" class="text-blue-600 hover:underline">Forgot Password?</a>
-                    </div>
-                    <button type="button" onclick="login()"
-                        class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700">Login</button>
-                    <div class="mt-4 text-center">
-                        <span>Don't have an account?</span>
-                        <a onclick="registerView()" class="text-blue-600 hover:underline">Register</a>
-                    </div>
-                    <div class="md:hidden block ">
-
                     </div>
                 </div>
             </div>
+         </div> -->
+         <div class='flex items-center justify-center min-h-screen bg-darkerBlue'>
+            <div class='gap-5 bg-darkerBlue rounded-3xl min-h-[800px] max-2-[980px] min-w-[560px] max-2-[650px]'>
+                <div class='text-white pt-16'>
+                    <span class="text-3xl font-normal font-sans">Login to </span>
+                    <span class="text-3xl font-bold font-sans">FischSim</span>
+                </div>
+                <div class="pt-32">
+                    <label for="user_email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
+                    <input type="text" id="user_email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Enter your email" required />
+                </div>
+                <div class="pt-8">
+                    <label for="Password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
+                    <input type="text" id="Password" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Enter your password" required />
+                </div>
 
-
+                </div>
+            </div>
+         </div>
         </fieldset>
         <fieldset id="register" class="lg:col-span-2 col-span-3" hidden>
             <div class="min-h-screen flex items-center justify-center bg-gray-100">
@@ -182,7 +176,7 @@
                 success: function(response) {
                     console.log(response);
                 },
-               
+
             });
         }
 
