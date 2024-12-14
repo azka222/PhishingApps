@@ -202,7 +202,7 @@
                     password: password,
                     password_confirmation: password_confirmation,
                     phone: phone,
-                    gender: gender.
+                    gender: gender,
                     "_token": "{{ csrf_token() }}"
                 },
                 success: function(response) {

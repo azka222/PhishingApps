@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-
+use App\Models\User;
+use Illuminate\Http\Request;
 
 class AuthenticateController extends Controller
 {
@@ -21,8 +20,8 @@ class AuthenticateController extends Controller
 
     public function register(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-           'first_name' => 'required|string',
+        $request->validate([
+            'first_name' => 'required|string',
             'last_name' => 'required|string',
             'email' => 'required|email|unique:users',
             'password' => 'required|string|min:6',
@@ -30,12 +29,28 @@ class AuthenticateController extends Controller
             'phone' => 'required|string|regex:/^08[0-9]{8,}$/',
             'password_confirmation' => 'required|same:password',
             'gender' => 'required|string',
-        ])->validate();
+        ]);
+        $user = new User();
+        $user->first_name = $request->first_name;
+        $user->last_name = $request->last_name;
+        $user->email = $request->email;
+        $user->password = bcrypt($request->password);
+        $user->company = $request->company;
+        $user->phone = $request->phone;
+        $user->gender = $request->gender;
+        $user->save();
 
-        if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput(); 
+        $user->sendEmailVerificationNotification();
+
+        if (!$user->hasVerifiedEmail()) {
+            return response()->json([
+                'message' => 'Please verify your email!',
+            ], 401);
+        } else {
+            return response()->json([
+                'message' => 'Registration successful!',
+            ], 200);
         }
+
     }
 }

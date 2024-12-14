@@ -19,9 +19,10 @@ class Authenticate
     }
 
     protected function redirectTo($request)
-{
-    if (!$request->expectsJson()) {
-        return 'Auth.login'; 
+    {
+        dd('redirect');
+        if (!$request->expectsJson()) {
+            return route('authView');
+        }
     }
-}
 }
