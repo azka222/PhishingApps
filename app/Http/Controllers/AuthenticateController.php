@@ -42,15 +42,9 @@ class AuthenticateController extends Controller
 
         $user->sendEmailVerificationNotification();
 
-        if (!$user->hasVerifiedEmail()) {
-            return response()->json([
-                'message' => 'Please verify your email!',
-            ], 401);
-        } else {
-            return response()->json([
-                'message' => 'Registration successful!',
-            ], 200);
-        }
+        return response()->json([
+            'message' => 'User created successfully'
+        ], 200);
 
     }
 }
