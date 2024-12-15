@@ -202,22 +202,22 @@
                     password: password,
                     password_confirmation: password_confirmation,
                     phone: phone,
-                    gender: gender.
+                    gender: gender,
                     "_token": "{{ csrf_token() }}"
                 },
                 success: function(response) {
                     console.log(response);
                 },
                 error: function(xhr) {
-                    var errors = xhr.responseJSON.errors;
-                    $('#error_message_field').show();
-                    $('#error_message').empty();
-                    $.each(errors, function(field, messages) {
-                        $.each(messages, function(index, message) {
-                            let data = `<li>${message}</li>`;
-                            $('#error_message').append(data);
-                        });
-                    });
+                    // var errors = xhr.responseJSON.errors;
+                    // $('#error_message_field').show();
+                    // $('#error_message').empty();
+                    // $.each(errors, function(field, messages) {
+                    //     $.each(messages, function(index, message) {
+                    //         let data = `<li>${message}</li>`;
+                    //         $('#error_message').append(data);
+                    //     });
+                    // });
                 }
             });
         }
