@@ -5,18 +5,34 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Auth\Events\Registered;
 
 class AuthenticateController extends Controller
 {
     public function login(Request $request)
     {
-        dd($request->all());
-        // $credentials = $request->only('email', 'password');
-        // if (auth()->attempt($credentials)) {
-        //     return redirect()->route('dashboard');
-        // }
-        // return redirect()->back()->with('error', 'Invalid credentials');
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|string',
+        ]);
+
+        $credentials = $request->only('email', 'password');
+        if (!auth()->attempt($credentials)) {
+            throw ValidationException::withMessages([
+                'email' => ['Cannot find user with provided credentials'],
+            ]);
+        }
+        
+        $user = auth()->user();
+        if (!$user->hasVerifiedEmail()) {
+            event(new Registered($user));
+            throw ValidationException::withMessages([
+                'email' => ['Your email isn’t verified yet. Please check your inbox and verify your email to continue'],
+            ]);
+        }
+
+
     }
 
     public function register(Request $request)
