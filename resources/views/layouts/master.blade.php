@@ -14,11 +14,11 @@
 </head>
 <body>
     <header>
-        {{-- @include('partials.header') --}}
+        @include('layouts.header')
     </header>
 
     <main>
-        @include('layouts.header')
+  
         @yield('content')
     </main>
 

@@ -13,4 +13,8 @@ class ViewController extends Controller
     {
         return view('auth.register');
     }
+
+    public function userSettingView(){
+        return view('contents.user-setting');
+    }
 }

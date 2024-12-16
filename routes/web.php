@@ -25,13 +25,15 @@ Route::get('/email/verify/{id}/{hash}', function (Request $request) {
 Route::get('/login', [ViewController::class, 'loginView'])->middleware('guest')->name('authView');
 Route::post('/login', [AuthenticateController::class, 'login'])->name('login');
 Route::post('/register', [AuthenticateController::class, 'register'])->name('register');
+Route::get('/logout', [AuthenticateController::class, 'logout'])->name('logout');
 
 
 
 
 // ==================================== if user login success ====================================
 Route::group(['middleware' => ['auth', 'verified']], function () {
-    Route::get('/', function () {
+    Route::get('/dashboard', function () {
         return view('contents.dashboard');
     })->name('dashboard');
+    Route::get('/user-setting', [ViewController::class, 'userSettingView'])->name('userSettingView');
 });
