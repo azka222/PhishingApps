@@ -18,7 +18,6 @@
     </header>
 
     <main>
-        @include('layouts.header')
         @yield('content')
     </main>
 
