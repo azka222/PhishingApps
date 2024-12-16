@@ -57,12 +57,15 @@ class AuthenticateController extends Controller
         $user->gender = $request->gender;
         $user->save();
 
-        // $user->sendEmailVerificationNotification();
         event(new Registered($user));
 
         return response()->json([
             'message' => 'User created successfully'
         ], 200);
+    }
 
+    public function logout(){
+        auth()->logout();
+        return redirect()->route('authView');
     }
 }
