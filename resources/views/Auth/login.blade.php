@@ -12,19 +12,31 @@
                     <div class="pt-32">
                         <label for="user_email"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
-                        <input type="text" id="user_email"
+                        <input type="email" id="login_email"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             placeholder="Enter your email" required />
                     </div>
                     <div class="pt-8">
                         <label for="Password"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
-                        <input type="text" id="Password"
+                        <input type="password" id="login_password"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             placeholder="Enter your password" required />
                     </div>
                     <div class="pt-8">
-                        <button
+                        <div id="error_message_field_login" hidden>
+                            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                                role="alert">
+                                <strong class="font-bold">Whoops!</strong>
+                                <span class="block sm:inline">There were some problems with your input.</span>
+                                <ul id="error_message_login"class="mt-3 list-disc list-inside text-sm text-red-600">
+
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pt-8">
+                        <button onclick="login()"
                             class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 dark:bg-gray-800 dark:text-white">Login</button>
                         <div class="mt-4 text-center text-white">
                             <span>Don't have an account?</span>
@@ -160,13 +172,25 @@
         }
 
         function loginView() {
+            $('#error_message_field_login').hide();
+            $('#error_message_login').empty();
+            $("#login_email").val('');
+            $("#login_password").val('');   
             $('#login').show();
             $('#register').hide();
         }
 
         function login() {
-            var email = $('#email').val();
-            var password = $('#password').val();
+            Swal.fire({
+                title: 'Logging in...',
+                text: 'Please wait while we process your login.',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading()
+                }
+            });
+            var email = $('#login_email').val();
+            var password = $('#login_password').val();
             $.ajax({
                 url: "{{ route('login') }}",
                 type: 'POST',
@@ -176,8 +200,24 @@
                     "_token": "{{ csrf_token() }}"
                 },
                 success: function(response) {
-                    console.log(response);
+                    Swal.close();
+                    window.location.href = "{{ route('dashboard') }}";
                 },
+                error: function(xhr, status, error) {
+                    Swal.close();
+                    console.log(xhr.responseText);
+                    var errorMessage = JSON.parse(xhr.responseText) ? JSON.parse(xhr.responseText) : xhr.responseText;
+                    var errors = errorMessage.errors ? errorMessage.errors : errorMessage;
+                    $('#error_message_field_login').show();
+                    $('#error_message_login').empty();
+                    $.each(errors, function(field, messages) {
+                        $.each(messages, function(index, message) {
+                            let data = `<li>${message}</li>`;
+                            $('#error_message_login').append(data);
+                        });
+                    });
+                }
+                
 
             });
         }
@@ -229,7 +269,7 @@
                 error: function(xhr, status, error) {
                     Swal.close();
                     var errorMessage = JSON.parse(xhr.responseText);
-                    var errors = errorMessage.errors;                    
+                    var errors = errorMessage.errors;
                     $('#error_message_field').show();
                     $('#error_message').empty();
                     $.each(errors, function(field, messages) {
