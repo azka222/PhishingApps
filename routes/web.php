@@ -22,9 +22,14 @@ Route::get('/email/verify/{id}/{hash}', function (Request $request) {
     }
     return  redirect()->route('login');
 })->middleware(['signed'])->name('verification.verify');
-Route::get('/login', [ViewController::class, 'loginView'])->name('authView');
+Route::get('/login', [ViewController::class, 'loginView'])->middleware('guest')->name('authView');
 Route::post('/login', [AuthenticateController::class, 'login'])->name('login');
 Route::post('/register', [AuthenticateController::class, 'register'])->name('register');
+
+
+
+
+// ==================================== if user login success ====================================
 Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::get('/', function () {
         return view('contents.dashboard');

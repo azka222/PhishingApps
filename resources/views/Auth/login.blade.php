@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('layouts.master-login')
 @section('title', 'Login')
 @section('content')
     <div class="grid grid-cols-3">
