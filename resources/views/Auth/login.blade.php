@@ -26,7 +26,7 @@
                     <div class="pt-8">
                         <button
                             class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 dark:bg-gray-800 dark:text-white">Login</button>
-                        <div class="mt-4 text-center">
+                        <div class="mt-4 text-center text-white">
                             <span>Don't have an account?</span>
                             <a onclick="registerView()" class="text-blue-600 hover:underline">Register</a>
                         </div>
@@ -183,6 +183,14 @@
         }
 
         function register() {
+            Swal.fire({
+                title: 'Registering...',
+                text: 'Please wait while we process your registration.',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading()
+                }
+            });
             var first_name = $('#first_name').val();
             var last_name = $('#last_name').val();
             var company = $('#company').val();
@@ -206,18 +214,30 @@
                     "_token": "{{ csrf_token() }}"
                 },
                 success: function(response) {
-                    console.log(response);
+                    Swal.close();
+                    Swal.fire({
+                        title: 'Success!',
+                        text: 'Check your mailbox to verify email.',
+                        icon: 'success',
+                        confirmButtonText: 'Login'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            loginView();
+                        }
+                    })
                 },
-                error: function(xhr) {
-                    // var errors = xhr.responseJSON.errors;
-                    // $('#error_message_field').show();
-                    // $('#error_message').empty();
-                    // $.each(errors, function(field, messages) {
-                    //     $.each(messages, function(index, message) {
-                    //         let data = `<li>${message}</li>`;
-                    //         $('#error_message').append(data);
-                    //     });
-                    // });
+                error: function(xhr, status, error) {
+                    Swal.close();
+                    var errorMessage = JSON.parse(xhr.responseText);
+                    var errors = errorMessage.errors;                    
+                    $('#error_message_field').show();
+                    $('#error_message').empty();
+                    $.each(errors, function(field, messages) {
+                        $.each(messages, function(index, message) {
+                            let data = `<li>${message}</li>`;
+                            $('#error_message').append(data);
+                        });
+                    });
                 }
             });
         }

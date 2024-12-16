@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Auth\Events\Registered;
 
 class AuthenticateController extends Controller
 {
@@ -40,7 +41,8 @@ class AuthenticateController extends Controller
         $user->gender = $request->gender;
         $user->save();
 
-        $user->sendEmailVerificationNotification();
+        // $user->sendEmailVerificationNotification();
+        event(new Registered($user));
 
         return response()->json([
             'message' => 'User created successfully'
