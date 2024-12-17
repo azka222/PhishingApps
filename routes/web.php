@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Auth\Access\AuthorizationException;
+use App\Http\Controllers\UserController;
 
 Route::get('/email/verify', function () {
     return view('auth.verify-email');
@@ -35,5 +36,10 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::get('/dashboard', function () {
         return view('contents.dashboard');
     })->name('dashboard');
-    Route::get('/user-setting', [ViewController::class, 'userSettingView'])->name('userSettingView');
+
+    Route::group(['prefix' => 'user-setting'], function () {
+        Route::get('/', [ViewController::class, 'userSettingView'])->name('userSettingView');
+        Route::get('/getProfileDetails', [UserController::class, 'getProfileDetails'])->name('getProfileDetails');
+    });
+
 });
