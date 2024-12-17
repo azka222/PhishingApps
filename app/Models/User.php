@@ -22,6 +22,10 @@ class User extends Authenticatable implements MustVerifyEmailContract
         'name',
         'email',
         'password',
+        'gender',
+        'phone',
+        'company_id',
+
     ];
 
     /**
@@ -50,6 +54,11 @@ class User extends Authenticatable implements MustVerifyEmailContract
     public static function getProfileDetails()
     {
         return User::find(auth()->user()->id);
+    }
+
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
     }
 
     

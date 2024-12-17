@@ -52,7 +52,7 @@ class AuthenticateController extends Controller
         $user->last_name = $request->last_name;
         $user->email = $request->email;
         $user->password = bcrypt($request->password);
-        $user->company = $request->company;
+        $user->company_id = $request->company;
         $user->phone = $request->phone;
         $user->gender = $request->gender;
         $user->save();
@@ -66,6 +66,6 @@ class AuthenticateController extends Controller
 
     public function logout(){
         auth()->logout();
-        return redirect()->route('authView');
+        return redirect()->route('loginView');
     }
 }
