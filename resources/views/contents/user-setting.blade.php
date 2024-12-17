@@ -159,7 +159,7 @@
             $("#address_display").text(profile.company ? profile.company.address : "Not Set");
             $("#company_type_display").text(profile.company ? profile.company.type : "Not Set");
             $("#username").text(profile.email);
-            $("#company_display").text(profile.company ? profile.company : "");
+            $("#company_display").text(profile.company ? profile.company.name : "");
         }
     </script>
 @endsection

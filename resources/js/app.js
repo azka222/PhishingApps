@@ -1,1 +1,3 @@
-// import Swal from 'sweetalert2';
+function test(){
+    console.log('test');
+}
