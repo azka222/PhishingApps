@@ -1,6 +1,7 @@
 @extends('layouts.master-login')
 @section('title', 'Register')
 @section('content')
+    @include('auth.modal.create-company-modal')
     <div class="grid grid-cols-3">
         <fieldset id="register" class="lg:col-span-2 col-span-3" hidden>
             <div class="min-h-screen flex items-center justify-center bg-gray-100">
@@ -97,7 +98,7 @@
                         </div>
                     </div>
         </fieldset>
-        <fieldset id="createCompany" class="lg:col-span-2 col-span-3" hidden>
+        <fieldset id="chooseCompany" class="lg:col-span-2 col-span-3" hidden>
             <div class="min-h-screen flex items-center justify-center bg-gray-100">
                 <div class="w-full max-w-2xl ">
                     <div class="bg-white shadow-md rounded-lg p-8 m-8 mb-4">
@@ -108,8 +109,9 @@
                                     <label for="selectCompany"
                                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select
                                         Company</label>
-                                    <select class="js-example-basic-single" style="width: 100%" id="selectCompany" onchange="checkCompany(this.value)" name="state">
-                                      
+                                    <select class="js-example-basic-single" style="width: 100%" id="selectCompany"
+                                        onchange="checkCompany(this.value)" name="state">
+
                                     </select>
 
                                 </div>
@@ -132,7 +134,7 @@
                             </div>
                         </div>
                         <div class="mt-4 flex justify-center flex-col items-center">
-                            <button id="createCompanyBtn" type="button" onclick="test()"
+                            <button id="chooseCompanyBtn" type="button" onclick="createCompanyView()"
                                 class="w-full max-w-64 bg-green-600 text-white py-2 rounded-lg hover:bg-green-700">Create</button>
                             <button id="nextToRegisterUser" type="button" onclick="registerView()" hidden
                                 class="w-full max-w-64 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700">Next</button>
@@ -143,6 +145,71 @@
                                 </div>
                             </div>
                         </div>
+        </fieldset>
+        <fieldset id="createCompany" class="lg:col-span-2 col-span-3" hidden>
+            <div class="min-h-screen flex items-center justify-center bg-gray-100">
+                <div class="w-full max-w-2xl ">
+                    <div class="bg-white shadow-md rounded-lg p-8 m-8 mb-4">
+                        <div class="mb-4 text-xl font-bold">Create Company</div>
+                        <div class="grid grid-cols-2 gap-4 bg-red mb-8">
+                            <div class="md:col-span-1 col-span-2">
+                                <div>
+                                    <label for="company_name"
+                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Company
+                                        Name</label>
+                                    <input type="text" id="company_name"
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
+                                        placeholder="Enter your company name" required />
+                                </div>
+                            </div>
+                            <div class="md:col-span-1 col-span-2">
+                                <div>
+                                    <label for="company_email"
+                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Company
+                                        Email</label>
+                                    <input type="email" id="company_email"
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
+                                        placeholder="Enter your company email" required />
+                                </div>
+                            </div>
+                            <div class="md:col-span-2 col-span-2">
+                                <div>
+                                    <label for="company_address"
+                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Company
+                                        Address</label>
+                                    <textarea id="company_address" rows="4"
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                        placeholder="Enter your company address" required></textarea>
+                                </div>
+
+                                <div class="col-span-2 pt-4" id="error_message_field_company_create" hidden>
+                                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                                        role="alert">
+                                        <strong class="font-bold">Whoops!</strong>
+                                        <span class="block sm:inline">There were some problems with your input.</span>
+                                        <ul
+                                            id="error_message_company_create"class="mt-3 list-disc list-inside text-sm text-red-600">
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                
+                            </div>
+                        </div>
+                        <div class="mt-4 flex justify-center flex-col items-center">
+                            <button id="chooseCompanyBtn" type="button" onclick="createCompany()"
+                                class="w-full max-w-64 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700">Create</button>
+                            <button id="nextToRegisterUser" type="button" onclick="registerView()" hidden
+                                class="w-full max-w-64 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700">Next</button>
+                            <div class="mt-4 text-center">
+                                <div class="mt-4 text-center">
+                                    <span>Already have an account?</span>
+                                    <a onclick="loginView()" class="text-blue-600 hover:underline">Login</a>
+                                </div>
+                            </div>
+                        </div>
+
+
         </fieldset>
         <fieldset id="content" class="col-span-1 lg:block hidden">
             <div class="min-h-screen flex items-center justify-center bg-gray-200">
@@ -159,24 +226,67 @@
                 var phone = $(this).val();
                 $(this).val(phone.replace(/[^0-9]/g, ''));
             });
-            getCompanies();
             companyView();
         });
 
+        function createCompanyView() {
+            $('#createCompany').show();
+            $('#chooseCompany').hide();
+        }
+
+        function createCompany() {
+
+            $.ajax({
+                url: "{{ route('createCompany') }}",
+                type: 'POST',
+                data: {
+                    name: $('#company_name').val(),
+                    email: $('#company_email').val(),
+                    address: $('#company_address').val(),
+                    "_token": "{{ csrf_token() }}"
+                },
+                success: function(response) {
+                    Swal.fire({
+                        title: 'Success!',
+                        text: 'Company created successfully.',
+                        icon: 'success',
+                        confirmButtonText: 'Ok'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            companyView();
+                        }
+                    })
+                },
+                error: function(xhr, status, error) {
+                    var errorMessage = JSON.parse(xhr.responseText);
+                    var errors = errorMessage.errors;
+                    $('#error_message_field_company_create').show();
+                    $('#error_message_company_create').empty();
+                    $.each(errors, function(field, messages) {
+                        $.each(messages, function(index, message) {
+                            let data = `<li>${message}</li>`;
+                            $('#error_message_company_create').append(data);
+                        });
+                    });
+                }
+            });
+        }
 
         function companyView() {
             $('#register').hide();
-            $('#createCompany').show();
+            $('#chooseCompany').show();
             $("#error_message_field_company").hide();
             $("#success_message_field_company").hide();
             $("#selectCompany").val('');
-            $('#createCompanyBtn').show();
+            $('#chooseCompanyBtn').show();
             $('#nextToRegisterUser').hide();
+            $("#createCompany").hide();
+            getCompanies();
         }
 
         function registerView() {
             $('#register').show();
-            $('#createCompany').hide();
+            $('#chooseCompany').hide();
 
         }
 
@@ -195,7 +305,7 @@
                 success: function(response) {
                     $('#error_message_field_company').hide();
                     $('#success_message_field_company').show();
-                    $('#createCompanyBtn').hide();
+                    $('#chooseCompanyBtn').hide();
                     $('#nextToRegisterUser').show();
 
                 },
@@ -203,7 +313,7 @@
                     var errorMessage = JSON.parse(xhr.responseText);
                     var errors = errorMessage.message;
                     var suggest = errorMessage.suggest;
-                    $('#createCompanyBtn').show();
+                    $('#chooseCompanyBtn').show();
                     $('#nextToRegisterUser').hide();
                     $("#success_message_field_company").hide();
                     $('#error_message_field_company').show();

@@ -1,12 +1,21 @@
-function test(){
-    console.log('test');
+function showModal(id) {
+    const options = {
+        placement: "bottom-right",
+        backdrop: "dynamic",
+        backdropClasses:
+            "bg-gray-700 dark:bg-gray-700 fixed inset-0 z-40",
+        closable: true,
+    };
+    const instanceOptions = {
+        id: "modalEl",
+        override: true,
+    };
+
+    let modal = new Modal(document.getElementById(id), options, instanceOptions);
+    modal.show();
 }
 
-function showModal(id){
-    const modal = new Modal(document.getElementById(id), {
-        placement: 'center',
-        backdrop: 'static',
-    });
+function hideModal(id) {
+    let modal = new Modal(document.getElementById(id));
+    modal.hide();
 }
-
-
