@@ -132,7 +132,7 @@
                             </div>
                         </div>
                         <div class="mt-4 flex justify-center flex-col items-center">
-                            <button id="createCompanyBtn" type="button" onclick="createCompanyView()"
+                            <button id="createCompanyBtn" type="button" onclick="test()"
                                 class="w-full max-w-64 bg-green-600 text-white py-2 rounded-lg hover:bg-green-700">Create</button>
                             <button id="nextToRegisterUser" type="button" onclick="registerView()" hidden
                                 class="w-full max-w-64 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700">Next</button>
