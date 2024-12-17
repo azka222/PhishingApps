@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthenticateController;
+use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\ViewController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Support\Facades\Route;
@@ -23,10 +24,13 @@ Route::get('/email/verify/{id}/{hash}', function (Request $request) {
     }
     return  redirect()->route('login');
 })->middleware(['signed'])->name('verification.verify');
-Route::get('/login', [ViewController::class, 'loginView'])->middleware('guest')->name('authView');
+Route::get('/login', [ViewController::class, 'loginView'])->middleware('guest')->name('loginView');
+Route::get('/register', [ViewController::class, 'registerView'])->middleware('guest')->name('registerView');
 Route::post('/login', [AuthenticateController::class, 'login'])->name('login');
 Route::post('/register', [AuthenticateController::class, 'register'])->name('register');
 Route::get('/logout', [AuthenticateController::class, 'logout'])->name('logout');
+Route::get('/getCompanies', [CompanyController::class, 'getCompanies'])->name('getCompanies');
+Route::post('/checkCompanies', [CompanyController::class, 'checkCompany'])->name('checkCompany');
 
 
 

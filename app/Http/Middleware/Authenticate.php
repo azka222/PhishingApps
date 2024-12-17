@@ -22,7 +22,7 @@ class Authenticate
     {
         dd('redirect');
         if (!$request->expectsJson()) {
-            return route('authView');
+            return route('loginView');
         }
     }
 }
