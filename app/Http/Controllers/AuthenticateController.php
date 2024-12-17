@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Auth\Events\Registered;
+use App\Models\Company;
 
 class AuthenticateController extends Controller
 {
@@ -57,6 +58,13 @@ class AuthenticateController extends Controller
         $user->gender = $request->gender;
         $user->save();
 
+        $checkUser = User::where('company_id', $request->company)->count();
+        if($checkUser == 1){
+            $company = Company::findOrFail($request->company);
+            $company->user_id = $user->id;
+            $company->save();
+        }
+        
         event(new Registered($user));
 
         return response()->json([

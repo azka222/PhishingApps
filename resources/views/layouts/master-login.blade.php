@@ -14,6 +14,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet">
     
     <script src='{{ url('/js/app.js') }}'></script>
+    @vite('resources/js/app.js')
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 </head>
 

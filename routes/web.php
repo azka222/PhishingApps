@@ -31,6 +31,7 @@ Route::post('/register', [AuthenticateController::class, 'register'])->name('reg
 Route::get('/logout', [AuthenticateController::class, 'logout'])->name('logout');
 Route::get('/getCompanies', [CompanyController::class, 'getCompanies'])->name('getCompanies');
 Route::post('/checkCompanies', [CompanyController::class, 'checkCompany'])->name('checkCompany');
+Route::post('/createCompany', [CompanyController::class, 'createCompany'])->name('createCompany');
 
 
 

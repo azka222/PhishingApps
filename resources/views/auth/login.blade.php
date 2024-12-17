@@ -4,7 +4,7 @@
     <div class="grid grid-cols-3">
         <fieldset id="login" class="lg:col-span-2 col-span-3">
             <div class='flex items-center justify-center min-h-screen bg-darkerBlue'>
-                <div class='gap-5 bg-darkerBlue rounded-3xl min-h-[800px] max-2-[980px] min-w-[560px] max-2-[650px]'>
+                <div class='gap-5 p-8 bg-darkerBlue rounded-3xl min-h-[800px] max-2-[980px] min-w-[560px] max-2-[650px]'>
                     <div class='text-white pt-16'>
                         <span class="text-3xl font-normal font-sans">Login to </span>
                         <span class="text-3xl font-bold font-sans">FischSim</span>

@@ -41,4 +41,23 @@ class CompanyController extends Controller
             ], 400);
         }
     }
+
+    public function createCompany(Request $request){
+        $request->validate([
+            'name' => 'required|string',
+            'email' => 'required|email',
+            'address' => 'required|string'
+        ]);
+   
+        $company = new Company();
+        $company->name = $request->name;
+        $company->address = $request->address;
+        $company->email = $request->email;
+        $company->user = 1;
+        $company->save();
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Company created successfully',
+        ]);
+    }
 }
