@@ -47,5 +47,10 @@ class User extends Authenticatable implements MustVerifyEmailContract
         ];
     }
 
+    public static function getProfileDetails()
+    {
+        return User::find(auth()->user()->id);
+    }
+
     
 }

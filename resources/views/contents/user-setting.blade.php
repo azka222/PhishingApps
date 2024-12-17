@@ -38,39 +38,70 @@
                 </div>
             </div>
             <div class="col-span-2">
-                <fieldset id="profile-content" class="h-full p-4">
+                <fieldset id="content-profile" class="h-full p-4">
                     <div class="w-full h-full bg-gray-200 dark:bg-gray-600 rounded-xl">
                         <div class="flex flex-col gap-4 h-full">
                             <div class="w-full h-1/5 bg-gray-300 dark:bg-gray-700 rounded-xl">
-                                <div class="flex flex-row justify-start ps-4 gap-8  h-full">
-                                    <div class="h-full flex items-center">
-                                        <img src="{{ asset('image/user.png') }}" class="w-20 h-20 rounded-full">
-                                    </div>
-                                    <div class="h-full flex gap-4 items-center">
-                                        <div>
-                                            <h1 class="text-xl font-semibold dark:text-white">User Name</h1>
-                                            <p class="text-sm dark:text-white">Company Name</p>
+                                <div class="flex flex-row justify-between h-full">
+                                    <div class="flex flex-row items-center justify-start ps-4 gap-8  h-full">
+                                        <div class="h-full flex items-center">
+                                            <img src="{{ asset('image/user.png') }}" class="w-20 h-20 rounded-full">
                                         </div>
+                                        <div class="h-full flex gap-4 items-center">
+                                            <div>
+                                                <h1 id="username" class="text-xl font-semibold dark:text-white">User Name</h1>
+                                                <p id="company_display" class="text-sm dark:text-white">Company Name</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center p-4">
+                                        <button
+                                            class="flex items-center p-2 rounded-lg  bg-blue-600 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-800 text-gray-900 dark:text-white">
+                                            <span class="ms-2 me-2 text-sm text-white">Edit</span>
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                                                class="size-4">
+                                                <path
+                                                    d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32l8.4-8.4Z" />
+                                                <path
+                                                    d="M5.25 5.25a3 3 0 0 0-3 3v10.5a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3V13.5a.75.75 0 0 0-1.5 0v5.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5V8.25a1.5 1.5 0 0 1 1.5-1.5h5.25a.75.75 0 0 0 0-1.5H5.25Z" />
+                                            </svg>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
                             <div class="w-full h-4/5 bg-gray-300 dark:bg-gray-700 rounded-xl">
                                 <div class="grid grid-cols-2 p-4 gap-4">
                                     <div class="ps-2 pt-2 col-span-1">
-                                        <h1 class="text-lg dark:text-white font-semibold">First Name</h1>
-                                        <h2 id="first_name_display" class="text-md pt-2 dark:text-white">John</h2>
+                                        <h1 class="text-md dark:text-white font-semibold">First Name</h1>
+                                        <h2 id="first_name_display" class="text-sm pt-2 dark:text-white"></h2>
                                     </div>
                                     <div class="ps-2 pt-2 col-span-1">
-                                        <h1 class="text-lg dark:text-white font-semibold">Last Name</h1>
-                                        <h2 id="last_name_display" class="text-md pt-2 dark:text-white">Doe</h2>
+                                        <h1 class="text-md dark:text-white font-semibold">Last Name</h1>
+                                        <h2 id="last_name_display" class="text-sm pt-2 dark:text-white"></h2>
                                     </div>
                                     <div class="ps-2 pt-2 col-span-1">
-                                        <h1 class="text-lg dark:text-white font-semibold">Phone Number</h1>
-                                        <h2 id="phone_number_display" class="text-md pt-2 dark:text-white">087822172006</h2>
+                                        <h1 class="text-md dark:text-white font-semibold">Phone Number</h1>
+                                        <h2 id="phone_number_display" class="text-sm pt-2 dark:text-white"></h2>
                                     </div>
-                                    <div class="ps-2 pt-2 col-span-1">
-                                        <h1 class="text-lg dark:text-white font-semibold">Gender</h1>
-                                        <h2 id="gender_display" class="text-md pt-2 dark:text-white">Male</h2>
+                                    <div class="ps-2 pt-2 col-span-1 mb-4">
+                                        <h1 class="text-md dark:text-white font-semibold">Gender</h1>
+                                        <h2 id="gender_display" class="text-sm pt-2 dark:text-white"></h2>
+                                    </div>
+
+                                    <div class="relative flex items-center justify-center col-span-2">
+                                        <hr class="w-full border-gray-400 dark:border-gray-500">
+                                        <span
+                                            class="absolute px-3 text-gray-700 rounded-full bg-gray-200 dark:bg-gray-600 dark:text-white">Additional
+                                            Info</span>
+                                    </div>
+
+                                    <div class="ps-2 pt-4 col-span-1">
+                                        <h1 class="text-md dark:text-white font-semibold">Company Address</h1>
+                                        <h2 id="address_display" class="text-sm pt-2 dark:text-white">Not Set</h2>
+                                    </div>
+                                    <div class="ps-2 pt-4 col-span-1">
+                                        <h1 class="text-md dark:text-white font-semibold">Company Type</h1>
+                                        <h2 id="company_type_display" class="text-sm pt-2 dark:text-white">Not Set</h2>
                                     </div>
                                 </div>
                             </div>
@@ -92,8 +123,11 @@
         let inactive =
             ' bg-gray-300 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-700 text-gray-900 dark:text-white';
 
+        let profile = null;
+
         $(document).ready(function() {
             firstRender();
+            getProfile();
         })
 
         function firstRender() {
@@ -104,6 +138,28 @@
         function handleSidebar(content) {
             $(".side-button").removeClass(active).addClass(inactive);
             $("#button-setting-" + content).removeClass(inactive).addClass(active);
+        }
+
+        function getProfile() {
+            $.ajax({
+                url: "{{ route('getProfileDetails') }}",
+                type: "GET",
+                success: function(response) {
+                    profile = response.data;
+                    setProfileInformation(profile);
+                }
+            })
+        }
+
+        function setProfileInformation(profile) {
+            $("#first_name_display").text(profile.first_name);
+            $("#last_name_display").text(profile.last_name);
+            $("#phone_number_display").text(profile.phone);
+            $("#gender_display").text(profile.gender);
+            $("#address_display").text(profile.company ? profile.company.address : "Not Set");
+            $("#company_type_display").text(profile.company ? profile.company.type : "Not Set");
+            $("#username").text(profile.email);
+            $("#company_display").text(profile.company ? profile.company : "");
         }
     </script>
 @endsection
