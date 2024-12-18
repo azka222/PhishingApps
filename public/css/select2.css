@@ -1,0 +1,28 @@
+.js-example-basic-single {
+    width: 300px;
+    /* Atur lebar sesuai kebutuhan */
+    height: 40px;
+    /* Atur tinggi sesuai kebutuhan */
+    border-radius: 10px;
+    /* Atur sudut melengkung */
+}
+
+/* Untuk mengatur tampilan Select2 */
+.select2-container--default .select2-selection--single {
+    height: 40px;
+    /* Sesuaikan dengan tinggi yang Anda inginkan */
+    border-radius: 10px;
+    /* Sesuaikan dengan sudut melengkung yang Anda inginkan */
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: 40px;
+    /* Sesuaikan dengan tinggi yang Anda inginkan */
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 40px;
+    /* Sesuaikan dengan tinggi yang Anda inginkan */
+    right: 10px;
+    /* Atur posisi panah */
+}

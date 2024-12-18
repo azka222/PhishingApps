@@ -3,51 +3,70 @@
 @section('content')
     <div class="grid grid-cols-3">
         <fieldset id="login" class="lg:col-span-2 col-span-3">
-            <div class='flex items-center justify-center min-h-screen bg-darkerBlue'>
-                <div class='gap-5 p-8 bg-darkerBlue rounded-3xl min-h-[800px] max-2-[980px] min-w-[560px] max-2-[650px]'>
-                    <div class='text-white pt-16'>
-                        <span class="text-3xl font-normal font-sans">Login to </span>
-                        <span class="text-3xl font-bold font-sans">FischSim</span>
+            <div class='flex items-center justify-center min-h-screen bg-darkerBlue p-4'>
+                <div class='relative bg-blueBlue rounded-3xl shadow-lg p-8  w-full max-w-md mx-auto text-white'>
+                    <!-- Logo -->
+                    <div class="flex items-center justify-center">
+                        <img src="{{asset('image/kittyoEat.png')}}" alt="Logo" class="w-24 h-auto object-cover">
                     </div>
-                    <div class="pt-32">
+                    <!-- Header -->
+                    <div class='text-4xl font-outfit text-center mt-4'>
+                        <span class="font-normal">Login to </span>
+                        <span class="font-bold text-skyBlue">FischSim</span>
+                    </div>
+                    <!-- Email input -->
+                    <div class="mt-8">
                         <label for="user_email"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
+                            class="block mb-2 text-base font-medium">Your email</label>
                         <input type="email" id="login_email"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            class="w-full p-3 border rounded-lg text-gray-900 focus:ring-2 focus:ring-blue-500 focus:outline-none"
                             placeholder="Enter your email" required />
                     </div>
-                    <div class="pt-8">
+                    <!-- Password Input -->
+                    <div class="mt-6">
                         <label for="Password"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
+                            class="block mb-2 text-base font-medium">Your password</label>
                         <input type="password" id="login_password"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            class="w-full p-3 border rounded-lg text-gray-900 focus:ring-2 focus:ring-blue-500 focus:outline-none"
                             placeholder="Enter your password" required />
                     </div>
+                    <!-- Remember me & Reset Password -->
+                    <div class="flex items-center justify-between px-1 mt-4">
+                        <div class="flex items-center">
+                            <input id="remember" type="checkbox"
+                                class="w-4 h-4 rounded border-gray-300 focus:ring-2 focus:ring-blue-500">
+                            <label for="remember" class="ml-2 text-sm text-gray-300">Remember me?</label>
+                        </div>
+                        <a href="#" class="text-sm text-blue-400 hover:underline">Reset Password</a>
+                    </div>
+                     <!-- Error Message  -->
                     <div class="pt-8">
                         <div id="error_message_field_login" hidden>
-                            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg shadow-md relative"
                                 role="alert">
                                 <strong class="font-bold">Whoops!</strong>
                                 <span class="block sm:inline">There were some problems with your input.</span>
-                                <ul id="error_message_login"class="mt-3 list-disc list-inside text-sm text-red-600">
-
+                                <ul id="error_message_login"class="mt-3 list-disc list-inside text-sm">
                                 </ul>
                             </div>
                         </div>
                     </div>
-                    <div class="pt-8">
+
+                    <!-- Login button -->
+                    <div class="mt-4">
                         <button onclick="login()"
-                            class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 dark:bg-gray-800 dark:text-white">Login</button>
+                            class="w-full bg-greyishBlue text-white py-3 rounded-lg hover:bg-blue-500 transition duration-300 ease-in-out">Login</button>
+                        <!-- Dont have account -->
                         <div class="mt-4 text-center text-white">
                             <span>Don't have an account?</span>
-                            <a onclick="registerView()" class="text-blue-600 hover:underline">Register</a>
+                            <a onclick="registerView()" class="text-blue-400 hover:underline">Register</a>
                         </div>
-
                     </div>
                 </div>
         </fieldset>
+        <!-- Fun fact area -->
         <fieldset id="content" class="col-span-1 lg:block hidden">
-            <div class="min-h-screen flex items-center justify-center bg-gray-200">
+            <div class="min-h-screen flex items-center justify-center bg-skyBlue">
                 aaaaaaa
             </div>
         </fieldset>
@@ -120,7 +139,7 @@
             });
         }
 
-   
+
         function login() {
             Swal.fire({
                 title: 'Logging in...',
@@ -165,7 +184,7 @@
         }
 
 
-       
+
     </script>
 
 @endsection

@@ -1,7 +1,7 @@
 @extends('layouts.master-login')
 @section('title', 'Register')
 @section('content')
-    <div class="grid grid-cols-3">
+    <div class="grid grid-cols-3 bg-darkerBlue">
         <fieldset id="register" class="lg:col-span-2 col-span-3" hidden>
             <div class="min-h-screen flex items-center justify-center bg-gray-100">
                 <div class="w-full max-w-2xl ">
@@ -98,51 +98,50 @@
                     </div>
         </fieldset>
         <fieldset id="chooseCompany" class="lg:col-span-2 col-span-3" hidden>
-            <div class="min-h-screen flex items-center justify-center bg-gray-100">
-                <div class="w-full max-w-2xl ">
-                    <div class="bg-white shadow-md rounded-lg p-8 m-8 mb-4">
-                        <div class="mb-4 text-xl font-bold">{{ __('Company') }}</div>
-                        <div class="grid grid-cols-2 gap-4 bg-red mb-8">
+            <div class="min-h-screen flex items-center justify-center p-4">
+                <div class="w-full max-w-2xl bg-blueBlue shadow-lg rounded-3xl p-8">
+                    <!-- Header -->
+                    <div class="text-center mb-6 text-white">
+                        <div class="text-3xl font-bold pb-8">Company</div>
+                        <!-- Select -->
+                        <div class="mb-6">
                             <div class="md:col-span-2 col-span-2">
-                                <div>
-                                    <label for="selectCompany"
-                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select
-                                        Company</label>
-                                    <select class="js-example-basic-single" style="width: 100%" id="selectCompany"
+                                <div class="">
+                                    <label for="company" class="block mb-2 text-sm font-medium text-white dark:text-white">Select Company</label>
+                                    <select class="js-example-basic-single" style="width: 100%;" id="selectCompany"
                                         onchange="checkCompany(this.value)" name="state">
-
                                     </select>
-
                                 </div>
                             </div>
-                            <div class="col-span-2" id="error_message_field_company" hidden>
-                                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                            <!-- Error Message-->
+                            <div class="col-span-2 pt-4" id="error_message_field_company" hidden>
+                                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg shadow-md relative"
                                     role="alert">
                                     <strong class="font-bold">Whoops!</strong>
                                     <span class="block sm:inline">There were some problems with your input.</span>
-                                    <ul id="error_message_company"class="mt-3 list-disc list-inside text-sm text-red-600">
+                                    <ul id="error_message_company"class="mt-3 list-disc list-inside text-sm">
                                     </ul>
                                 </div>
                             </div>
-                            <div class="col-span-2" id="success_message_field_company" hidden>
-                                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative"
+                            <div class="col-span-2 pt-4" id="success_message_field_company" hidden>
+                                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg shadow-md relative"
                                     role="alert">
                                     <strong class="font-bold">Yeay!</strong>
                                     <span class="block sm:inline">You can use this company.</span>
                                 </div>
                             </div>
                         </div>
-                        <div class="mt-4 flex justify-center flex-col items-center">
+                        <!-- Button -->
+                        <div class="flex flex-col items-center">
                             <button id="chooseCompanyBtn" type="button" onclick="createCompanyView()"
-                                class="w-full max-w-64 bg-green-600 text-white py-2 rounded-lg hover:bg-green-700">Create</button>
+                                class="w-full max-w-64 bg-[#38A169] text-white py-2 rounded-lg hover:bg-[#2F855A] transition duration-300 ease-in-out">Create</button>
                             <button id="nextToRegisterUser" type="button" onclick="registerView()" hidden
-                                class="w-full max-w-64 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700">Next</button>
-                            <div class="mt-4 text-center">
-                                <div class="mt-4 text-center">
+                                class="w-full max-w-64 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 mt-4 transition duration-300 ease-in-out">Next</button>
+                                <!-- Login -->
+                                <div class="mt-2 text-center text-white">
                                     <span>Already have an account?</span>
-                                    <a onclick="loginView()" class="text-blue-600 hover:underline">Login</a>
+                                    <a onclick="loginView()" class="text-blue-400 hover:underline">Login</a>
                                 </div>
-                            </div>
                         </div>
         </fieldset>
         <fieldset id="createCompany" class="lg:col-span-2 col-span-3" hidden>
@@ -192,7 +191,7 @@
                                     </div>
                                 </div>
 
-                                
+
                             </div>
                         </div>
                         <div class="mt-4 flex justify-center flex-col items-center">
@@ -211,16 +210,20 @@
 
         </fieldset>
         <fieldset id="content" class="col-span-1 lg:block hidden">
-            <div class="min-h-screen flex items-center justify-center bg-gray-200">
+            <div class="min-h-screen flex items-center justify-center bg-skyBlue">
                 aaaaaaa
             </div>
         </fieldset>
 
     </div>
+    <style>
 
+    </style>
     <script>
         $(document).ready(function() {
-            $('.js-example-basic-single').select2();
+            $('.js-example-basic-single').select2({
+
+            });
             $("#phone").on('input', function() {
                 var phone = $(this).val();
                 $(this).val(phone.replace(/[^0-9]/g, ''));
