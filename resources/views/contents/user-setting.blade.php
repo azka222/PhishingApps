@@ -39,7 +39,7 @@
                 </div>
             </div>
             <div class="col-span-2">
-                <fieldset id="content-profile" class="h-full p-4">
+                <fieldset id="content-profile" class="content-user-setting h-full p-4">
                     <div class="w-full h-full bg-gray-200 dark:bg-gray-600 rounded-xl">
                         <div class="flex flex-col gap-4 h-full">
                             <div class="w-full h-1/5 bg-gray-300 dark:bg-gray-700 rounded-xl">
@@ -140,6 +140,8 @@
         function handleSidebar(content) {
             $(".side-button").removeClass(active).addClass(inactive);
             $("#button-setting-" + content).removeClass(inactive).addClass(active);
+            $(".content-user-setting").hide();
+            $("#content-" + content).show();
         }
 
         function getProfile() {
