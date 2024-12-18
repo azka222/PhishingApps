@@ -2,8 +2,6 @@ function showModal(id) {
     const options = {
         placement: "bottom-right",
         backdrop: "dynamic",
-        backdropClasses:
-            "bg-gray-700 dark:bg-gray-700 fixed inset-0 z-40",
         closable: true,
     };
     const instanceOptions = {
