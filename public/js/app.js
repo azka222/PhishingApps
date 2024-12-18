@@ -8,12 +8,29 @@ function showModal(id) {
         id: "modalEl",
         override: true,
     };
-
-    let modal = new Modal(document.getElementById(id), options, instanceOptions);
+    let modal = new Modal(
+        document.getElementById(id),
+        options,
+        instanceOptions
+    );
     modal.show();
 }
 
 function hideModal(id) {
-    let modal = new Modal(document.getElementById(id));
+    const options = {
+        placement: "bottom-right",
+        backdrop: "dynamic",
+        closable: true,
+    };
+    const instanceOptions = {
+        id: "modalEl",
+        override: true,
+    };
+    let modal = new Modal(
+        document.getElementById(id),
+        options,
+        instanceOptions
+    );
     modal.hide();
+    $(".alert-danger").hide();
 }

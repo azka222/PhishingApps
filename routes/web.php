@@ -45,6 +45,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::group(['prefix' => 'user-setting'], function () {
         Route::get('/', [ViewController::class, 'userSettingView'])->name('userSettingView');
         Route::get('/getProfileDetails', [UserController::class, 'getProfileDetails'])->name('getProfileDetails');
+        Route::post('/updateProfile', [UserController::class, 'updateProfile'])->name('updateProfile');
     });
 
 });
