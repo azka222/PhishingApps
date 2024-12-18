@@ -12,10 +12,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet">
-    
+    <link rel="stylesheet" href="{{ url('css/flowbite.min.css') }}">
     <script src='{{ url('/js/app.js') }}'></script>
-    @vite('resources/js/app.js')
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    @vite('resources/js/app.js')
 </head>
 
 <body>

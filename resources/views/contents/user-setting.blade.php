@@ -1,5 +1,6 @@
 @extends('layouts.master')
 @section('title', 'User Setting')
+@include('contents.modal.edit-profile-modal')
 
 @section('content')
     <div class="flex justify-center h-screen pt-28 pe-4 ps-4 bg-gray-50 dark:bg-gray-800">
@@ -49,13 +50,14 @@
                                         </div>
                                         <div class="h-full flex gap-4 items-center">
                                             <div>
-                                                <h1 id="username" class="text-xl font-semibold dark:text-white">User Name</h1>
+                                                <h1 id="username" class="text-xl font-semibold dark:text-white">User Name
+                                                </h1>
                                                 <p id="company_display" class="text-sm dark:text-white">Company Name</p>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="flex items-center p-4">
-                                        <button
+                                        <button onclick="showEditProfileModal()"
                                             class="flex items-center p-2 rounded-lg  bg-blue-600 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-800 text-gray-900 dark:text-white">
                                             <span class="ms-2 me-2 text-sm text-white">Edit</span>
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
@@ -160,6 +162,56 @@
             $("#company_type_display").text(profile.company ? profile.company.type : "Not Set");
             $("#username").text(profile.email);
             $("#company_display").text(profile.company ? profile.company.name : "");
+        }
+
+
+        function showEditProfileModal() {
+            showModal("edit-profile-modal");
+            $("#first_name").val(profile.first_name);
+            $("#last_name").val(profile.last_name);
+            $("#phone_number").val(profile.phone);
+            $("#gender").val(profile.gender);
+            $("#email").val(profile.email);
+        }
+
+        function submitEditModal() {
+            let data = {
+                id: profile.id,
+                first_name: $("#first_name").val(),
+                last_name: $("#last_name").val(),
+                phone: $("#phone_number").val(),
+                gender: $("#gender").val(),
+                email: $("#email").val(),
+                _token: "{{ csrf_token() }}"
+            }
+            $.ajax({
+                url: "{{ route('updateProfile') }}",
+                type: "POST",
+                data: data,
+                success: function(response) {
+                    if (response.status == "success") {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: response.message,
+                            confirmButtonColor: '#22c55e',
+                            confirmButtonText: 'Ok'
+                        })
+                        getProfile();
+                        hideModal("edit-profile-modal");
+                    }
+                },
+                error: function(xhr) {
+                    var error = JSON.parse(xhr.responseText);
+                    Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: error.message,
+                        confirmButtonColor: '#ef4444',
+                        confirmButtonText: 'Close'
+                    });
+                }
+            })
         }
     </script>
 @endsection
