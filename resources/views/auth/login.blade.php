@@ -12,7 +12,7 @@
                     <!-- Header -->
                     <div class='text-4xl font-outfit text-center mt-4'>
                         <span class="font-normal">Login to </span>
-                        <span class="font-bold">FischSim</span>
+                        <span class="font-bold text-skyBlue">FischSim</span>
                     </div>
                     <!-- Email input -->
                     <div class="mt-8">
@@ -42,15 +42,16 @@
                      <!-- Error Message  -->
                     <div class="pt-8">
                         <div id="error_message_field_login" hidden>
-                            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg shadow-md relative"
                                 role="alert">
                                 <strong class="font-bold">Whoops!</strong>
                                 <span class="block sm:inline">There were some problems with your input.</span>
-                                <ul id="error_message_login"class="mt-3 list-disc list-inside text-sm text-red-600">
+                                <ul id="error_message_login"class="mt-3 list-disc list-inside text-sm">
                                 </ul>
                             </div>
                         </div>
                     </div>
+
                     <!-- Login button -->
                     <div class="mt-4">
                         <button onclick="login()"
@@ -63,6 +64,7 @@
                     </div>
                 </div>
         </fieldset>
+        <!-- Fun fact area -->
         <fieldset id="content" class="col-span-1 lg:block hidden">
             <div class="min-h-screen flex items-center justify-center bg-skyBlue">
                 aaaaaaa

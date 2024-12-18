@@ -15,6 +15,8 @@
     <link rel="stylesheet" href="{{ url('css/flowbite.min.css') }}">
     <script src='{{ url('/js/app.js') }}'></script>
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/select2.css') }}">
+
     @vite('resources/js/app.js')
 </head>
 
