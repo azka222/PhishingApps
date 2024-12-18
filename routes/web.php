@@ -2,14 +2,13 @@
 
 use App\Http\Controllers\AuthenticateController;
 use App\Http\Controllers\CompanyController;
-use App\Http\Controllers\ViewController;
-use Illuminate\Foundation\Auth\EmailVerificationRequest;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Http\Request;
-use App\Models\User;
-use Illuminate\Auth\Events\Verified;
-use Illuminate\Auth\Access\AuthorizationException;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ViewController;
+use App\Models\User;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Auth\Events\Verified;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/email/verify', function () {
     return view('auth.verify-email');
@@ -22,7 +21,7 @@ Route::get('/email/verify/{id}/{hash}', function (Request $request) {
     if ($user->markEmailAsVerified()) {
         event(new Verified($user));
     }
-    return  redirect()->route('login');
+    return redirect()->route('login');
 })->middleware(['signed'])->name('verification.verify');
 Route::get('/login', [ViewController::class, 'loginView'])->middleware('guest')->name('loginView');
 Route::get('/register', [ViewController::class, 'registerView'])->middleware('guest')->name('registerView');
@@ -32,9 +31,7 @@ Route::get('/logout', [AuthenticateController::class, 'logout'])->name('logout')
 Route::get('/getCompanies', [CompanyController::class, 'getCompanies'])->name('getCompanies');
 Route::post('/checkCompanies', [CompanyController::class, 'checkCompany'])->name('checkCompany');
 Route::post('/createCompany', [CompanyController::class, 'createCompany'])->name('createCompany');
-
-
-
+Route::post('/changePassword', [AuthenticateController::class, 'changePassword'])->name('changePassword');
 
 // ==================================== if user login success ====================================
 Route::group(['middleware' => ['auth', 'verified']], function () {
@@ -46,6 +43,10 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         Route::get('/', [ViewController::class, 'userSettingView'])->name('userSettingView');
         Route::get('/getProfileDetails', [UserController::class, 'getProfileDetails'])->name('getProfileDetails');
         Route::post('/updateProfile', [UserController::class, 'updateProfile'])->name('updateProfile');
+        Route::post('/sendOtp', [AuthenticateController::class, 'sendOtp'])->name('sendOtp');
+        Route::post('/verifyOtp', [AuthenticateController::class, 'verifyOtp'])->name('verifyOtp');
+        Route::post('/resendOtp', [AuthenticateController::class, 'resendOtp'])->name('resendOtp');
+
     });
 
 });

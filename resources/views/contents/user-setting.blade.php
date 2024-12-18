@@ -1,14 +1,15 @@
 @extends('layouts.master')
 @section('title', 'User Setting')
 @include('contents.modal.edit-profile-modal')
+@include('contents.modal.otp-modal')
 
 @section('content')
     <div class="flex justify-center h-screen pt-28 pe-4 ps-4 bg-gray-50 dark:bg-gray-800">
-        <div class="w-4/5 h-4/5 p-4 grid grid-cols-3 bg-gray-200 dark:bg-gray-600 rounded-xl gap-4">
-            <div class="col-span-1 border-e-2 border-e-gray-900 dark:border-e-gray-100">
+        <div class="w-4/5 h-4/5 p-4 grid grid-cols-3 bg-gray-200 dark:bg-gray-600 rounded-xl">
+            <div class="col-span-1 border-e-2 border-e-gray-900 dark:border-e-gray-100 pe-2">
                 <div id="default-sidebar" class="" aria-label="Sidebar">
-                    <div class="px-3 py-4 overflow-y-auto ">
-                        <div class="p-2">
+                    <div class="p-4 overflow-y-auto ">
+                        <div class="mb-2">
                             <div id="button-setting-profile" onclick="handleSidebar('profile')"
                                 class="side-button flex items-center p-2 rounded-lg">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
@@ -21,7 +22,7 @@
                                 <span class="ms-3">Profile</span>
                             </div>
                         </div>
-                        <div class="p-2">
+                        <div class="mb-2">
                             <div id="button-setting-security" onclick="handleSidebar('security')"
                                 class="side-button flex items-center p-2 rounded-lg">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
@@ -33,18 +34,28 @@
                                 <span class="ms-3">Security</span>
                             </div>
                         </div>
-
-
+                        <div class="mb-2">
+                            <div id="button-setting-company" onclick="handleSidebar('company')"
+                                class="side-button flex items-center p-2 rounded-lg">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                                    class="w-5 h-5">
+                                    <path fill-rule="evenodd"
+                                        d="M12 1.5a5.25 5.25 0 0 0-5.25 5.25v3a3 3 0 0 0-3 3v6.75a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3v-6.75a3 3 0 0 0-3-3v-3c0-2.9-2.35-5.25-5.25-5.25Zm3.75 8.25v-3a3.75 3.75 0 1 0-7.5 0v3h7.5Z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                                <span class="ms-3">Company</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="col-span-2">
-                <fieldset id="content-profile" class="h-full p-4">
-                    <div class="w-full h-full bg-gray-200 dark:bg-gray-600 rounded-xl">
-                        <div class="flex flex-col gap-4 h-full">
-                            <div class="w-full h-1/5 bg-gray-300 dark:bg-gray-700 rounded-xl">
-                                <div class="flex flex-row justify-between h-full">
-                                    <div class="flex flex-row items-center justify-start ps-4 gap-8  h-full">
+            <div class="col-span-2 ps-2">
+                <fieldset id="content-profile" class="content-user-setting p-4">
+                    <div class="w-full bg-gray-200 dark:bg-gray-600 rounded-xl">
+                        <div class="flex flex-col gap-4">
+                            <div class="p-4 bg-gray-300 dark:bg-gray-700 rounded-xl">
+                                <div class="flex flex-row justify-between">
+                                    <div class="flex flex-row items-center justify-start ps-4 gap-8 ">
                                         <div class="h-full flex items-center">
                                             <img src="{{ asset('image/user.png') }}" class="w-20 h-20 rounded-full">
                                         </div>
@@ -113,10 +124,52 @@
                     </div>
 
                 </fieldset>
+                <fieldset id="content-security" class="content-user-setting p-4">
+                    <div class="w-full bg-gray-300 dark:bg-gray-700 rounded-xl p-4">
+                        <h1 class="text-xl font-semibold dark:text-white">Security</h1>
+                        <p class="text-sm dark:text-white">This is the security setting page</p>
+
+                        <div class="mt-4 mb-4">
+                            <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">New
+                                Password</label>
+                            <div class="flex pb-4 items-center gap-2">
+                                <input type="password" name="password" id="password" disabled
+                                    class="mt-1 block w-2/5 p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white">
+                                <button onclick="authCheckPassword()" id="button-password-check"
+                                    class="bg-blue-600 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-800 text-white p-2 rounded-lg mt-1">
+                                    Change
+                                </button>
+                                <div id="button-password-group" hidden>
+                                    <button onclick="changePassword()"
+                                        class="me-1 bg-green-600 dark:bg-green-700 hover:bg-green-700 dark:hover:bg-green-800 text-white p-2 rounded-lg mt-1">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                                            class="size-6">
+                                            <path fill-rule="evenodd"
+                                                d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                    </button>
+                                    <button onclick="cancelChangePassword()"
+                                        class="bg-red-600 dark:bg-red-700 hover:bg-red-700 dark:hover:bg-red-800 text-white p-2 rounded-lg mt-1">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                                            class="size-6">
+                                            <path fill-rule="evenodd"
+                                                d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-1.72 6.97a.75.75 0 1 0-1.06 1.06L10.94 12l-1.72 1.72a.75.75 0 1 0 1.06 1.06L12 13.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L13.06 12l1.72-1.72a.75.75 0 1 0-1.06-1.06L12 10.94l-1.72-1.72Z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
             </div>
-
-
+            </fieldset>
         </div>
+
+
+    </div>
     </div>
 
 
@@ -130,16 +183,38 @@
         $(document).ready(function() {
             firstRender();
             getProfile();
+
+            const otpInputs = $(".otp-input");
+            otpInputs.on("input", function() {
+                const input = $(this);
+                const value = input.val().replace(/[^0-9]/g, "");
+                input.val(value);
+
+                if (value.length === 1) {
+                    input.next(".otp-input").focus();
+                }
+            });
+
+            otpInputs.on("keydown", function(e) {
+                if (e.key === "Backspace" && !$(this).val()) {
+                    $(this).prev(".otp-input").focus();
+                }
+            });
+
         })
 
         function firstRender() {
             $(".side-button").addClass(inactive).removeClass(active);
+            $(".content-user-setting").hide();
             $("#button-setting-profile").removeClass(inactive).addClass(active);
+            $("#content-profile").show();
         }
 
         function handleSidebar(content) {
             $(".side-button").removeClass(active).addClass(inactive);
             $("#button-setting-" + content).removeClass(inactive).addClass(active);
+            $(".content-user-setting").hide();
+            $("#content-" + content).show();
         }
 
         function getProfile() {
@@ -163,7 +238,6 @@
             $("#username").text(profile.email);
             $("#company_display").text(profile.company ? profile.company.name : "");
         }
-
 
         function showEditProfileModal() {
             showModal("edit-profile-modal");
@@ -212,6 +286,151 @@
                     });
                 }
             })
+        }
+
+        function authCheckPassword() {
+            Swal.fire({
+                title: 'Loading...',
+                text: 'Please wait while we process your request.',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+            let userId = profile.id;
+            $.ajax({
+                url: "{{ route('sendOtp') }}",
+                type: "POST",
+                data: {
+                    id: userId,
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(response) {
+                    Swal.close();
+                    Swal.fire({
+                        title: "<strong>Check your mailbox!</strong>",
+                        icon: "info",
+                        text: "We have sent an OTP to your email address. Please check your email and enter the OTP to continue.",
+                        closeOnClickOutside: false,
+                        confirmButtonColor: '#40c3ed',
+                        confirmButtonText: 'Ok'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            showModal("otp-modal");
+                        }
+                    });
+                },
+                error: function(xhr) {}
+            })
+        }
+
+        function verifyOTP() {
+            let data = {
+                otp: $("#otp-1").val() + $("#otp-2").val() + $("#otp-3").val() + $("#otp-4").val() + $("#otp-5").val() +
+                    $("#otp-6").val(),
+                _token: "{{ csrf_token() }}"
+            }
+            $.ajax({
+                url: "{{ route('verifyOtp') }}",
+                type: "POST",
+                data: data,
+                success: function(response) {
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: response.message,
+                        confirmButtonColor: '#22c55e',
+                        confirmButtonText: 'Ok'
+                    })
+                    $("#password").prop("disabled", false);
+                    $("#button-password-group").show();
+                    $("#button-password-check").hide();
+                    hideModal("otp-modal");
+
+                },
+                error: function(xhr) {
+                    var error = JSON.parse(xhr.responseText);
+                    Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: error.message,
+                        confirmButtonColor: '#ef4444',
+                        confirmButtonText: 'Close'
+                    });
+                }
+            })
+        }
+
+        function resendOTP(){
+            Swal.fire({
+                title: 'Loading...',
+                text: 'Please wait while we process your request.',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+            let userId = profile.id;
+            $.ajax({
+                url: "{{ route('sendOtp') }}",
+                type: "POST",
+                data: {
+                    id: userId,
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(response) {
+                    Swal.close();
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: response.message,
+                        confirmButtonColor: '#22c55e',
+                        confirmButtonText: 'Ok'
+                    })
+                },
+                error: function(xhr) {}
+            })
+        }
+
+        function changePassword(){
+            let data = {
+                id: profile.id,
+                password: $("#password").val(),
+                _token: "{{ csrf_token() }}"
+            }
+            $.ajax({
+                url: "{{ route('changePassword') }}",
+                type: "POST",
+                data: data,
+                success: function(response) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: response.message,
+                        confirmButtonColor: '#22c55e',
+                        confirmButtonText: 'Ok'
+                    })
+                    cancelChangePassword();
+                },
+                error: function(xhr) {
+                    var error = JSON.parse(xhr.responseText);
+                    Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: error.message,
+                        confirmButtonColor: '#ef4444',
+                        confirmButtonText: 'Close'
+                    });
+                }
+            })
+        }
+
+        function cancelChangePassword(){
+            $("#password").prop("disabled", true);
+            $("#button-password-group").hide();
+            $("#button-password-check").show();
+            $("#password").val("");
         }
     </script>
 @endsection
