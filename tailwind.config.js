@@ -13,8 +13,11 @@ export default {
     theme: {
         extend: {
             colors: {
-                skyBlue: "#E9FFFE",
                 darkerBlue: "#070F2B",
+                blueBlue: "#1B1E3D",
+                greyishBlue: "#535C91",
+                purpleBlue: "#9290C3",
+                skyBlue: "#E9FFFE",
             },
             fontFamily: {
                 sans: ["Outfit", ...defaultTheme.fontFamily.sans],
