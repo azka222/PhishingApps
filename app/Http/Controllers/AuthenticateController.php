@@ -3,14 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Mail\OtpEmail;
+use App\Mail\ResetPasswordMail;
 use App\Models\Company;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
-use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\OtpEmail;
-use Carbon\Carbon;
+use Illuminate\Validation\ValidationException;
 
 class AuthenticateController extends Controller
 {
@@ -106,7 +107,7 @@ class AuthenticateController extends Controller
     public function verifyOtp(Request $request)
     {
         $request->validate([
-            'otp' => 'required|string|size:6|min:6|max:6', 
+            'otp' => 'required|string|size:6|min:6|max:6',
         ]);
         $user = auth()->user();
         if ($user->otp_expired_at < Carbon::now()) {
@@ -134,4 +135,67 @@ class AuthenticateController extends Controller
         $user->save();
         return response()->json(['message' => 'Password changed successfully']);
     }
+
+    public function forgotPassword(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|exists:users,email',
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+        $token = sha1(time());
+        $user->reset_token = $token;
+        $user->otp_expired_at = Carbon::now()->addMinutes(5);
+        $user->save();
+
+        $resetUrl = url('/reset-password?token=' . $token);
+        Mail::to($user->email)->send(new ResetPasswordMail($resetUrl));
+        return response()->json(['message' => 'Reset password link sent to your email']);
+    }
+
+    public function resetPassword(Request $request)
+    {
+        $request->validate([
+            'token' => 'required',
+            'password' => 'required|min:8|confirmed',
+        ]);
+
+        $user = User::where('reset_token', $request->token)
+            ->where('otp_expired_at', '>=', Carbon::now())
+            ->first();
+
+        if (!$user) {
+            return response()->json(['message' => 'Invalid or expired token.'], 400);
+        }
+
+        $user->password = bcrypt($request->password);
+        $user->reset_token = null;
+        $user->token_expiration = null;
+        $user->save();
+
+        return response()->json(['message' => 'Password has been reset successfully.']);
+    }
+
+    public function resetPasswordSubmit(Request $request)
+    {
+        $request->validate([
+            'token' => 'required',
+            'password' => 'required|min:6',
+        ]);
+
+        $user = User::where('reset_token', $request->token)
+            ->where('otp_expired_at', '>=', now())
+            ->first();
+
+        if (!$user) {
+            return redirect('/')->with('error', 'Invalid or expired token.');
+        }
+
+        $user->password = bcrypt($request->password);
+        $user->reset_token = null;
+        $user->otp_expired_at = null;
+        $user->save();
+        return response()->json(['message' => 'Password has been reset successfully.']);
+    }
+
 }

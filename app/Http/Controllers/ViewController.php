@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 
 class ViewController extends Controller
 {
@@ -14,7 +16,22 @@ class ViewController extends Controller
         return view('auth.register');
     }
 
-    public function userSettingView(){
+    public function userSettingView()
+    {
         return view('contents.user-setting');
+    }
+
+    public function forgotPasswordView()
+    {
+        return view('auth.forgot-password');
+    }
+
+    public function resetPasswordView(Request $request)
+    {
+        $token = $request->query('token');
+        if (!$token) {
+            return redirect('/')->with('error', 'Invalid token.');
+        }
+        return view('auth.reset-password', ['token' => $token]);
     }
 }
