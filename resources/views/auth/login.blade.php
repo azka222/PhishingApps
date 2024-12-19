@@ -37,7 +37,7 @@
                                 class="w-4 h-4 rounded border-gray-300 focus:ring-2 focus:ring-blue-500">
                             <label for="remember" class="ml-2 text-sm text-gray-300">Remember me?</label>
                         </div>
-                        <a href="#" class="text-sm text-blue-400 hover:underline">Reset Password</a>
+                        <a href="{{ route('forgotPasswordView') }}" class="text-sm text-blue-400 hover:underline">Reset Password</a>
                     </div>
                      <!-- Error Message  -->
                     <div class="pt-8">
