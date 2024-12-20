@@ -1,13 +1,14 @@
 @extends('layouts.master')
 @section('title', 'Target')
 @section('content')
-    @include('contents.modal.add-target-modal')
+    @include('contents.modal.target.import-target-modal')
+    @include('contents.modal.target.add-target-modal')
     <div class=" p-4 w-full flex flex-col h-full min-h-screen  bg-gray-50 dark:bg-gray-800 dark:text-white text-gray-900">
         <div class="">
             <div class="flex p-4 items-center justify-between">
                 <h1 class="text-3xl font-semibold">Company Target</h1>
                 <div>
-                    <button
+                    <button onclick="showImportTargetModal()"
                         class="px-4 py-2 me-2 text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">Import
                         Target</button>
                     <button onclick="showAddTargetModal()"
@@ -27,7 +28,7 @@
                     <div>
                         <label for="department"
                             class="mb-1 mt-4 block text-sm font-medium text-gray-700 dark:text-gray-300">Department</label>
-                        <select id="department" name="department"  onchange="getTargets()"
+                        <select id="department" name="department" onchange="getTargets()"
                             class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
 
                         </select>
@@ -268,7 +269,7 @@
             });
         }
 
-        function updateTarget(id){
+        function updateTarget(id) {
             let name = $('#target_name').val();
             let email = $('#target_email').val();
             let position = $('#target_position').val();
@@ -313,7 +314,7 @@
             });
         }
 
-        function deleteTarget(id){
+        function deleteTarget(id) {
             Swal.fire({
                 title: 'Are you sure?',
                 text: "You won't be able to revert this!",
@@ -342,7 +343,8 @@
                             getTargets();
                         },
                         error: function(xhr) {
-                            var errorMessage = JSON.parse(xhr.responseText) ? JSON.parse(xhr.responseText) : xhr
+                            var errorMessage = JSON.parse(xhr.responseText) ? JSON.parse(xhr
+                                    .responseText) : xhr
                                 .responseText;
                             var errors = errorMessage.errors ? errorMessage.errors : errorMessage;
                             $('#error_message_field').show();
@@ -359,6 +361,58 @@
             });
         }
 
-        
+        function showImportTargetModal() {
+            showModal('import-target-modal');
+        }
+
+        function previewImportTarget() {
+            var formData = new FormData();
+            formData.append('_token', "{{ csrf_token() }}");
+            formData.append('target', $('#targetFile').prop('files')[0]);
+            formData.append('separator', $('#separator').val());
+            $.ajax({
+                url: "{{ route('importTarget') }}",
+                type: "POST",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    // showFlowBytesModal('preview-import-modal');
+                    // hideFlowBytesModal('import-company-modal');
+                    console.log(response);
+                    // $("#company-body").empty();
+                    Object.keys(response.companyList).forEach(function(key) {
+                        // let sales = response.companyList[key].userId[0].last_name ? response
+                        //     .companyList[key].userId[0].first_name + ' ' + response.companyList[key]
+                        //     .userId[0].last_name : response.companyList[key].userId[0].first_name;
+                        // $("#company-body").append(
+                        //     `<tr>
+                        //         <td class="px-6 py-3">${response.companyList[key].name}</td>
+                        //         <td class="px-6 py-3">${response.companyList[key].location}</td>
+                        //         <td class="px-6 py-3">${response.companyList[key].industryId}</td>
+                        //         <td class="px-6 py-3">${response.companyList[key].typeId}</td>
+                        //         <td class="px-6 py-3">${sales}</td>
+                        //         <td class="px-6 py-3">${response.companyList[key].main_personId}</td>
+                        //     </tr>`
+                        // );
+                    });
+                },
+                error: function(xhr, status, error) {
+                    if (xhr.status == 403 || xhr.status == 400) {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Oops...",
+                            text: xhr.responseJSON.message,
+                        })
+                    } else {
+                        swal.fire({
+                            icon: "error",
+                            title: "Oops...",
+                            text: xhr.responseJSON.errors[0],
+                        })
+                    }
+                }
+            });
+        }
     </script>
 @endSection

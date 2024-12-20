@@ -67,6 +67,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         Route::post('/createTarget', [TargetController::class, 'createTarget'])->name('createTarget');
         Route::post('/updateTarget', [TargetController::class, 'updateTarget'])->name('updateTarget');
         Route::post('/deleteTarget', [TargetController::class, 'deleteTarget'])->name('deleteTarget');
+        Route::post('/importTarget', [TargetController::class, 'importTarget'])->name('importTarget');
     });
 
 });

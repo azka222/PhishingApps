@@ -20,4 +20,6 @@ class Target extends Model
     {
         return $this->belongsTo(TargetPosition::class, 'position_id');
     }
+
+    
 }
