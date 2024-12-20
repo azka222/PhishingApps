@@ -67,4 +67,42 @@ class TargetController extends Controller
             'success' => true,
         ]);
     }
+
+    public function updateTarget(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|integer|exists:targets,id',
+            'name' => 'required|string|max:255',
+            'department' => 'required|integer|exists:target_departments,id',
+            'email' => 'required|email',
+            'position' => 'required|integer|exists:target_positions,id',
+        ]);
+
+        $target = Target::find($request->id);
+        $target->name = $request->name;
+        $target->department_id = $request->department;
+        $target->email = $request->email;
+        $target->position_id = $request->position;
+        $target->save();
+
+        return response()->json([
+            'message' => 'Target updated successfully',
+            'success' => true,
+        ]);
+    }
+
+    public function deleteTarget(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|integer|exists:targets,id',
+        ]);
+
+        $target = Target::find($request->id);
+        $target->delete();
+
+        return response()->json([
+            'message' => 'Target deleted successfully',
+            'success' => true,
+        ]);
+    }
 }

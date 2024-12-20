@@ -25,9 +25,9 @@
                         </select>
                     </div>
                     <div>
-                        <label for="department" onchange="getTargets()"
+                        <label for="department"
                             class="mb-1 mt-4 block text-sm font-medium text-gray-700 dark:text-gray-300">Department</label>
-                        <select id="department" name="department"
+                        <select id="department" name="department"  onchange="getTargets()"
                             class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
 
                         </select>
@@ -155,7 +155,7 @@
                         <td class="p-4">${target.department.name}</td>
                         <td class="p-4">${target.email}</td>
                         <td class="p-4 flex gap-2">
-                            <button onclick="updateTarget(${target.id})"
+                            <button onclick="showUpdateTargetModal(${target.id}, '${target.name}', '${target.email}', '${target.position.id}', '${target.department.id}')"
                                 class="py-2 px-2 text-xs font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700">Update</button>
                             <button onclick="deleteTarget(${target.id})"
                                 class="py-2 px-2 text-xs font-medium text-white bg-red-600 rounded-lg hover:bg-red-700">Delete</button>
@@ -206,7 +206,22 @@
             $("#target_email").val('');
             $("#target_department").val('');
             $("#target_position").val('');
+            $("#title-add-target-modal").text('Add Target');
+            $("#button-for-target").removeAttr('onclick').attr('onclick', 'createTarget()');
+            $("#button-for-target").text('Add');
             showModal('add-target-modal');
+        }
+
+        function showUpdateTargetModal(id, name, email, position, department) {
+            $("#target_name").val(name);
+            $("#target_email").val(email);
+            $("#target_department").val(department);
+            $("#target_position").val(position);
+            $("#title-add-target-modal").text('Update Target');
+            $("#button-for-target").removeAttr('onclick').attr('onclick', `updateTarget(${id})`);
+            $("#button-for-target").text('Update');
+            showModal('add-target-modal');
+
         }
 
         function createTarget() {
@@ -252,5 +267,98 @@
                 }
             });
         }
+
+        function updateTarget(id){
+            let name = $('#target_name').val();
+            let email = $('#target_email').val();
+            let position = $('#target_position').val();
+            let department = $('#target_department').val();
+
+            $.ajax({
+                url: "{{ route('updateTarget') }}",
+                type: 'POST',
+                data: {
+                    id: id,
+                    name: name,
+                    email: email,
+                    position: position,
+                    department: department,
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(response) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Success",
+                        text: response.message,
+                        confirmButtonColor: '#10b981',
+                        confirmButtonText: 'Close'
+                    });
+                    $("#error_message_field").hide();
+                    hideModal('add-target-modal');
+                    getTargets();
+                },
+                error: function(xhr) {
+                    var errorMessage = JSON.parse(xhr.responseText) ? JSON.parse(xhr.responseText) : xhr
+                        .responseText;
+                    var errors = errorMessage.errors ? errorMessage.errors : errorMessage;
+                    $('#error_message_field').show();
+                    $('#error_message').empty();
+                    $.each(errors, function(field, messages) {
+                        $.each(messages, function(index, message) {
+                            let data = `<li>${message}</li>`;
+                            $('#error_message').append(data);
+                        });
+                    });
+                }
+            });
+        }
+
+        function deleteTarget(id){
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#10b981',
+                cancelButtonColor: '#d97706',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "{{ route('deleteTarget') }}",
+                        type: 'POST',
+                        data: {
+                            id: id,
+                            _token: "{{ csrf_token() }}"
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                icon: "success",
+                                title: "Success",
+                                text: response.message,
+                                confirmButtonColor: '#10b981',
+                                confirmButtonText: 'Close'
+                            });
+                            getTargets();
+                        },
+                        error: function(xhr) {
+                            var errorMessage = JSON.parse(xhr.responseText) ? JSON.parse(xhr.responseText) : xhr
+                                .responseText;
+                            var errors = errorMessage.errors ? errorMessage.errors : errorMessage;
+                            $('#error_message_field').show();
+                            $('#error_message').empty();
+                            $.each(errors, function(field, messages) {
+                                $.each(messages, function(index, message) {
+                                    let data = `<li>${message}</li>`;
+                                    $('#error_message').append(data);
+                                });
+                            });
+                        }
+                    });
+                }
+            });
+        }
+
+        
     </script>
 @endSection
