@@ -34,4 +34,9 @@ class ViewController extends Controller
         }
         return view('auth.reset-password', ['token' => $token]);
     }
+
+    public function targetView()
+    {
+        return view('contents.target');
+    }
 }

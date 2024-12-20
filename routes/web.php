@@ -9,6 +9,7 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TargetController;
 
 Route::group(['middleware' => 'guest'], function () {
     Route::get('/email/verify', function () {
@@ -54,7 +55,18 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         Route::post('/verifyOtp', [AuthenticateController::class, 'verifyOtp'])->name('verifyOtp');
         Route::post('/resendOtp', [AuthenticateController::class, 'resendOtp'])->name('resendOtp');
         Route::post('/changePassword', [AuthenticateController::class, 'changePassword'])->name('changePassword');
+        Route::get('/getCompanyDetails', [CompanyController::class, 'getCompanyDetails'])->name('getCompanyDetails');
+        Route::post('/updateCompany', [CompanyController::class, 'updateCompany'])->name('updateCompany');
 
+    });
+
+    Route::group(['prefix' => 'target'], function () {
+        Route::get('/', [ViewController::class, 'targetView'])->name('targetView');
+        Route::get('/getTargetResources', [TargetController::class, 'getTargetResources'])->name('getTargetResources');
+        Route::get('/getTargets', [TargetController::class, 'getTargets'])->name('getTargets');
+        Route::post('/createTarget', [TargetController::class, 'createTarget'])->name('createTarget');
+        // Route::post('/updateTarget', [CompanyController::class, 'updateTarget'])->name('updateTarget');
+        // Route::post('/deleteTarget', [CompanyController::class, 'deleteTarget'])->name('deleteTarget');
     });
 
 });

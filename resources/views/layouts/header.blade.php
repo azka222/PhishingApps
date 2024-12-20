@@ -1,12 +1,12 @@
 @php
     $url = explode('/', Route::current()->uri)[0];
-    $home = $about = $services = $pricing = $contact = $dashboard = false;
+    $home = $target = $services = $pricing = $contact = $dashboard = false;
     switch ($url) {
         case 'dashboard':
             $dashboard = true;
             break;
-        case 'about':
-            $about = true;
+        case 'target':
+            $target = true;
             break;
         case 'services':
             $services = true;
@@ -23,7 +23,7 @@
     }
 
 @endphp
-<nav class="border-b-2 border-b-gray-900 bg-white border-gray-200 dark:border-b-gray-200 dark:bg-gray-900" id="navbar-header">
+<nav class="border-b-2 p-2 border-b-gray-900 bg-white border-gray-200 dark:border-b-gray-200 dark:bg-gray-900" id="navbar-header">
     <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto">
         <a href="https://flowbite.com/" class="flex items-center space-x-3 rtl:space-x-reverse">
             <img src="https://flowbite.com/docs/images/logo.svg" class="h-8" alt="Flowbite Logo" />
@@ -34,7 +34,7 @@
                 <button id="dropdownAvatarNameButton" data-dropdown-toggle="dropdownAvatarName"
                     class="flex items-center text-sm font-medium text-gray-900 rounded-full hover:text-blue-600 dark:hover:text-blue-500 md:me-0 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:text-white"
                     type="button">
-                    <img class="w-8 h-8 rounded-full" src="{{ asset('/image/user.png') }}" alt="user photo">
+                    <img class="w-10 h-10 rounded-full" src="{{ asset('/image/user.png') }}" alt="user photo">
                 </button>
                 <!-- Dropdown menu -->
                 <div id="dropdownAvatarName"
@@ -95,8 +95,8 @@
                 </div>
                 <div>
                     <button>
-                        <a href="{{ url('/about') }}"
-                            class="px-3 py-2 text-sm font-medium border-2 {{ $about ? 'text-blue-600 border-blue-600 dark:text-blue-700  dark:border-blue-700' : 'text-gray-900 dark:text-white border-gray-900 dark:border-white ' }} rounded-full">About</a>
+                        <a href="{{ url('/target') }}"
+                            class="px-3 py-2 text-sm font-medium border-2 {{ $target ? 'text-blue-600 border-blue-600 dark:text-blue-700  dark:border-blue-700' : 'text-gray-900 dark:text-white border-gray-900 dark:border-white ' }} rounded-full">Target</a>
                     </button>
                 </div>
                 <div>

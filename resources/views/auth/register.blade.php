@@ -3,9 +3,9 @@
 @section('content')
     <div class="grid grid-cols-3 bg-darkerBlue">
         <fieldset id="register" class="lg:col-span-2 col-span-3" hidden>
-            <div class="min-h-screen flex items-center justify-center bg-gray-100">
+            <div class="min-h-screen flex items-center justify-center bg-darkerBlue text-white">
                 <div class="w-full max-w-2xl ">
-                    <div class="bg-white shadow-md rounded-lg p-8 m-8 mb-4">
+                    <div class="bg-blueBlue shadow-md rounded-3xl p-8 m-8">
                         <div class="mb-4 text-xl font-bold">{{ __('Register') }}</div>
                         <div class="grid grid-cols-2 gap-4 bg-red mb-8">
                             <div class="md:col-span-1 col-span-2">
@@ -101,13 +101,15 @@
             <div class="min-h-screen flex items-center justify-center p-4">
                 <div class="w-full max-w-2xl bg-blueBlue shadow-lg rounded-3xl p-8">
                     <!-- Header -->
-                    <div class="text-center mb-6 text-white">
-                        <div class="text-3xl font-bold pb-8">Company</div>
+                    <div class=" mb-6 text-white">
+                        <div class="text-center text-3xl font-bold pb-8">Company</div>
                         <!-- Select -->
                         <div class="mb-6">
                             <div class="md:col-span-2 col-span-2">
                                 <div class="">
-                                    <label for="company" class="block mb-2 text-sm font-medium text-white dark:text-white">Select Company</label>
+                                    <label for="company"
+                                        class="flex block mb-2 text-sm font-medium text-white dark:text-white">Select
+                                        Company</label>
                                     <select class="js-example-basic-single" style="width: 100%;" id="selectCompany"
                                         onchange="checkCompany(this.value)" name="state">
                                     </select>
@@ -133,27 +135,28 @@
                         </div>
                         <!-- Button -->
                         <div class="flex flex-col items-center">
-                            <button id="chooseCompanyBtn" type="button" onclick="createCompanyView()"
-                                class="w-full max-w-64 bg-[#38A169] text-white py-2 rounded-lg hover:bg-[#2F855A] transition duration-300 ease-in-out">Create</button>
+                            <div class="flex w-full items-center gap-2 justify-center">
+                                <button id="chooseCompanyBtn" type="button" onclick="createCompanyView()"
+                                class="w-full max-w-32 bg-[#38A169] text-white py-2 rounded-lg hover:bg-[#2F855A] transition duration-300 ease-in-out">Create</button>
                             <button id="nextToRegisterUser" type="button" onclick="registerView()" hidden
-                                class="w-full max-w-64 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 mt-4 transition duration-300 ease-in-out">Next</button>
-                                <!-- Login -->
-                                <div class="mt-2 text-center text-white">
-                                    <span>Already have an account?</span>
-                                    <a onclick="loginView()" class="text-blue-400 hover:underline">Login</a>
-                                </div>
+                                class="w-full max-w-32 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-300 ease-in-out">Next</button>
+                            </div>
+                            <!-- Login -->
+                            <div class="mt-2 text-center text-white">
+                                <span>Already have an account?</span>
+                                <a onclick="loginView()" class="text-blue-400 hover:underline">Login</a>
+                            </div>
                         </div>
         </fieldset>
         <fieldset id="createCompany" class="lg:col-span-2 col-span-3" hidden>
-            <div class="min-h-screen flex items-center justify-center bg-gray-100">
-                <div class="w-full max-w-2xl ">
-                    <div class="bg-white shadow-md rounded-lg p-8 m-8 mb-4">
+            <div class="min-h-screen p-4 flex items-center justify-center bg-darkerBlue text-white">
+                <div class="w-full bg-blueBlue max-w-2xl rounded-3xl">
+                    <div class="shadow-md rounded-lg p-8 m-8 mb-4">
                         <div class="mb-4 text-xl font-bold">Create Company</div>
-                        <div class="grid grid-cols-2 gap-4 bg-red mb-8">
+                        <div class="grid grid-cols-2 gap-4 mb-8">
                             <div class="md:col-span-1 col-span-2">
                                 <div>
-                                    <label for="company_name"
-                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Company
+                                    <label for="company_name" class="block mb-2 text-sm sm:text-base font-medium">Company
                                         Name</label>
                                     <input type="text" id="company_name"
                                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
@@ -162,8 +165,7 @@
                             </div>
                             <div class="md:col-span-1 col-span-2">
                                 <div>
-                                    <label for="company_email"
-                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Company
+                                    <label for="company_email" class="block mb-2 text-sm sm:text-base font-medium">Company
                                         Email</label>
                                     <input type="email" id="company_email"
                                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
@@ -173,7 +175,7 @@
                             <div class="md:col-span-2 col-span-2">
                                 <div>
                                     <label for="company_address"
-                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Company
+                                        class="block mb-2 text-sm sm:text-base font-medium">Company
                                         Address</label>
                                     <textarea id="company_address" rows="4"
                                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
@@ -190,13 +192,11 @@
                                         </ul>
                                     </div>
                                 </div>
-
-
                             </div>
                         </div>
                         <div class="mt-4 flex justify-center flex-col items-center">
                             <button id="chooseCompanyBtn" type="button" onclick="createCompany()"
-                                class="w-full max-w-64 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700">Create</button>
+                                class="w-full max-w-64 bg-green-500 text-white py-2 rounded-lg hover:bg-blue-700">Create</button>
                             <button id="nextToRegisterUser" type="button" onclick="registerView()" hidden
                                 class="w-full max-w-64 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700">Next</button>
                             <div class="mt-4 text-center">
@@ -307,7 +307,7 @@
                 success: function(response) {
                     $('#error_message_field_company').hide();
                     $('#success_message_field_company').show();
-                    $('#chooseCompanyBtn').hide();
+                    // $('#chooseCompanyBtn').hide();
                     $('#nextToRegisterUser').show();
 
                 },
