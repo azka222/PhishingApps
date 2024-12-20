@@ -23,22 +23,28 @@
     }
 
 @endphp
-<nav class="border-b-2 p-2 border-b-gray-900 bg-white border-gray-200 dark:border-b-gray-200 dark:bg-gray-900" id="navbar-header">
-    <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto">
+<nav class="border-b-2 p-4 border-b-gray-900 bg-white border-gray-200 dark:border-gray-600 dark:bg-gray-800 items-center" id="navbar-header">
+    <div class="max-w-full flex flex-wrap items-center justify-between mx-4">
         <a href="https://flowbite.com/" class="flex items-center space-x-3 rtl:space-x-reverse">
             <img src="https://flowbite.com/docs/images/logo.svg" class="h-8" alt="Flowbite Logo" />
             <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Fischsim</span>
         </a>
         <div class="flex flex-row items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
-            <div class="flex flex-col items-center p-4">
+            <button id="theme-toggle"
+                class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-full hover:bg-blue-700 dark:bg-yellow-500 dark:hover:bg-yellow-600">
+                <div id="svg">
+                </div>
+
+            </button>
+            <div class="flex flex-col items-center px-4">
                 <button id="dropdownAvatarNameButton" data-dropdown-toggle="dropdownAvatarName"
                     class="flex items-center text-sm font-medium text-gray-900 rounded-full hover:text-blue-600 dark:hover:text-blue-500 md:me-0 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:text-white"
                     type="button">
-                    <img class="w-10 h-10 rounded-full" src="{{ asset('/image/user.png') }}" alt="user photo">
+                    <img class="w-12 h-12 rounded-full" src="{{ asset('/image/user.png') }}" alt="user photo">
                 </button>
                 <!-- Dropdown menu -->
                 <div id="dropdownAvatarName"
-                    class="z-10 hidden absolute mt-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
+                    class="z-10 hidden absolute mt-10 me-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
                     <div class="text-sm text-gray-900 px-2 pt-2 dark:text-white">
                         <div class="font-medium ">{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}</div>
                         <div class="truncate text-xs pb-2">{{ Auth::user()->email }}</div>
@@ -66,12 +72,7 @@
                 </div>
             </div>
 
-            <button id="theme-toggle"
-                class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-full hover:bg-blue-700 dark:bg-yellow-500 dark:hover:bg-yellow-600">
-                <div id="svg">
-                </div>
 
-            </button>
 
             <button data-collapse-toggle="navbar-user" id="toggle-navbar" type="button"
                 class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
@@ -90,25 +91,25 @@
                 <div>
                     <button>
                         <a href="{{ url('/dashboard') }}"
-                            class="px-3 py-2 text-sm font-medium border-2 {{ $dashboard ? 'text-blue-600 border-blue-600 dark:text-blue-700  dark:border-blue-700' : 'text-gray-900 dark:text-white border-gray-900 dark:border-white ' }} rounded-full">Dashboard</a>
+                            class="px-3 py-2 text-sm font-medium border-2 {{ $dashboard ? 'text-white border-blue-500 shadow-blue-500/50 dark:bg-blue-500 bg-blue-500 dark:border-blue-500' : 'border-gray-700 text-gray-900 dark:text-white ' }} rounded-full">Dashboard</a>
                     </button>
                 </div>
                 <div>
                     <button>
                         <a href="{{ url('/target') }}"
-                            class="px-3 py-2 text-sm font-medium border-2 {{ $target ? 'text-blue-600 border-blue-600 dark:text-blue-700  dark:border-blue-700' : 'text-gray-900 dark:text-white border-gray-900 dark:border-white ' }} rounded-full">Target</a>
+                            class="px-3 py-2 text-sm font-medium border-2 {{ $target ? 'text-white dark:text-white border-blue-500 shadow-blue-500/50 dark:bg-blue-500 bg-blue-500  dark:border-blue-500' : 'border-gray-700 text-gray-900 dark:text-white ' }} rounded-full">Target</a>
                     </button>
                 </div>
                 <div>
                     <button>
                         <a href="{{ url('/services') }}"
-                            class="px-3 py-2 text-sm font-medium border-2 {{ $services ? 'text-blue-600 border-blue-600 dark:text-blue-700  dark:border-blue-700' : 'text-gray-900 dark:text-white border-gray-900 dark:border-white ' }} rounded-full">Services</a>
+                            class="px-3 py-2 text-sm font-medium border-2 {{ $services ? 'text-white border-blue-500 shadow-blue-500/50 dark:bg-blue-500 bg-blue-500 dark:border-blue-500' : 'border-gray-700 text-gray-900 dark:text-white ' }} rounded-full">Services</a>
                     </button>
                 </div>
                 <div>
                     <button>
                         <a href="{{ url('/pricing') }}"
-                            class="px-3 py-2 text-sm font-medium border-2 {{ $pricing ? 'text-blue-600 border-blue-600 dark:text-blue-700  dark:border-blue-700' : 'text-gray-900 dark:text-white border-gray-900 dark:border-white ' }} rounded-full">Pricing</a>
+                            class="px-3 py-2 text-sm font-medium border-2 {{ $pricing ? 'text-white border-blue-500 shadow-blue-500/50 dark:bg-blue-500 bg-blue-500 dark:border-blue-500' : 'border-gray-700 text-gray-900 dark:text-white ' }} rounded-full">Pricing</a>
                     </button>
                 </div>
             </div>
@@ -145,7 +146,7 @@
 
         } else {
             body.removeClass('dark');
-            $("#svg").append(` 
+            $("#svg").append(`
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="size-6">
                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -166,7 +167,7 @@
             } else {
                 localStorage.theme = 'light';
                 $("#svg").empty();
-                $("#svg").append(` 
+                $("#svg").append(`
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="size-6">
                         <path stroke-linecap="round" stroke-linejoin="round"

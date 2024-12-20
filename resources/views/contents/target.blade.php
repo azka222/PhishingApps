@@ -150,7 +150,7 @@
             } else {
                 targets.forEach(function(target, index) {
                     table.append(`
-                    <tr class="text-sm font-normal text-gray-900 dark:text-gray-400 bg-white dark:bg-gray-800 border-b-2 border-gray-600">
+                    <tr class="text-sm font-normal text-gray-900 dark:text-gray-400 bg-white dark:bg-gray-800">
                         <td class="p-4">${target.name}</td>
                         <td class="p-4">${target.position.name}</td>
                         <td class="p-4">${target.department.name}</td>
