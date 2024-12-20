@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\FileHelper;
+use App\Http\Controllers\Controller;
 use App\Models\Target;
 use App\Models\TargetDepartment;
 use App\Models\TargetPosition;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class TargetController extends Controller
 {
@@ -104,5 +107,59 @@ class TargetController extends Controller
             'message' => 'Target deleted successfully',
             'success' => true,
         ]);
+    }
+
+    public function importTarget(Request $request)
+    {
+        $request->validate([
+            'target' => 'required|file|mimes:csv,txt',
+            'separator' => 'required|string',
+        ]);
+        $cantReadCsv = false;
+        $targetCsv = $request->file("target")->get();
+        $projectsSeparator = $request->input("separator", ',');
+        if ($targetCsv) {
+            $targetCsv = trim($targetCsv, "\n");
+            $csvRowsColumns = FileHelper::convertCsvToCollection($targetCsv, $projectsSeparator);
+            $csvRowsColumns->shift();
+            $validator = Validator::make(
+                ["RowColumns" => $csvRowsColumns->toArray()],
+                [
+                    "RowColumns.*" => "size:5",
+                    "RowColumns.*.0" => "distinct",
+                    "RowColumns.*.1" => "max:256 | required",
+                    "RowColumns.*.2" => "max:256 | required",
+                    "RowColumns.*.3" => "exists:target_departments,id",
+                    "RowColumns.*.4" => "exists:target_positions,id",            
+        
+                ],
+                [
+                    "RowColumns.*.1.required" => "Name is required at :attribute",
+                    "RowColumns.*.1.max" => "Name is too long at :attribute",
+                    "RowColumns.*.2.required" => "Email is required at :attribute",
+                    "RowColumns.*.2.max" => "Email is too long at :attribute",
+                    "RowColumns.*.3.exists" => "Department not found at :attribute",
+                    "RowColumns.*.4.exists" => "Position not found at :attribute",
+
+                ]
+            )->setAttributeNames(
+                collect($csvRowsColumns)->mapWithKeys(function ($_, $index) {
+                    return [
+                        "RowColumns.$index.1" => "Row " . ($index + 1),
+                        "RowColumns.$index.2" => "Row " . ($index + 1),
+                        "RowColumns.$index.3" => "Row " . ($index + 1),
+                    ];
+                })->toArray()
+            );
+
+            if ($validator->errors()->any()) {
+                return response()->json([
+                    "errors" => $validator->errors()->all(),
+                ], 400);
+            }
+            dd($csvRowsColumns);
+        } else {
+            $cantReadCsv = true;
+        }
     }
 }
