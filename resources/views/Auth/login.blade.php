@@ -17,7 +17,7 @@
                     <!-- Email input -->
                     <div class="mt-8">
                         <label for="user_email"
-                            class="block mb-2 text-base font-medium">Your email</label>
+                            class="block mb-2  text-sm sm:text-base font-medium">Your email</label>
                         <input type="email" id="login_email"
                             class="w-full p-3 border rounded-lg text-gray-900 focus:ring-2 focus:ring-blue-500 focus:outline-none"
                             placeholder="Enter your email" required />
@@ -25,7 +25,7 @@
                     <!-- Password Input -->
                     <div class="mt-6">
                         <label for="Password"
-                            class="block mb-2 text-base font-medium">Your password</label>
+                            class="block mb-2 text-sm sm:text-base font-medium">Your password</label>
                         <input type="password" id="login_password"
                             class="w-full p-3 border rounded-lg text-gray-900 focus:ring-2 focus:ring-blue-500 focus:outline-none"
                             placeholder="Enter your password" required />

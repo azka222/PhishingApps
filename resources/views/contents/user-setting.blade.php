@@ -2,6 +2,7 @@
 @section('title', 'User Setting')
 @include('contents.modal.edit-profile-modal')
 @include('contents.modal.otp-modal')
+@include('contents.modal.edit-company-modal')
 
 @section('content')
     <div class="flex justify-center h-screen pt-28 pe-4 ps-4 bg-gray-50 dark:bg-gray-800">
@@ -10,7 +11,7 @@
                 <div id="default-sidebar" class="" aria-label="Sidebar">
                     <div class="p-4 overflow-y-auto ">
                         <div class="mb-2">
-                            <div id="button-setting-profile" onclick="handleSidebar('profile')"
+                            <div id="button-setting-profile" onclick="handleSidebar('profile');getProfile()"
                                 class="side-button flex items-center p-2 rounded-lg">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
                                     class="w-5 h-5">
@@ -35,14 +36,15 @@
                             </div>
                         </div>
                         <div class="mb-2">
-                            <div id="button-setting-company" onclick="handleSidebar('company')"
+                            <div id="button-setting-company" onclick="handleSidebar('company');getCompany()"
                                 class="side-button flex items-center p-2 rounded-lg">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
                                     class="w-5 h-5">
                                     <path fill-rule="evenodd"
-                                        d="M12 1.5a5.25 5.25 0 0 0-5.25 5.25v3a3 3 0 0 0-3 3v6.75a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3v-6.75a3 3 0 0 0-3-3v-3c0-2.9-2.35-5.25-5.25-5.25Zm3.75 8.25v-3a3.75 3.75 0 1 0-7.5 0v3h7.5Z"
+                                        d="M4.5 2.25a.75.75 0 0 0 0 1.5v16.5h-.75a.75.75 0 0 0 0 1.5h16.5a.75.75 0 0 0 0-1.5h-.75V3.75a.75.75 0 0 0 0-1.5h-15ZM9 6a.75.75 0 0 0 0 1.5h1.5a.75.75 0 0 0 0-1.5H9Zm-.75 3.75A.75.75 0 0 1 9 9h1.5a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75ZM9 12a.75.75 0 0 0 0 1.5h1.5a.75.75 0 0 0 0-1.5H9Zm3.75-5.25A.75.75 0 0 1 13.5 6H15a.75.75 0 0 1 0 1.5h-1.5a.75.75 0 0 1-.75-.75ZM13.5 9a.75.75 0 0 0 0 1.5H15A.75.75 0 0 0 15 9h-1.5Zm-.75 3.75a.75.75 0 0 1 .75-.75H15a.75.75 0 0 1 0 1.5h-1.5a.75.75 0 0 1-.75-.75ZM9 19.5v-2.25a.75.75 0 0 1 .75-.75h4.5a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-.75.75h-4.5A.75.75 0 0 1 9 19.5Z"
                                         clip-rule="evenodd" />
                                 </svg>
+
                                 <span class="ms-3">Company</span>
                             </div>
                         </div>
@@ -164,8 +166,64 @@
                         </div>
 
                     </div>
+
+                </fieldset>
+                <fieldset id="content-company" class="content-user-setting p-4">
+                    <div class="w-full bg-gray-300 dark:bg-gray-700 rounded-xl p-4">
+                        <h1 class="text-xl font-semibold dark:text-white">Company</h1>
+                        <p class="text-sm dark:text-white">This is the company setting page</p>
+                    </div>
+                    <div class="w-full mt-4 bg-gray-300 dark:bg-gray-700 rounded-xl ">
+                        <div class="grid grid-cols-2 gap-4 p-4">
+                            <div class="ps-2 pt-2 col-span-2">
+                                <div class="flex flex-row justify-between">
+                                    <div id="company-name-display" class="text-xl dark:text-white font-semibold">Company
+                                        Name</div>
+                                    <button onclick="showEditCompanyModal()"
+                                        class="flex items-center p-2 rounded-lg  bg-blue-600 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-800 text-gray-900 dark:text-white">
+                                        <span class="ms-2 me-2 text-sm text-white">Edit</span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                                            class="size-4">
+                                            <path
+                                                d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32l8.4-8.4Z" />
+                                            <path
+                                                d="M5.25 5.25a3 3 0 0 0-3 3v10.5a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3V13.5a.75.75 0 0 0-1.5 0v5.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5V8.25a1.5 1.5 0 0 1 1.5-1.5h5.25a.75.75 0 0 0 0-1.5H5.25Z" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="relative flex items-center justify-center col-span-2">
+                                <hr class="w-full border-gray-400 dark:border-gray-500">
+                            </div>
+                            <div class="ps-2 pt-2 col-span-1">
+                                <h1 class="text-md dark:text-white font-semibold">Company Email</h1>
+                                <h2 id="company_email_display" class="text-sm pt-2 dark:text-white">Not Set</h2>
+                            </div>
+                            <div class="ps-2 pt-2 col-span-1">
+                                <h1 class="text-md dark:text-white font-semibold">Owner</h1>
+                                <h2 id="company_owner_display" class="text-sm pt-2 dark:text-white">Not Set</h2>
+                            </div>
+                            <div class="ps-2 pt-2 col-span-1">
+                                <h1 class="text-md dark:text-white font-semibold">Allowed User</h1>
+                                <h2 id="company_user_display" class="text-sm pt-2 dark:text-white">Not Set</h2>
+                            </div>
+                            <div class="ps-2 pt-2 col-span-1">
+                                <h1 class="text-md dark:text-white font-semibold">Address</h1>
+                                <h2 id="company_address_display" class="text-sm pt-2 dark:text-white">Not Set</h2>
+                            </div>
+                            <div class="ps-2 pt-2 col-span-1">
+                                <h1 class="text-md dark:text-white font-semibold">Status</h1>
+                                <h2 id="company_status_display" class="text-sm pt-2 dark:text-white">Not Set</h2>
+                            </div>
+                            <div class="ps-2 pt-2 col-span-1">
+                                <h1 class="text-md dark:text-white font-semibold">Visibility</h1>
+                                <h2 id="company_visibility_display" class="text-sm pt-2 dark:text-white">Not Set</h2>
+                            </div>
+
+                        </div>
+                    </div>
             </div>
-            </fieldset>
+
         </div>
 
 
@@ -174,11 +232,12 @@
 
 
     <script>
-        let active = ' bg-blue-600 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-800 text-white';
-        let inactive =
+        const active = ' bg-blue-600 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-800 text-white';
+        const inactive =
             ' bg-gray-300 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-700 text-gray-900 dark:text-white';
 
         let profile = null;
+        let company = null;
 
         $(document).ready(function() {
             firstRender();
@@ -362,7 +421,7 @@
             })
         }
 
-        function resendOTP(){
+        function resendOTP() {
             Swal.fire({
                 title: 'Loading...',
                 text: 'Please wait while we process your request.',
@@ -393,7 +452,7 @@
             })
         }
 
-        function changePassword(){
+        function changePassword() {
             let data = {
                 id: profile.id,
                 password: $("#password").val(),
@@ -426,11 +485,84 @@
             })
         }
 
-        function cancelChangePassword(){
+        function cancelChangePassword() {
             $("#password").prop("disabled", true);
             $("#button-password-group").hide();
             $("#button-password-check").show();
             $("#password").val("");
+        }
+
+        function getCompany() {
+            $.ajax({
+                url: "{{ route('getCompanyDetails') }}",
+                type: "GET",
+                success: function(response) {
+                    company = response.data;
+                    setCompanyInformation(company);
+                }
+            })
+        }
+
+        function setCompanyInformation(company) {
+            $("#company-name-display").text(company.name);
+            $("#company_email_display").text(company.email);
+            $("#company_owner_display").text(company.user.email);
+            $("#company_user_display").text(company.max_account);
+            $("#company_address_display").text(company.address);
+            $("#company_status_display").text(company.status.name);
+            $("#company_visibility_display").text(company.visibility.name);
+        }
+
+        function showEditCompanyModal() {
+            showModal("edit-company-modal");
+            $("#company_name").val(company.name);
+            $("#company_email").val(company.email);
+            $("#company_address").val(company.address);
+            $("#company_max_account").val(company.max_account);
+            $("#company_status").val(company.status_id);
+            $("#company_owner").val(company.user.email);
+            $("#company_visibility").val(company.visibility_id);
+        }
+
+        function submitEditModal(){
+            let data = {
+                id: company.id,
+                name: $("#company_name").val(),
+                email: $("#company_email").val(),
+                address: $("#company_address").val(),
+                max_account: $("#company_max_account").val(),
+                status_id: $("#company_status").val(),
+                visibility_id: $("#company_visibility").val(),
+                _token: "{{ csrf_token() }}"
+            }
+            $.ajax({
+                url: "{{ route('updateCompany') }}",
+                type: "POST",
+                data: data,
+                success: function(response) {
+                    if (response.status == "success") {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: response.message,
+                            confirmButtonColor: '#22c55e',
+                            confirmButtonText: 'Ok'
+                        })
+                        getCompany();
+                        hideModal("edit-company-modal");
+                    }
+                },
+                error: function(xhr) {
+                    var error = JSON.parse(xhr.responseText);
+                    Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: error.message,
+                        confirmButtonColor: '#ef4444',
+                        confirmButtonText: 'Close'
+                    });
+                }
+            })
         }
     </script>
 @endsection
