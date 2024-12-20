@@ -268,6 +268,97 @@
             });
         }
 
+        function updateTarget(id){
+            let name = $('#target_name').val();
+            let email = $('#target_email').val();
+            let position = $('#target_position').val();
+            let department = $('#target_department').val();
+
+            $.ajax({
+                url: "{{ route('updateTarget') }}",
+                type: 'POST',
+                data: {
+                    id: id,
+                    name: name,
+                    email: email,
+                    position: position,
+                    department: department,
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(response) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Success",
+                        text: response.message,
+                        confirmButtonColor: '#10b981',
+                        confirmButtonText: 'Close'
+                    });
+                    $("#error_message_field").hide();
+                    hideModal('add-target-modal');
+                    getTargets();
+                },
+                error: function(xhr) {
+                    var errorMessage = JSON.parse(xhr.responseText) ? JSON.parse(xhr.responseText) : xhr
+                        .responseText;
+                    var errors = errorMessage.errors ? errorMessage.errors : errorMessage;
+                    $('#error_message_field').show();
+                    $('#error_message').empty();
+                    $.each(errors, function(field, messages) {
+                        $.each(messages, function(index, message) {
+                            let data = `<li>${message}</li>`;
+                            $('#error_message').append(data);
+                        });
+                    });
+                }
+            });
+        }
+
+        function deleteTarget(id){
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#10b981',
+                cancelButtonColor: '#d97706',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "{{ route('deleteTarget') }}",
+                        type: 'POST',
+                        data: {
+                            id: id,
+                            _token: "{{ csrf_token() }}"
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                icon: "success",
+                                title: "Success",
+                                text: response.message,
+                                confirmButtonColor: '#10b981',
+                                confirmButtonText: 'Close'
+                            });
+                            getTargets();
+                        },
+                        error: function(xhr) {
+                            var errorMessage = JSON.parse(xhr.responseText) ? JSON.parse(xhr.responseText) : xhr
+                                .responseText;
+                            var errors = errorMessage.errors ? errorMessage.errors : errorMessage;
+                            $('#error_message_field').show();
+                            $('#error_message').empty();
+                            $.each(errors, function(field, messages) {
+                                $.each(messages, function(index, message) {
+                                    let data = `<li>${message}</li>`;
+                                    $('#error_message').append(data);
+                                });
+                            });
+                        }
+                    });
+                }
+            });
+        }
+
         
     </script>
 @endSection

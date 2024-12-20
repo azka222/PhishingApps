@@ -65,8 +65,8 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         Route::get('/getTargetResources', [TargetController::class, 'getTargetResources'])->name('getTargetResources');
         Route::get('/getTargets', [TargetController::class, 'getTargets'])->name('getTargets');
         Route::post('/createTarget', [TargetController::class, 'createTarget'])->name('createTarget');
-        // Route::post('/updateTarget', [CompanyController::class, 'updateTarget'])->name('updateTarget');
-        // Route::post('/deleteTarget', [CompanyController::class, 'deleteTarget'])->name('deleteTarget');
+        Route::post('/updateTarget', [TargetController::class, 'updateTarget'])->name('updateTarget');
+        Route::post('/deleteTarget', [TargetController::class, 'deleteTarget'])->name('deleteTarget');
     });
 
 });
