@@ -39,4 +39,8 @@ class ViewController extends Controller
     {
         return view('contents.target');
     }
+
+    public function groupView(){
+        return view('contents.group');
+    }
 }
