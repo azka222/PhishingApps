@@ -1,6 +1,6 @@
 @php
     $url = explode('/', Route::current()->uri)[0];
-    $home = $target = $services = $pricing = $contact = $dashboard = false;
+    $home = $target = $groups = $pricing = $contact = $dashboard = false;
     switch ($url) {
         case 'dashboard':
             $dashboard = true;
@@ -8,8 +8,8 @@
         case 'target':
             $target = true;
             break;
-        case 'services':
-            $services = true;
+        case 'groups':
+            $groups = true;
             break;
         case 'pricing':
             $pricing = true;
@@ -102,8 +102,8 @@
                 </div>
                 <div>
                     <button>
-                        <a href="{{ url('/services') }}"
-                            class="px-3 py-2 text-sm font-medium border-2 {{ $services ? 'text-white border-blue-500 shadow-blue-500/50 dark:bg-blue-500 bg-blue-500 dark:border-blue-500' : 'border-gray-700 text-gray-900 dark:text-white ' }} rounded-full">Services</a>
+                        <a href="{{ url('/groups') }}"
+                            class="px-3 py-2 text-sm font-medium border-2 {{ $groups ? 'text-white border-blue-500 shadow-blue-500/50 dark:bg-blue-500 bg-blue-500 dark:border-blue-500' : 'border-gray-700 text-gray-900 dark:text-white ' }} rounded-full">Groups</a>
                     </button>
                 </div>
                 <div>

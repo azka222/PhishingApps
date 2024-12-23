@@ -3,6 +3,7 @@
 @section('content')
     @include('contents.modal.target.import-target-modal')
     @include('contents.modal.target.add-target-modal')
+    @include('contents.modal.target.preview-import-target-modal')
     <div class=" p-4 w-full flex flex-col h-full min-h-screen  bg-gray-50 dark:bg-gray-800 dark:text-white text-gray-900">
         <div class="">
             <div class="flex p-4 items-center justify-between">
@@ -57,14 +58,16 @@
                 <thead class="bg-gray-300 dark:bg-gray-700">
                     <tr
                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-300">
-                        <th scope="col" class="p-4">Name</th>
+                        <th scope="col" class="p-4">First Name</th>
+                        <th scope="col" class="p-4">Last Name</th>
                         <th scope="col" class="p-4">Position</th>
                         <th scope="col" class="p-4">Department</th>
                         <th scope="col" class="p-4">Email</th>
                         <th scope="col" class="p-4">Action</th>
                     </tr>
                 </thead>
-                <tbody class="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
+                <tbody id="list-targets-tbody"
+                    class="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
 
                 </tbody>
             </table>
@@ -149,14 +152,15 @@
                 `);
             } else {
                 targets.forEach(function(target, index) {
-                    table.append(`
+                    $("#list-targets-tbody").append(`
                     <tr class="text-sm font-normal text-gray-900 dark:text-gray-400 bg-white dark:bg-gray-800">
-                        <td class="p-4">${target.name}</td>
+                        <td class="p-4">${target.first_name}</td>
+                        <td class="p-4">${target.last_name}</td>
                         <td class="p-4">${target.position.name}</td>
                         <td class="p-4">${target.department.name}</td>
                         <td class="p-4">${target.email}</td>
                         <td class="p-4 flex gap-2">
-                            <button onclick="showUpdateTargetModal(${target.id}, '${target.name}', '${target.email}', '${target.position.id}', '${target.department.id}')"
+                            <button onclick="showUpdateTargetModal(${target.id}, '${target.first_name}', ${target.last_name},'${target.email}', '${target.position.id}', '${target.department.id}')"
                                 class="py-2 px-2 text-xs font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700">Update</button>
                             <button onclick="deleteTarget(${target.id})"
                                 class="py-2 px-2 text-xs font-medium text-white bg-red-600 rounded-lg hover:bg-red-700">Delete</button>
@@ -203,7 +207,8 @@
         }
 
         function showAddTargetModal() {
-            $("#target_name").val('');
+            $("#target_first_name").val('');
+            $("#target_last_name").val('');
             $("#target_email").val('');
             $("#target_department").val('');
             $("#target_position").val('');
@@ -213,8 +218,9 @@
             showModal('add-target-modal');
         }
 
-        function showUpdateTargetModal(id, name, email, position, department) {
-            $("#target_name").val(name);
+        function showUpdateTargetModal(id, firstName, lastName, email, position, department) {
+            $("#target_first_name").val(firstName);
+            $("#target_last_name").val(lastName);
             $("#target_email").val(email);
             $("#target_department").val(department);
             $("#target_position").val(position);
@@ -226,7 +232,8 @@
         }
 
         function createTarget() {
-            let name = $('#target_name').val();
+            let firstName = $('#target_first_name').val();
+            let lastName = $('#target_last_name').val();
             let email = $('#target_email').val();
             let position = $('#target_position').val();
             let department = $('#target_department').val();
@@ -235,7 +242,8 @@
                 url: "{{ route('createTarget') }}",
                 type: 'POST',
                 data: {
-                    name: name,
+                    first_name: firstName,
+                    last_name: lastName,
                     email: email,
                     position: position,
                     department: department,
@@ -270,7 +278,8 @@
         }
 
         function updateTarget(id) {
-            let name = $('#target_name').val();
+            let firstName = $('#target_first_name').val();
+            let lastName = $('#target_last_name').val();
             let email = $('#target_email').val();
             let position = $('#target_position').val();
             let department = $('#target_department').val();
@@ -280,7 +289,8 @@
                 type: 'POST',
                 data: {
                     id: id,
-                    name: name,
+                    first_name: firstName,
+                    last_name: lastName,
                     email: email,
                     position: position,
                     department: department,
@@ -371,46 +381,86 @@
             formData.append('target', $('#targetFile').prop('files')[0]);
             formData.append('separator', $('#separator').val());
             $.ajax({
+                url: "{{ route('previewImportTarget') }}",
+                type: "POST",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    hideModal('import-target-modal');
+                    showModal('preview-import-target-modal');
+                    $("#target-preview-body").empty();
+                    Object.keys(response.targets).forEach(function(key) {
+                        let target = response.targets[key];
+                        $("#target-preview-body").append(`
+                        <tr class="text-sm font-normal text-gray-900 dark:text-gray-400 bg-white dark:bg-gray-800">
+                            <td class="p-4">${target.first_name}</td>
+                            <td class="p-4">${target.last_name}</td>
+                            <td class="p-4">${target.email}</td>
+                            <td class="p-4">${target.position}</td>
+                            <td class="p-4">${target.department}</td>
+                        </tr>
+                        `);
+                    });
+                },
+                error: function(xhr, status, error) {
+                    if (xhr.status == 403 || xhr.status == 400) {
+                        var errorMessage = JSON.parse(xhr.responseText) ? JSON.parse(xhr.responseText) : xhr
+                            .responseText;
+                        console.log(errorMessage);
+                        Swal.fire({
+                            icon: "error",
+                            title: "Oops...",
+                            text: errorMessage.errors[0],
+                            confirmButtonColor: '#ef4444',
+                            confirmButtonText: 'Close'
+
+                        })
+                    } else {
+                        let errorMessage = JSON.parse(xhr.responseText);
+                        swal.fire({
+                            icon: "error",
+                            title: "Oops...",
+                            text: errorMessage.message,
+                            confirmButtonColor: '#ef4444',
+                            confirmButtonText: 'Close'
+                        })
+                    }
+                }
+            });
+        }
+
+        function importTarget() {
+            var formData = new FormData();
+            formData.append('_token', "{{ csrf_token() }}");
+            formData.append('target', $('#targetFile').prop('files')[0]);
+            formData.append('separator', $('#separator').val());
+            $.ajax({
                 url: "{{ route('importTarget') }}",
                 type: "POST",
                 data: formData,
                 processData: false,
                 contentType: false,
                 success: function(response) {
-                    // showFlowBytesModal('preview-import-modal');
-                    // hideFlowBytesModal('import-company-modal');
-                    console.log(response);
-                    // $("#company-body").empty();
-                    Object.keys(response.companyList).forEach(function(key) {
-                        // let sales = response.companyList[key].userId[0].last_name ? response
-                        //     .companyList[key].userId[0].first_name + ' ' + response.companyList[key]
-                        //     .userId[0].last_name : response.companyList[key].userId[0].first_name;
-                        // $("#company-body").append(
-                        //     `<tr>
-                        //         <td class="px-6 py-3">${response.companyList[key].name}</td>
-                        //         <td class="px-6 py-3">${response.companyList[key].location}</td>
-                        //         <td class="px-6 py-3">${response.companyList[key].industryId}</td>
-                        //         <td class="px-6 py-3">${response.companyList[key].typeId}</td>
-                        //         <td class="px-6 py-3">${sales}</td>
-                        //         <td class="px-6 py-3">${response.companyList[key].main_personId}</td>
-                        //     </tr>`
-                        // );
+                    Swal.fire({
+                        icon: "success",
+                        title: "Success",
+                        text: response.message,
+                        confirmButtonColor: '#10b981',
+                        confirmButtonText: 'Close'
                     });
+                    hideModal('preview-import-target-modal');
+                    getTargets();
                 },
                 error: function(xhr, status, error) {
-                    if (xhr.status == 403 || xhr.status == 400) {
-                        Swal.fire({
-                            icon: "error",
-                            title: "Oops...",
-                            text: xhr.responseJSON.message,
-                        })
-                    } else {
-                        swal.fire({
-                            icon: "error",
-                            title: "Oops...",
-                            text: xhr.responseJSON.errors[0],
-                        })
-                    }
+                    let errorMessage = JSON.parse(xhr.responseText);
+                    swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: errorMessage.message,
+                        confirmButtonColor: '#ef4444',
+                        confirmButtonText: 'Close'
+                    });
                 }
             });
         }
