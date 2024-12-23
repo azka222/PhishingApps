@@ -75,9 +75,9 @@
                 aria-label="Table navigation">
                 <span
                     class="text-sm font-normal text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto">Showing
-                    <span class="font-semibold text-gray-900 dark:text-white"> <span id="numberFirstItem">1</span> - <span
-                            id="numberLastItem">4</span></span> of
-                    <span id="totalTemplatesCount" class="font-semibold text-gray-900 dark:text-white">4</span>
+                    <span class="font-semibold text-gray-900 dark:text-white"> <span id="numberFirstItem">0</span> - <span
+                            id="numberLastItem">0</span></span> of
+                    <span id="totalTemplatesCount" class="font-semibold text-gray-900 dark:text-white">0</span>
                 </span>
                 <ul id="page-button-target-company" class="inline-flex space-x-2 rtl:space-x-reverse text-sm h-8">
 
@@ -161,9 +161,9 @@
                         <td class="p-4">${target.email}</td>
                         <td class="p-4 flex gap-2">
                             <button onclick="showUpdateTargetModal(${target.id}, '${target.first_name}', ${target.last_name},'${target.email}', '${target.position.id}', '${target.department.id}')"
-                                class="py-2 px-2 text-xs font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700">Update</button>
+                                class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">Update</button>
                             <button onclick="deleteTarget(${target.id})"
-                                class="py-2 px-2 text-xs font-medium text-white bg-red-600 rounded-lg hover:bg-red-700">Delete</button>
+                                class="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-xl hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600">Delete</button>
                         </td>
 
                     </tr>

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthenticateController;
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\GroupController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ViewController;
 use App\Models\User;
@@ -69,6 +70,15 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         Route::post('/deleteTarget', [TargetController::class, 'deleteTarget'])->name('deleteTarget');
         Route::post('/previewImportTarget', [TargetController::class, 'previewImportTarget'])->name('previewImportTarget');
         Route::post('/importTarget', [TargetController::class, 'importTarget'])->name('importTarget');
+    });
+
+    Route::group(['prefix' => 'groups'], function(){
+       Route::get('/', [ViewController::class, 'groupView'])->name('groupView'); 
+       Route::get('/getGroups', [GroupController::class, 'getGroups'])->name('getGroups');
+       Route::get('/getGroupResources', [GroupController::class, 'getGroupResources'])->name('getGroupResources');
+       Route::post('/createGroup', [GroupController::class, 'createGroup'])->name('createGroup');
+       Route::post('/updateGroup', [GroupController::class, 'updateGroup'])->name('updateGroup');
+       Route::post('/deleteGroup', [GroupController::class, 'deleteGroup'])->name('deleteGroup');
     });
 
 });
