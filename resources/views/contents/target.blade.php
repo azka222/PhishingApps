@@ -53,24 +53,25 @@
                         placeholder="Search...">
                 </div>
             </div>
-
-            <table class="p-4 min-w-full divide-y divide-gray-200 dark:divide-gray-700 mt-4">
-                <thead class="bg-gray-300 dark:bg-gray-700">
-                    <tr
-                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-300">
-                        <th scope="col" class="p-4">First Name</th>
-                        <th scope="col" class="p-4">Last Name</th>
-                        <th scope="col" class="p-4">Position</th>
-                        <th scope="col" class="p-4">Department</th>
-                        <th scope="col" class="p-4">Email</th>
-                        <th scope="col" class="p-4">Action</th>
-                    </tr>
-                </thead>
-                <tbody id="list-targets-tbody"
-                    class="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
-
-                </tbody>
-            </table>
+            <div class="p-4 min-w-32 overflow-x-auto md:min-w-full">
+                <table class="min-w-32 md:min-w-full divide-y divide-gray-200 dark:divide-gray-700 mt-4">
+                    <thead class="bg-gray-300 dark:bg-gray-700">
+                        <tr
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-300">
+                            <th scope="col" class="p-4">First Name</th>
+                            <th scope="col" class="p-4">Last Name</th>
+                            <th scope="col" class="p-4">Position</th>
+                            <th scope="col" class="p-4">Department</th>
+                            <th scope="col" class="p-4">Email</th>
+                            <th scope="col" class="p-4">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="list-targets-tbody"
+                        class="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
+    
+                    </tbody>
+                </table>
+            </div>
             <nav class="flex items-center flex-column flex-wrap md:flex-row justify-between p-4"
                 aria-label="Table navigation">
                 <span
@@ -153,14 +154,14 @@
             } else {
                 targets.forEach(function(target, index) {
                     $("#list-targets-tbody").append(`
-                    <tr class="text-sm font-normal text-gray-900 dark:text-gray-400 bg-white dark:bg-gray-800">
+                    <tr class="text-sm font-light text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800">
                         <td class="p-4">${target.first_name}</td>
                         <td class="p-4">${target.last_name}</td>
                         <td class="p-4">${target.position.name}</td>
                         <td class="p-4">${target.department.name}</td>
                         <td class="p-4">${target.email}</td>
                         <td class="p-4 flex gap-2">
-                            <button onclick="showUpdateTargetModal(${target.id}, '${target.first_name}', ${target.last_name},'${target.email}', '${target.position.id}', '${target.department.id}')"
+                            <button onclick="showUpdateTargetModal(${target.id}, '${target.first_name}', '${target.last_name}','${target.email}', '${target.position.id}', '${target.department.id}')"
                                 class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">Update</button>
                             <button onclick="deleteTarget(${target.id})"
                                 class="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-xl hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600">Delete</button>

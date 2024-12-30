@@ -7,6 +7,7 @@ use App\Models\Target;
 use App\Models\TargetDepartment;
 use Illuminate\Http\Request;
 
+
 class GroupController extends Controller
 {
     public function getGroupResources()
@@ -48,7 +49,7 @@ class GroupController extends Controller
     public function createGroup(Request $request)
     {
         $request->validate([
-            'name' => 'required',
+            'name' => 'required|unique:groups,name',
             'department' => 'required|exists:target_departments,id',
             'status' => 'required|in:1,0',
             'members' => 'required|array|min:1',
@@ -75,7 +76,7 @@ class GroupController extends Controller
     public function updateGroup(Request $request){
         $request->validate([
             'id' => 'required|exists:groups,id',
-            'name' => 'required',
+            'name' => 'required|unique:groups,name,' . $request->id,
             'department' => 'required|exists:target_departments,id',
             'status' => 'required|in:1,0',
             'members' => 'required|array|min:1',
