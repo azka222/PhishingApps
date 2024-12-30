@@ -1,8 +1,8 @@
 @extends('layouts.master')
 @section('title', 'User Setting')
-@include('contents.modal.edit-profile-modal')
-@include('contents.modal.otp-modal')
-@include('contents.modal.edit-company-modal')
+@include('contents.modal.user-setting.edit-profile-modal')
+@include('contents.modal.user-setting.otp-modal')
+@include('contents.modal.user-setting.edit-company-modal')
 
 @section('content')
     <div class="flex justify-center h-screen pt-28 pe-4 ps-4 bg-gray-50 dark:bg-gray-800">

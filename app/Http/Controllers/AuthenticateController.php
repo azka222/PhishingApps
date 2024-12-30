@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Mail\OtpEmail;
 use App\Mail\ResetPasswordMail;
 use App\Models\Company;
+use App\Models\Gophish;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Auth\Events\Registered;
@@ -62,14 +63,19 @@ class AuthenticateController extends Controller
         $user->gender = $request->gender;
         $user->save();
 
+        $apiKey = sha1(time());
+
         $checkUser = User::where('company_id', $request->company)->count();
         if ($checkUser == 1) {
             $company = Company::findOrFail($request->company);
             $company->user_id = $user->id;
+            $company->api_key = $apiKey;
             $company->save();
         }
 
         event(new Registered($user));
+
+        
 
         return response()->json([
             'message' => 'User created successfully',

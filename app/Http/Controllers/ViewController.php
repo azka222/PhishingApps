@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
@@ -40,7 +41,18 @@ class ViewController extends Controller
         return view('contents.target');
     }
 
-    public function groupView(){
+    public function groupView()
+    {
         return view('contents.group');
+    }
+
+    public function landingPageView()
+    {
+        return view('contents.landing-page');
+    }
+
+    public function emailTemplatesView()
+    {
+        return view('contents.email-templates');
     }
 }

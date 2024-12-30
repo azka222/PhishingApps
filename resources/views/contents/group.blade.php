@@ -88,6 +88,7 @@
         $(document).ready(function() {
             getGroupResources();
             getGroups();
+            
         });
 
         function getGroupResources() {
@@ -189,6 +190,7 @@
             $("#strict_user_selected_department").prop('checked', false);
             $("#title-add-group-modal").text('Add Group');
             $("#button-for-group").removeAttr('onclick').attr('onclick', 'createGroup()');
+            $("#group_status").prop('disabled', true);
             setTargetSelection();
         }
 
@@ -196,6 +198,7 @@
             tempGroup = groups.find(group => group.id == id);
             console.log(tempGroup);
             showModal('add-group-modal');
+            $("#group_status").prop('disabled', false);
             $("#strict_user_selected_department").prop('checked', false);
             $("#title-add-group-modal").text('Edit Group');
             $("#button-for-group").removeAttr('onclick').attr('onclick', `updateGroup(${id})`);
@@ -494,6 +497,8 @@
                 `);
             });
         }
+
+ 
     </script>
 
 

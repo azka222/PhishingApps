@@ -1,21 +1,24 @@
 @php
     $url = explode('/', Route::current()->uri)[0];
-    $home = $target = $groups = $pricing = $contact = $dashboard = false;
+    $home = $user = $landingPage = $attribute = $dashboard = false;
     switch ($url) {
         case 'dashboard':
             $dashboard = true;
             break;
         case 'target':
-            $target = true;
+            $user = true;
             break;
         case 'groups':
-            $groups = true;
+            $user = true;
             break;
-        case 'pricing':
-            $pricing = true;
+        case 'landing-page':
+            $landingPage = true;
             break;
-        case 'contact':
-            $contact = true;
+        case 'template-email':
+            $attribute = true;
+            break;
+        case 'sending-profile':
+            $attribute = true;
             break;
         default:
             $home = true;
@@ -23,7 +26,8 @@
     }
 
 @endphp
-<nav class="border-b-2 p-4 border-b-gray-900 bg-white border-gray-200 dark:border-gray-600 dark:bg-gray-800 items-center" id="navbar-header">
+<nav class="border-b-2 p-4 border-b-gray-900 bg-white border-gray-200 dark:border-gray-600 dark:bg-gray-800 items-center"
+    id="navbar-header">
     <div class="max-w-full flex flex-wrap items-center justify-between mx-4">
         <a href="https://flowbite.com/" class="flex items-center space-x-3 rtl:space-x-reverse">
             <img src="https://flowbite.com/docs/images/logo.svg" class="h-8" alt="Flowbite Logo" />
@@ -89,29 +93,59 @@
             id="navbar-user">
             <div class="flex flex-row gap-4">
                 <div>
-                    <button>
-                        <a href="{{ url('/dashboard') }}"
-                            class="px-3 py-2 text-sm font-medium border-2 {{ $dashboard ? 'text-white border-blue-500 shadow-blue-500/50 dark:bg-blue-500 bg-blue-500 dark:border-blue-500' : 'border-gray-700 text-gray-900 dark:text-white ' }} rounded-full">Dashboard</a>
+                    <button
+                        class="px-3 py-2 text-sm font-medium border-2 {{ $dashboard ? 'text-white border-blue-500 shadow-blue-500/50 dark:bg-blue-500 bg-blue-500 dark:border-blue-500' : 'border-gray-700 text-gray-900 dark:text-white ' }} rounded-full">
+                        <a href="{{ url('/dashboard') }}">Dashboard</a>
                     </button>
                 </div>
                 <div>
-                    <button>
-                        <a href="{{ url('/target') }}"
-                            class="px-3 py-2 text-sm font-medium border-2 {{ $target ? 'text-white dark:text-white border-blue-500 shadow-blue-500/50 dark:bg-blue-500 bg-blue-500  dark:border-blue-500' : 'border-gray-700 text-gray-900 dark:text-white ' }} rounded-full">Target</a>
+                    <button id="dropdownHoverButton" data-dropdown-toggle="hoverTargetGroup"
+                        data-dropdown-trigger="hover"
+                        class="px-3 py-2 text-sm font-medium border-2 {{ $user ? 'text-white border-blue-500 shadow-blue-500/50 dark:bg-blue-500 bg-blue-500 dark:border-blue-500' : 'border-gray-700 text-gray-900 dark:text-white ' }} rounded-full"
+                        type="button">Group & Target
+                    </button>
+                </div>
+                <div id="hoverTargetGroup"
+                    class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+                    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownHoverButton">
+                        <li>
+                            <a href="{{ url('/target') }}"
+                                class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Target</a>
+                        </li>
+                        <li>
+                            <a href="{{ url('/groups') }}"
+                                class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Groups</a>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <button
+                        class="px-3 py-2 text-sm font-medium border-2 {{ $landingPage ? 'text-white border-blue-500 shadow-blue-500/50 dark:bg-blue-500 bg-blue-500 dark:border-blue-500' : 'border-gray-700 text-gray-900 dark:text-white ' }} rounded-full">
+                        <a href="{{ url('/landing-page') }}">Landing
+                            Page</a>
                     </button>
                 </div>
                 <div>
-                    <button>
-                        <a href="{{ url('/groups') }}"
-                            class="px-3 py-2 text-sm font-medium border-2 {{ $groups ? 'text-white border-blue-500 shadow-blue-500/50 dark:bg-blue-500 bg-blue-500 dark:border-blue-500' : 'border-gray-700 text-gray-900 dark:text-white ' }} rounded-full">Groups</a>
+                    <button id="dropdownHoverButton2" data-dropdown-toggle="hoverAttribute"
+                        data-dropdown-trigger="hover"
+                        class="px-3 py-2 text-sm font-medium border-2 {{ $attribute ? 'text-white border-blue-500 shadow-blue-500/50 dark:bg-blue-500 bg-blue-500 dark:border-blue-500' : 'border-gray-700 text-gray-900 dark:text-white ' }} rounded-full"
+                        type="button">Attribute
                     </button>
                 </div>
-                <div>
-                    <button>
-                        <a href="{{ url('/pricing') }}"
-                            class="px-3 py-2 text-sm font-medium border-2 {{ $pricing ? 'text-white border-blue-500 shadow-blue-500/50 dark:bg-blue-500 bg-blue-500 dark:border-blue-500' : 'border-gray-700 text-gray-900 dark:text-white ' }} rounded-full">Pricing</a>
-                    </button>
+                <div id="hoverAttribute"
+                    class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+                    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownHoverButton2">
+                        <li>
+                            <a href="{{ url('/sending-profile') }}"
+                                class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Sending Profile</a>
+                        </li>
+                        <li>
+                            <a href="{{ url('/email-templates') }}"
+                                class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Email Template</a>
+                        </li>
+                    </ul>
                 </div>
+
             </div>
         </div>
     </div>

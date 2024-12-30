@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\AuthenticateController;
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\GophishController;
 use App\Http\Controllers\GroupController;
+use App\Http\Controllers\TargetController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ViewController;
 use App\Models\User;
@@ -10,7 +12,6 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\TargetController;
 
 Route::group(['middleware' => 'guest'], function () {
     Route::get('/email/verify', function () {
@@ -72,13 +73,31 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         Route::post('/importTarget', [TargetController::class, 'importTarget'])->name('importTarget');
     });
 
-    Route::group(['prefix' => 'groups'], function(){
-       Route::get('/', [ViewController::class, 'groupView'])->name('groupView'); 
-       Route::get('/getGroups', [GroupController::class, 'getGroups'])->name('getGroups');
-       Route::get('/getGroupResources', [GroupController::class, 'getGroupResources'])->name('getGroupResources');
-       Route::post('/createGroup', [GroupController::class, 'createGroup'])->name('createGroup');
-       Route::post('/updateGroup', [GroupController::class, 'updateGroup'])->name('updateGroup');
-       Route::post('/deleteGroup', [GroupController::class, 'deleteGroup'])->name('deleteGroup');
+    Route::group(['prefix' => 'groups'], function () {
+        Route::get('/', [ViewController::class, 'groupView'])->name('groupView');
+        Route::get('/getGroups', [GroupController::class, 'getGroups'])->name('getGroups');
+        Route::get('/getGroupResources', [GroupController::class, 'getGroupResources'])->name('getGroupResources');
+        Route::post('/createGroup', [GroupController::class, 'createGroup'])->name('createGroup');
+        Route::post('/updateGroup', [GroupController::class, 'updateGroup'])->name('updateGroup');
+        Route::post('/deleteGroup', [GroupController::class, 'deleteGroup'])->name('deleteGroup');
+
+    });
+
+    Route::group(['prefix' => 'landing-page'], function () {
+        Route::get('/', [ViewController::class, 'landingPageView'])->name('landingPageView');
+        Route::get('/getLandingPage', [GophishController::class, 'getLandingPage'])->name('getLandingPage');
+        Route::get('/landingPagePreview/{id}', [GophishController::class, 'landingPagePreview'])->name('landingPagePreview');
+        Route::get('/preview', [ViewController::class, 'landingPagePreview'])->name('content.landingPagePreview');
+
+    });
+
+    Route::group(['prefix' => 'email-templates'], function () {
+        Route::get('/', [ViewController::class, 'emailTemplatesView'])->name('emailTemplatesView');
+        // Route::get('/getEmailTemplates', [GophishController::class, 'getEmailTemplates'])->name('getEmailTemplates');
+        Route::get('/getEmailTemplate', [GophishController::class, 'getEmailTemplate'])->name('getEmailTemplate');
+        Route::post('/createEmailTemplate', [GophishController::class, 'createEmailTemplate'])->name('createEmailTemplate');
+        // Route::post('/updateEmailTemplate', [GophishController::class, 'updateEmailTemplate'])->name('updateEmailTemplate');
+        // Route::post('/deleteEmailTemplate', [GophishController::class, 'deleteEmailTemplate'])->name('deleteEmailTemplate');
     });
 
 });
