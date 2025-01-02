@@ -8,6 +8,7 @@ use DateTimeZone;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Validation\Rule;
 
 class GophishController extends Controller
 {
@@ -131,7 +132,7 @@ class GophishController extends Controller
             'subject' => $request->email_subject,
             'envelope_sender' => $envelope,
             'text' => $request->email_text,
-            'html' => '<html><head></head><body>Please reset your password <a href\"{{.URL}}\">here</a></body></html>',
+            'html' => $request->email_html,
             'modified_date' => $formattedDate,
             'attachments' => $attachments,
         ];
@@ -202,6 +203,113 @@ class GophishController extends Controller
             'pageCount' => $paginatedData->lastPage(),
         ]);
 
+    }
+
+    public function updateEmailTemplate(Request $request)
+    {
+        $request->validate([
+            'template_name' => 'required|string',
+            'email_subject' => 'required|string',
+            'email_text' => 'required|string',
+            'status' => 'required|boolean',
+            'email_html' => 'required|string',
+            'old_email_attachment' => [
+                'nullable',
+                'string',
+                Rule::requiredIf(function () use ($request) {
+                    return $request->input('email_attachment') === null;
+                }),
+            ],
+            'email_attachment' => [
+                'nullable',
+                'file',
+                'mimes:jpg,jpeg,png',
+                'max:1000',
+                Rule::requiredIf(function () use ($request) {
+                    return $request->input('old_email_attachment') === 'null';
+                }),
+            ],
+            'sender_name' => 'required|string',
+            'sender_email' => 'required|email',
+        ]);
+
+        $date = new DateTime();
+        $date->setTimezone(new DateTimeZone('America/Chicago'));
+        $formattedDate = $date->format('Y-m-d\TH:i:s.uP');
+
+        if ($request->hasFile('email_attachment') && $request->email_attachment != null) {
+            $attachments = [
+                [
+                    'content' => base64_encode(file_get_contents($request->file('email_attachment')->path())),
+                    'type' => $request->file('email_attachment')->getClientMimeType(),
+                    'name' => $request->file('email_attachment')->getClientOriginalName(),
+                ],
+            ];
+        } else {
+            $tempFile = $request->old_email_attachment;
+            $tempAttachment = json_decode($tempFile);
+            $attachments = [
+                [
+                    'content' => $tempAttachment->content,
+                    'type' => $tempAttachment->type,
+                    'name' => $tempAttachment->name,
+                ],
+
+            ];
+        }
+        $templateId = $request->id;
+        $envelope = $request->sender_name . ' <' . $request->sender_email . '>';
+        $jsonData = [
+            'id' => intval($request->id),
+            'template_id' => $request->id,
+            'name' => $request->template_name . ' -+-' . $request->id,
+            'subject' => $request->email_subject,
+            'text' => $request->email_text,
+            'envelope_sender' => $envelope,
+            'html' => $request->email_html,
+            'modified_date' => $formattedDate,
+            'attachments' => $attachments,
+        ];
+
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
+            'Content-Type' => 'application/json',
+        ])->put("{$this->url}/templates/{$templateId}", $jsonData);
+        if ($response->successful() && $response->body() != []) {
+            if ($request->status != null) {
+                $companyEmailTemplate = EmailTemplateCompany::where('company_id', auth()->user()->company_id)->where('template_id', $templateId)->first();
+                $companyEmailTemplate->status = $request->status;
+                $companyEmailTemplate->save();
+            }
+            return response()->json(['message' => 'Email template updated successfully']);
+        } else {
+            return response()->json(['error' => $response->json()], 500);
+        }
+    }
+
+    public function deleteEmailTemplate(Request $request)
+    {
+        $templateId = intval($request->id);
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
+        ])->delete("{$this->url}/templates/{$templateId}");
+        if ($response->successful() && $response->body() != []) {
+            $companyEmailTemplate = EmailTemplateCompany::where('company_id', auth()->user()->company_id)->where('template_id', $templateId)->first();
+            $companyEmailTemplate->delete();
+            return response()->json(['message' => 'Email template deleted successfully']);
+        } else {
+            return response()->json(['error' => $response->json()], 500);
+        }
+
+    }
+
+    public function activateEmailTemplate(Request $request)
+    {
+        $templateId = intval($request->id);
+        $companyEmailTemplate = EmailTemplateCompany::where('company_id', auth()->user()->company_id)->where('template_id', $templateId)->first();
+        $companyEmailTemplate->status = 1;
+        $companyEmailTemplate->save();
+        return response()->json(['message' => 'Email template activated successfully']);
     }
 
     // ================================== End Email Templates ==================================

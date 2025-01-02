@@ -30,7 +30,7 @@
                                     Name</label>
                                 <input type="text" id="template_name" name="template_name"
                                     placeholder="Enter template name"
-                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
+                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 bg-gray-100 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
                             </div>
                             <div class="col-span-2">
                                 <label for="email_subject"
@@ -38,7 +38,7 @@
                                     Subject</label>
                                 <input type="email" id="email_subject" name="email_subject"
                                     placeholder="Enter email subject"
-                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
+                                    class="mt-1 bg-gray-100 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
                             </div>
                             <div class="col-span-1">
                                 <label for="sender_name"
@@ -46,7 +46,7 @@
                                     Name</label>
                                 <input type="text" id="sender_name" name="sender_name"
                                     placeholder="Enter sender name"
-                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
+                                    class="mt-1 bg-gray-100 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
                             </div>
                             <div class="col-span-1">
                                 <label for="sender_email"
@@ -54,7 +54,7 @@
                                     Email</label>
                                 <input type="text" id="sender_email" name="sender_email"
                                     placeholder="Enter sender email"
-                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
+                                    class="mt-1 bg-gray-100  block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
                             </div>
 
 
@@ -71,9 +71,16 @@
                                 <label for="email_attachment"
                                     class="block text-sm font-medium text-gray-700 dark:text-gray-200">Attachment
                                 </label>
-                                <input
-                                    class="mt-1 block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 col-span-5 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                                <input onchange="showAttachmentFileNameCreate()"
+                                    class="mt-1
+                                    block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer
+                                    bg-gray-100 dark:text-gray-400 col-span-5 focus:outline-none dark:bg-gray-700
+                                    dark:border-gray-600 dark:placeholder-gray-400"
                                     id="email_attachment" type="file" name="email_attachment">
+                                    <p class="text-xs mt-2 text-red-700 dark:text-red-500">* Only image files can be uploaded.</p>
+                            </div>
+                            <div class="col-span-2" id="attachment-file">
+
                             </div>
                             <div class="col-span-2">
                                 <div id="error_message_field" hidden>
