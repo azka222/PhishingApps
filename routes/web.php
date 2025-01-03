@@ -109,6 +109,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         Route::post('/createSendingProfile', [GophishController::class, 'createSendingProfile'])->name('createSendingProfile');
         Route::post('/updateSendingProfile', [GophishController::class, 'updateSendingProfile'])->name('updateSendingProfile');
         Route::post('/deleteSendingProfile', [GophishController::class, 'deleteSendingProfile'])->name('deleteSendingProfile');
+        Route::post('/activateSendingProfile', [GophishController::class, 'activateSendingProfile'])->name('activateSendingProfile');
     });
 
 });

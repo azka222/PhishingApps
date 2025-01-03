@@ -8,7 +8,7 @@
                 <h3 class="text-xl font-semibold text-gray-900 dark:text-white" id="title-add-sending-profile-modal">
                     Create Sending Profile
                 </h3>
-                <button type="button" onclick="hideModal('add-group-modal')"
+                <button type="button" onclick="hideModal('add-sending-profile-modal')"
                     class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
                     data-modal-hide="static-modal">
                     <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -22,7 +22,7 @@
             <!-- Modal body -->
             <div class="p-4 md:p-5 space-y-4">
                 <div class="grid grid-cols-2 gap-8">
-                    <div class="col-span-1">
+                    <div class="col-span-1" id="sending-profile-form">
                         <div class="grid grid-cols-2 gap-4">
                             <div class="col-span-2">
                                 <label for="profile_name"
@@ -44,11 +44,11 @@
                                 <label for="email_smtp"
                                     class="block text-sm font-medium text-gray-700 dark:text-gray-200">SMTP
                                     Email</label>
-                                <input type="text" id="email_smtp" name="email_smtp"
-                                    placeholder="Enter email"
+                                <input type="text" id="email_smtp" name="email_smtp" placeholder="Enter email"
                                     class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
                             </div>
-                            <div class="col-span-1">
+
+                            <div class="col-span-1 for-create-profile">
                                 <label for="first_name_smtp"
                                     class="block text-sm font-medium text-gray-700 dark:text-gray-200">SMTP First
                                     Name</label>
@@ -56,7 +56,7 @@
                                     placeholder="Enter first name"
                                     class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
                             </div>
-                            <div class="col-span-1">
+                            <div class="col-span-1 for-create-profile">
                                 <label for="last_name_smtp"
                                     class="block text-sm font-medium text-gray-700 dark:text-gray-200">SMTP Last
                                     Name</label>
@@ -64,6 +64,24 @@
                                     placeholder="Enter last name"
                                     class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
                             </div>
+                            <div class="for-edit-profile col-span-1">
+                                <label for="address_name"
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-200">Address Name
+                                </label>
+                                <input type="text" id="address_name" name="address_name"
+                                    placeholder="Enter first name"
+                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
+                            </div>
+                            <div class="col-span-1 for-edit-profile">
+                                <label for="status"
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-200">Status</label>
+                                <select id="profile_status" name="status"
+                                    class="mt-1 bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                    <option selected value="1">Active</option>
+                                    <option value="0">Inactive</option>
+                                </select>
+                            </div>
+
                             <div class="col-span-1">
                                 <label for="smtp_host"
                                     class="block text-sm font-medium text-gray-700 dark:text-gray-200">SMTP Host</label>
@@ -88,9 +106,9 @@
                                     class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
                             </div>
                             <div class="col-span-1">
-                                <label for="password_username"
+                                <label for="password_profile"
                                     class="block text-sm font-medium text-gray-700 dark:text-gray-200">Password</label>
-                                <input type="password" id="password_username" name="password_username"
+                                <input type="password" id="password_profile" name="password_profile"
                                     placeholder="Enter password"
                                     class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
                             </div>
@@ -111,23 +129,44 @@
                         </div>
                     </div>
                     <div class="col-span-1">
-                        <div class="w-full">
-                            <label for="group_member"
-                                class="block text-sm font-medium text-gray-700 dark:text-gray-200">Group Member</label>
-                            <select id="group_member" name="group_member" onchange="addUserToGroup(this.value)"
-                                class="mt-1 bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                            </select>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="col-span-2">
+                                <div class="flex flex-row items-end justify-between">
+                                    <div class="w-5/6 flex flex-row gap-4">
+                                        <div class="flex flex-col w-1/2">
+                                            <label for="header_email"
+                                                class="block text-sm font-medium text-gray-700 dark:text-gray-200">Email
+                                                Headers</label>
+                                            <input type="text" id="header_email" name="header_email"
+                                                placeholder="X-Custom-Header"
+                                                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
+                                        </div>
+                                        <div class="flex flex-col w-1/2">
+                                            <label for="header_value"
+                                                class="block text-sm font-medium text-gray-700 dark:text-gray-200">Value</label>
+                                            <input type="text" id="header_value" name="header_value"
+                                                placeholder="Enter header value"
+                                                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
+                                        </div>
+                                    </div>
+                                    <div class="w-1/6 flex justify-end">
+                                        <button id="button-for-header" type="button" onclick="addHttpHeader()"
+                                            class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">Add
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-span-2">
+                                <div id="error-http-header" hidden>
+                                    <div class="bg-red-100 border border-red-400 text-red-700 px-3 py-1 rounded-lg shadow-md"
+                                        role="alert">
+                                        <strong class="font-bold">Whoops!</strong>
+                                        <span class="block sm:inline">Please fill both field</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="mt-4 flex flex-row justify-between items-center">
-                            <span class=" text-sm font-medium text-gray-900 dark:text-gray-300">Import target
-                                from selected department ?</span>
-                            <button type="button" onclick="importTargetFromDepartment()"
-                                id="import_target_from_department"
-                                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                                Import
-                            </button>
-                        </div>
-                        <div class="mt-4 max-h-96 overflow-y-auto" id="group_member_list">
+                        <div class="mt-4 max-h-96 overflow-y-auto" id="http-header-list">
 
                         </div>
                     </div>
@@ -136,9 +175,10 @@
             <!-- Modal footer -->
             <div
                 class="flex items-center justify-end p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600 gap-2">
-                <button data-modal-hide="static-modal" type="button" onclick="hideModal('add-group-modal')"
+                <button data-modal-hide="static-modal" type="button"
+                    onclick="hideModal('add-sending-profile-modal')"
                     class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Close</button>
-                <button id="button-for-group" data-modal-hide="static-modal" type="button" onclick="createGroup()"
+                <button id="button-for-profile" data-modal-hide="static-modal" type="button"
                     class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Add
                 </button>
             </div>
