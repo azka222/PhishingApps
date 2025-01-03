@@ -343,16 +343,16 @@ class GophishController extends Controller
         $formattedDate = $date->format('Y-m-d\TH:i:s.uP');
         $envelope = $request->first_name_smtp . ' ' . $request->last_name_smtp . ' ' . '<' . $request->email_smtp . '>';
 
-        $httpHeaders = []; 
-        if($request->has('http_headers') && $request->http_headers != null){
+        $httpHeaders = [];
+        if ($request->has('http_headers') && $request->http_headers != null) {
             foreach ($request->http_headers as $key => $value) {
                 $httpHeaders[] = [
-                    'name' => $key,
-                    'value' => $value,
+                    'name' => $value['header_email'],
+                    'value' => $value['header_value'],
                 ];
             }
         }
-    
+
         $jsonData = [
             'id' => $newId,
             'name' => $request->profile_name . ' -+-' . $newId,
@@ -433,20 +433,90 @@ class GophishController extends Controller
 
     }
 
-    public function updateSendingProfile(Request $request){
-        // 'id' => $newId,
-        // 'name' => $request->profile_name . ' -+-' . $newId,
-        // 'interface_type' => $request->interface_type,
-        // 'from_address' => $envelope,
-        // 'host' => $request->host,
-        // 'username' => $request->username,
-        // 'password' => $request->password,
-        // 'ignore_cert_errors' => $request->ignore_certificate == 1 ? true : false,
-        // 'modified_date' => $formattedDate,
-        // 'headers' => $httpHeaders,
+    public function updateSendingProfile(Request $request)
+    {
+
         $request->validate([
-            'id' => 'required|exists:'
+            'id' => 'required|integer',
+            'name' => 'required|string',
+            'interface_type' => 'required|in:smtp',
+            'email' => 'required|email',
+            'address_name' => 'required|string',
+            'host' => 'required|regex:/^[a-zA-Z0-9.-]+:[0-9]+$/',
+            'status' => 'required|boolean',
+            'ignore_cert_errors' => 'required|boolean',
+            'username' => 'nullable|string',
+            'password' => 'nullable|string',
+            'http_headers' => 'nullable|array',
         ]);
+        $date = new DateTime();
+        $date->setTimezone(new DateTimeZone('America/Chicago'));
+        $formattedDate = $date->format('Y-m-d\TH:i:s.uP');
+
+        if ($request->has('http_headers') && $request->http_headers != null) {
+            $httpHeaders = [];
+            foreach ($request->http_headers as $key => $value) {
+                $httpHeaders[] = [
+                    'name' => $value['header_email'],
+                    'value' => $value['header_value'],
+                ];
+            }
+        } else {
+            $httpHeaders = [];
+        }
+        $envelope = $request->address_name . ' <' . $request->email . '>';
+        $jsonData = [
+            'id' => intval($request->id),
+            'name' => $request->name . ' -+-' . $request->id,
+            'interface_type' => $request->interface_type,
+            'from_address' => $envelope,
+            'host' => $request->host,
+            'username' => $request->username,
+            'password' => $request->password,
+            'ignore_cert_errors' => $request->ignore_cert_errors == 1 ? true : false,
+            'modified_date' => $formattedDate,
+            'headers' => $httpHeaders,
+        ];
+
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
+            'Content-Type' => 'application/json',
+        ])->put("{$this->url}/smtp/{$request->id}", $jsonData);
+        if ($response->successful() && $response->body() != []) {
+            if ($request->status != null) {
+                $companySendingProfile = SendingProfileCompany::where('company_id', auth()->user()->company_id)->where('sending_profile_id', $request->id)->first();
+                $companySendingProfile->status = $request->status;
+                $companySendingProfile->save();
+            }
+            return response()->json(['message' => 'Sending profile updated successfully']);
+        } else {
+            return response()->json(['error' => $response->json()], 500);
+        }
+
+    }
+
+    public function deleteSendingProfile(Request $request)
+    {
+        $profileId = intval($request->id);
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
+        ])->delete("{$this->url}/smtp/{$profileId}");
+        if ($response->successful() && $response->body() != []) {
+            $companySendingProfile = SendingProfileCompany::where('company_id', auth()->user()->company_id)->where('sending_profile_id', $profileId)->first();
+            $companySendingProfile->delete();
+            return response()->json(['message' => 'Sending profile deleted successfully']);
+        } else {
+            return response()->json(['error' => $response->json()], 500);
+        }
+    }
+
+    public function activateSendingProfile(Request $request)
+    {
+        $profileId = intval($request->id);
+        $companySendingProfile = SendingProfileCompany::where('company_id', auth()->user()->company_id)->where('sending_profile_id', $profileId)->first();
+        $companySendingProfile->status = 1;
+        $companySendingProfile->save();
+        return response()->json(['message' => 'Sending profile activated successfully']);
     }
     // ================================== End Sending Profile ==================================
 }

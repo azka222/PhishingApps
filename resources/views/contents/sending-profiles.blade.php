@@ -177,6 +177,29 @@
                         confirmButtonText: 'Close'
 
                     })
+                },
+                error: function(xhr) {
+                    if (xhr.status === 422) {
+                        var errorMessage = JSON.parse(xhr.responseText) ? JSON.parse(xhr.responseText) : xhr
+                            .responseText;
+                        var errors = errorMessage.errors ? errorMessage.errors : errorMessage;
+                        $('#error_message_field').show();
+                        $('#error_message').empty();
+                        $.each(errors, function(field, messages) {
+                            $.each(messages, function(index, message) {
+                                let data = `<li>${message}</li>`;
+                                $('#error_message').append(data);
+                            });
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Error",
+                            text: xhr.responseJSON.message,
+                            confirmButtonColor: '#10b981',
+                            confirmButtonText: 'Close'
+                        });
+                    }
                 }
             });
         }
@@ -213,20 +236,20 @@
                                 `;
                         } else {
                             button = `
-                            <button onclick="ActivatesendingProfile(${sendingProfile.id})"
+                            <button onclick="activateSendingProfile(${sendingProfile.id})"
                                 class="px-4 me-2 py-2 text-sm font-medium text-white bg-yellow-600 rounded-xl hover:bg-yellow-700 dark:bg-yellow-500 dark:hover:bg-yellow-600">Activate</button>
                             `;
                         }
                         let data = `
                         <tr class="text-sm font-light text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800">
                             <td class="p-4">${sendingProfile.name}</td>
-                            <td class="p-4">${sendingProfile.username}</td>
+                            <td class="p-4">${sendingProfile.username ?? 'Not Set'}</td>
                             <td class="p-4">${sendingProfile.host}</td>
                             <td class="p-4">${sendingProfile.from_address}</td>
                             <td class="p-4">${sendingProfile.ignore_cert_errors}</td>
                             <td class="p-4">
                                 ${button} 
-                                <button onclick="removesendingProfile(${sendingProfile.id})"
+                                <button onclick="deleteSendingProfile(${sendingProfile.id})"
                                     class="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-xl hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600">Remove</button>
                             </td>
                         </tr>`;
@@ -295,6 +318,7 @@
             $("#error-http-header").hide();
             $("#error-message-field").hide();
             $("#title-add-sending-profile-modal").text('Edit Sending Profile');
+            $("#error_message_field").hide();
             showModal('add-sending-profile-modal');
 
         }
@@ -309,11 +333,11 @@
             let ignore_cert_errors = $("#ignore_certificate").val();
             let username = $("#username_profile").val();
             let password = $("#password_profile").val();
-            let headers = []
+            let http_headers = []
             $("#http-header-list").children().each(function() {
                 let header_email = $(this).find('p').first().text();
                 let header_value = $(this).find('p').last().text();
-                headers.push({
+                http_headers.push({
                     header_email,
                     header_value
                 });
@@ -332,7 +356,7 @@
                     ignore_cert_errors,
                     username,
                     password,
-                    headers,
+                    http_headers,
                     _token: "{{ csrf_token() }}"
                 },
                 success: function(response) {
@@ -344,8 +368,97 @@
                         confirmButtonColor: '#10b981',
                         confirmButtonText: 'Close'
                     });
-                    showModal('add-sending-profile-modal');
+                    hideModal('add-sending-profile-modal');
                 },
+                error: function(xhr) {
+                    if (xhr.status === 422) {
+                        var errorMessage = JSON.parse(xhr.responseText) ? JSON.parse(xhr.responseText) : xhr
+                            .responseText;
+                        var errors = errorMessage.errors ? errorMessage.errors : errorMessage;
+                        $('#error_message_field').show();
+                        $('#error_message').empty();
+                        $.each(errors, function(field, messages) {
+                            $.each(messages, function(index, message) {
+                                let data = `<li>${message}</li>`;
+                                $('#error_message').append(data);
+                            });
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Error",
+                            text: xhr.responseJSON.message,
+                            confirmButtonColor: '#10b981',
+                            confirmButtonText: 'Close'
+                        });
+                    }
+                }
+            })
+        }
+
+        function deleteSendingProfile(id) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#10b981',
+                cancelButtonColor: '#d97706',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "{{ route('deleteSendingProfile') }}",
+                        type: "POST",
+                        data: {
+                            id,
+                            _token: "{{ csrf_token() }}"
+                        },
+                        success: function(response) {
+                            getSendingProfile();
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success',
+                                text: 'Sending Profile has been deleted!',
+                                confirmButtonColor: '#10b981',
+                                confirmButtonText: 'Close'
+                            });
+                        }
+                    });
+                }
+            })
+        }
+
+        function activateSendingProfile(id) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You want to activate this sending profile?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#10b981',
+                cancelButtonColor: '#d97706',
+                confirmButtonText: 'Yes, activate it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "{{ route('activateSendingProfile') }}",
+                        type: "POST",
+                        data: {
+                            id,
+                            _token: "{{ csrf_token() }}"
+                        },
+                        success: function(response) {
+                            getSendingProfile();
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success',
+                                text: 'Sending Profile has been activated!',
+                                confirmButtonColor: '#10b981',
+                                confirmButtonText: 'Close'
+                            });
+                        }
+                    });
+                }
             })
         }
     </script>
