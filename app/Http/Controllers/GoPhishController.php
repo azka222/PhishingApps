@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\EmailTemplateCompany;
+use App\Models\SendingProfileCompany;
 use DateTime;
 use DateTimeZone;
 use Illuminate\Http\Request;
@@ -314,4 +315,138 @@ class GophishController extends Controller
 
     // ================================== End Email Templates ==================================
 
+    // ================================== Sending Profile ==================================
+
+    public function createSendingProfile(Request $request)
+    {
+        $request->validate([
+            'profile_name' => 'required|string',
+            'interface_type' => 'required|in:smtp',
+            'email_smtp' => 'required|email',
+            'first_name_smtp' => 'required|string',
+            'last_name_smtp' => 'required|string',
+            'host' => 'required|regex:/^[a-zA-Z0-9.-]+:[0-9]+$/',
+            'ignore_certificate' => 'required|boolean',
+            'username' => 'nullable|string',
+            'password' => 'nullable|string',
+            'http_headers' => 'nullable|array',
+        ]);
+
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
+        ])->get('http://127.0.0.1:3333/api/smtp');
+        $existingIds = collect($response->json())->pluck('id');
+        $newId = $existingIds->max() + 1;
+
+        $date = new DateTime();
+        $date->setTimezone(new DateTimeZone('America/Chicago'));
+        $formattedDate = $date->format('Y-m-d\TH:i:s.uP');
+        $envelope = $request->first_name_smtp . ' ' . $request->last_name_smtp . ' ' . '<' . $request->email_smtp . '>';
+
+        $httpHeaders = []; 
+        if($request->has('http_headers') && $request->http_headers != null){
+            foreach ($request->http_headers as $key => $value) {
+                $httpHeaders[] = [
+                    'name' => $key,
+                    'value' => $value,
+                ];
+            }
+        }
+    
+        $jsonData = [
+            'id' => $newId,
+            'name' => $request->profile_name . ' -+-' . $newId,
+            'interface_type' => $request->interface_type,
+            'from_address' => $envelope,
+            'host' => $request->host,
+            'username' => $request->username,
+            'password' => $request->password,
+            'ignore_cert_errors' => $request->ignore_certificate == 1 ? true : false,
+            'modified_date' => $formattedDate,
+            'headers' => $httpHeaders,
+
+        ];
+
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
+        ])->post("{$this->url}/smtp/", $jsonData);
+        if ($response->successful() && $response->body() != []) {
+            $companySendingProfile = new SendingProfileCompany();
+            $companySendingProfile->company_id = auth()->user()->company_id;
+            $companySendingProfile->sending_profile_id = $newId;
+            $companySendingProfile->status = 1;
+            $companySendingProfile->save();
+            return response()->json(['message' => 'Sending profile created successfully']);
+        } else {
+            return response()->json(['error' => $response->json()], 500);
+        }
+
+    }
+
+    public function getSendingProfile(Request $request)
+    {
+        if ($request->has('status') && $request->status != null) {
+            $sendingProfile = SendingProfileCompany::where('company_id', auth()->user()->company_id)->where('status', $request->status)->pluck('sending_profile_id');
+        }
+
+        $responses = [];
+        foreach ($sendingProfile as $value) {
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
+            ])->get("{$this->url}/smtp/{$value}");
+
+            if ($response->successful()) {
+                $data = $response->json();
+                if (isset($data['name'])) {
+                    $data['name'] = explode('-+-', $data['name'])[0];
+                }
+                $responses[] = $data;
+            }
+        }
+
+        $responseCollection = collect($responses);
+        if ($request->has('search') && $request->search != null) {
+            $responseCollection = $responseCollection->filter(function ($item) use ($request) {
+                return stripos($item['name'], $request->search) !== false;
+            });
+        }
+        $perPage = $request->has('show') ? (int) $request->show : 10;
+        $currentPage = $request->has('page') ? (int) $request->page : 1;
+        $pagedData = $responseCollection->slice(($currentPage - 1) * $perPage, $perPage)->values();
+        $paginatedData = new LengthAwarePaginator(
+            $pagedData,
+            $responseCollection->count(),
+            $perPage,
+            $currentPage,
+            ['path' => $request->url(), 'query' => $request->query()]
+        );
+        $totalProfile = $responseCollection->count();
+        $firstPageTotal = $responseCollection->slice(0, $perPage)->count();
+
+        return response()->json([
+            'data' => $paginatedData->items(),
+            'profileTotal' => $totalProfile,
+            'currentPage' => $paginatedData->currentPage(),
+            'firstPageTotal' => $firstPageTotal,
+            'pageCount' => $paginatedData->lastPage(),
+        ]);
+
+    }
+
+    public function updateSendingProfile(Request $request){
+        // 'id' => $newId,
+        // 'name' => $request->profile_name . ' -+-' . $newId,
+        // 'interface_type' => $request->interface_type,
+        // 'from_address' => $envelope,
+        // 'host' => $request->host,
+        // 'username' => $request->username,
+        // 'password' => $request->password,
+        // 'ignore_cert_errors' => $request->ignore_certificate == 1 ? true : false,
+        // 'modified_date' => $formattedDate,
+        // 'headers' => $httpHeaders,
+        $request->validate([
+            'id' => 'required|exists:'
+        ]);
+    }
+    // ================================== End Sending Profile ==================================
 }

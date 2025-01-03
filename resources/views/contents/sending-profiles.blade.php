@@ -1,7 +1,7 @@
 @extends('layouts.master')
 @section('title', 'Sending Profiles')
 @section('content')
-@include('contents.modal.sending-profile.add-sending-profile-modal')
+    @include('contents.modal.sending-profile.add-sending-profile-modal')
     <div class=" p-4 w-full flex flex-col h-full min-h-screen  bg-gray-50 dark:bg-gray-800 dark:text-white text-gray-900">
         <div class="">
             <div class="flex p-4 items-center justify-between">
@@ -77,8 +77,276 @@
     </div>
 
     <script>
-        function showAddSendingProfileModal(){
+        let sendingProfiles = [];
+        $(document).ready(function() {
+            getSendingProfile();
+        });
+
+        function showAddSendingProfileModal() {
+            $("#button-for-profile").removeAttr('onclick').attr('onclick', 'addSendingProfile()');
+            $("#sending-profile-form input").val("");
+            $("#interface_type").val("smtp");
+            $("#http-header-list").empty();
+            $(".for-edit-profile").hide();
+            $(".for-create-profile").show();
+            $("#error-http-header").hide();
+            $("#error-message-field").hide();
+            $("#button-for-profile").text('Add');
+            $("#title-add-sending-profile-modal").text('Create Sending Profile')
             showModal('add-sending-profile-modal');
+
+        }
+
+        function addHttpHeader() {
+            let checkValue = $("#header_email").val() != "" && $("#header_value").val() != "";
+            if (checkValue) {
+                let header_email = $("#header_email").val();
+                let header_value = $("#header_value").val();
+                let id = $("#http-header-list").children().last().attr('value') ? parseInt($("#http-header-list").children()
+                    .last().attr('value')) + 1 : 1;
+                let html = ` <div class="http-header flex items-center justify-between mb-4 shadow-md p-3 rounded-xl"
+                        value="${id}" id="http_header_${id}">
+                        <div class="flex flex-col gap-1">
+                            <p class="text-xs font-semibold text-gray-800 dark:text-gray-200">${header_email}</p>
+                            <p class="text-xs font-medium text-gray-500 dark:text-gray-100">${header_value}</p>
+                        </div>
+                        <div>
+                            <button type="button" data-value="${id}" onclick="removeHttpHeader(${id})"
+                                class="remove-user focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-xs px-5 py-2.5 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Remove</button>
+                        </div>
+                    </div>`;
+                $("#http-header-list").append(html);
+                $("#header_email").val("");
+                $("#header_value").val("");
+                $("#error-http-header").hide();
+            } else {
+                $("#error-http-header").show();
+            }
+        }
+
+        function removeHttpHeader(id) {
+            $(`#http_header_${id}`).remove();
+        }
+
+        function addSendingProfile() {
+            let profile_name = $("#profile_name").val();
+            let interface_type = $("#interface_type").val();
+            let email_smtp = $("#email_smtp").val();
+            let first_name_smtp = $("#first_name_smtp").val();
+            let last_name_smtp = $("#last_name_smtp").val();
+            let host = $("#smtp_host").val();
+            let ignore_certificate = $("#ignore_certificate").val();
+            let username = $("#username_profile").val();
+            let password = $("#password_profile").val();
+            let http_headers = [];
+            $("#http-header-list").children().each(function() {
+                let header_email = $(this).find('p').first().text();
+                let header_value = $(this).find('p').last().text();
+                http_headers.push({
+                    header_email,
+                    header_value
+                });
+            });
+
+            $.ajax({
+                url: "{{ route('createSendingProfile') }}",
+                type: "POST",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    profile_name,
+                    interface_type,
+                    email_smtp,
+                    first_name_smtp,
+                    last_name_smtp,
+                    host,
+                    ignore_certificate,
+                    username,
+                    password,
+                    http_headers
+
+                },
+                success: function(response) {
+
+                    getSendingProfile();
+                    hideModal('add-sending-profile-modal');
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Sending Profile has been added successfully',
+                        confirmButtonColor: '#10b981',
+                        confirmButtonText: 'Close'
+
+                    })
+                }
+            });
+        }
+
+        function getSendingProfile(page = 1) {
+            let show = $("#show").val();
+            let search = $("#search").val();
+            let status = $("#status").val();
+            $.ajax({
+                url: "{{ route('getSendingProfile') }}?page=" + page,
+                type: "GET",
+                data: {
+                    show,
+                    search,
+                    status,
+                    page
+                },
+                success: function(response) {
+                    console.log(response)
+                    sendingProfiles = [];
+                    sendingProfiles = response.data;
+                    $("#list-sending-profile-tbody").empty();
+
+                    Object.keys(sendingProfiles).forEach(function(key) {
+                        let button = '';
+                        let sendingProfile = sendingProfiles[key];
+
+                        if ($("#status").val() == 1) {
+                            button =
+                                `
+                            <button onclick="showEditSendingProfileModal(${sendingProfile.id})"
+                                class="px-4 me-2 py-2 text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">Edit</button>
+                                
+                                `;
+                        } else {
+                            button = `
+                            <button onclick="ActivatesendingProfile(${sendingProfile.id})"
+                                class="px-4 me-2 py-2 text-sm font-medium text-white bg-yellow-600 rounded-xl hover:bg-yellow-700 dark:bg-yellow-500 dark:hover:bg-yellow-600">Activate</button>
+                            `;
+                        }
+                        let data = `
+                        <tr class="text-sm font-light text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800">
+                            <td class="p-4">${sendingProfile.name}</td>
+                            <td class="p-4">${sendingProfile.username}</td>
+                            <td class="p-4">${sendingProfile.host}</td>
+                            <td class="p-4">${sendingProfile.from_address}</td>
+                            <td class="p-4">${sendingProfile.ignore_cert_errors}</td>
+                            <td class="p-4">
+                                ${button} 
+                                <button onclick="removesendingProfile(${sendingProfile.id})"
+                                    class="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-xl hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600">Remove</button>
+                            </td>
+                        </tr>`;
+                        $('#list-sending-profile-tbody').append(data);
+                    });
+                    paginationSendingProfile("#page-button-sending-profile-company", response.pageCount,
+                        response.currentPage);
+                    $("#numberFirstItem").text(
+                        response.profileTotal != 0 ? (page - 1) * $("#show").val() + 1 : 0
+                    );
+                    $("#numberLastItem").text(
+                        (page - 1) * $("#show").val() + response.data.length
+                    );
+                    $("#totalTemplatesCount").text(response.profileTotal);
+
+
+                }
+            });
+        }
+
+        function separateEnvelope(sender) {
+            let regex = /^(.*?)<(.+?)>$/;
+            let matches = sender.match(regex);
+            let name = $.trim(matches[1]);
+            let email = $.trim(matches[2]);
+            return {
+                name: name,
+                email: email
+            };
+        }
+
+        function showEditSendingProfileModal(id) {
+            let sendingProfile = sendingProfiles.find(x => x.id == id);
+            let headers = sendingProfile.headers
+            let sender = separateEnvelope(sendingProfile.from_address);
+            $("#profile_name").val(sendingProfile.name);
+            $("#interface_type").val(sendingProfile.interface_type);
+            $("#address_name").val(sender.name);
+            $("#email_smtp").val(sender.email);
+            $("#smtp_host").val(sendingProfile.host);
+            $("#ignore_certificate").val(sendingProfile.ignore_cert_errors == true ? 1 : 0);
+            $("#username_profile").val(sendingProfile.username);
+            $("#password_profile").val(sendingProfile.password);
+            $("#http-header-list").empty();
+            headers.forEach(function(header) {
+                let id = $("#http-header-list").children().last().attr('value') ? parseInt($("#http-header-list")
+                    .children()
+                    .last().attr('value')) + 1 : 1;
+                let html = ` <div class="http-header flex items-center justify-between mb-4 shadow-md p-3 rounded-xl"
+                        value="${id}" id="http_header_${id}">
+                        <div class="flex flex-col gap-1">
+                            <p class="text-xs font-semibold text-gray-800 dark:text-gray-200">${header.key}</p>
+                            <p class="text-xs font-medium text-gray-500 dark:text-gray-100">${header.value}</p>
+                        </div>
+                        <div>
+                            <button type="button" data-value="${id}" onclick="removeHttpHeader(${id})"
+                                class="remove-user focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-xs px-5 py-2.5 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Remove</button>
+                        </div>
+                    </div>`;
+                $("#http-header-list").append(html);
+            });
+            $("#button-for-profile").removeAttr('onclick').attr('onclick', `editSendingProfile(${id})`);
+            $("#button-for-profile").text('Update');
+            $(".for-edit-profile").show();
+            $(".for-create-profile").hide();
+            $("#error-http-header").hide();
+            $("#error-message-field").hide();
+            $("#title-add-sending-profile-modal").text('Edit Sending Profile');
+            showModal('add-sending-profile-modal');
+
+        }
+
+        function editSendingProfile(id) {
+            let name = $("#profile_name").val();
+            let interface_type = $("#interface_type").val();
+            let email = $("#email_smtp").val();
+            let address_name = $("#address_name").val();
+            let status = $("#profile_status").val();
+            let host = $("#smtp_host").val();
+            let ignore_cert_errors = $("#ignore_certificate").val();
+            let username = $("#username_profile").val();
+            let password = $("#password_profile").val();
+            let headers = []
+            $("#http-header-list").children().each(function() {
+                let header_email = $(this).find('p').first().text();
+                let header_value = $(this).find('p').last().text();
+                headers.push({
+                    header_email,
+                    header_value
+                });
+            });
+            $.ajax({
+                url: "{{ route('updateSendingProfile') }}",
+                type: "POST",
+                data: {
+                    id,
+                    name,
+                    interface_type,
+                    email,
+                    address_name,
+                    status,
+                    host,
+                    ignore_cert_errors,
+                    username,
+                    password,
+                    headers,
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(response) {
+                    getSendingProfile();
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Sending Profile has been updated!',
+                        confirmButtonColor: '#10b981',
+                        confirmButtonText: 'Close'
+                    });
+                    showModal('add-sending-profile-modal');
+                },
+            })
         }
     </script>
 @endsection
