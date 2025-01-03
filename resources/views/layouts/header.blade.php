@@ -14,7 +14,7 @@
         case 'landing-page':
             $landingPage = true;
             break;
-        case 'template-email':
+        case 'email-templates':
             $attribute = true;
             break;
         case 'sending-profile':
@@ -29,8 +29,8 @@
 <nav class="border-b-2 p-4 border-b-gray-900 bg-white border-gray-200 dark:border-gray-600 dark:bg-gray-800 items-center"
     id="navbar-header">
     <div class="max-w-full flex flex-wrap items-center justify-between mx-4">
-        <a href="https://flowbite.com/" class="flex items-center space-x-3 rtl:space-x-reverse">
-            <img src="https://flowbite.com/docs/images/logo.svg" class="h-8" alt="Flowbite Logo" />
+        <a href="{{ url('/dashboard') }}" class="flex items-center space-x-3 rtl:space-x-reverse">
+            <img src="{{ asset('image/kittyoEat.png') }}" class="h-8" alt="Flowbite Logo" />
             <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Fischsim</span>
         </a>
         <div class="flex flex-row items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
@@ -207,8 +207,6 @@
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z" />
                     </svg>`);
-
-
             }
         });
 

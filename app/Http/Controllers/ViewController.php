@@ -55,4 +55,9 @@ class ViewController extends Controller
     {
         return view('contents.email-templates');
     }
+
+    public function sendingProfileView()
+    {
+        return view('contents.sending-profiles');
+    }
 }

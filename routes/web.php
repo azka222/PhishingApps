@@ -14,6 +14,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => 'guest'], function () {
+    Route::get('/', function () {
+        return view('auth.login');
+    });
     Route::get('/email/verify', function () {
         return view('auth.verify-email');
     })->middleware('auth')->name('verification.notice');
@@ -93,11 +96,19 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
 
     Route::group(['prefix' => 'email-templates'], function () {
         Route::get('/', [ViewController::class, 'emailTemplatesView'])->name('emailTemplatesView');
-        // Route::get('/getEmailTemplates', [GophishController::class, 'getEmailTemplates'])->name('getEmailTemplates');
         Route::get('/getEmailTemplate', [GophishController::class, 'getEmailTemplate'])->name('getEmailTemplate');
         Route::post('/createEmailTemplate', [GophishController::class, 'createEmailTemplate'])->name('createEmailTemplate');
-        // Route::post('/updateEmailTemplate', [GophishController::class, 'updateEmailTemplate'])->name('updateEmailTemplate');
-        // Route::post('/deleteEmailTemplate', [GophishController::class, 'deleteEmailTemplate'])->name('deleteEmailTemplate');
+        Route::post('/updateEmailTemplate', [GophishController::class, 'updateEmailTemplate'])->name('updateEmailTemplate');
+        Route::post('/deleteEmailTemplate', [GophishController::class, 'deleteEmailTemplate'])->name('deleteEmailTemplate');
+        Route::post('/activateEmailTemplate', [GophishController::class, 'activateEmailTemplate'])->name('activateEmailTemplate');
+    });
+
+    Route::group(['prefix' => 'sending-profile'], function () {
+        Route::get('/', [ViewController::class, 'sendingProfileView'])->name('sendingProfileView');
+        Route::get('/getSendingProfile', [GophishController::class, 'getSendingProfile'])->name('getSendingProfile');
+        Route::post('/createSendingProfile', [GophishController::class, 'createSendingProfile'])->name('createSendingProfile');
+        Route::post('/updateSendingProfile', [GophishController::class, 'updateSendingProfile'])->name('updateSendingProfile');
+        Route::post('/deleteSendingProfile', [GophishController::class, 'deleteSendingProfile'])->name('deleteSendingProfile');
     });
 
 });
