@@ -1,6 +1,7 @@
 @extends('layouts.master')
 @section('title', 'Sending Profiles')
 @section('content')
+@include('contents.modal.sending-profile.add-sending-profile-modal')
     <div class=" p-4 w-full flex flex-col h-full min-h-screen  bg-gray-50 dark:bg-gray-800 dark:text-white text-gray-900">
         <div class="">
             <div class="flex p-4 items-center justify-between">
@@ -74,4 +75,10 @@
             </nav>
         </div>
     </div>
+
+    <script>
+        function showAddSendingProfileModal(){
+            showModal('add-sending-profile-modal');
+        }
+    </script>
 @endsection

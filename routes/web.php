@@ -103,8 +103,8 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         Route::post('/activateEmailTemplate', [GophishController::class, 'activateEmailTemplate'])->name('activateEmailTemplate');
     });
 
-    Route::group(['prefix' => 'sending-profiles'], function () {
-        Route::get('/', [ViewController::class, 'sendingProfilesView'])->name('sendingProfilesView');
+    Route::group(['prefix' => 'sending-profile'], function () {
+        Route::get('/', [ViewController::class, 'sendingProfileView'])->name('sendingProfileView');
         Route::get('/getSendingProfile', [GophishController::class, 'getSendingProfile'])->name('getSendingProfile');
         Route::post('/createSendingProfile', [GophishController::class, 'createSendingProfile'])->name('createSendingProfile');
         Route::post('/updateSendingProfile', [GophishController::class, 'updateSendingProfile'])->name('updateSendingProfile');
