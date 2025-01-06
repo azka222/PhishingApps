@@ -122,14 +122,15 @@
                     search: search
                 },
                 success: function(response) {
-                    groups = response.groups;
+                    groups = response.data;
+                    console.log(groups);
                     $("#list-groups-tbody").empty();
                     groups.forEach(function(group) {
                         let status = group.status == 1 ? 'Active' : 'Inactive';
                         $("#list-groups-tbody").append(`
                             <tr class="text-sm font-normal text-gray-900 dark:text-gray-400 bg-white dark:bg-gray-800">
                                 <td class="p-4">${group.name}</td>
-                                <td class="p-4">${group.target_count}</td>
+                                <td class="p-4">${group.member}</td>
                                 <td class="p-4">${group.department.name}</td>
                                 <td class="p-4">${status}</td>
                                 <td class="p-4">
@@ -143,12 +144,12 @@
                     paginationGroupCompany("#pagination-group-button", response.pageCount, response
                         .currentPage);
                     $("#numberFirstItem").text(
-                        response.targetTotal != 0 ? (page - 1) * $("#show").val() + 1 : 0
+                        response.totalGroup != 0 ? (page - 1) * $("#show").val() + 1 : 0
                     );
                     $("#numberLastItem").text(
-                        (page - 1) * $("#show").val() + response.groups.length
+                        (page - 1) * $("#show").val() + response.data.length
                     );
-                    $("#totalTemplatesCount").text(response.targetTotal);
+                    $("#totalTemplatesCount").text(response.totalGroup);
                 },
                 error: function(error) {
                     console.log(error);
@@ -208,7 +209,7 @@
             $("#group_status").val(tempGroup.status);
             $("#group_description").val(tempGroup.description);
             $("#group_member_list").empty();
-            tempGroup.target.forEach(function(target) {
+            tempGroup.targets.forEach(function(target) {
                 $("#group_member_list").append(`
                     <div class="group-member flex items-center justify-between mb-4 shadow-md p-3 rounded-xl"
                         value="${target.id}" id="group_member_${target.id}">

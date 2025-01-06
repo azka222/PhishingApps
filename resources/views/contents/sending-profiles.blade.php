@@ -90,6 +90,8 @@
             $(".for-edit-profile").hide();
             $(".for-create-profile").show();
             $("#error-http-header").hide();
+            $("#header_email").val("");
+            $("#header_value").val("");
             $("#error-message-field").hide();
             $("#button-for-profile").text('Add');
             $("#title-add-sending-profile-modal").text('Create Sending Profile')
@@ -105,7 +107,7 @@
                 let id = $("#http-header-list").children().last().attr('value') ? parseInt($("#http-header-list").children()
                     .last().attr('value')) + 1 : 1;
                 let html = ` <div class="http-header flex items-center justify-between mb-4 shadow-md p-3 rounded-xl"
-                        value="${id}" id="http_header_${id}">
+                        value="${id}" id="http_header_${id}" data-header="${header_email}" data-value="${header_value}">
                         <div class="flex flex-col gap-1">
                             <p class="text-xs font-semibold text-gray-800 dark:text-gray-200">${header_email}</p>
                             <p class="text-xs font-medium text-gray-500 dark:text-gray-100">${header_value}</p>
@@ -140,8 +142,8 @@
             let password = $("#password_profile").val();
             let http_headers = [];
             $("#http-header-list").children().each(function() {
-                let header_email = $(this).find('p').first().text();
-                let header_value = $(this).find('p').last().text();
+                let header_email =  $(this).data('header');
+                let header_value = $(this).data('value');
                 http_headers.push({
                     header_email,
                     header_value
@@ -299,7 +301,7 @@
                     .children()
                     .last().attr('value')) + 1 : 1;
                 let html = ` <div class="http-header flex items-center justify-between mb-4 shadow-md p-3 rounded-xl"
-                        value="${id}" id="http_header_${id}">
+                        value="${id}" id="http_header_${id}" data-header="${header.key}" data-value="${header.value}">
                         <div class="flex flex-col gap-1">
                             <p class="text-xs font-semibold text-gray-800 dark:text-gray-200">${header.key}</p>
                             <p class="text-xs font-medium text-gray-500 dark:text-gray-100">${header.value}</p>
@@ -317,6 +319,8 @@
             $(".for-create-profile").hide();
             $("#error-http-header").hide();
             $("#error-message-field").hide();
+            $("#header_email").val("");
+            $("#header_value").val("");
             $("#title-add-sending-profile-modal").text('Edit Sending Profile');
             $("#error_message_field").hide();
             showModal('add-sending-profile-modal');
@@ -335,13 +339,14 @@
             let password = $("#password_profile").val();
             let http_headers = []
             $("#http-header-list").children().each(function() {
-                let header_email = $(this).find('p').first().text();
-                let header_value = $(this).find('p').last().text();
+                let header_email = $(this).data('header');
+                let header_value = $(this).data('value');
                 http_headers.push({
                     header_email,
                     header_value
                 });
             });
+            console.log(http_headers)
             $.ajax({
                 url: "{{ route('updateSendingProfile') }}",
                 type: "POST",

@@ -15,6 +15,24 @@ class GophishController extends Controller
 {
     public $url = 'http://127.0.0.1:3333/api';
 
+    public function getTimeGoPhish()
+    {
+        $date = new DateTime();
+        $date->setTimezone(new DateTimeZone('America/Chicago'));
+        $formattedDate = $date->format('Y-m-d\TH:i:s.uP');
+        return $formattedDate;
+    }
+
+    public function getIdFromGophish($module)
+    {
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
+        ])->get('http://127.0.0.1:3333/api/' . $module);
+        $existingIds = collect($response->json())->pluck('id');
+        $newId = $existingIds->max() + 1;
+        return $newId;
+    }
+
     // ================================== Landing Pages ==================================
     public function landingPagePreview($id)
     {
@@ -117,15 +135,8 @@ class GophishController extends Controller
             $attachments = [];
         }
 
-        $date = new DateTime();
-        $date->setTimezone(new DateTimeZone('America/Chicago'));
-        $formattedDate = $date->format('Y-m-d\TH:i:s.uP');
-
-        $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
-        ])->get('http://127.0.0.1:3333/api/templates');
-        $existingIds = collect($response->json())->pluck('id');
-        $newId = $existingIds->max() + 1;
+        $formattedDate = $this->getTimeGoPhish();
+        $newId = $this->getIdFromGophish('templates');
         $envelope = $request->sender_name . ' <' . $request->sender_email . '>';
         $jsonData = [
             'id' => $newId,
@@ -234,9 +245,7 @@ class GophishController extends Controller
             'sender_email' => 'required|email',
         ]);
 
-        $date = new DateTime();
-        $date->setTimezone(new DateTimeZone('America/Chicago'));
-        $formattedDate = $date->format('Y-m-d\TH:i:s.uP');
+        $formattedDate = $this->getTimeGoPhish();
 
         if ($request->hasFile('email_attachment') && $request->email_attachment != null) {
             $attachments = [
@@ -332,22 +341,14 @@ class GophishController extends Controller
             'http_headers' => 'nullable|array',
         ]);
 
-        $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
-        ])->get('http://127.0.0.1:3333/api/smtp');
-        $existingIds = collect($response->json())->pluck('id');
-        $newId = $existingIds->max() + 1;
-
-        $date = new DateTime();
-        $date->setTimezone(new DateTimeZone('America/Chicago'));
-        $formattedDate = $date->format('Y-m-d\TH:i:s.uP');
+        $newId = $this->getIdFromGophish('smtp');
+        $formattedDate = $this->getTimeGoPhish();
         $envelope = $request->first_name_smtp . ' ' . $request->last_name_smtp . ' ' . '<' . $request->email_smtp . '>';
-
         $httpHeaders = [];
         if ($request->has('http_headers') && $request->http_headers != null) {
             foreach ($request->http_headers as $key => $value) {
                 $httpHeaders[] = [
-                    'name' => $value['header_email'],
+                    'key' => $value['header_email'],
                     'value' => $value['header_value'],
                 ];
             }
@@ -449,15 +450,14 @@ class GophishController extends Controller
             'password' => 'nullable|string',
             'http_headers' => 'nullable|array',
         ]);
-        $date = new DateTime();
-        $date->setTimezone(new DateTimeZone('America/Chicago'));
-        $formattedDate = $date->format('Y-m-d\TH:i:s.uP');
+        
+        $formattedDate = $this->getTimeGoPhish();
 
         if ($request->has('http_headers') && $request->http_headers != null) {
             $httpHeaders = [];
             foreach ($request->http_headers as $key => $value) {
                 $httpHeaders[] = [
-                    'name' => $value['header_email'],
+                    'key' => $value['header_email'],
                     'value' => $value['header_value'],
                 ];
             }
