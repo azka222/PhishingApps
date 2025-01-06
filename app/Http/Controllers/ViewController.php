@@ -60,4 +60,9 @@ class ViewController extends Controller
     {
         return view('contents.sending-profiles');
     }
+
+    public function campaignView()
+    {
+        return view('contents.campaign');
+    }
 }

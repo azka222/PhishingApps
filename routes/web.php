@@ -112,4 +112,9 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         Route::post('/activateSendingProfile', [GophishController::class, 'activateSendingProfile'])->name('activateSendingProfile');
     });
 
+    Route::group(['prefix' => 'campaigns'], function(){
+        Route::get('/', [ViewController::class, 'campaignView'])->name('campaignView');
+        Route::get('/getCampaignResources', [GophishController::class, 'getCampaignResources'])->name('getCampaignResources');
+    });
+
 });

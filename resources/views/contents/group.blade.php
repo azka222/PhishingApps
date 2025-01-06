@@ -1,5 +1,5 @@
 @extends('layouts.master')
-@section('title', 'Target')
+@section('title', 'Groups')
 @section('content')
     @include('contents.modal.group.add-group-modal')
     @include('contents.modal.group.details-group-modal')
@@ -487,7 +487,7 @@
             $("#group_member_count_details").text(tempGroup.target_count);
             $("#group_description_details").text(tempGroup.description);
             $("#list-targets-groups-tbody").empty();
-            tempGroup.target.forEach(function(target){
+            tempGroup.targets.forEach(function(target){
                 $("#list-targets-groups-tbody").append(`
                     <tr class="text-sm font-normal text-gray-900 dark:text-gray-400 bg-white dark:bg-gray-700">
                         <td class="p-4">${target.first_name} ${target.last_name}</td>

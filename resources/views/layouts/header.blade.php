@@ -1,6 +1,6 @@
 @php
     $url = explode('/', Route::current()->uri)[0];
-    $home = $user = $landingPage = $attribute = $dashboard = false;
+    $home = $user = $landingPage = $attribute = $dashboard = $campaign = false;
     switch ($url) {
         case 'dashboard':
             $dashboard = true;
@@ -12,13 +12,16 @@
             $user = true;
             break;
         case 'landing-page':
-            $landingPage = true;
+            $attribute = true;
             break;
         case 'email-templates':
             $attribute = true;
             break;
         case 'sending-profile':
             $attribute = true;
+            break;
+        case 'campaigns':
+            $campaign = true;
             break;
         default:
             $home = true;
@@ -78,9 +81,9 @@
 
 
 
-            <button data-collapse-toggle="navbar-user" id="toggle-navbar" type="button"
-                class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
-                aria-controls="navbar-user" aria-expanded="false">
+            <button data-collapse-toggle="navbar-menu" id="toggle-navbar" type="button"
+                class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg lg:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+                aria-controls="navbar-menu" aria-expanded="false">
                 <span class="sr-only">Open main menu</span>
                 <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                     viewBox="0 0 17 14">
@@ -89,61 +92,99 @@
                 </svg>
             </button>
         </div>
-        <div id="targetEl" class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1"
-            id="navbar-user">
+        <div id="targetEl" class="items-center justify-between hidden w-full lg:flex px-8 lg:w-auto lg:order-1"
+            data-collapse-target="navbar-menu">
             <div class="flex flex-row gap-4">
-                <div>
-                    <button
-                        class="px-3 py-2 text-sm font-medium border-2 {{ $dashboard ? 'text-white border-blue-500 shadow-blue-500/50 dark:bg-blue-500 bg-blue-500 dark:border-blue-500' : 'border-gray-700 text-gray-900 dark:text-white ' }} rounded-full">
-                        <a href="{{ url('/dashboard') }}">Dashboard</a>
-                    </button>
+                <div class="items-center justify-between hidden lg:flex gap-4 lg:w-auto lg:order-1"
+                    data-collapse-target="navbar-menu">
+                    <div>
+                        <button
+                            class="px-3 py-2 text-sm font-medium border-2 {{ $dashboard ? 'text-white border-blue-500 shadow-blue-500/50 dark:bg-blue-500 bg-blue-500 dark:border-blue-500' : 'border-gray-700 text-gray-900 dark:text-white ' }} rounded-full">
+                            <a href="{{ url('/dashboard') }}">Dashboard</a>
+                        </button>
+                    </div>
+                    <div>
+                        <button id="dropdownHoverButton" data-dropdown-toggle="hoverTargetGroup"
+                            data-dropdown-trigger="hover"
+                            class="px-3 py-2 text-sm font-medium border-2 {{ $user ? 'text-white border-blue-500 shadow-blue-500/50 dark:bg-blue-500 bg-blue-500 dark:border-blue-500' : 'border-gray-700 text-gray-900 dark:text-white ' }} rounded-full"
+                            type="button">Group & Target
+                        </button>
+                    </div>
+                    <div id="hoverTargetGroup"
+                        class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+                        <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownHoverButton">
+                            <li>
+                                <a href="{{ url('/target') }}"
+                                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Target</a>
+                            </li>
+                            <li>
+                                <a href="{{ url('/groups') }}"
+                                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Groups</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <button id="dropdownHoverButton2" data-dropdown-toggle="hoverAttribute"
+                            data-dropdown-trigger="hover"
+                            class="px-3 py-2 text-sm font-medium border-2 {{ $attribute ? 'text-white border-blue-500 shadow-blue-500/50 dark:bg-blue-500 bg-blue-500 dark:border-blue-500' : 'border-gray-700 text-gray-900 dark:text-white ' }} rounded-full"
+                            type="button">Attribute
+                        </button>
+                    </div>
+                    <div id="hoverAttribute"
+                        class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+                        <ul class="py-2 text-sm text-gray-700 dark:text-gray-200"
+                            aria-labelledby="dropdownHoverButton2">
+                            <li>
+                                <a href="{{ url('/sending-profile') }}"
+                                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Sending
+                                    Profile</a>
+                            </li>
+                            <li>
+                                <a href="{{ url('/email-templates') }}"
+                                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Email
+                                    Template</a>
+                            </li>
+                            <li>
+                                <a href="{{ url('/landing-page') }}"
+                                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Landing
+                                    Page</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <button
+                            class="px-3 py-2 text-sm font-medium border-2 {{ $campaign ? 'text-white border-blue-500 shadow-blue-500/50 dark:bg-blue-500 bg-blue-500 dark:border-blue-500' : 'border-gray-700 text-gray-900 dark:text-white ' }} rounded-full">
+                            <a href="{{ url('/campaigns') }}">Campaign</a>
+                        </button>
+                    </div>
                 </div>
-                <div>
-                    <button id="dropdownHoverButton" data-dropdown-toggle="hoverTargetGroup"
-                        data-dropdown-trigger="hover"
-                        class="px-3 py-2 text-sm font-medium border-2 {{ $user ? 'text-white border-blue-500 shadow-blue-500/50 dark:bg-blue-500 bg-blue-500 dark:border-blue-500' : 'border-gray-700 text-gray-900 dark:text-white ' }} rounded-full"
-                        type="button">Group & Target
-                    </button>
-                </div>
-                <div id="hoverTargetGroup"
-                    class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
-                    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownHoverButton">
-                        <li>
-                            <a href="{{ url('/target') }}"
-                                class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Target</a>
-                        </li>
-                        <li>
-                            <a href="{{ url('/groups') }}"
-                                class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Groups</a>
-                        </li>
-                    </ul>
-                </div>
-                <div>
-                    <button
-                        class="px-3 py-2 text-sm font-medium border-2 {{ $landingPage ? 'text-white border-blue-500 shadow-blue-500/50 dark:bg-blue-500 bg-blue-500 dark:border-blue-500' : 'border-gray-700 text-gray-900 dark:text-white ' }} rounded-full">
-                        <a href="{{ url('/landing-page') }}">Landing
-                            Page</a>
-                    </button>
-                </div>
-                <div>
-                    <button id="dropdownHoverButton2" data-dropdown-toggle="hoverAttribute"
-                        data-dropdown-trigger="hover"
-                        class="px-3 py-2 text-sm font-medium border-2 {{ $attribute ? 'text-white border-blue-500 shadow-blue-500/50 dark:bg-blue-500 bg-blue-500 dark:border-blue-500' : 'border-gray-700 text-gray-900 dark:text-white ' }} rounded-full"
-                        type="button">Attribute
-                    </button>
-                </div>
-                <div id="hoverAttribute"
-                    class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
-                    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownHoverButton2">
-                        <li>
-                            <a href="{{ url('/sending-profile') }}"
-                                class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Sending Profile</a>
-                        </li>
-                        <li>
-                            <a href="{{ url('/email-templates') }}"
-                                class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Email Template</a>
-                        </li>
-                    </ul>
+                
+                <div class="fixed top-16 right-4 z-50 flex flex-col gap-2 bg-white dark:bg-gray-800 rounded-md shadow-lg p-4 w-64 hidden"
+                    id="mobileDropdown">
+                    <a href="{{ url('/dashboard') }}" class="block px-4 py-2 text-sm text-gray-900 dark:text-white">
+                        Dashboard
+                    </a>
+                    <a href="{{ url('/target') }}" class="block px-4 py-2 text-sm text-gray-900 dark:text-white">
+                        Target
+                    </a>
+                    <a href="{{ url('/groups') }}" class="block px-4 py-2 text-sm text-gray-900 dark:text-white">
+                        Groups
+                    </a>
+                    <a href="{{ url('/sending-profile') }}"
+                        class="block px-4 py-2 text-sm text-gray-900 dark:text-white">
+                        Sending Profile
+                    </a>
+                    <a href="{{ url('/email-templates') }}"
+                        class="block px-4 py-2 text-sm text-gray-900 dark:text-white">
+                        Email Template
+                    </a>
+                    <a href="{{ url('/landing-page') }}"
+                        class="block px-4 py-2 text-sm text-gray-900 dark:text-white">
+                        Landing Page
+                    </a>
+                    <a href="{{ url('/campaigns') }}" class="block px-4 py-2 text-sm text-gray-900 dark:text-white">
+                        Campaign
+                    </a>
                 </div>
 
             </div>
@@ -154,7 +195,7 @@
 <script>
     $(document).ready(function() {
         $("#toggle-navbar").click(function() {
-            $("#navbar-user").toggleClass('hidden');
+            $("#targetEl").toggleClass('hidden');
         });
 
         $("#dropdownAvatarNameButton").click(function() {
