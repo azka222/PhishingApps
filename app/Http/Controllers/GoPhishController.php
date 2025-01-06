@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\EmailTemplateCompany;
+use App\Models\Group;
 use App\Models\SendingProfileCompany;
 use DateTime;
 use DateTimeZone;
@@ -450,7 +451,7 @@ class GophishController extends Controller
             'password' => 'nullable|string',
             'http_headers' => 'nullable|array',
         ]);
-        
+
         $formattedDate = $this->getTimeGoPhish();
 
         if ($request->has('http_headers') && $request->http_headers != null) {
@@ -519,4 +520,70 @@ class GophishController extends Controller
         return response()->json(['message' => 'Sending profile activated successfully']);
     }
     // ================================== End Sending Profile ==================================
+
+    // ================================== Campaign ==================================
+    public function getCampaignResources()
+    {
+        $emailTemplatesApp = EmailTemplateCompany::where('company_id', auth()->user()->company_id)->where('status', 1)->pluck('template_id');
+        $sendingProfilesApp = SendingProfileCompany::where('company_id', auth()->user()->company_id)->where('status', 1)->pluck('sending_profile_id');
+        $groupApp = Group::where('company_id', auth()->user()->company_id)->where('status', 1)->orwhere('status', '1')->pluck('gophish_id');  
+        $emailTemplates = [];
+        $sendingProfiles = [];
+        $groups = [];
+        $landingPages = [];
+        foreach ($emailTemplatesApp as $value) {
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
+            ])->get("{$this->url}/templates/{$value}");
+            if ($response->successful()) {
+                $data = $response->json();
+                if (isset($data['name'])) {
+                    $data['name'] = explode('-+-', $data['name'])[0];
+                }
+                $emailTemplates[] = ['id' => $data['id'], 'name' => $data['name']];
+            }
+        }
+        foreach ($sendingProfilesApp as $value) {
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
+            ])->get("{$this->url}/smtp/{$value}");
+            if ($response->successful()) {
+                $data = $response->json();
+                if (isset($data['name'])) {
+                    $data['name'] = explode('-+-', $data['name'])[0];
+                }
+                $sendingProfiles[] = ['id' => $data['id'], 'name' => $data['name']];
+            }
+        }
+        foreach ($groupApp as $value) {
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
+            ])->get("{$this->url}/groups/{$value}");
+            if ($response->successful()) {
+                $data = $response->json();
+                if (isset($data['name'])) {
+                    $data['name'] = explode('-+-', $data['name'])[0];
+                }
+                $groups[] = ['id' => $data['id'], 'name' => $data['name']];
+            }
+        }
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
+        ])->get("{$this->url}/pages");
+        if ($response->successful()) {
+            $data = $response->json();
+            foreach ($data as $value) {
+                if (isset($value['name'])) {
+                    $value['name'] = explode('-+-', $value['name'])[0];
+                }
+                $landingPages[] = ['id' => $value['id'], 'name' => $value['name']];
+            }
+        }
+        return response()->json([
+            'emailTemplates' => $emailTemplates,
+            'sendingProfiles' => $sendingProfiles,
+            'groups' => $groups,
+            'landingPages' => $landingPages,
+        ]);
+    }
 }

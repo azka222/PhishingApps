@@ -62,7 +62,7 @@ class GroupController extends Controller
                 if (isset($data['name'])) {
                     $data['name'] = explode('-+-', $data['name'])[0];
                 }
-                $group = Group::with('department', 'target.department')->where('gophish_id', $id)->first();
+                $group = Group::with('department', 'target.department', 'target.position')->where('gophish_id', $id)->first();
                 $data['department'] = $group->department;
                 $data['status'] = $group->status;
                 $data['member'] = count($data['targets']);
@@ -70,6 +70,9 @@ class GroupController extends Controller
                 $data['department_id'] = $group->department_id;
                 $data['targets'] = [];
                 $data['targets'] = $group->target;
+                $data['created_at'] = $group->created_at;
+                $data['updated_at'] = $group->updated_at;
+                $data['target_count'] = count($data['targets']);
                 $responses[] = $data;
 
             }
@@ -206,15 +209,21 @@ class GroupController extends Controller
     public function deleteGroup(Request $request)
     {
         $request->validate([
-            'id' => 'required|exists:groups,id',
+            'id' => 'required|exists:groups,gophish_id',
         ]);
 
-        $group = Group::find($request->id);
-        $group->delete();
-
-        return response()->json([
-            'message' => 'Group deleted successfully',
-        ]);
+        $group = Group::where('gophish_id', $request->id)->first();
+        $id = intval($request->id);
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
+        ])->delete("{$this->url}/groups/{$id}");
+        if ($response->successful() && $response->body() != []) {
+            $group->delete();
+            return response()->json([
+                'message' => 'Group deleted successfully',
+            ]);
+        }
+        return response()->json(['error' => $response->json()], 500);
     }
 
 }
