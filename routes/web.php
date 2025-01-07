@@ -110,11 +110,13 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         Route::post('/updateSendingProfile', [GophishController::class, 'updateSendingProfile'])->name('updateSendingProfile');
         Route::post('/deleteSendingProfile', [GophishController::class, 'deleteSendingProfile'])->name('deleteSendingProfile');
         Route::post('/activateSendingProfile', [GophishController::class, 'activateSendingProfile'])->name('activateSendingProfile');
+        Route::post('/testSendingProfile', [GophishController::class, 'testSendingProfile'])->name('testSendingProfile');
     });
 
     Route::group(['prefix' => 'campaigns'], function(){
         Route::get('/', [ViewController::class, 'campaignView'])->name('campaignView');
         Route::get('/getCampaignResources', [GophishController::class, 'getCampaignResources'])->name('getCampaignResources');
+        Route::post('/testConnection', [GophishController::class, 'testConnection'])->name('testConnection');
     });
 
 });

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
 use App\Models\EmailTemplateCompany;
 use App\Models\Group;
 use App\Models\SendingProfileCompany;
@@ -10,6 +11,7 @@ use DateTimeZone;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rule;
 
 class GophishController extends Controller
@@ -519,6 +521,55 @@ class GophishController extends Controller
         $companySendingProfile->save();
         return response()->json(['message' => 'Sending profile activated successfully']);
     }
+
+    public function testSendingProfile(Request $request)
+    {
+        $request->validate([
+            'interface_type' => 'required|in:smtp',
+            'email_smtp' => 'required|email',
+            'first_name_smtp' => 'nullable|string',
+            'last_name_smtp' => 'nullable|string',
+            'host' => 'required|regex:/^[a-zA-Z0-9.-]+:[0-9]+$/',
+            'ignore_certificate' => 'required|boolean',
+            'username' => 'nullable|string',
+            'password' => 'nullable|string',
+            'http_headers' => 'nullable|array',
+        ]);
+
+        [$host, $port] = explode(':', $request->input('host'));
+        config([
+            'mail.mailers.smtp.host' => $host,
+            'mail.mailers.smtp.port' => $port,
+            'mail.mailers.smtp.username' => $request->input('username'),
+            'mail.mailers.smtp.password' => $request->input('password'),
+            'mail.mailers.smtp.encryption' => $request->input('ignore_certificate') ? null : 'ssl',
+            'mail.from.address' => $request->input('email_smtp'),
+            'mail.from.name' => $request->input('first_name_smtp') . ' ' . $request->input('last_name_smtp'),
+        ]);
+
+        try {
+            Mail::raw('This is a test email to validate the SMTP configuration.', function ($message) use ($request) {
+                $message->to('test@example.com')
+                    ->subject('Test Email from Gophish Configuration');
+                if ($request->input('http_headers')) {
+                    foreach ($request->input('http_headers') as $header => $value) {
+                        if (is_array($value)) {
+                            $value = implode(', ', $value);
+                        }
+                        $message->getHeaders()->addTextHeader($header, (string) $value);
+                    }
+                }
+            });
+
+            return response()->json([
+                'message' => 'Test email sent successfully!',
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Test email failed to send: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
     // ================================== End Sending Profile ==================================
 
     // ================================== Campaign ==================================
@@ -526,7 +577,7 @@ class GophishController extends Controller
     {
         $emailTemplatesApp = EmailTemplateCompany::where('company_id', auth()->user()->company_id)->where('status', 1)->pluck('template_id');
         $sendingProfilesApp = SendingProfileCompany::where('company_id', auth()->user()->company_id)->where('status', 1)->pluck('sending_profile_id');
-        $groupApp = Group::where('company_id', auth()->user()->company_id)->where('status', 1)->orwhere('status', '1')->pluck('gophish_id');  
+        $groupApp = Group::where('company_id', auth()->user()->company_id)->where('status', 1)->orwhere('status', '1')->pluck('gophish_id');
         $emailTemplates = [];
         $sendingProfiles = [];
         $groups = [];
@@ -586,4 +637,68 @@ class GophishController extends Controller
             'landingPages' => $landingPages,
         ]);
     }
+    public function testConnection(Request $request)
+    {
+        $id = $request->input('id');
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
+        ])->get("{$this->url}/smtp/{$id}");
+
+        if (!$response->successful()) {
+            return response()->json(['error' => 'Failed to fetch SMTP configuration'], 500);
+        }
+        $smtp = $response->json();
+        try {
+            if (!isset($smtp['host'], $smtp['from_address'])) {
+                return response()->json(['error' => 'Invalid SMTP configuration'], 400);
+            }
+            [$host, $port] = explode(':', $smtp['host']);
+            $formattedAddress = $this->formatAddress($smtp['from_address']);
+            config([
+                'mail.mailers.smtp.host' => $host,
+                'mail.mailers.smtp.port' => $port,
+                'mail.mailers.smtp.username' => $smtp['username'],
+                'mail.mailers.smtp.password' => $smtp['password'],
+                'mail.mailers.smtp.encryption' => $smtp['ignore_cert_errors'] ? null : 'ssl',
+                'mail.from.address' => $formattedAddress['email'],
+                'mail.from.name' => $formattedAddress['name'],
+            ]);
+            Mail::raw('This is a test email to validate the SMTP configuration.', function ($message) use ($request) {
+                $message->to('test@example.com')
+                    ->subject('Test Email from Gophish Configuration');
+                if ($request->input('http_headers')) {
+                    foreach ($request->input('http_headers') as $header => $value) {
+                        if (is_array($value)) {
+                            $value = implode(', ', $value);
+                        }
+                        $message->getHeaders()->addTextHeader($header, (string) $value);
+                    }
+                }
+            });
+            return response()->json(['message' => 'Test email sent successfully!'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Test email failed: ' . $e->getMessage()], 500);
+        }
+    }
+
+    public function formatAddress($address)
+    {
+        if (preg_match('/^(.+?)\s*<(.+?)>$/', $address, $matches)) {
+            return [
+                'name' => $matches[1],
+                'email' => $matches[2],
+            ];
+        }
+        if (preg_match('/^[^@]+@[^@]+\.[^@]+$/', $address)) {
+            return [
+                'name' => '',
+                'email' => $address,
+            ];
+        }
+        return [
+            'name' => 'Default Name',
+            'email' => 'default@example.com',
+        ];
+    }
+
 }

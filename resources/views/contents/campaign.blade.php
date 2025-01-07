@@ -164,7 +164,7 @@
             $("#group_campaign").append(
                 `<option value="">Select Group</option>`
             );
-            groups.forEach(function(group){ 
+            groups.forEach(function(group) {
                 $("#group_campaign").append(
                     `<option value="${group.id}">${group.name}</option>`
                 );
@@ -179,9 +179,66 @@
             })
         }
 
-        function removeGroup(id){
+        function removeGroup(id) {
             $(`#group_member_${id}`).remove();
             setGroupSelection();
+        }
+
+        function testConnection() {
+            Swal.fire({
+                title: 'Testing...',
+                text: 'Please wait while we test your email profile.',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            let id = $("#campaign_profile").val();
+
+            // Set a timeout for 10 seconds (10000 milliseconds)
+            let timeout = setTimeout(() => {
+                Swal.close();
+                Swal.fire({
+                    icon: "error",
+                    title: "Response Took Too Long",
+                    text: "The connection is taking longer than expected. Please check your email profile.",
+                    confirmButtonColor: '#10b981',
+                    confirmButtonText: 'Close'
+                });
+            }, 10000);
+
+            $.ajax({
+                url: "{{ route('testConnection') }}",
+                type: "POST",
+                data: {
+                    id: id,
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(response) {
+                    clearTimeout(timeout); // Clear the timeout when the request is successful
+                    Swal.close();
+                    Swal.fire({
+                        title: 'Success',
+                        text: 'Connection is successful.',
+                        icon: 'success',
+                        confirmButtonColor: '#10b981',
+                        confirmButtonText: 'OK'
+                    });
+                },
+                error: function(xhr, status, error) {
+                    clearTimeout(timeout); // Clear the timeout if there is an error
+                    Swal.close();
+                    let errorMessage = JSON.parse(xhr.responseText);
+                    Swal.fire({
+                        icon: "error",
+                        title: "Error",
+                        text: errorMessage.error,
+                        confirmButtonColor: '#10b981',
+                        confirmButtonText: 'Close'
+                    });
+                }
+            })
         }
     </script>
 @endSection

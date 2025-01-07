@@ -142,7 +142,7 @@
             let password = $("#password_profile").val();
             let http_headers = [];
             $("#http-header-list").children().each(function() {
-                let header_email =  $(this).data('header');
+                let header_email = $(this).data('header');
                 let header_value = $(this).data('value');
                 http_headers.push({
                     header_email,
@@ -463,6 +463,102 @@
                             });
                         }
                     });
+                }
+            })
+        }
+
+        function testMail() {
+            Swal.fire({
+                title: 'Testing...',
+                text: 'Please wait while we test your input.',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading()
+                }
+            });
+            let profile_name = $("#profile_name").val();
+            let interface_type = $("#interface_type").val();
+            let email_smtp = $("#email_smtp").val();
+            let first_name_smtp = $("#first_name_smtp").val();
+            let last_name_smtp = $("#last_name_smtp").val();
+            let host = $("#smtp_host").val();
+            let ignore_certificate = $("#ignore_certificate").val();
+            let username = $("#username_profile").val();
+            let password = $("#password_profile").val();
+            let http_headers = [];
+            $("#http-header-list").children().each(function() {
+                let header_email = $(this).data('header');
+                let header_value = $(this).data('value');
+                http_headers.push({
+                    header_email,
+                    header_value
+                });
+            });
+            let timeout = setTimeout(() => {
+                Swal.close();
+                Swal.fire({
+                    icon: "error",
+                    title: "Response Took Too Long",
+                    text: "The connection is taking longer than expected. Please check your input.",
+                    confirmButtonColor: '#10b981',
+                    confirmButtonText: 'Close'
+                });
+            }, 10000);
+            $.ajax({
+                url: "{{ route('testSendingProfile') }}",
+                type: "POST",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    profile_name,
+                    interface_type,
+                    email_smtp,
+                    first_name_smtp,
+                    last_name_smtp,
+                    host,
+                    ignore_certificate,
+                    username,
+                    password,
+                    http_headers
+
+                },
+                success: function(response) {
+                    clearTimeout(timeout);
+                    Swal.close();
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Success! The test email has been sent successfully!',
+                        confirmButtonColor: '#10b981',
+                        confirmButtonText: 'Close'
+
+                    })
+                },
+                error: function(xhr) {
+                    clearTimeout(timeout);
+                    Swal.close();
+                    if (xhr.status === 422) {
+                        var errorMessage = JSON.parse(xhr.responseText) ? JSON.parse(xhr.responseText) : xhr
+                            .responseText;
+                        var errors = errorMessage.errors ? errorMessage.errors : errorMessage;
+                        $('#error_message_field').show();
+                        $('#error_message').empty();
+                        $.each(errors, function(field, messages) {
+                            $.each(messages, function(index, message) {
+                                let data = `<li>${message}</li>`;
+                                $('#error_message').append(data);
+                            });
+                        });
+                    } else {
+                        let errorMessage = JSON.parse(xhr.responseText);
+                        Swal.fire({
+                            icon: "error",
+                            title: "Error",
+                            text: errorMessage.error,
+                            confirmButtonColor: '#10b981',
+                            confirmButtonText: 'Close'
+                        });
+                        console.log(errorMessage)
+                    }
                 }
             })
         }
