@@ -115,8 +115,15 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
 
     Route::group(['prefix' => 'campaigns'], function(){
         Route::get('/', [ViewController::class, 'campaignView'])->name('campaignView');
+        Route::get('/campaignDetails/{id}', [ViewController::class, 'campaignDetailsView'])->name('campaignDetailsView');
         Route::get('/getCampaignResources', [GophishController::class, 'getCampaignResources'])->name('getCampaignResources');
+        Route::get('/getCampaigns', [GophishController::class, 'getCampaigns'])->name('getCampaigns');
         Route::post('/testConnection', [GophishController::class, 'testConnection'])->name('testConnection');
+        Route::post('/createCampaign', [GophishController::class, 'createCampaign'])->name('createCampaign');
+        Route::post('/deleteCampaign', [GophishController::class, 'deleteCampaign'])->name('deleteCampaign');
+        Route::get('/getCampaignData', [GophishController::class, 'getCampaignData'])->name('getCampaignData');
     });
+
+
 
 });

@@ -158,8 +158,6 @@
                     profile_name,
                     interface_type,
                     email_smtp,
-                    first_name_smtp,
-                    last_name_smtp,
                     host,
                     ignore_certificate,
                     username,
@@ -272,25 +270,13 @@
             });
         }
 
-        function separateEnvelope(sender) {
-            let regex = /^(.*?)<(.+?)>$/;
-            let matches = sender.match(regex);
-            let name = $.trim(matches[1]);
-            let email = $.trim(matches[2]);
-            return {
-                name: name,
-                email: email
-            };
-        }
-
         function showEditSendingProfileModal(id) {
             let sendingProfile = sendingProfiles.find(x => x.id == id);
             let headers = sendingProfile.headers
-            let sender = separateEnvelope(sendingProfile.from_address);
+            let sender = sendingProfile.from_address;
             $("#profile_name").val(sendingProfile.name);
             $("#interface_type").val(sendingProfile.interface_type);
-            $("#address_name").val(sender.name);
-            $("#email_smtp").val(sender.email);
+            $("#email_smtp").val(sender);
             $("#smtp_host").val(sendingProfile.host);
             $("#ignore_certificate").val(sendingProfile.ignore_cert_errors == true ? 1 : 0);
             $("#username_profile").val(sendingProfile.username);
@@ -331,7 +317,6 @@
             let name = $("#profile_name").val();
             let interface_type = $("#interface_type").val();
             let email = $("#email_smtp").val();
-            let address_name = $("#address_name").val();
             let status = $("#profile_status").val();
             let host = $("#smtp_host").val();
             let ignore_cert_errors = $("#ignore_certificate").val();
@@ -355,7 +340,6 @@
                     name,
                     interface_type,
                     email,
-                    address_name,
                     status,
                     host,
                     ignore_cert_errors,
@@ -479,8 +463,6 @@
             let profile_name = $("#profile_name").val();
             let interface_type = $("#interface_type").val();
             let email_smtp = $("#email_smtp").val();
-            let first_name_smtp = $("#first_name_smtp").val();
-            let last_name_smtp = $("#last_name_smtp").val();
             let host = $("#smtp_host").val();
             let ignore_certificate = $("#ignore_certificate").val();
             let username = $("#username_profile").val();
@@ -512,8 +494,6 @@
                     profile_name,
                     interface_type,
                     email_smtp,
-                    first_name_smtp,
-                    last_name_smtp,
                     host,
                     ignore_certificate,
                     username,

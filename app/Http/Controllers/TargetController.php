@@ -85,12 +85,26 @@ class TargetController extends Controller
         ]);
 
         $target = Target::find($request->id);
+        $original = [
+            'first_name' => $target->first_name,
+            'last_name' => $target->last_name,
+            'email' => $target->email,
+            'position' => $target->position_id,
+        ];
+
         $target->first_name = $request->first_name;
         $target->last_name = $request->last_name;
         $target->department_id = $request->department;
         $target->email = $request->email;
         $target->position_id = $request->position;
         $target->save();
+        if (
+            $original['first_name'] !== $target->first_name ||
+            $original['last_name'] !== $target->last_name ||
+            $original['email'] !== $target->email || $original['position'] !== $target->position_id
+        ) {
+            GophishController::updateTarget($target, $original);
+        }
 
         return response()->json([
             'message' => 'Target updated successfully',

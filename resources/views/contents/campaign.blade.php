@@ -48,10 +48,9 @@
                         <tr
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-300">
                             <th scope="col" class="p-4">Campaign Name</th>
-                            <th scope="col" class="p-4">Template</th>
+                            <th scope="col" class="p-4">Status</th>
                             <th scope="col" class="p-4">Launch Date</th>
-                            <th scope="col" class="p-4">End Date</th>
-                            <th scope="col" class="p-4">Sending Profile</th>
+                            <th scope="col" class="p-4">From Address</th>
                             <th scope="col" class="p-4">Action</th>
                         </tr>
                     </thead>
@@ -69,7 +68,7 @@
                             id="numberLastItem">0</span></span> of
                     <span id="totalTemplatesCount" class="font-semibold text-gray-900 dark:text-white">0</span>
                 </span>
-                <ul id="page-button-campign-company" class="inline-flex space-x-2 rtl:space-x-reverse text-sm h-8">
+                <ul id="page-button-campaign-company" class="inline-flex space-x-2 rtl:space-x-reverse text-sm h-8">
 
                 </ul>
             </nav>
@@ -82,8 +81,9 @@
         let sendingProfiles = [];
         let groups = [];
         let campaigns = [];
+
         $(document).ready(function() {
-            // getCampaigns();
+            getCampaigns();
             getCampaignsResources();
         });
 
@@ -195,8 +195,6 @@
             });
 
             let id = $("#campaign_profile").val();
-
-            // Set a timeout for 10 seconds (10000 milliseconds)
             let timeout = setTimeout(() => {
                 Swal.close();
                 Swal.fire({
@@ -216,7 +214,7 @@
                     _token: "{{ csrf_token() }}"
                 },
                 success: function(response) {
-                    clearTimeout(timeout); // Clear the timeout when the request is successful
+                    clearTimeout(timeout);
                     Swal.close();
                     Swal.fire({
                         title: 'Success',
@@ -227,7 +225,7 @@
                     });
                 },
                 error: function(xhr, status, error) {
-                    clearTimeout(timeout); // Clear the timeout if there is an error
+                    clearTimeout(timeout);
                     Swal.close();
                     let errorMessage = JSON.parse(xhr.responseText);
                     Swal.fire({
@@ -239,6 +237,181 @@
                     });
                 }
             })
+        }
+
+        function createCampaign() {
+            let name = $("#campaign_name").val();
+            let template = $("#campaign_template").val();
+            let page = $("#campaign_page").val();
+            let launchDate = $("#campaign_launch_date").val();
+            let endDate = $("#campaign_end_date").val();
+            let url = $("#campaign_url").val();
+            let status = $("#campaign_status").val();
+            let profile = $("#campaign_profile").val();
+            let groups = [];
+            $(".group-campaign").each(function() {
+                groups.push($(this).attr('value'));
+            });
+            $.ajax({
+                url: "{{ route('createCampaign') }}",
+                type: "POST",
+                data: {
+                    name: name,
+                    template: template,
+                    page: page,
+                    launchDate: launchDate,
+                    endDate: endDate,
+                    url: url,
+                    status: status,
+                    profile: profile,
+                    groups: groups,
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(response) {
+                    Swal.fire({
+                        title: 'Success',
+                        text: 'Campaign created successfully.',
+                        icon: 'success',
+                        confirmButtonColor: '#10b981',
+                        confirmButtonText: 'OK'
+                    });
+                    hideModal('add-campaign-modal');
+                    getCampaigns();
+                },
+                error: function(xhr, status, error) {
+                    if (xhr.status === 422) {
+                        var errorMessage = JSON.parse(xhr.responseText) ? JSON.parse(xhr.responseText) : xhr
+                            .responseText;
+                        var errors = errorMessage.errors ? errorMessage.errors : errorMessage;
+                        $('#error_message_field').show();
+                        $('#error_message').empty();
+                        $.each(errors, function(field, messages) {
+                            $.each(messages, function(index, message) {
+                                let data = `<li>${message}</li>`;
+                                $('#error_message').append(data);
+                            });
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Error",
+                            text: xhr.responseJSON.message,
+                            confirmButtonColor: '#10b981',
+                            confirmButtonText: 'Close'
+                        });
+                    }
+                }
+            })
+
+        }
+
+        function getCampaigns(page = 1) {
+            let show = $("#show").val();
+            let search = $("#search").val();
+            let status = $("#status").val();
+            $.ajax({
+                url: "{{ route('getCampaigns') }}?page=" + page,
+                type: "GET",
+                data: {
+                    show: show,
+                    search: search,
+                    status: status,
+                    page: page
+                },
+                success: function(response) {
+                    campaigns = [];
+                    campaigns = response.data;
+                    $("#list-campaign-tbody").empty();
+                    campaigns.forEach(function(campaign) {
+                        console.log(campaign);
+                        let date = new Date(campaign.launch_date);
+                        let formattedDate =
+                            `${date.toLocaleDateString('id-ID', {
+                            day: '2-digit',
+                            month: 'long',
+                            year: 'numeric'
+                        })} ${String(date.getUTCHours()).padStart(2, '0')}:${String(date.getUTCMinutes()).padStart(2, '0')}`;
+                        $("#list-campaign-tbody").append(`
+                            <tr class="text-sm font-normal text-gray-900 dark:text-gray-400 bg-white dark:bg-gray-800">
+                                <td class="p-4">
+                                   ${campaign.name}
+                                </td>
+                                <td class="p-4">
+                                    ${campaign.status}
+                                </td>
+                                <td class="p-4">
+                                    ${formattedDate}
+                                </td>
+                                <td class="p-4">
+                                    ${campaign.smtp.from_address}
+                                </td>
+                                    <td class="p-4">
+                                        <div class="flex items-center">
+                                            <button onclick="showDetailCampaign(${campaign.id})" class="px-4 me-2 py-2 text-sm font-medium text-white bg-green-600 rounded-xl hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600">Details</button>
+                                        <button onclick="deleteCampaign(${campaign.id})" class="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-xl hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600">Delete</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        `);
+                    });
+                    $("#numberFirstItem").text(
+                        response.campaignTotal != 0 ? (page - 1) * $("#show").val() + 1 : 0
+                    );
+                    $("#numberLastItem").text(
+                        (page - 1) * $("#show").val() + response.data.length
+                    );
+                    $("#totalTemplatesCount").text(response.campaignTotal);
+                    paginationSendingProfile("#page-button-campaign-company", response.pageCount,
+                        response.currentPage);
+                }
+
+            });
+        }
+
+        function deleteCampaign(id) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#10b981',
+                cancelButtonColor: '#d97706',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "{{ route('deleteCampaign') }}",
+                        type: "POST",
+                        data: {
+                            id: id,
+                            _token: "{{ csrf_token() }}"
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                title: 'Success',
+                                text: 'Campaign deleted successfully.',
+                                icon: 'success',
+                                confirmButtonColor: '#10b981',
+                                confirmButtonText: 'OK'
+                            });
+                            getCampaigns();
+                        },
+                        error: function(xhr, status, error) {
+                            Swal.fire({
+                                icon: "error",
+                                title: "Error",
+                                text: xhr.responseJSON.message,
+                                confirmButtonColor: '#10b981',
+                                confirmButtonText: 'Close'
+                            });
+                        }
+                    })
+                }
+            })
+        }
+
+        function showDetailCampaign(id) {
+            window.location.href = "{{ route('campaignDetailsView', '') }}/" + id;
         }
     </script>
 @endSection

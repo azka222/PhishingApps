@@ -32,44 +32,19 @@
                                     placeholder="Enter profile name"
                                     class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
                             </div>
-                            <div class="col-span-1">
-                                <label for="interface_type"
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-200">Interface
-                                    Type</label>
-                                <input type="text" id="interface_type" name="interface_type"
-                                    placeholder="should be smtp" value="smtp" disabled
-                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
-                            </div>
-                            <div class="col-span-1">
+                            <div class="col-span-2">
                                 <label for="email_smtp"
                                     class="block text-sm font-medium text-gray-700 dark:text-gray-200">SMTP
                                     Email</label>
                                 <input type="text" id="email_smtp" name="email_smtp" placeholder="Enter email"
                                     class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
                             </div>
-
-                            <div class="col-span-1 for-create-profile">
-                                <label for="first_name_smtp"
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-200">SMTP First
-                                    Name</label>
-                                <input type="text" id="first_name_smtp" name="first_name_smtp"
-                                    placeholder="Enter first name"
-                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
-                            </div>
-                            <div class="col-span-1 for-create-profile">
-                                <label for="last_name_smtp"
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-200">SMTP Last
-                                    Name</label>
-                                <input type="text" id="last_name_smtp" name="last_name_smtp"
-                                    placeholder="Enter last name"
-                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
-                            </div>
-                            <div class="for-edit-profile col-span-1">
-                                <label for="address_name"
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-200">Address Name
-                                </label>
-                                <input type="text" id="address_name" name="address_name"
-                                    placeholder="Enter first name"
+                            <div class="col-span-1">
+                                <label for="interface_type"
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-200">Interface
+                                    Type</label>
+                                <input type="text" id="interface_type" name="interface_type"
+                                    placeholder="should be smtp" value="smtp" disabled
                                     class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
                             </div>
                             <div class="col-span-1 for-edit-profile">

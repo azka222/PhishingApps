@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\CompanyCampaign;
 use Illuminate\Http\Request;
 
 class ViewController extends Controller
@@ -64,5 +65,14 @@ class ViewController extends Controller
     public function campaignView()
     {
         return view('contents.campaign');
+    }
+
+    public function campaignDetailsView($id)
+    {
+        $check = CompanyCampaign::where('company_id', auth()->user()->company_id)->where('campaign_id', $id)->first();
+        if (!$check) {
+            abort(404);
+        }
+        return view('contents.campaign-details', ['id' => $id]);
     }
 }
