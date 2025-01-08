@@ -2,19 +2,61 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
+use App\Models\CompanyCampaign;
 use App\Models\EmailTemplateCompany;
 use App\Models\Group;
 use App\Models\SendingProfileCompany;
+use App\Models\TargetGroup;
 use DateTime;
 use DateTimeZone;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rule;
 
 class GophishController extends Controller
 {
     public $url = 'http://127.0.0.1:3333/api';
+
+    public static function updateTarget($target, $original)
+    {
+        $group = TargetGroup::where('target_id', $target->id)->pluck('group_id');
+        if ($group->count() > 0) {
+            $gophishGroup = Group::where('company_id', auth()->user()->company_id)->whereIn('id', $group)->pluck('gophish_id');
+            foreach ($gophishGroup as $value) {
+                $instance = new self();
+                $tempGroup = $instance->getDetailsModuleGophish('groups', intval($value));
+                $tempGroupMember = $tempGroup['targets'];
+                foreach ($tempGroupMember as &$member) {
+                    if ($member['email'] == $original['email']) {
+                        $member['email'] = $target->email;
+                        $member['first_name'] = $target->first_name;
+                        $member['last_name'] = $target->last_name;
+                        $member['position'] = $target->position->name;
+                    }
+                }
+                unset($member);
+                $jsonData = [
+                    'id' => intval($tempGroup['id']),
+                    'name' => $tempGroup['name'],
+                    'targets' => $tempGroupMember,
+                    'modified_date' => $instance->getTimeGoPhish(),
+                ];
+                $response = Http::withHeaders([
+                    'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
+                ])->put("{$instance->url}/groups/{$tempGroup['id']}", $jsonData);
+                if (!$response->successful() || $response->body() == null) {
+                    return false;
+                } else {
+                    continue;
+                }
+            }
+        } else {
+            return true;
+        }
+    }
 
     public function getTimeGoPhish()
     {
@@ -32,6 +74,14 @@ class GophishController extends Controller
         $existingIds = collect($response->json())->pluck('id');
         $newId = $existingIds->max() + 1;
         return $newId;
+    }
+
+    public function getDetailsModuleGophish($module, $id)
+    {
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
+        ])->get("{$this->url}/{$module}/{$id}");
+        return $response->json();
     }
 
     // ================================== Landing Pages ==================================
@@ -333,8 +383,6 @@ class GophishController extends Controller
             'profile_name' => 'required|string',
             'interface_type' => 'required|in:smtp',
             'email_smtp' => 'required|email',
-            'first_name_smtp' => 'required|string',
-            'last_name_smtp' => 'required|string',
             'host' => 'required|regex:/^[a-zA-Z0-9.-]+:[0-9]+$/',
             'ignore_certificate' => 'required|boolean',
             'username' => 'nullable|string',
@@ -344,7 +392,7 @@ class GophishController extends Controller
 
         $newId = $this->getIdFromGophish('smtp');
         $formattedDate = $this->getTimeGoPhish();
-        $envelope = $request->first_name_smtp . ' ' . $request->last_name_smtp . ' ' . '<' . $request->email_smtp . '>';
+        $envelope = $request->email_smtp;
         $httpHeaders = [];
         if ($request->has('http_headers') && $request->http_headers != null) {
             foreach ($request->http_headers as $key => $value) {
@@ -443,7 +491,6 @@ class GophishController extends Controller
             'name' => 'required|string',
             'interface_type' => 'required|in:smtp',
             'email' => 'required|email',
-            'address_name' => 'required|string',
             'host' => 'required|regex:/^[a-zA-Z0-9.-]+:[0-9]+$/',
             'status' => 'required|boolean',
             'ignore_cert_errors' => 'required|boolean',
@@ -465,7 +512,7 @@ class GophishController extends Controller
         } else {
             $httpHeaders = [];
         }
-        $envelope = $request->address_name . ' <' . $request->email . '>';
+        $envelope = $request->email;
         $jsonData = [
             'id' => intval($request->id),
             'name' => $request->name . ' -+-' . $request->id,
@@ -519,6 +566,53 @@ class GophishController extends Controller
         $companySendingProfile->save();
         return response()->json(['message' => 'Sending profile activated successfully']);
     }
+
+    public function testSendingProfile(Request $request)
+    {
+        $request->validate([
+            'interface_type' => 'required|in:smtp',
+            'email_smtp' => 'required|email',
+            'host' => 'required|regex:/^[a-zA-Z0-9.-]+:[0-9]+$/',
+            'ignore_certificate' => 'required|boolean',
+            'username' => 'nullable|string',
+            'password' => 'nullable|string',
+            'http_headers' => 'nullable|array',
+        ]);
+
+        [$host, $port] = explode(':', $request->input('host'));
+        config([
+            'mail.mailers.smtp.host' => $host,
+            'mail.mailers.smtp.port' => $port,
+            'mail.mailers.smtp.username' => $request->input('username'),
+            'mail.mailers.smtp.password' => $request->input('password'),
+            'mail.mailers.smtp.encryption' => $request->input('ignore_certificate') ? null : 'ssl',
+            'mail.from.address' => $request->input('email_smtp'),
+            'mail.from.name' => $request->input('email_smtp'),
+        ]);
+
+        try {
+            Mail::raw('This is a test email to validate the SMTP configuration.', function ($message) use ($request) {
+                $message->to('test@example.com')
+                    ->subject('Test Email from Gophish Configuration');
+                if ($request->input('http_headers')) {
+                    foreach ($request->input('http_headers') as $header => $value) {
+                        if (is_array($value)) {
+                            $value = implode(', ', $value);
+                        }
+                        $message->getHeaders()->addTextHeader($header, (string) $value);
+                    }
+                }
+            });
+
+            return response()->json([
+                'message' => 'Test email sent successfully!',
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Test email failed to send: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
     // ================================== End Sending Profile ==================================
 
     // ================================== Campaign ==================================
@@ -526,7 +620,7 @@ class GophishController extends Controller
     {
         $emailTemplatesApp = EmailTemplateCompany::where('company_id', auth()->user()->company_id)->where('status', 1)->pluck('template_id');
         $sendingProfilesApp = SendingProfileCompany::where('company_id', auth()->user()->company_id)->where('status', 1)->pluck('sending_profile_id');
-        $groupApp = Group::where('company_id', auth()->user()->company_id)->where('status', 1)->orwhere('status', '1')->pluck('gophish_id');  
+        $groupApp = Group::where('company_id', auth()->user()->company_id)->where('status', 1)->orwhere('status', '1')->pluck('gophish_id');
         $emailTemplates = [];
         $sendingProfiles = [];
         $groups = [];
@@ -586,4 +680,240 @@ class GophishController extends Controller
             'landingPages' => $landingPages,
         ]);
     }
+    public function testConnection(Request $request)
+    {
+        $id = $request->input('id');
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
+        ])->get("{$this->url}/smtp/{$id}");
+
+        if (!$response->successful()) {
+            return response()->json(['error' => 'Failed to fetch SMTP configuration'], 500);
+        }
+        $smtp = $response->json();
+        try {
+            if (!isset($smtp['host'], $smtp['from_address'])) {
+                return response()->json(['error' => 'Invalid SMTP configuration'], 400);
+            }
+            [$host, $port] = explode(':', $smtp['host']);
+            $formattedAddress = $this->formatAddress($smtp['from_address']);
+            config([
+                'mail.mailers.smtp.host' => $host,
+                'mail.mailers.smtp.port' => $port,
+                'mail.mailers.smtp.username' => $smtp['username'],
+                'mail.mailers.smtp.password' => $smtp['password'],
+                'mail.mailers.smtp.encryption' => $smtp['ignore_cert_errors'] ? null : 'ssl',
+                'mail.from.address' => $formattedAddress['email'],
+                'mail.from.name' => $formattedAddress['name'],
+            ]);
+            Mail::raw('This is a test email to validate the SMTP configuration.', function ($message) use ($request) {
+                $message->to('test@example.com')
+                    ->subject('Test Email from Gophish Configuration');
+                if ($request->input('http_headers')) {
+                    foreach ($request->input('http_headers') as $header => $value) {
+                        if (is_array($value)) {
+                            $value = implode(', ', $value);
+                        }
+                        $message->getHeaders()->addTextHeader($header, (string) $value);
+                    }
+                }
+            });
+            return response()->json(['message' => 'Test email sent successfully!'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Test email failed: ' . $e->getMessage()], 500);
+        }
+    }
+
+    public function formatAddress($address)
+    {
+        if (preg_match('/^(.+?)\s*<(.+?)>$/', $address, $matches)) {
+            return [
+                'name' => $matches[1],
+                'email' => $matches[2],
+            ];
+        }
+        if (preg_match('/^[^@]+@[^@]+\.[^@]+$/', $address)) {
+            return [
+                'name' => '',
+                'email' => $address,
+            ];
+        }
+        return [
+            'name' => 'Default Name',
+            'email' => 'default@example.com',
+        ];
+    }
+
+    public function createCampaign(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string',
+            'template' => 'required|integer|exists:email_template_companies,template_id',
+            'page' => 'required|integer',
+            'launchDate' => 'required|date',
+            'end_date' => 'nullable|date',
+            'url' => 'required|url',
+            'status' => 'required|in:1,0',
+            'profile' => 'required|integer|exists:sending_profile_companies,sending_profile_id',
+            'groups' => 'required|array|min:1',
+        ]);
+
+        $launchDate = new DateTime($request->launchDate);
+        $launchDate->modify('-7 hours');
+        $launchDate->setTimezone(new DateTimeZone('Asia/Jakarta'));
+        $formattedLaunchDate = $launchDate->format('Y-m-d\TH:i:s.uP');
+        $end_date = $request->end_date && $request->end_date != null ? new DateTime($request->end_date) : null;
+        if ($end_date) {
+            $end_date->modify('-7 hours');
+            $end_date->setTimezone(new DateTimeZone('Asia/Jakarta'));
+            $formattedEndDate = $end_date->format('Y-m-d\TH:i:s.uP');
+        } else {
+            $formattedEndDate = null;
+        }
+        $newId = $this->getIdFromGophish('campaigns');
+
+        $templateId = intval($request->template);
+        $pageId = intval($request->page);
+        $profileId = intval($request->profile);
+        $groupIds = $request->groups;
+        $groupName = [];
+
+        $template = $this->getDetailsModuleGophish('templates', $templateId);
+        $page = $this->getDetailsModuleGophish('pages', $pageId);
+        $profile = $this->getDetailsModuleGophish('smtp', $profileId);
+        foreach ($groupIds as $groupId) {
+            $group = $this->getDetailsModuleGophish('groups', $groupId);
+            $groupName[]['name'] = $group['name'];
+        }
+
+        $pageName = ($page['name']);
+        $templateName = $template['name'];
+        $profileName = $profile['name'];
+
+        $jsonData = [
+            'id' => intval($newId),
+            'name' => $request->name . ' -+-' . $newId,
+            'template' => [
+                'name' => $templateName,
+            ],
+            'url' => $request->url,
+            'page' => [
+                'name' => $pageName,
+            ],
+            'smtp' => [
+                'name' => $profileName,
+            ],
+            'launch_date' => $formattedLaunchDate,
+            'send_by_date' => $formattedEndDate,
+            'groups' => $groupName,
+        ];
+
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
+        ])->post("{$this->url}/campaigns/", $jsonData);
+        if ($response->successful() && $response != [] && $response->json() != []) {
+            $companyCampaign = new CompanyCampaign();
+            $companyCampaign->company_id = auth()->user()->company_id;
+            $companyCampaign->campaign_id = $newId;
+            $companyCampaign->status = $request->status;
+            $companyCampaign->save();
+            return response()->json(['message' => 'Campaign created successfully']);
+        } else {
+            return response()->json([
+                'message' => 'failed to create campaign',
+            ], 500);
+        }
+
+    }
+
+    public function getCampaigns(Request $request)
+    {
+        $campaigns = CompanyCampaign::where('company_id', auth()->user()->company_id)->get();
+        $campaignsData = [];
+        foreach ($campaigns as $campaign) {
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
+            ])->get("{$this->url}/campaigns/{$campaign->campaign_id}");
+            if ($response->successful()) {
+                $data = $response->json();
+                if (isset($data['name'])) {
+                    $data['name'] = explode('-+-', $data['name'])[0];
+                }
+                $campaignsData[] = $data;
+            }
+        }
+        $responseCollection = collect($campaignsData);
+        if ($request->has('search') && $request->search != null) {
+            $responseCollection = $responseCollection->filter(function ($item) use ($request) {
+                return stripos($item['name'], $request->search) !== false;
+            });
+        }
+        $perPage = $request->has('show') ? (int) $request->show : 10;
+        $currentPage = $request->has('page') ? (int) $request->page : 1;
+        $pagedData = $responseCollection->slice(($currentPage - 1) * $perPage, $perPage)->values();
+        $paginatedData = new LengthAwarePaginator(
+            $pagedData,
+            $responseCollection->count(),
+            $perPage,
+            $currentPage,
+            ['path' => $request->url(), 'query' => $request->query()]
+        );
+        $totalCampaign = $responseCollection->count();
+        $firstPageTotal = $responseCollection->slice(0, $perPage)->count();
+        return response()->json([
+            'data' => $paginatedData->items(),
+            'campaignTotal' => $totalCampaign,
+            'currentPage' => $paginatedData->currentPage(),
+            'firstPageTotal' => $firstPageTotal,
+            'pageCount' => $paginatedData->lastPage(),
+        ]);
+    }
+
+    public function deleteCampaign(Request $request)
+    {
+        $campaignId = intval($request->id);
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
+        ])->delete("{$this->url}/campaigns/{$campaignId}");
+        if ($response->successful() && $response->body() != []) {
+            $companyCampaign = CompanyCampaign::where('company_id', auth()->user()->company_id)->where('campaign_id', $campaignId)->first();
+            $companyCampaign->delete();
+            return response()->json(['message' => 'Campaign deleted successfully']);
+        } else {
+            return response()->json(['error' => $response->json()], 500);
+        }
+    }
+
+    public function getCampaignData(Request $request)
+    {
+        $campaignId = intval($request->id);
+        $data = $this->getDetailsModuleGophish('campaigns', $campaignId);
+        $data['name'] = explode('-+-', $data['name'])[0];
+        $data['template']['name'] = explode('-+-', $data['template']['name'])[0];
+        $data['page']['name'] = explode('-+-', $data['page']['name'])[0];
+        $data['smtp']['name'] = explode('-+-', $data['smtp']['name'])[0];
+        $page = $request->page ? $request->page : 1;
+        $perPage = 5;
+
+        if (isset($data['results']) && is_array($data['results'])) {
+            $totalResults = count($data['results']);
+            $totalPages = ceil($totalResults / $perPage);
+            $offset = ($page - 1) * $perPage;
+            $data['results'] = array_slice($data['results'], $offset, $perPage);
+            if ($request->has('search') && $request->search != null) {
+                $data['results'] = array_filter($data['results'], function ($result) use ($request) {
+                    return stripos($result['email'], $request->search) !== false;
+                });
+            }
+            $data['pagination'] = [
+                'current_page' => $page,
+                'per_page' => $perPage,
+                'total_results' => $totalResults,
+                'total_pages' => $totalPages,
+            ];
+        }
+
+        return response()->json($data);
+    }
+
 }

@@ -32,44 +32,19 @@
                                     placeholder="Enter profile name"
                                     class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
                             </div>
-                            <div class="col-span-1">
-                                <label for="interface_type"
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-200">Interface
-                                    Type</label>
-                                <input type="text" id="interface_type" name="interface_type"
-                                    placeholder="should be smtp" value="smtp" disabled
-                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
-                            </div>
-                            <div class="col-span-1">
+                            <div class="col-span-2">
                                 <label for="email_smtp"
                                     class="block text-sm font-medium text-gray-700 dark:text-gray-200">SMTP
                                     Email</label>
                                 <input type="text" id="email_smtp" name="email_smtp" placeholder="Enter email"
                                     class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
                             </div>
-
-                            <div class="col-span-1 for-create-profile">
-                                <label for="first_name_smtp"
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-200">SMTP First
-                                    Name</label>
-                                <input type="text" id="first_name_smtp" name="first_name_smtp"
-                                    placeholder="Enter first name"
-                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
-                            </div>
-                            <div class="col-span-1 for-create-profile">
-                                <label for="last_name_smtp"
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-200">SMTP Last
-                                    Name</label>
-                                <input type="text" id="last_name_smtp" name="last_name_smtp"
-                                    placeholder="Enter last name"
-                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
-                            </div>
-                            <div class="for-edit-profile col-span-1">
-                                <label for="address_name"
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-200">Address Name
-                                </label>
-                                <input type="text" id="address_name" name="address_name"
-                                    placeholder="Enter first name"
+                            <div class="col-span-1">
+                                <label for="interface_type"
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-200">Interface
+                                    Type</label>
+                                <input type="text" id="interface_type" name="interface_type"
+                                    placeholder="should be smtp" value="smtp" disabled
                                     class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
                             </div>
                             <div class="col-span-1 for-edit-profile">
@@ -175,9 +150,12 @@
             <!-- Modal footer -->
             <div
                 class="flex items-center justify-end p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600 gap-2">
+                <button id="button-test-mail" data-modal-hide="static-modal" type="button" onclick="testMail()"
+                    class="text-white bg-yellow-700 hover:bg-yellow-800 focus:ring-4 focus:outline-none focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-yellow-600 dark:hover:bg-yellow-700 dark:focus:ring-yellow-800">Test
+                </button>
                 <button data-modal-hide="static-modal" type="button"
                     onclick="hideModal('add-sending-profile-modal')"
-                    class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Close</button>
+                    class="py-2.5 px-5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Close</button>
                 <button id="button-for-profile" data-modal-hide="static-modal" type="button"
                     class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Add
                 </button>
