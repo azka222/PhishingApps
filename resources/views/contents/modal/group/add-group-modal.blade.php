@@ -9,7 +9,7 @@
                     Add Group
                 </h3>
                 <button type="button" onclick="hideModal('add-group-modal')"
-                    class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                    class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-xs md:text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
                     data-modal-hide="static-modal">
                     <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                         viewBox="0 0 14 14">
@@ -26,40 +26,40 @@
                         <div class="grid grid-cols-2 gap-4">
                             <div class="col-span-2">
                                 <label for="group_name"
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-200">Group
+                                    class="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-200">Group
                                     Name</label>
                                 <input type="text" id="group_name" name="group_name" placeholder="Enter group name"
-                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
+                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-xs md:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
                             </div>
 
                             <div class="col-span-2">
                                 <label for="group_description"
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-200">Group
+                                    class="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-200">Group
                                     Description</label>
                                 <textarea id="group_description" name="group_description" rows="4" placeholder="Enter group description"
-                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300"></textarea>
+                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-xs md:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300"></textarea>
 
                             </div>
                             <div class="col-span-2 lg:col-span-1">
                                 <label for="group_status"
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-200">Status</label>
+                                    class="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-200">Status</label>
                                 <select id="group_status" name="group_status" disabled
-                                    class="mt-1 bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                    class="mt-1 bg-gray-100 border border-gray-300 text-gray-900 text-xs md:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                     <option selected value="1">Active</option>
                                     <option value="0">Inactive</option>
                                 </select>
                             </div>
                             <div class="col-span-2 lg:col-span-1">
                                 <label for="group_department"
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-200">Department</label>
+                                    class="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-200">Department</label>
                                 <select id="group_department" name="group_department" onchange="setTargetSelection()"
-                                    class="mt-1 bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                    class="mt-1 bg-gray-100 border border-gray-300 text-gray-900 text-xs md:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
 
                                 </select>
                             </div>
                             <div class="col-span-2">
                                 <div class="flex flex-row justify-between items-center">
-                                    <span class=" text-sm font-medium text-gray-900 dark:text-gray-300">Strict target
+                                    <span class=" text-xs md:text-sm font-medium text-gray-900 dark:text-gray-300">Strict target
                                         from selected department ?</span>
                                     <label class="inline-flex items-center cursor-pointer">
                                         <input type="checkbox" id="strict_user_selected_department" value=""
@@ -87,20 +87,20 @@
                     <div class="col-span-2 md:col-span-1">
                         <div class="w-full">
                             <label for="group_member"
-                                class="block text-sm font-medium text-gray-700 dark:text-gray-200">Group Member</label>
+                                class="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-200">Group Member</label>
                             <select id="group_member" name="group_member" onchange="addUserToGroup(this.value)"
-                                class="mt-1 bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                class="mt-1 bg-gray-100 border border-gray-300 text-gray-900 text-xs md:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                             </select>
                         </div>
                         <div class="mt-4 flex flex-row justify-between items-center">
-                            <span class=" text-sm font-medium text-gray-900 dark:text-gray-300">Import target
+                            <span class=" text-xs md:text-sm font-medium text-gray-900 dark:text-gray-300">Import target
                                 from selected department ?</span>
                             <button type="button" onclick="importTargetFromDepartment()" id="import_target_from_department"
-                                class="m-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                                class="m-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-xs md:text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                                 Import
                             </button>
                         </div>
-                        <div class="mt-4 max-h-96 overflow-y-auto" id="group_member_list">
+                        <div class="mt-4 max-h-32 md:max-h-96 overflow-y-auto" id="group_member_list">
 
                         </div>
                     </div>
@@ -110,9 +110,9 @@
             <div
                 class="flex items-center justify-end p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600 gap-2">
                 <button data-modal-hide="static-modal" type="button" onclick="hideModal('add-group-modal')"
-                    class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Close</button>
+                    class="py-2.5 px-5 ms-3 text-xs md:text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Close</button>
                 <button id="button-for-group" data-modal-hide="static-modal" type="button" onclick="createGroup()"
-                    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Add
+                    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-xs md:text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Add
                 </button>
             </div>
         </div>
