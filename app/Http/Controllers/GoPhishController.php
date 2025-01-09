@@ -12,6 +12,7 @@ use DateTime;
 use DateTimeZone;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rule;
@@ -219,8 +220,14 @@ class GophishController extends Controller
     public function getEmailTemplate(Request $request)
     {
         if ($request->has('status') && $request->status != null) {
-            $emailTemplate = EmailTemplateCompany::where('company_id', auth()->user()->company_id)->where('status', $request->status)->pluck('template_id');
+            $emailTemplate = auth()->user()->accessibleEmailTemplate()->where('status', $request->status);
         }
+        if (Gate::allows('IsAdmin')) {
+            if ($request->has('companyId') && $request->companyId != null) {
+                $emailTemplate->where('company_id', $request->companyId);
+            }
+        }
+        $emailTemplate = $emailTemplate->pluck('template_id');
 
         $responses = [];
 
@@ -338,7 +345,7 @@ class GophishController extends Controller
         ])->put("{$this->url}/templates/{$templateId}", $jsonData);
         if ($response->successful() && $response->body() != []) {
             if ($request->status != null) {
-                $companyEmailTemplate = EmailTemplateCompany::where('company_id', auth()->user()->company_id)->where('template_id', $templateId)->first();
+                $companyEmailTemplate = auth()->user()->accessibleEmailTemplate()->where('template_id', $templateId)->first();
                 $companyEmailTemplate->status = $request->status;
                 $companyEmailTemplate->save();
             }
@@ -355,7 +362,7 @@ class GophishController extends Controller
             'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
         ])->delete("{$this->url}/templates/{$templateId}");
         if ($response->successful() && $response->body() != []) {
-            $companyEmailTemplate = EmailTemplateCompany::where('company_id', auth()->user()->company_id)->where('template_id', $templateId)->first();
+            $companyEmailTemplate = auth()->user()->accessibleEmailTemplate()->where('template_id', $templateId)->first();
             $companyEmailTemplate->delete();
             return response()->json(['message' => 'Email template deleted successfully']);
         } else {
@@ -367,7 +374,7 @@ class GophishController extends Controller
     public function activateEmailTemplate(Request $request)
     {
         $templateId = intval($request->id);
-        $companyEmailTemplate = EmailTemplateCompany::where('company_id', auth()->user()->company_id)->where('template_id', $templateId)->first();
+        $companyEmailTemplate = auth()->user()->accessibleEmailTemplate()->where('template_id', $templateId)->first();
         $companyEmailTemplate->status = 1;
         $companyEmailTemplate->save();
         return response()->json(['message' => 'Email template activated successfully']);
@@ -436,8 +443,15 @@ class GophishController extends Controller
     public function getSendingProfile(Request $request)
     {
         if ($request->has('status') && $request->status != null) {
-            $sendingProfile = SendingProfileCompany::where('company_id', auth()->user()->company_id)->where('status', $request->status)->pluck('sending_profile_id');
+            $sendingProfile = auth()->user()->accessibleSendingProfile()->where('status', $request->status);
         }
+
+        if (Gate::allows('IsAdmin')) {
+            if ($request->has('companyId') && $request->companyId != null) {
+                $sendingProfile->where('company_id', $request->companyId);
+            }
+        }
+        $sendingProfile = $sendingProfile->pluck('sending_profile_id');
 
         $responses = [];
         foreach ($sendingProfile as $value) {
@@ -532,7 +546,7 @@ class GophishController extends Controller
         ])->put("{$this->url}/smtp/{$request->id}", $jsonData);
         if ($response->successful() && $response->body() != []) {
             if ($request->status != null) {
-                $companySendingProfile = SendingProfileCompany::where('company_id', auth()->user()->company_id)->where('sending_profile_id', $request->id)->first();
+                $companySendingProfile = auth()->user()->accessibleSendingProfile()->where('sending_profile_id', $request->id)->first();
                 $companySendingProfile->status = $request->status;
                 $companySendingProfile->save();
             }
@@ -550,7 +564,7 @@ class GophishController extends Controller
             'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
         ])->delete("{$this->url}/smtp/{$profileId}");
         if ($response->successful() && $response->body() != []) {
-            $companySendingProfile = SendingProfileCompany::where('company_id', auth()->user()->company_id)->where('sending_profile_id', $profileId)->first();
+            $companySendingProfile = auth()->user()->accessibleSendingProfile()->where('sending_profile_id', $profileId)->first();
             $companySendingProfile->delete();
             return response()->json(['message' => 'Sending profile deleted successfully']);
         } else {
@@ -561,7 +575,7 @@ class GophishController extends Controller
     public function activateSendingProfile(Request $request)
     {
         $profileId = intval($request->id);
-        $companySendingProfile = SendingProfileCompany::where('company_id', auth()->user()->company_id)->where('sending_profile_id', $profileId)->first();
+        $companySendingProfile = auth()->user()->accessibleSendingProfile()->where('sending_profile_id', $profileId)->first();
         $companySendingProfile->status = 1;
         $companySendingProfile->save();
         return response()->json(['message' => 'Sending profile activated successfully']);
@@ -618,9 +632,9 @@ class GophishController extends Controller
     // ================================== Campaign ==================================
     public function getCampaignResources()
     {
-        $emailTemplatesApp = EmailTemplateCompany::where('company_id', auth()->user()->company_id)->where('status', 1)->pluck('template_id');
-        $sendingProfilesApp = SendingProfileCompany::where('company_id', auth()->user()->company_id)->where('status', 1)->pluck('sending_profile_id');
-        $groupApp = Group::where('company_id', auth()->user()->company_id)->where('status', 1)->orwhere('status', '1')->pluck('gophish_id');
+        $emailTemplatesApp = auth()->user()->accessibleEmailTemplate()->where('status', 1)->pluck('template_id');
+        $sendingProfilesApp = auth()->user()->accessibleSendingProfile()->where('status', 1)->pluck('sending_profile_id');
+        $groupApp = auth()->user()->accessibleGroup()->where('status', 1)->orwhere('status', '1')->pluck('gophish_id');
         $emailTemplates = [];
         $sendingProfiles = [];
         $groups = [];
@@ -828,7 +842,17 @@ class GophishController extends Controller
 
     public function getCampaigns(Request $request)
     {
-        $campaigns = CompanyCampaign::where('company_id', auth()->user()->company_id)->get();
+        $campaigns = auth()->user()->accessibleCampaign();
+        if (Gate::allows('IsAdmin')) {
+            if ($request->has('companyId') && $request->companyId != null) {
+                $campaigns->where('company_id', $request->companyId);
+            }
+        }
+        $campaigns = $campaigns->get();
+        if ($request->has('status') && $request->status != null) {
+            $campaigns = $campaigns->where('status', $request->status);
+        }
+
         $campaignsData = [];
         foreach ($campaigns as $campaign) {
             $response = Http::withHeaders([
@@ -876,7 +900,7 @@ class GophishController extends Controller
             'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
         ])->delete("{$this->url}/campaigns/{$campaignId}");
         if ($response->successful() && $response->body() != []) {
-            $companyCampaign = CompanyCampaign::where('company_id', auth()->user()->company_id)->where('campaign_id', $campaignId)->first();
+            $companyCampaign = auth()->user()->accessibleCampaign()->where('campaign_id', $campaignId)->first();
             $companyCampaign->delete();
             return response()->json(['message' => 'Campaign deleted successfully']);
         } else {

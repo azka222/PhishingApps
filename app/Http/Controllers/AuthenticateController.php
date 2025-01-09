@@ -61,6 +61,7 @@ class AuthenticateController extends Controller
         $user->company_id = $request->company;
         $user->phone = $request->phone;
         $user->gender = $request->gender;
+        $user->is_admin = 0;
         $user->save();
 
         $apiKey = sha1(time());
