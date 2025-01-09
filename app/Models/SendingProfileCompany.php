@@ -6,5 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class SendingProfileCompany extends Model
 {
-    //
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
 }

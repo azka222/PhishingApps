@@ -8,6 +8,7 @@ use App\Models\Target;
 use App\Models\TargetDepartment;
 use App\Models\TargetPosition;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
 
 class TargetController extends Controller
@@ -24,7 +25,7 @@ class TargetController extends Controller
 
     public function getTargets(Request $request)
     {
-        $query = Target::with('department', 'position')->where('company_id', auth()->user()->company_id);
+        $query = auth()->user()->accessibleTarget();
         if ($request->has('search') && !empty($request->search) && $request->search != null) {
             $query->where('first_name', 'like', '%' . $request->search . '%')->orWhere('last_name', 'like', '%' . $request->search . '%');
         }
@@ -33,6 +34,11 @@ class TargetController extends Controller
         }
         if ($request->has('position') && !empty($request->position) && $request->position != null) {
             $query->where('position_id', $request->position);
+        }
+        if (Gate::allows("IsAdmin")) {
+            if ($request->has('companyId') && !empty($request->companyId) && $request->companyId != null) {
+                $query->where('company_id', $request->companyId);
+            }
         }
         $totalTarget = $query->count();
         $query = $query->paginate($request->show);
@@ -84,7 +90,7 @@ class TargetController extends Controller
             'position' => 'required|integer|exists:target_positions,id',
         ]);
 
-        $target = Target::find($request->id);
+        $target = auth()->user()->accessibleTarget()->where('id', $request->id)->first();
         $original = [
             'first_name' => $target->first_name,
             'last_name' => $target->last_name,
@@ -118,7 +124,7 @@ class TargetController extends Controller
             'id' => 'required|integer|exists:targets,id',
         ]);
 
-        $target = Target::find($request->id);
+        $target = auth()->user()->accessibleTarget()->where('id', $request->id)->first();
         $target->delete();
 
         return response()->json([

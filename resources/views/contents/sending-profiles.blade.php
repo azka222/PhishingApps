@@ -24,6 +24,21 @@
                         </select>
                     </div>
                 </div>
+                @IsAdmin()
+                <div class="max-w-xs">
+                    <div>
+                        <label for="companyCheckAdmin"
+                            class="mb-1 mt-4 block text-sm font-medium text-gray-700 dark:text-gray-300">Company</label>
+                        <select id="companyCheckAdmin" name="companyCheckAdmin" onchange="getSendingProfile()"
+                            class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            <option value="">All</option>
+                            @foreach ($companies as $company)
+                                <option value="{{ $company->id }}">{{ $company->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                @endIsAdmin()
             </div>
             <div class="flex p-4 justify-between items-center mt-8">
                 <div class="flex items-center">
@@ -208,6 +223,7 @@
             let show = $("#show").val();
             let search = $("#search").val();
             let status = $("#status").val();
+            let companyId = $("#companyCheckAdmin").val();
             $.ajax({
                 url: "{{ route('getSendingProfile') }}?page=" + page,
                 type: "GET",
@@ -215,7 +231,8 @@
                     show,
                     search,
                     status,
-                    page
+                    page,
+                    companyId
                 },
                 success: function(response) {
                     console.log(response)
@@ -223,24 +240,31 @@
                     sendingProfiles = response.data;
                     $("#list-sending-profile-tbody").empty();
 
-                    Object.keys(sendingProfiles).forEach(function(key) {
-                        let button = '';
-                        let sendingProfile = sendingProfiles[key];
+                    if (sendingProfiles.length == 0) {
+                        let data = `
+                        <tr class="text-sm font-light text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800">
+                            <td class="p-4" colspan="6">No data available</td>
+                        </tr>`;
+                        $('#list-sending-profile-tbody').append(data);
+                    } else {
+                        Object.keys(sendingProfiles).forEach(function(key) {
+                            let button = '';
+                            let sendingProfile = sendingProfiles[key];
 
-                        if ($("#status").val() == 1) {
-                            button =
-                                `
+                            if ($("#status").val() == 1) {
+                                button =
+                                    `
                             <button onclick="showEditSendingProfileModal(${sendingProfile.id})"
                                 class="px-4 me-2 py-2 text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">Edit</button>
                                 
                                 `;
-                        } else {
-                            button = `
+                            } else {
+                                button = `
                             <button onclick="activateSendingProfile(${sendingProfile.id})"
                                 class="px-4 me-2 py-2 text-sm font-medium text-white bg-yellow-600 rounded-xl hover:bg-yellow-700 dark:bg-yellow-500 dark:hover:bg-yellow-600">Activate</button>
                             `;
-                        }
-                        let data = `
+                            }
+                            let data = `
                         <tr class="text-sm font-light text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800">
                             <td class="p-4">${sendingProfile.name}</td>
                             <td class="p-4">${sendingProfile.username ?? 'Not Set'}</td>
@@ -253,8 +277,9 @@
                                     class="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-xl hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600">Remove</button>
                             </td>
                         </tr>`;
-                        $('#list-sending-profile-tbody').append(data);
-                    });
+                            $('#list-sending-profile-tbody').append(data);
+                        });
+                    }
                     paginationSendingProfile("#page-button-sending-profile-company", response.pageCount,
                         response.currentPage);
                     $("#numberFirstItem").text(

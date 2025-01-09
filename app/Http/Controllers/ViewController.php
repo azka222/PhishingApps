@@ -5,9 +5,17 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\CompanyCampaign;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class ViewController extends Controller
 {
+    public static function getCompanies()
+    {
+        if (Gate::allows("IsAdmin")) {
+            return \App\Models\Company::all();
+        }
+        return \App\Models\Company::whereRaw(0);
+    }
     public function loginView()
     {
         return view('auth.login');
@@ -39,12 +47,15 @@ class ViewController extends Controller
 
     public function targetView()
     {
-        return view('contents.target');
+        $companies = $this->getCompanies();
+        return view('contents.target', ['companies' => $companies]);
     }
 
     public function groupView()
     {
-        return view('contents.group');
+        $companies = $this->getCompanies();
+        return view('contents.group', ['companies' => $companies]);
+
     }
 
     public function landingPageView()
@@ -54,17 +65,21 @@ class ViewController extends Controller
 
     public function emailTemplatesView()
     {
-        return view('contents.email-templates');
+
+        $companies = $this->getCompanies();
+        return view('contents.email-templates', ['companies' => $companies]);
     }
 
     public function sendingProfileView()
     {
-        return view('contents.sending-profiles');
+        $companies = $this->getCompanies();
+        return view('contents.sending-profiles', ['companies' => $companies]);
     }
 
     public function campaignView()
     {
-        return view('contents.campaign');
+        $companies = $this->getCompanies();
+        return view('contents.campaign', ['companies' => $companies]);
     }
 
     public function campaignDetailsView($id)

@@ -9,6 +9,7 @@ use DateTime;
 use DateTimeZone;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Http;
 
 class GroupController extends Controller
@@ -36,7 +37,7 @@ class GroupController extends Controller
     public function getGroupResources()
     {
         $department = TargetDepartment::all();
-        $users = Target::with('department')->where('company_id', auth()->user()->company_id)->get();
+        $users = auth()->user()->accessibleTarget()->get();
         return response()->json([
             'department' => $department,
             'users' => $users,
@@ -44,12 +45,17 @@ class GroupController extends Controller
     }
     public function getGroups(Request $request)
     {
-        $query = Group::where('company_id', auth()->user()->company_id);
+        $query = auth()->user()->accessibleGroup();
         if ($request->has('status') && $request->status != null) {
             $query = $query->where('status', $request->status);
         }
         if ($request->has('department') && $request->department != 'null') {
             $query = $query->where('department_id', $request->department);
+        }
+        if(Gate::allows('IsAdmin')){
+            if($request->has('companyId') && $request->companyId != null){
+                $query = $query->where('company_id', $request->companyId);
+            }
         }
         $ids = $query->pluck('gophish_id');
         $responses = [];
@@ -62,7 +68,7 @@ class GroupController extends Controller
                 if (isset($data['name'])) {
                     $data['name'] = explode('-+-', $data['name'])[0];
                 }
-                $group = Group::with('department', 'target.department', 'target.position')->where('gophish_id', $id)->first();
+                $group = auth()->user()->accessibleGroup()->where('gophish_id', $id)->first();
                 $data['department'] = $group->department;
                 $data['status'] = $group->status;
                 $data['member'] = count($data['targets']);
@@ -124,7 +130,7 @@ class GroupController extends Controller
         $group->description = $request->description;
         $group->company_id = auth()->user()->company_id;
 
-        $targets = Target::whereIn('id', $request->members)->get();
+        $targets = auth()->user()->accessibleTarget()->whereIn('id', $request->members)->get();
         $jsonTarget = [];
         foreach ($targets as $target) {
             $jsonTarget[] = [
@@ -167,15 +173,11 @@ class GroupController extends Controller
             'description' => 'nullable',
         ]);
 
-        
-        $group = Group::where('gophish_id', $request->id)->first();
+        $group = auth()->user()->accessibleGroup()->where('gophish_id', $request->id)->first();
         $group->department_id = $request->department;
         $group->status = $request->status;
         $group->description = $request->description;
-        
-        // $group->save();
-        // $group->target()->sync($request->members);
-        $targets = Target::whereIn('id', $request->members)->get();
+        $targets = auth()->user()->accessibleTarget()->whereIn('id', $request->members)->get();
         $jsonTarget = [];
         foreach ($targets as $target) {
             $jsonTarget[] = [
@@ -192,7 +194,7 @@ class GroupController extends Controller
             'targets' => $jsonTarget,
         ];
         $idGroup = intval($request->id);
-        
+
         $response = Http::withHeaders([
             'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
         ])->put("{$this->url}/groups/{$idGroup}", $jsonData);
@@ -212,7 +214,7 @@ class GroupController extends Controller
             'id' => 'required|exists:groups,gophish_id',
         ]);
 
-        $group = Group::where('gophish_id', $request->id)->first();
+        $group = auth()->user()->accessibleGroup()->where('gophish_id', $request->id)->first();
         $id = intval($request->id);
         $response = Http::withHeaders([
             'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
