@@ -24,7 +24,7 @@
                 <div class="grid grid-cols-2 gap-8">
                     <div class="col-span-2">
                         <div class="grid grid-cols-2 gap-6">
-                            <div>
+                            <div class="col-span-2 md:col-span-1">
                                 <label for="group_name_details"
                                     class="block text-md font-medium text-gray-700 dark:text-gray-200">Group
                                     Name</label>
@@ -32,7 +32,7 @@
                                     Name Value
                                 </h3>
                             </div>
-                            <div>
+                            <div class="col-span-2 md:col-span-1">
                                 <label for="group_status_details"
                                     class="block text-md font-medium text-gray-700 dark:text-gray-200">Group
                                     Status</label>
@@ -40,7 +40,7 @@
                                     Status
                                     Value</h3>
                             </div>
-                            <div>
+                            <div class="col-span-2 md:col-span-1">
                                 <label for="group_created_at_details"
                                     class="block text-md font-medium text-gray-700 dark:text-gray-200">Created
                                     At</label>
@@ -48,7 +48,7 @@
                                     Created At
                                     Value</h3>
                             </div>
-                            <div>
+                            <div class="col-span-2 md:col-span-1">
                                 <label for="group_updated_at_details"
                                     class="block text-md font-medium text-gray-700 dark:text-gray-200">Updated
                                     At</label>
@@ -56,7 +56,7 @@
                                     Updated At
                                     Value</h3>
                             </div>
-                            <div>
+                            <div class="col-span-2 md:col-span-1">
                                 <label for="group_department_details"
                                     class="block text-md font-medium text-gray-700 dark:text-gray-200">Group
                                     Department</label>
@@ -64,7 +64,7 @@
                                     Updated At
                                     Value</h3>
                             </div>
-                            <div>
+                            <div class="col-span-2 md:col-span-1">
                                 <label for="group_member_count_details"
                                     class="block text-md font-medium text-gray-700 dark:text-gray-200">Total
                                     Members</label>

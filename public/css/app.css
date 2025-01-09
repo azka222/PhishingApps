@@ -664,12 +664,20 @@ video {
   grid-column: span 5 / span 5;
 }
 
+.col-span-4 {
+  grid-column: span 4 / span 4;
+}
+
 .m-8 {
   margin: 2rem;
 }
 
 .m-3 {
   margin: 0.75rem;
+}
+
+.m-2 {
+  margin: 0.5rem;
 }
 
 .mx-4 {
@@ -3019,6 +3027,10 @@ video {
 
   .lg\:col-span-1 {
     grid-column: span 1 / span 1;
+  }
+
+  .lg\:col-span-12 {
+    grid-column: span 12 / span 12;
   }
 
   .lg\:block {
