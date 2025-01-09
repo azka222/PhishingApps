@@ -22,28 +22,28 @@
             <!-- Modal body -->
             <div class="p-4 md:p-5 space-y-4">
                 <div class="grid grid-cols-2 gap-4">
-                    <div class="col-span-1">
+                    <div class="col-span-2 md:col-span-1">
                         <label for="target_name"
                             class="block text-sm font-medium text-gray-700 dark:text-gray-200">Target First
                             Name</label>
                         <input type="text" id="target_first_name" name="target_name" placeholder="Enter target first name"
                             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
                     </div>
-                    <div class="col-span-1">
+                    <div class="col-span-2 md:col-span-1">
                         <label for="target_name"
                             class="block text-sm font-medium text-gray-700 dark:text-gray-200">Target Last
                             Name</label>
                         <input type="text" id="target_last_name" name="target_name" placeholder="Enter target last name"
                             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
                     </div>
-                    <div class="col-span-1">
+                    <div class="col-span-2 md:col-span-1">
                         <label for="target_email"
                             class="block text-sm font-medium text-gray-700 dark:text-gray-200">Target
                             Email</label>
                         <input type="email" id="target_email" name="target_email" placeholder="Enter target email"
                             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
                     </div>
-                    <div class="col-span-1">
+                    <div class="col-span-2 md:col-span-1">
                         <label for="target_position"
                             class="block text-sm font-medium text-gray-700 dark:text-gray-200">Position</label>
                         <select id="target_position" name="target_position"
@@ -51,7 +51,7 @@
 
                         </select>
                     </div>
-                    <div class="col-span-1">
+                    <div class="col-span-2 md:col-span-1">
                         <label for="target_department"
                             class="block text-sm font-medium text-gray-700 dark:text-gray-200">Department</label>
                         <select id="target_department" name="target_department"

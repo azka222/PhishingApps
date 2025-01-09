@@ -22,7 +22,7 @@
             <!-- Modal body -->
             <div class="p-4 md:p-5 space-y-4">
                 <div class="grid grid-cols-2 gap-8">
-                    <div class="col-span-1">
+                    <div class="col-span-2 lg:col-span-1">
                         <div class="grid grid-cols-2 gap-4">
                             <div class="col-span-2">
                                 <label for="template_name"
@@ -40,7 +40,7 @@
                                     placeholder="Enter email subject"
                                     class="mt-1 bg-gray-100 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
                             </div>
-                            <div class="col-span-1">
+                            <div class="col-span-2 lg:col-span-1">
                                 <label for="sender_name"
                                     class="block text-sm font-medium text-gray-700 dark:text-gray-200">Sender
                                     Name</label>
@@ -48,7 +48,7 @@
                                     placeholder="Enter sender name"
                                     class="mt-1 bg-gray-100 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
                             </div>
-                            <div class="col-span-1">
+                            <div class="col-span-2 lg:col-span-1">
                                 <label for="sender_email"
                                     class="block text-sm font-medium text-gray-700 dark:text-gray-200">Sender
                                     Email</label>
@@ -58,7 +58,7 @@
                             </div>
 
 
-                            <div class="col-span-1">
+                            <div class="col-span-2 lg:col-span-1">
                                 <label for="email_status"
                                     class="block text-sm font-medium text-gray-700 dark:text-gray-200">Status</label>
                                 <select id="email_status" name="email_status" disabled
@@ -67,7 +67,7 @@
                                     <option value="0">Inactive</option>
                                 </select>
                             </div>
-                            <div class="col-span-1">
+                            <div class="col-span-2 lg:col-span-1">
                                 <label for="email_attachment"
                                     class="block text-sm font-medium text-gray-700 dark:text-gray-200">Attachment
                                 </label>
@@ -77,7 +77,8 @@
                                     bg-gray-100 dark:text-gray-400 col-span-5 focus:outline-none dark:bg-gray-700
                                     dark:border-gray-600 dark:placeholder-gray-400"
                                     id="email_attachment" type="file" name="email_attachment">
-                                    <p class="text-xs mt-2 text-red-700 dark:text-red-500">* Only image files can be uploaded.</p>
+                                <p class="text-xs mt-2 text-red-700 dark:text-red-500">* Only image files can be
+                                    uploaded.</p>
                             </div>
                             <div class="col-span-2" id="attachment-file">
 
@@ -95,7 +96,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-span-1">
+                    <div class="col-span-2 lg:col-span-1">
                         <div class="w-full">
                             <label for="email_body"
                                 class="block text-sm font-medium text-gray-700 dark:text-gray-200">Email

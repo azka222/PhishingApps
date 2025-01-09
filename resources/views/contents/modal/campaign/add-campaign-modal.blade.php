@@ -32,7 +32,7 @@
                                     placeholder="Enter campaign name"
                                     class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
                             </div>
-                            <div class="col-span-1">
+                            <div class="col-span-2 lg:col-span-1">
                                 <label for="campaign_template"
                                     class="block text-sm font-medium text-gray-700 dark:text-gray-200">Email
                                     Template</label>
@@ -41,7 +41,7 @@
                                     <option value="">Select Email Template</option>
                                 </select>
                             </div>
-                            <div class="col-span-1">
+                            <div class="col-span-2 lg:col-span-1">
                                 <label for="campaign_page"
                                     class="block text-sm font-medium text-gray-700 dark:text-gray-200">Landing
                                     Page</label>
@@ -50,21 +50,21 @@
                                     <option value="">Select Landing Page</option>
                                 </select>
                             </div>
-                            <div class="col-span-1">
+                            <div class="col-span-2 lg:col-span-1">
                                 <label for="campaign_launch_date"
                                     class="block text-sm font-medium text-gray-700 dark:text-gray-200">Campaign Launch
                                     Date</label>
                                 <input type="datetime-local" id="campaign_launch_date" name="campaign_launch_date"
                                     class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
                             </div>
-                            <div class="col-span-1">
+                            <div class="col-span-2 lg:col-span-1">
                                 <label for="campaign_end_date"
                                     class="block text-sm font-medium text-gray-700 dark:text-gray-200">Campaign End
                                     Date</label>
                                 <input type="datetime-local" id="campaign_end_date" name="campaign_end_date"
                                     class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
                             </div>
-                            <div class="col-span-1">
+                            <div class="col-span-2 lg:col-span-1">
                                 <label for="campaign_status"
                                     class="block text-sm font-medium text-gray-700 dark:text-gray-200">Status</label>
                                 <select id="campaign_status" name="campaign_status" disabled
@@ -73,7 +73,7 @@
                                     <option value="0">Inactive</option>
                                 </select>
                             </div>
-                            <div class="col-span-1">
+                            <div class="col-span-2 lg:col-span-1">
                                 <label for="campaign_url"
                                     class="block text-sm font-medium text-gray-700 dark:text-gray-200">URL
                                 </label>

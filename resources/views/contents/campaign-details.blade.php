@@ -10,27 +10,27 @@
             <div class="p-4">
                 <div class="bg-white dark:bg-gray-700 dark:text-white rounded-lg p-4">
                     <div class="grid grid-cols-2 gap-4">
-                        <div class="col-span-1">
+                        <div class="col-span-4 md:col-span-1">
                             <p class="text-sm font-semibold">Campaign Name</p>
                             <p class="text-sm font-light" id="campaign-name">Not Set</p>
                         </div>
-                        <div class="col-span-1">
+                        <div class="col-span-4 md:col-span-1">
                             <p class="text-sm font-semibold">Email Profile</p>
                             <p class="text-sm font-light" id="email-profile-name">Not Set</p>
                         </div>
-                        <div class="col-span-1">
+                        <div class="col-span-4 md:col-span-1">
                             <p class="text-sm font-semibold">Campaign Launch Date</p>
                             <p class="text-sm font-light" id="campaign-launch-date">Not Set</p>
                         </div>
-                        <div class="col-span-1">
+                        <div class="col-span-4 md:col-span-1">
                             <p class="text-sm font-semibold">Email Template</p>
                             <p class="text-sm font-light" id="email-template-name">Not Set</p>
                         </div>
-                        <div class="col-span-1">
+                        <div class="col-span-4 md:col-span-1">
                             <p class="text-sm font-semibold">Total Target</p>
                             <p class="text-sm font-light" id="campaign-total-target">Not Set</p>
                         </div>
-                        <div class="col-span-1">
+                        <div class="col-span-4 md:col-span-1">
                             <p class="text-sm font-semibold">Status</p>
                             <p class="text-sm font-light" id="campaign-status">Not Set</p>
                         </div>
@@ -42,19 +42,19 @@
             <div class="p-4">
                 <div class="bg-white dark:bg-gray-700 dark:text-white rounded-lg p-4">
                     <div class="grid grid-cols-4 gap-4">
-                        <div class="col-span-1 flex flex-col items-center justify-center">
+                        <div class="col-span-4 lg:col-span-1 md:col-span-2  flex flex-col items-center justify-center">
                             <p class="text-sm font-semibold mb-4">Emails Sent</p>
                             <div id="donut-email-sent"></div>
                         </div>
-                        <div class="col-span-1 flex flex-col items-center justify-center">
+                        <div class="col-span-4 lg:col-span-1 md:col-span-2 flex flex-col items-center justify-center">
                             <p class="text-sm font-semibold mb-4">Emails Opened</p>
                             <div id="donut-email-opened"></div>
                         </div>
-                        <div class="col-span-1 flex flex-col items-center justify-center">
+                        <div class="col-span-4 lg:col-span-1 md:col-span-2 flex flex-col items-center justify-center">
                             <p class="text-sm font-semibold mb-4">Links Clicked</p>
                             <div id="donut-link-clicked"></div>
                         </div>
-                        <div class="col-span-1 flex flex-col items-center justify-center">
+                        <div class="col-span-4 lg:col-span-1 md:col-span-2  flex flex-col items-center justify-center">
                             <p class="text-sm font-semibold mb-4">Emails Reported</p>
                             <div id="donut-email-reported"></div>
                         </div>
@@ -71,7 +71,7 @@
                         placeholder="Search by email only..">
                 </div>
             </div>
-            <div class="p-4 min-w-32 overflow-x-auto md:min-w-full mb-16">
+            <div class="p-4 min-w-32 overflow-x-auto md:min-w-full">
                 <table class="min-w-32 md:min-w-full divide-y divide-gray-200 dark:divide-gray-700 mt-4">
                     <thead class="bg-gray-300 dark:bg-gray-700">
                         <tr
@@ -120,7 +120,7 @@
                 type: "GET",
                 data: {
                     id: id,
-                    search : $("#search").val()
+                    search: $("#search").val()
                 },
                 success: function(response) {
                     console.log(response);
@@ -159,7 +159,7 @@
                         dataEmailReported.totalEmail);
 
                     $('#list-campaign-tbody').empty();
-                    response.results.forEach(function(result) {
+                    response.paginated_results.forEach(function(result) {
                         let status = result.status;
                         let reported = result.reported;
                         let statusColor = '';
@@ -203,9 +203,18 @@
                         </tr>`;
                         $('#list-campaign-tbody').append(html);
                     });
-
-                    paginationCampaignDetails('#page-button-campaign-details', response.pagination.total_pages, response
+                    console.log(typeof response.pagination.total_pages);
+                    paginationCampaignDetails('#page-button-campaign-details', response.pagination.total_pages,
+                        response
                         .pagination.current_page);
+
+                    $("#numberFirstItem").text(
+                        (page - 1) * 5 + 1
+                    );
+                    $("#numberLastItem").text(
+                        (page - 1) * 5 + response.paginated_results.length
+                    );
+                    $("#totalTemplatesCount").text(response.pagination.total_results );
                 }
 
             })
