@@ -8,29 +8,29 @@
                 <h1 class="text-3xl font-semibold">Sending Profiles</h1>
                 <div>
                     <button onclick="showAddSendingProfileModal()"
-                        class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">Add
+                        class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">Add
                         Profile</button>
                 </div>
             </div>
             <div class="flex flex-col gap-4 p-4">
-                <div class="max-w-xs">
+                <div class="md:max-w-xs max-w-full">
                     <div>
                         <label for="status"
-                            class="mb-1 mt-4 block text-sm font-medium text-gray-700 dark:text-gray-300">Status</label>
+                            class="mb-1 mt-4 block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-300">Status</label>
                         <select id="status" name="status" onchange="getSendingProfile()"
-                            class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            class="bg-gray-100 border border-gray-300 text-gray-900 text-xs md:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                             <option value="1">Active</option>
                             <option value="0">Inactive</option>
                         </select>
                     </div>
                 </div>
                 @IsAdmin()
-                <div class="max-w-xs">
+                <div class="md:max-w-xs max-w-full">
                     <div>
                         <label for="companyCheckAdmin"
-                            class="mb-1 mt-4 block text-sm font-medium text-gray-700 dark:text-gray-300">Company</label>
+                            class="mb-1 mt-4 block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-300">Company</label>
                         <select id="companyCheckAdmin" name="companyCheckAdmin" onchange="getSendingProfile()"
-                            class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            class="bg-gray-100 border border-gray-300 text-gray-900 text-xs md:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                             <option value="">All</option>
                             @foreach ($companies as $company)
                                 <option value="{{ $company->id }}">{{ $company->name }}</option>
@@ -42,9 +42,9 @@
             </div>
             <div class="flex p-4 justify-between items-center mt-8">
                 <div class="flex items-center">
-                    <label for="show" class="mr-2 text-sm font-medium">Show</label>
+                    <label for="show" class="mr-2 text-xs md:text-sm font-medium">Show</label>
                     <select id="show" name="show" onchange="getSendingProfile()"
-                        class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        class="bg-gray-100 border border-gray-300 text-gray-900 text-xs md:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                         <option value="5">5</option>
                         <option value="10">10</option>
                         <option value="20">20</option>
@@ -53,7 +53,7 @@
                 </div>
                 <div class="flex items-center">
                     <input type="text" id="search" name="search" onchange="getSendingProfile()"
-                        class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5 w-64 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        class="bg-gray-100 border border-gray-300 text-gray-900 text-xs md:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5 w-64 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         placeholder="Search...">
                 </div>
             </div>
@@ -76,15 +76,14 @@
                     </tbody>
                 </table>
             </div>
-            <nav class="flex items-center flex-column flex-wrap md:flex-row justify-between p-4"
-                aria-label="Table navigation">
+            <nav class="flex items-center flex-column flex-row justify-between p-4" aria-label="Table navigation">
                 <span
-                    class="text-sm font-normal text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto">Showing
+                    class="text-xs md:text-sm font-normal text-gray-500 dark:text-gray-400 md:mb-0 block w-full md:inline md:w-auto">Showing
                     <span class="font-semibold text-gray-900 dark:text-white"> <span id="numberFirstItem">0</span> - <span
                             id="numberLastItem">0</span></span> of
                     <span id="totalTemplatesCount" class="font-semibold text-gray-900 dark:text-white">0</span>
                 </span>
-                <ul id="page-button-sending-profile-company" class="inline-flex space-x-2 rtl:space-x-reverse text-sm h-8">
+                <ul id="page-button-sending-profile-company" class="inline-flex space-x-2 rtl:space-x-reverse text-xs md:text-sm h-8">
 
                 </ul>
             </nav>
@@ -242,7 +241,7 @@
 
                     if (sendingProfiles.length == 0) {
                         let data = `
-                        <tr class="text-sm font-light text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800">
+                        <tr class="text-xs md:text-sm font-light text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800">
                             <td class="p-4" colspan="6">No data available</td>
                         </tr>`;
                         $('#list-sending-profile-tbody').append(data);
@@ -255,26 +254,26 @@
                                 button =
                                     `
                             <button onclick="showEditSendingProfileModal(${sendingProfile.id})"
-                                class="px-4 me-2 py-2 text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">Edit</button>
+                                class="px-4 me-2 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">Edit</button>
                                 
                                 `;
                             } else {
                                 button = `
                             <button onclick="activateSendingProfile(${sendingProfile.id})"
-                                class="px-4 me-2 py-2 text-sm font-medium text-white bg-yellow-600 rounded-xl hover:bg-yellow-700 dark:bg-yellow-500 dark:hover:bg-yellow-600">Activate</button>
+                                class="px-4 me-2 py-2 text-xs md:text-sm font-medium text-white bg-yellow-600 rounded-xl hover:bg-yellow-700 dark:bg-yellow-500 dark:hover:bg-yellow-600">Activate</button>
                             `;
                             }
                             let data = `
-                        <tr class="text-sm font-light text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800">
+                        <tr class="text-xs md:text-sm font-light text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800">
                             <td class="p-4">${sendingProfile.name}</td>
                             <td class="p-4">${sendingProfile.username ?? 'Not Set'}</td>
                             <td class="p-4">${sendingProfile.host}</td>
                             <td class="p-4">${sendingProfile.from_address}</td>
                             <td class="p-4">${sendingProfile.ignore_cert_errors}</td>
-                            <td class="p-4">
+                            <td class="p-4 flex gap-2">
                                 ${button} 
                                 <button onclick="deleteSendingProfile(${sendingProfile.id})"
-                                    class="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-xl hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600">Remove</button>
+                                    class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-red-600 rounded-xl hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600">Remove</button>
                             </td>
                         </tr>`;
                             $('#list-sending-profile-tbody').append(data);

@@ -7,40 +7,40 @@
     <div class=" p-4 w-full flex flex-col h-full min-h-screen  bg-gray-50 dark:bg-gray-800 dark:text-white text-gray-900">
         <div class="">
             <div class="flex p-4 items-center justify-between">
-                <h1 class="text-3xl font-semibold">Company Target</h1>
-                <div>
+                <h1 class="md:text-3xl text-xl font-semibold">Company Target</h1>
+                <div class="flex md:flex-row items-center justify-center flex-col gap-2">
                     <button onclick="showImportTargetModal()"
-                        class="px-4 py-2 me-2 text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">Import
+                        class="px-4 py-2 me-2 md:text-sm text-xs font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">Import
                         Target</button>
                     <button onclick="showAddTargetModal()"
-                        class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">Add
+                        class="px-4 py-2 md:text-sm text-xs font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">Add
                         Target</button>
                 </div>
             </div>
             <div class="flex flex-col gap-4 p-4">
-                <div class="max-w-xs">
+                <div class="md:max-w-xs max-w-full">
                     <div>
-                        <label for="position" class="mb-1 block text-sm font-medium">Position</label>
+                        <label for="position" class="mb-1 block text-xs md:text-sm font-medium">Position</label>
                         <select id="position" name="position" onchange="getTargets()"
-                            class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            class="bg-gray-100 border border-gray-300 text-gray-900 text-xs md:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
 
                         </select>
                     </div>
                     <div>
                         <label for="department"
-                            class="mb-1 mt-4 block text-sm font-medium text-gray-700 dark:text-gray-300">Department</label>
+                            class="mb-1 mt-4 block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-300">Department</label>
                         <select id="department" name="department" onchange="getTargets()"
-                            class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            class="bg-gray-100 border border-gray-300 text-gray-900 text-xs md:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
 
                         </select>
                     </div>
                     @IsAdmin()
-                    <div class="max-w-xs">
+                    <div class="md:max-w-xs max-w-full">
                         <div>
                             <label for="companyCheckAdmin"
-                                class="mb-1 mt-4 block text-sm font-medium text-gray-700 dark:text-gray-300">Company</label>
+                                class="mb-1 mt-4 block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-300">Company</label>
                             <select id="companyCheckAdmin" name="companyCheckAdmin" onchange="getTargets()"
-                                class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                class="bg-gray-100 border border-gray-300 text-gray-900 text-xs md:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                 <option value="">All</option>
                                 @foreach ($companies as $company)
                                     <option value="{{ $company->id }}">{{ $company->name }}</option>
@@ -52,9 +52,9 @@
                 </div>
                 <div class="flex p-4 justify-between items-center mt-8">
                     <div class="flex items-center">
-                        <label for="show" class="mr-2 text-sm font-medium">Show</label>
+                        <label for="show" class="mr-2 text-xs md:text-sm font-medium">Show</label>
                         <select id="show" name="show" onchange="getTargets()"
-                            class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            class="bg-gray-100 border border-gray-300 text-gray-900 text-xs md:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                             <option value="5">5</option>
                             <option value="10">10</option>
                             <option value="20">20</option>
@@ -63,7 +63,7 @@
                     </div>
                     <div class="flex items-center">
                         <input type="text" id="search" name="search" onchange="getTargets()"
-                            class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5 w-64 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            class="bg-gray-100 border border-gray-300 text-gray-900 text-xs md:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5 w-64 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             placeholder="Search...">
                     </div>
                 </div>
@@ -86,15 +86,16 @@
                         </tbody>
                     </table>
                 </div>
-                <nav class="flex items-center flex-column flex-wrap md:flex-row justify-between p-4"
+                <nav class="flex items-center flex-column flex-row md:flex-row justify-between p-4"
                     aria-label="Table navigation">
                     <span
-                        class="text-sm font-normal text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto">Showing
+                        class="text-xs md:text-sm font-normal text-gray-500 dark:text-gray-400  md:mb-0 block w-full md:inline md:w-auto">Showing
                         <span class="font-semibold text-gray-900 dark:text-white"> <span id="numberFirstItem">0</span> -
                             <span id="numberLastItem">0</span></span> of
                         <span id="totalTemplatesCount" class="font-semibold text-gray-900 dark:text-white">0</span>
                     </span>
-                    <ul id="page-button-target-company" class="inline-flex space-x-2 rtl:space-x-reverse text-sm h-8">
+                    <ul id="page-button-target-company"
+                        class="inline-flex space-x-2 rtl:space-x-reverse text-xs md:text-sm h-8">
 
                     </ul>
                 </nav>
@@ -163,14 +164,14 @@
                 table.empty();
                 if (targets.length == 0) {
                     $("#list-targets-tbody").append(`
-                  <tr class="text-sm font-light text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800">
+                  <tr class="text-xs md:text-sm font-light text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800">
                             <td class="p-4" colspan="6">No data available</td>
                         </tr>
                 `);
                 } else {
                     targets.forEach(function(target, index) {
                         $("#list-targets-tbody").append(`
-                    <tr class="text-sm font-light text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800">
+                    <tr class="text-xs md:text-sm font-light text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800">
                         <td class="p-4">${target.first_name}</td>
                         <td class="p-4">${target.last_name}</td>
                         <td class="p-4">${target.position.name}</td>
@@ -178,9 +179,9 @@
                         <td class="p-4">${target.email}</td>
                         <td class="p-4 flex gap-2">
                             <button onclick="showUpdateTargetModal(${target.id}, '${target.first_name}', '${target.last_name}','${target.email}', '${target.position.id}', '${target.department.id}')"
-                                class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">Update</button>
+                                class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">Update</button>
                             <button onclick="deleteTarget(${target.id})"
-                                class="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-xl hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600">Delete</button>
+                                class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-red-600 rounded-xl hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600">Delete</button>
                         </td>
 
                     </tr>

@@ -9,11 +9,11 @@
 
             </div>
             <div class="flex flex-col gap-4 p-4">
-                <div class="max-w-xs">
+                <div class="max-w-full md:max-w-xs">
                     <div>
-                        <label for="capture_passwords" class="mb-1 block text-sm font-medium">Capture Password</label>
+                        <label for="capture_passwords" class="mb-1 block text-xs md:text-sm font-medium">Capture Password</label>
                         <select id="capture_passwords" name="capture_passwords" onchange="getLandingPage()"
-                            class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            class="bg-gray-100 border border-gray-300 text-gray-900 text-xs md:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                             <option value="2">All</option>
                             <option value="1">Yes</option>
                             <option value="0">No</option>
@@ -22,10 +22,10 @@
                     </div>
                     <div>
                         <label for="capture_credentials"
-                            class="mb-1 mt-4 block text-sm font-medium text-gray-700 dark:text-gray-300">Capture
+                            class="mb-1 mt-4 block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-300">Capture
                             Credentials</label>
                         <select id="capture_credentials" name="capture_credentials" onchange="getLandingPage()"
-                            class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            class="bg-gray-100 border border-gray-300 text-gray-900 text-xs md:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                             <option value="2">All</option>
                             <option value="1">Yes</option>
                             <option value="0">No</option>
@@ -37,9 +37,9 @@
             </div>
             <div class="flex p-4 justify-between items-center mt-8">
                 <div class="flex items-center">
-                    <label for="show" class="mr-2 text-sm font-medium">Show</label>
+                    <label for="show" class="mr-2 text-xs md:text-sm font-medium">Show</label>
                     <select id="show" name="show" onchange="getLandingPage()"
-                        class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        class="bg-gray-100 border border-gray-300 text-gray-900 text-xs md:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                         <option value="5">5</option>
                         <option value="10">10</option>
                         <option value="20">20</option>
@@ -48,7 +48,7 @@
                 </div>
                 <div class="flex items-center">
                     <input type="text" id="search" name="search" onchange="getLandingPage()"
-                        class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5 w-64 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        class="bg-gray-100 border border-gray-300 text-gray-900 text-xs md:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5 w-64 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         placeholder="Search...">
                 </div>
             </div>
@@ -67,15 +67,15 @@
 
                 </tbody>
             </table>
-            <nav class="flex items-center flex-column flex-wrap md:flex-row justify-between p-4"
+            <nav class="flex items-center flex-column flex-row justify-between p-4"
                 aria-label="Table navigation">
                 <span
-                    class="text-sm font-normal text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto">Showing
+                    class="text-xs md:text-sm font-normal text-gray-500 dark:text-gray-400 md:mb-0 block w-full md:inline md:w-auto">Showing
                     <span class="font-semibold text-gray-900 dark:text-white"> <span id="numberFirstItem">0</span> - <span
                             id="numberLastItem">0</span></span> of
                     <span id="totalTemplatesCount" class="font-semibold text-gray-900 dark:text-white">0</span>
                 </span>
-                <ul id="pagination-page-button" class="inline-flex space-x-2 rtl:space-x-reverse text-sm h-8">
+                <ul id="pagination-page-button" class="inline-flex space-x-2 rtl:space-x-reverse text-xs md:text-sm h-8">
 
                 </ul>
             </nav>
@@ -110,12 +110,12 @@
                     Object.keys(landingPage).forEach(function(key) {
                         let value = landingPage[key];
                         $("#list-page-tbody").append(`
-                            <tr class="text-sm font-light text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800">
+                            <tr class="text-xs md:text-sm font-light text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800">
                                 <td class="p-4">${value.name}</td>
                                 <td class="p-4">${value.capture_credentials}</td>
                                 <td class="p-4">${value.capture_passwords}</td>
                                 <td class="p-4">
-                                    <button onclick="showLandingPage(${value.id})" class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">Show Preview</button>
+                                    <button onclick="showLandingPage(${value.id})" class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">Show Preview</button>
                                 </td>
                             </tr>
                         `);

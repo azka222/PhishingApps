@@ -11,28 +11,28 @@
                 <div class="bg-white dark:bg-gray-700 dark:text-white rounded-lg p-4">
                     <div class="grid grid-cols-2 gap-4">
                         <div class="col-span-4 md:col-span-1">
-                            <p class="text-sm font-semibold">Campaign Name</p>
-                            <p class="text-sm font-light" id="campaign-name">Not Set</p>
+                            <p class="text-xs md:text-sm font-semibold">Campaign Name</p>
+                            <p class="text-xs md:text-sm font-light" id="campaign-name">Not Set</p>
                         </div>
                         <div class="col-span-4 md:col-span-1">
-                            <p class="text-sm font-semibold">Email Profile</p>
-                            <p class="text-sm font-light" id="email-profile-name">Not Set</p>
+                            <p class="text-xs md:text-sm font-semibold">Email Profile</p>
+                            <p class="text-xs md:text-sm font-light" id="email-profile-name">Not Set</p>
                         </div>
                         <div class="col-span-4 md:col-span-1">
-                            <p class="text-sm font-semibold">Campaign Launch Date</p>
-                            <p class="text-sm font-light" id="campaign-launch-date">Not Set</p>
+                            <p class="text-xs md:text-sm font-semibold">Campaign Launch Date</p>
+                            <p class="text-xs md:text-sm font-light" id="campaign-launch-date">Not Set</p>
                         </div>
                         <div class="col-span-4 md:col-span-1">
-                            <p class="text-sm font-semibold">Email Template</p>
-                            <p class="text-sm font-light" id="email-template-name">Not Set</p>
+                            <p class="text-xs md:text-sm font-semibold">Email Template</p>
+                            <p class="text-xs md:text-sm font-light" id="email-template-name">Not Set</p>
                         </div>
                         <div class="col-span-4 md:col-span-1">
-                            <p class="text-sm font-semibold">Total Target</p>
-                            <p class="text-sm font-light" id="campaign-total-target">Not Set</p>
+                            <p class="text-xs md:text-sm font-semibold">Total Target</p>
+                            <p class="text-xs md:text-sm font-light" id="campaign-total-target">Not Set</p>
                         </div>
                         <div class="col-span-4 md:col-span-1">
-                            <p class="text-sm font-semibold">Status</p>
-                            <p class="text-sm font-light" id="campaign-status">Not Set</p>
+                            <p class="text-xs md:text-sm font-semibold">Status</p>
+                            <p class="text-xs md:text-sm font-light" id="campaign-status">Not Set</p>
                         </div>
 
                     </div>
@@ -43,19 +43,19 @@
                 <div class="bg-white dark:bg-gray-700 dark:text-white rounded-lg p-4">
                     <div class="grid grid-cols-4 gap-4">
                         <div class="col-span-4 lg:col-span-1 md:col-span-2  flex flex-col items-center justify-center">
-                            <p class="text-sm font-semibold mb-4">Emails Sent</p>
+                            <p class="text-xs md:text-sm font-semibold mb-4">Emails Sent</p>
                             <div id="donut-email-sent"></div>
                         </div>
                         <div class="col-span-4 lg:col-span-1 md:col-span-2 flex flex-col items-center justify-center">
-                            <p class="text-sm font-semibold mb-4">Emails Opened</p>
+                            <p class="text-xs md:text-sm font-semibold mb-4">Emails Opened</p>
                             <div id="donut-email-opened"></div>
                         </div>
                         <div class="col-span-4 lg:col-span-1 md:col-span-2 flex flex-col items-center justify-center">
-                            <p class="text-sm font-semibold mb-4">Links Clicked</p>
+                            <p class="text-xs md:text-sm font-semibold mb-4">Links Clicked</p>
                             <div id="donut-link-clicked"></div>
                         </div>
                         <div class="col-span-4 lg:col-span-1 md:col-span-2  flex flex-col items-center justify-center">
-                            <p class="text-sm font-semibold mb-4">Emails Reported</p>
+                            <p class="text-xs md:text-sm font-semibold mb-4">Emails Reported</p>
                             <div id="donut-email-reported"></div>
                         </div>
 
@@ -67,7 +67,7 @@
             <div class="flex p-4 justify-end items-center mt-8">
                 <div class="flex items-center">
                     <input type="text" id="search" name="search" onchange="getCampaignDetails()"
-                        class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5 w-64 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        class="bg-gray-100 border border-gray-300 text-gray-900 text-xs md:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5 w-64 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         placeholder="Search by email only..">
                 </div>
             </div>
@@ -89,15 +89,15 @@
                     </tbody>
                 </table>
             </div>
-            <nav class="flex items-center flex-column flex-wrap md:flex-row justify-between p-4"
+            <nav class="flex items-center flex-column flex-row justify-between p-4"
                 aria-label="Table navigation">
                 <span
-                    class="text-sm font-normal text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto">Showing
+                    class="text-xs md:text-sm font-normal text-gray-500 dark:text-gray-400 md:mb-0 block w-full md:inline md:w-auto">Showing
                     <span class="font-semibold text-gray-900 dark:text-white"> <span id="numberFirstItem">0</span> - <span
                             id="numberLastItem">0</span></span> of
                     <span id="totalTemplatesCount" class="font-semibold text-gray-900 dark:text-white">0</span>
                 </span>
-                <ul id="page-button-campaign-details" class="inline-flex space-x-2 rtl:space-x-reverse text-sm h-8">
+                <ul id="page-button-campaign-details" class="inline-flex space-x-2 rtl:space-x-reverse text-xs md:text-sm h-8">
 
                 </ul>
             </nav>
@@ -176,7 +176,7 @@
                         }
                         let reportedColor = reported ? 'bg-red-200 dark:bg-red-500' : '';
                         let reportedText = reported ? 'Reported' : 'Not Reported';
-                        let html = `<tr class="text-sm font-normal text-gray-900 dark:text-gray-400 bg-white dark:bg-gray-800">
+                        let html = `<tr class="text-xs md:text-sm font-normal text-gray-900 dark:text-gray-400 bg-white dark:bg-gray-800">
                             <td class="p-4">
                                 ${result.first_name}
                             </td>
