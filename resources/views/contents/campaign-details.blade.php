@@ -64,8 +64,8 @@
                 </div>
             </div>
 
-            <div class="flex p-4 justify-end items-center mt-8">
-                <div class="flex items-center">
+            <div class="flex p-4 justify-start md:justify-end items-start md:items-center mt-8">
+                <div class="flex">
                     <input type="text" id="search" name="search" onchange="getCampaignDetails()"
                         class="bg-gray-100 border border-gray-300 text-gray-900 text-xs md:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5 w-64 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         placeholder="Search by email only..">
@@ -89,10 +89,10 @@
                     </tbody>
                 </table>
             </div>
-            <nav class="flex items-center flex-column flex-row justify-between p-4"
+            <nav class="flex items-center flex-column flex-col md:flex-row justify-between p-4"
                 aria-label="Table navigation">
                 <span
-                    class="text-xs md:text-sm font-normal text-gray-500 dark:text-gray-400 md:mb-0 block w-full md:inline md:w-auto">Showing
+                    class="mb-4 md:mb-0 text-xs md:text-sm font-normal text-gray-500 dark:text-gray-400 block w-full md:inline md:w-auto">Showing
                     <span class="font-semibold text-gray-900 dark:text-white"> <span id="numberFirstItem">0</span> - <span
                             id="numberLastItem">0</span></span> of
                     <span id="totalTemplatesCount" class="font-semibold text-gray-900 dark:text-white">0</span>
@@ -192,7 +192,7 @@
                             <td class="p-4">
                                 ${result.ip ? result.ip : '-'}
                             </td>
-                            <td class="p-4">
+                            <td class="p-4 min-w-32">
                                 <span class="px-2 inline-flex text-xs dark:text-white leading-5 font-semibold rounded-full ${statusColor}">
                                     ${status}
                                 </span>

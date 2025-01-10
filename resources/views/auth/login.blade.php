@@ -17,17 +17,17 @@
                     <!-- Email input -->
                     <div class="mt-8">
                         <label for="user_email"
-                            class="block mb-2  text-sm sm:text-base font-medium">Your email</label>
+                            class="block mb-2  text-xs md:text-sm sm:text-base font-medium">Your email</label>
                         <input type="email" id="login_email"
-                            class="w-full p-3 border rounded-lg text-gray-900 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                            class="w-full p-3 border rounded-lg text-gray-900 focus:ring-2 text-xs md:text-sm focus:ring-blue-500 focus:outline-none"
                             placeholder="Enter your email" required />
                     </div>
                     <!-- Password Input -->
                     <div class="mt-6">
                         <label for="Password"
-                            class="block mb-2 text-sm sm:text-base font-medium">Your password</label>
+                            class="block mb-2 text-xs md:text-sm sm:text-base font-medium">Your password</label>
                         <input type="password" id="login_password"
-                            class="w-full p-3 border rounded-lg text-gray-900 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                            class="w-full p-3 border rounded-lg text-gray-900 text-xs md:text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
                             placeholder="Enter your password" required />
                     </div>
                     <!-- Remember me & Reset Password -->
@@ -35,9 +35,9 @@
                         <div class="flex items-center">
                             <input id="remember" type="checkbox"
                                 class="w-4 h-4 rounded border-gray-300 focus:ring-2 focus:ring-blue-500">
-                            <label for="remember" class="ml-2 text-sm text-gray-300">Remember me?</label>
+                            <label for="remember" class="ml-2 text-xs md:text-sm text-gray-300">Remember me?</label>
                         </div>
-                        <a href="{{ route('forgotPasswordView') }}" class="text-sm text-blue-400 hover:underline">Reset Password</a>
+                        <a href="{{ route('forgotPasswordView') }}" class="text-xs md:text-sm text-blue-400 hover:underline">Reset Password</a>
                     </div>
                      <!-- Error Message  -->
                     <div class="pt-8">
@@ -55,9 +55,9 @@
                     <!-- Login button -->
                     <div class="mt-4">
                         <button onclick="login()"
-                            class="w-full bg-greyishBlue text-white py-3 rounded-lg hover:bg-blue-500 transition duration-300 ease-in-out">Login</button>
+                            class="w-full text-xs md:text-sm bg-greyishBlue text-white py-3 rounded-lg hover:bg-blue-500 transition duration-300 ease-in-out">Login</button>
                         <!-- Dont have account -->
-                        <div class="mt-4 text-center text-white">
+                        <div class="mt-4 text-center text-white text-xs md:text-sm">
                             <span>Don't have an account?</span>
                             <a onclick="registerView()" class="text-blue-400 hover:underline">Register</a>
                         </div>
