@@ -8,8 +8,15 @@
                 <h1 class="text-3xl font-semibold">Campaigns</h1>
                 <div>
                     <button onclick="showAddCampaignModal()"
-                        class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">Create
-                        Campaign</button>
+                        class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                            class="size-4 md:hidden">
+                            <path fill-rule="evenodd"
+                                d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25V9Z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        <span class="hidden md:inline ml-2">Create Campaign</span>
+                    </button>
                 </div>
             </div>
             <div class="flex flex-col gap-4 p-4">
@@ -39,9 +46,9 @@
                     </div>
                     @endIsAdmin()
                 </div>
-                <div class="flex p-4 justify-between items-center mt-8">
-                    <div class="flex items-center">
-                        <label for="show" class="mr-2 text-xs md:text-sm font-medium">Show</label>
+                <div class="flex md:flex-row flex-col justify-between items-start md:items-center mt-8">
+                    <div class="flex md:flex-row flex-col items-start md:items-center mb-4 md:mb-0">
+                        <label for="show" class="mr-2 text-xs md:text-sm font-medium mb-2 md:mb-0">Show</label>
                         <select id="show" name="show" onchange="getCampaigns()"
                             class="bg-gray-100 border border-gray-300 text-gray-900 text-xs md:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                             <option value="5">5</option>
@@ -56,7 +63,7 @@
                             placeholder="Search...">
                     </div>
                 </div>
-                <div class="p-4 min-w-32 overflow-x-auto md:min-w-full">
+                <div class=" min-w-32 overflow-x-auto md:min-w-full">
                     <table class="min-w-32 md:min-w-full divide-y divide-gray-200 dark:divide-gray-700 mt-4">
                         <thead class="bg-gray-300 dark:bg-gray-700">
                             <tr
@@ -74,15 +81,15 @@
                         </tbody>
                     </table>
                 </div>
-                <nav class="flex items-center flex-column flex-row justify-between p-4"
-                    aria-label="Table navigation">
+                <nav class="flex items-center flex-column flex-col md:flex-row justify-between p-4" aria-label="Table navigation">
                     <span
-                        class="text-xs md:text-sm font-normal text-gray-500 dark:text-gray-400 md:mb-0 block w-full md:inline md:w-auto">Showing
+                        class="mb-4 md:mb-0 text-xs md:text-sm font-normal text-gray-500 dark:text-gray-400 block w-full md:inline md:w-auto">Showing
                         <span class="font-semibold text-gray-900 dark:text-white"> <span id="numberFirstItem">0</span> -
                             <span id="numberLastItem">0</span></span> of
                         <span id="totalTemplatesCount" class="font-semibold text-gray-900 dark:text-white">0</span>
                     </span>
-                    <ul id="page-button-campaign-company" class="inline-flex space-x-2 rtl:space-x-reverse text-xs md:text-sm h-8">
+                    <ul id="page-button-campaign-company"
+                        class="inline-flex space-x-2 rtl:space-x-reverse text-xs md:text-sm h-8">
 
                     </ul>
                 </nav>
@@ -338,7 +345,7 @@
                         campaigns = [];
                         campaigns = response.data;
                         $("#list-campaign-tbody").empty();
-                        if(campaigns.length == 0){
+                        if (campaigns.length == 0) {
                             $("#list-campaign-tbody").append(`
                             <tr class="text-xs md:text-sm font-normal text-gray-900 dark:text-gray-400 bg-white dark:bg-gray-800">
                                 <td class="p-4" colspan="5">
@@ -346,18 +353,17 @@
                                 </td>
                             </tr>
                         `);
-                        }
-                        else{
+                        } else {
                             campaigns.forEach(function(campaign) {
-                            console.log(campaign);
-                            let date = new Date(campaign.launch_date);
-                            let formattedDate =
-                                `${date.toLocaleDateString('id-ID', {
+                                console.log(campaign);
+                                let date = new Date(campaign.launch_date);
+                                let formattedDate =
+                                    `${date.toLocaleDateString('id-ID', {
                             day: '2-digit',
                             month: 'long',
                             year: 'numeric'
                         })} ${String(date.getUTCHours()).padStart(2, '0')}:${String(date.getUTCMinutes()).padStart(2, '0')}`;
-                            $("#list-campaign-tbody").append(`
+                                $("#list-campaign-tbody").append(`
                             <tr class="text-xs md:text-sm font-normal text-gray-900 dark:text-gray-400 bg-white dark:bg-gray-800">
                                 <td class="p-4">
                                    ${campaign.name}
@@ -379,7 +385,7 @@
                                 </td>
                             </tr>
                         `);
-                        });
+                            });
                         }
                         $("#numberFirstItem").text(
                             response.campaignTotal != 0 ? (page - 1) * $("#show").val() + 1 : 0

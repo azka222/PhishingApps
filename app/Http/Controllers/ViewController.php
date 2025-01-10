@@ -84,7 +84,7 @@ class ViewController extends Controller
 
     public function campaignDetailsView($id)
     {
-        $check = CompanyCampaign::where('company_id', auth()->user()->company_id)->where('campaign_id', $id)->first();
+        $check = auth()->user()->accessibleCampaign()->where('campaign_id', $id)->first();
         if (!$check) {
             abort(404);
         }

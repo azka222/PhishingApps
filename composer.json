@@ -69,7 +69,7 @@
         },
         "cache-dir": "C:\\Users\\USER\\AppData\\Local\\Composer\\cache",
         "platform": {
-            "php": "8.2.12"
+            "php": "8.4.1"
         }
     },
     "minimum-stability": "stable",
