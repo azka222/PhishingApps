@@ -6,6 +6,7 @@
         <div class="">
             <div class="flex p-4 items-center justify-between">
                 <h1 class="text-3xl font-semibold">Campaigns</h1>
+                @IsUser()
                 <div>
                     <button onclick="showAddCampaignModal()"
                         class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 flex items-center">
@@ -18,6 +19,7 @@
                         <span class="hidden md:inline ml-2">Create Campaign</span>
                     </button>
                 </div>
+                @endIsUser()
             </div>
             <div class="flex flex-col gap-4 p-4">
                 <div class="max-w-full md:max-w-xs">
@@ -44,8 +46,8 @@
                             @endforeach
                         </select>
                     </div>
-                    @endIsAdmin()
                 </div>
+                @endIsAdmin()
                 <div class="flex md:flex-row flex-col justify-between items-start md:items-center mt-8">
                     <div class="flex md:flex-row flex-col items-start md:items-center mb-4 md:mb-0">
                         <label for="show" class="mr-2 text-xs md:text-sm font-medium mb-2 md:mb-0">Show</label>
@@ -77,11 +79,11 @@
                         </thead>
                         <tbody id="list-campaign-tbody"
                             class="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
-
                         </tbody>
                     </table>
                 </div>
-                <nav class="flex items-center flex-column flex-col md:flex-row justify-between p-4" aria-label="Table navigation">
+                <nav class="flex items-center flex-column flex-col md:flex-row justify-between p-4"
+                    aria-label="Table navigation">
                     <span
                         class="mb-4 md:mb-0 text-xs md:text-sm font-normal text-gray-500 dark:text-gray-400 block w-full md:inline md:w-auto">Showing
                         <span class="font-semibold text-gray-900 dark:text-white"> <span id="numberFirstItem">0</span> -
@@ -90,81 +92,82 @@
                     </span>
                     <ul id="page-button-campaign-company"
                         class="inline-flex space-x-2 rtl:space-x-reverse text-xs md:text-sm h-8">
-
                     </ul>
                 </nav>
             </div>
         </div>
+    </div>
 
-        <script>
-            let landingPages = [];
-            let emailTemplates = [];
-            let sendingProfiles = [];
-            let groups = [];
-            let campaigns = [];
 
-            $(document).ready(function() {
-                getCampaigns();
-                getCampaignsResources();
-            });
+    <script>
+        let landingPages = [];
+        let emailTemplates = [];
+        let sendingProfiles = [];
+        let groups = [];
+        let campaigns = [];
 
-            function showAddCampaignModal() {
-                showModal('add-campaign-modal');
-            }
+        $(document).ready(function() {
+            getCampaigns();
+            getCampaignsResources();
+        });
 
-            function getCampaignsResources() {
-                $.ajax({
-                    url: "{{ route('getCampaignResources') }}",
-                    type: "GET",
-                    success: function(response) {
-                        landingPages = response.landingPages;
-                        emailTemplates = response.emailTemplates;
-                        sendingProfiles = response.sendingProfiles;
-                        groups = response.groups;
-                        $("#campaign_page").empty();
-                        $("#campaign_template").empty();
-                        $("#campaign_profile").empty();
-                        $("#group_campaign").empty();
+        function showAddCampaignModal() {
+            showModal('add-campaign-modal');
+        }
+
+        function getCampaignsResources() {
+            $.ajax({
+                url: "{{ route('getCampaignResources') }}",
+                type: "GET",
+                success: function(response) {
+                    landingPages = response.landingPages;
+                    emailTemplates = response.emailTemplates;
+                    sendingProfiles = response.sendingProfiles;
+                    groups = response.groups;
+                    $("#campaign_page").empty();
+                    $("#campaign_template").empty();
+                    $("#campaign_profile").empty();
+                    $("#group_campaign").empty();
+                    $("#campaign_page").append(
+                        `<option value="">Select Landing Page</option>`
+                    );
+                    $("#campaign_template").append(
+                        `<option value="">Select Template</option>`
+                    );
+                    $("#campaign_profile").append(
+                        `<option value="">Select Profile</option>`
+                    );
+                    $("#group_campaign").append(
+                        `<option value="">Select Group</option>`
+                    );
+                    landingPages.forEach(data => {
                         $("#campaign_page").append(
-                            `<option value="">Select Landing Page</option>`
+                            `<option value="${data.id}">${data.name}</option>`
                         );
+                    });
+                    emailTemplates.forEach(data => {
                         $("#campaign_template").append(
-                            `<option value="">Select Template</option>`
+                            `<option value="${data.id}">${data.name}</option>`
                         );
+                    });
+                    sendingProfiles.forEach(data => {
                         $("#campaign_profile").append(
-                            `<option value="">Select Profile</option>`
+                            `<option value="${data.id}">${data.name}</option>`
                         );
+                    });
+
+                    groups.forEach(data => {
                         $("#group_campaign").append(
-                            `<option value="">Select Group</option>`
+                            `<option value="${data.id}">${data.name}</option>`
                         );
-                        landingPages.forEach(data => {
-                            $("#campaign_page").append(
-                                `<option value="${data.id}">${data.name}</option>`
-                            );
-                        });
-                        emailTemplates.forEach(data => {
-                            $("#campaign_template").append(
-                                `<option value="${data.id}">${data.name}</option>`
-                            );
-                        });
-                        sendingProfiles.forEach(data => {
-                            $("#campaign_profile").append(
-                                `<option value="${data.id}">${data.name}</option>`
-                            );
-                        });
+                    });
+                }
+            })
+        }
 
-                        groups.forEach(data => {
-                            $("#group_campaign").append(
-                                `<option value="${data.id}">${data.name}</option>`
-                            );
-                        });
-                    }
-                })
-            }
-
-            function addGroupToCampaign(id) {
-                let tempGroup = groups.find(group => group.id == id);
-                $("#group-list").append(`
+        function addGroupToCampaign(id) {
+            let tempGroup = groups.find(group => group.id == id);
+            $("#group-list").append(`
                         <div class="group-campaign flex items-center justify-between mb-4 shadow-md p-3 rounded-xl"
                             value="${tempGroup.id}" id="group_member_${tempGroup.id}">
                             <div class="flex flex-col gap-1">
@@ -177,193 +180,193 @@
                             </div>
                         </div>
                 `);
-                setGroupSelection();
-            }
+            setGroupSelection();
+        }
 
-            function setGroupSelection() {
-                $("#group_campaign").empty();
+        function setGroupSelection() {
+            $("#group_campaign").empty();
+            $("#group_campaign").append(
+                `<option value="">Select Group</option>`
+            );
+            groups.forEach(function(group) {
                 $("#group_campaign").append(
-                    `<option value="">Select Group</option>`
+                    `<option value="${group.id}">${group.name}</option>`
                 );
-                groups.forEach(function(group) {
-                    $("#group_campaign").append(
-                        `<option value="${group.id}">${group.name}</option>`
-                    );
-                });
-                $(".group-campaign").each(function() {
-                    let id = $(this).attr('value');
-                    $("#group_campaign option").each(function() {
-                        if ($(this).val() == id) {
-                            $(this).remove();
-                        }
-                    });
-                })
-            }
-
-            function removeGroup(id) {
-                $(`#group_member_${id}`).remove();
-                setGroupSelection();
-            }
-
-            function testConnection() {
-                Swal.fire({
-                    title: 'Testing...',
-                    text: 'Please wait while we test your email profile.',
-                    allowOutsideClick: false,
-                    didOpen: () => {
-                        Swal.showLoading();
+            });
+            $(".group-campaign").each(function() {
+                let id = $(this).attr('value');
+                $("#group_campaign option").each(function() {
+                    if ($(this).val() == id) {
+                        $(this).remove();
                     }
                 });
+            })
+        }
 
-                let id = $("#campaign_profile").val();
-                let timeout = setTimeout(() => {
+        function removeGroup(id) {
+            $(`#group_member_${id}`).remove();
+            setGroupSelection();
+        }
+
+        function testConnection() {
+            Swal.fire({
+                title: 'Testing...',
+                text: 'Please wait while we test your email profile.',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            let id = $("#campaign_profile").val();
+            let timeout = setTimeout(() => {
+                Swal.close();
+                Swal.fire({
+                    icon: "error",
+                    title: "Response Took Too Long",
+                    text: "The connection is taking longer than expected. Please check your email profile.",
+                    confirmButtonColor: '#10b981',
+                    confirmButtonText: 'Close'
+                });
+            }, 10000);
+
+            $.ajax({
+                url: "{{ route('testConnection') }}",
+                type: "POST",
+                data: {
+                    id: id,
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(response) {
+                    clearTimeout(timeout);
                     Swal.close();
                     Swal.fire({
+                        title: 'Success',
+                        text: 'Connection is successful.',
+                        icon: 'success',
+                        confirmButtonColor: '#10b981',
+                        confirmButtonText: 'OK'
+                    });
+                },
+                error: function(xhr, status, error) {
+                    clearTimeout(timeout);
+                    Swal.close();
+                    let errorMessage = JSON.parse(xhr.responseText);
+                    Swal.fire({
                         icon: "error",
-                        title: "Response Took Too Long",
-                        text: "The connection is taking longer than expected. Please check your email profile.",
+                        title: "Error",
+                        text: errorMessage.error,
                         confirmButtonColor: '#10b981',
                         confirmButtonText: 'Close'
                     });
-                }, 10000);
+                }
+            })
+        }
 
-                $.ajax({
-                    url: "{{ route('testConnection') }}",
-                    type: "POST",
-                    data: {
-                        id: id,
-                        _token: "{{ csrf_token() }}"
-                    },
-                    success: function(response) {
-                        clearTimeout(timeout);
-                        Swal.close();
-                        Swal.fire({
-                            title: 'Success',
-                            text: 'Connection is successful.',
-                            icon: 'success',
-                            confirmButtonColor: '#10b981',
-                            confirmButtonText: 'OK'
+        function createCampaign() {
+            let name = $("#campaign_name").val();
+            let template = $("#campaign_template").val();
+            let page = $("#campaign_page").val();
+            let launchDate = $("#campaign_launch_date").val();
+            let endDate = $("#campaign_end_date").val();
+            let url = $("#campaign_url").val();
+            let status = $("#campaign_status").val();
+            let profile = $("#campaign_profile").val();
+            let groups = [];
+            $(".group-campaign").each(function() {
+                groups.push($(this).attr('value'));
+            });
+            $.ajax({
+                url: "{{ route('createCampaign') }}",
+                type: "POST",
+                data: {
+                    name: name,
+                    template: template,
+                    page: page,
+                    launchDate: launchDate,
+                    endDate: endDate,
+                    url: url,
+                    status: status,
+                    profile: profile,
+                    groups: groups,
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(response) {
+                    Swal.fire({
+                        title: 'Success',
+                        text: 'Campaign created successfully.',
+                        icon: 'success',
+                        confirmButtonColor: '#10b981',
+                        confirmButtonText: 'OK'
+                    });
+                    hideModal('add-campaign-modal');
+                    getCampaigns();
+                },
+                error: function(xhr, status, error) {
+                    if (xhr.status === 422) {
+                        var errorMessage = JSON.parse(xhr.responseText) ? JSON.parse(xhr.responseText) : xhr
+                            .responseText;
+                        var errors = errorMessage.errors ? errorMessage.errors : errorMessage;
+                        $('#error_message_field').show();
+                        $('#error_message').empty();
+                        $.each(errors, function(field, messages) {
+                            $.each(messages, function(index, message) {
+                                let data = `<li>${message}</li>`;
+                                $('#error_message').append(data);
+                            });
                         });
-                    },
-                    error: function(xhr, status, error) {
-                        clearTimeout(timeout);
-                        Swal.close();
-                        let errorMessage = JSON.parse(xhr.responseText);
+                    } else {
                         Swal.fire({
                             icon: "error",
                             title: "Error",
-                            text: errorMessage.error,
+                            text: xhr.responseJSON.message,
                             confirmButtonColor: '#10b981',
                             confirmButtonText: 'Close'
                         });
                     }
-                })
-            }
+                }
+            })
 
-            function createCampaign() {
-                let name = $("#campaign_name").val();
-                let template = $("#campaign_template").val();
-                let page = $("#campaign_page").val();
-                let launchDate = $("#campaign_launch_date").val();
-                let endDate = $("#campaign_end_date").val();
-                let url = $("#campaign_url").val();
-                let status = $("#campaign_status").val();
-                let profile = $("#campaign_profile").val();
-                let groups = [];
-                $(".group-campaign").each(function() {
-                    groups.push($(this).attr('value'));
-                });
-                $.ajax({
-                    url: "{{ route('createCampaign') }}",
-                    type: "POST",
-                    data: {
-                        name: name,
-                        template: template,
-                        page: page,
-                        launchDate: launchDate,
-                        endDate: endDate,
-                        url: url,
-                        status: status,
-                        profile: profile,
-                        groups: groups,
-                        _token: "{{ csrf_token() }}"
-                    },
-                    success: function(response) {
-                        Swal.fire({
-                            title: 'Success',
-                            text: 'Campaign created successfully.',
-                            icon: 'success',
-                            confirmButtonColor: '#10b981',
-                            confirmButtonText: 'OK'
-                        });
-                        hideModal('add-campaign-modal');
-                        getCampaigns();
-                    },
-                    error: function(xhr, status, error) {
-                        if (xhr.status === 422) {
-                            var errorMessage = JSON.parse(xhr.responseText) ? JSON.parse(xhr.responseText) : xhr
-                                .responseText;
-                            var errors = errorMessage.errors ? errorMessage.errors : errorMessage;
-                            $('#error_message_field').show();
-                            $('#error_message').empty();
-                            $.each(errors, function(field, messages) {
-                                $.each(messages, function(index, message) {
-                                    let data = `<li>${message}</li>`;
-                                    $('#error_message').append(data);
-                                });
-                            });
-                        } else {
-                            Swal.fire({
-                                icon: "error",
-                                title: "Error",
-                                text: xhr.responseJSON.message,
-                                confirmButtonColor: '#10b981',
-                                confirmButtonText: 'Close'
-                            });
-                        }
-                    }
-                })
+        }
 
-            }
-
-            function getCampaigns(page = 1) {
-                let show = $("#show").val();
-                let search = $("#search").val();
-                let status = $("#status").val();
-                let company = $("#companyCheckAdmin").val();
-                $.ajax({
-                    url: "{{ route('getCampaigns') }}?page=" + page,
-                    type: "GET",
-                    data: {
-                        show: show,
-                        search: search,
-                        status: status,
-                        page: page,
-                        companyId: company
-                    },
-                    success: function(response) {
-                        campaigns = [];
-                        campaigns = response.data;
-                        $("#list-campaign-tbody").empty();
-                        if (campaigns.length == 0) {
-                            $("#list-campaign-tbody").append(`
+        function getCampaigns(page = 1) {
+            let show = $("#show").val();
+            let search = $("#search").val();
+            let status = $("#status").val();
+            let company = $("#companyCheckAdmin").val();
+            $.ajax({
+                url: "{{ route('getCampaigns') }}?page=" + page,
+                type: "GET",
+                data: {
+                    show: show,
+                    search: search,
+                    status: status,
+                    page: page,
+                    companyId: company
+                },
+                success: function(response) {
+                    campaigns = [];
+                    campaigns = response.data;
+                    $("#list-campaign-tbody").empty();
+                    if (campaigns.length == 0) {
+                        $("#list-campaign-tbody").append(`
                             <tr class="text-xs md:text-sm font-normal text-gray-900 dark:text-gray-400 bg-white dark:bg-gray-800">
                                 <td class="p-4" colspan="5">
                                     No data available
                                 </td>
                             </tr>
                         `);
-                        } else {
-                            campaigns.forEach(function(campaign) {
-                                console.log(campaign);
-                                let date = new Date(campaign.launch_date);
-                                let formattedDate =
-                                    `${date.toLocaleDateString('id-ID', {
+                    } else {
+                        campaigns.forEach(function(campaign) {
+                            console.log(campaign);
+                            let date = new Date(campaign.launch_date);
+                            let formattedDate =
+                                `${date.toLocaleDateString('id-ID', {
                             day: '2-digit',
                             month: 'long',
                             year: 'numeric'
                         })} ${String(date.getUTCHours()).padStart(2, '0')}:${String(date.getUTCMinutes()).padStart(2, '0')}`;
-                                $("#list-campaign-tbody").append(`
+                            $("#list-campaign-tbody").append(`
                             <tr class="text-xs md:text-sm font-normal text-gray-900 dark:text-gray-400 bg-white dark:bg-gray-800">
                                 <td class="p-4">
                                    ${campaign.name}
@@ -385,66 +388,66 @@
                                 </td>
                             </tr>
                         `);
+                        });
+                    }
+                    $("#numberFirstItem").text(
+                        response.campaignTotal != 0 ? (page - 1) * $("#show").val() + 1 : 0
+                    );
+                    $("#numberLastItem").text(
+                        (page - 1) * $("#show").val() + response.data.length
+                    );
+                    $("#totalTemplatesCount").text(response.campaignTotal);
+                    paginationSendingProfile("#page-button-campaign-company", response.pageCount,
+                        response.currentPage);
+                }
+
+            });
+        }
+
+        function deleteCampaign(id) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#10b981',
+                cancelButtonColor: '#d97706',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "{{ route('deleteCampaign') }}",
+                        type: "POST",
+                        data: {
+                            id: id,
+                            _token: "{{ csrf_token() }}"
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                title: 'Success',
+                                text: 'Campaign deleted successfully.',
+                                icon: 'success',
+                                confirmButtonColor: '#10b981',
+                                confirmButtonText: 'OK'
+                            });
+                            getCampaigns();
+                        },
+                        error: function(xhr, status, error) {
+                            Swal.fire({
+                                icon: "error",
+                                title: "Error",
+                                text: xhr.responseJSON.message,
+                                confirmButtonColor: '#10b981',
+                                confirmButtonText: 'Close'
                             });
                         }
-                        $("#numberFirstItem").text(
-                            response.campaignTotal != 0 ? (page - 1) * $("#show").val() + 1 : 0
-                        );
-                        $("#numberLastItem").text(
-                            (page - 1) * $("#show").val() + response.data.length
-                        );
-                        $("#totalTemplatesCount").text(response.campaignTotal);
-                        paginationSendingProfile("#page-button-campaign-company", response.pageCount,
-                            response.currentPage);
-                    }
+                    })
+                }
+            })
+        }
 
-                });
-            }
-
-            function deleteCampaign(id) {
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: "You won't be able to revert this!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#10b981',
-                    cancelButtonColor: '#d97706',
-                    confirmButtonText: 'Yes, delete it!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        $.ajax({
-                            url: "{{ route('deleteCampaign') }}",
-                            type: "POST",
-                            data: {
-                                id: id,
-                                _token: "{{ csrf_token() }}"
-                            },
-                            success: function(response) {
-                                Swal.fire({
-                                    title: 'Success',
-                                    text: 'Campaign deleted successfully.',
-                                    icon: 'success',
-                                    confirmButtonColor: '#10b981',
-                                    confirmButtonText: 'OK'
-                                });
-                                getCampaigns();
-                            },
-                            error: function(xhr, status, error) {
-                                Swal.fire({
-                                    icon: "error",
-                                    title: "Error",
-                                    text: xhr.responseJSON.message,
-                                    confirmButtonColor: '#10b981',
-                                    confirmButtonText: 'Close'
-                                });
-                            }
-                        })
-                    }
-                })
-            }
-
-            function showDetailCampaign(id) {
-                window.location.href = "{{ route('campaignDetailsView', '') }}/" + id;
-            }
-        </script>
-    @endSection
+        function showDetailCampaign(id) {
+            window.location.href = "{{ route('campaignDetailsView', '') }}/" + id;
+        }
+    </script>
+@endSection

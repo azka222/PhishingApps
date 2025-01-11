@@ -55,28 +55,40 @@ class TargetController extends Controller
 
     public function createTarget(Request $request)
     {
+        if (Gate::allows('IsAdmin')) {
+            return response()->json([
+                'message' => 'You are not authorized to perform this action',
+                'success' => false,
+            ], 403);
+        } else if (Gate::allows('IsUser')) {
+            $request->validate([
+                'first_name' => 'required|string|max:50',
+                'last_name' => 'required|string|max:50',
+                'department' => 'required|integer|exists:target_departments,id',
+                'email' => 'required|email|unique:targets,email',
+                'position' => 'required|integer|exists:target_positions,id',
+            ]);
 
-        $request->validate([
-            'first_name' => 'required|string|max:50',
-            'last_name' => 'required|string|max:50',
-            'department' => 'required|integer|exists:target_departments,id',
-            'email' => 'required|email|unique:targets,email',
-            'position' => 'required|integer|exists:target_positions,id',
-        ]);
+            $target = new Target();
+            $target->first_name = $request->first_name;
+            $target->last_name = $request->last_name;
+            $target->department_id = $request->department;
+            $target->email = $request->email;
+            $target->position_id = $request->position;
+            $target->company_id = auth()->user()->company_id;
+            $target->save();
 
-        $target = new Target();
-        $target->first_name = $request->first_name;
-        $target->last_name = $request->last_name;
-        $target->department_id = $request->department;
-        $target->email = $request->email;
-        $target->position_id = $request->position;
-        $target->company_id = auth()->user()->company_id;
-        $target->save();
+            return response()->json([
+                'message' => 'Target created successfully',
+                'success' => true,
+            ]);
+        } else {
+            return response()->json([
+                'message' => 'You are not authorized to perform this action',
+                'success' => false,
+            ], 403);
+        }
 
-        return response()->json([
-            'message' => 'Target created successfully',
-            'success' => true,
-        ]);
     }
 
     public function updateTarget(Request $request)

@@ -6,6 +6,7 @@
         <div class="">
             <div class="flex p-4 items-center justify-between">
                 <h1 class="text-3xl font-semibold">Sending Profiles</h1>
+                @IsUser()
                 <div>
                     <button onclick="showAddSendingProfileModal()"
                         class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 flex items-center">
@@ -18,6 +19,7 @@
                         <span class="hidden md:inline ml-2">Create Profile</span>
                     </button>
                 </div>
+                @endIsUser()
             </div>
             <div class="flex flex-col gap-4 p-4">
                 <div class="md:max-w-xs max-w-full">

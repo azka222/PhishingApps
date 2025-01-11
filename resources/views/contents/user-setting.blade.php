@@ -524,7 +524,7 @@
             $("#company_visibility").val(company.visibility_id);
         }
 
-        function submitEditModal(){
+        function submitEditCompanyModal(){
             let data = {
                 id: company.id,
                 name: $("#company_name").val(),
