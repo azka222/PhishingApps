@@ -52,8 +52,8 @@ class GroupController extends Controller
         if ($request->has('department') && $request->department != 'null') {
             $query = $query->where('department_id', $request->department);
         }
-        if(Gate::allows('IsAdmin')){
-            if($request->has('companyId') && $request->companyId != null){
+        if (Gate::allows('IsAdmin')) {
+            if ($request->has('companyId') && $request->companyId != null) {
                 $query = $query->where('company_id', $request->companyId);
             }
         }
@@ -112,52 +112,55 @@ class GroupController extends Controller
     }
     public function createGroup(Request $request)
     {
-        $request->validate([
-            'name' => 'required|',
-            'department' => 'required|exists:target_departments,id',
-            'status' => 'required|in:1,0',
-            'members' => 'required|array|min:1',
-            'members.*' => 'required|exists:targets,id',
-            'description' => 'nullable',
-        ]);
-        $id = $this->getIdFromGophish('groups');
-        $time = $this->getTimeGoPhish();
-
-        $group = new Group();
-        $group->gophish_id = $id;
-        $group->department_id = $request->department;
-        $group->status = $request->status;
-        $group->description = $request->description;
-        $group->company_id = auth()->user()->company_id;
-
-        $targets = auth()->user()->accessibleTarget()->whereIn('id', $request->members)->get();
-        $jsonTarget = [];
-        foreach ($targets as $target) {
-            $jsonTarget[] = [
-                'first_name' => $target->first_name,
-                'last_name' => $target->last_name,
-                'email' => $target->email,
-                'position' => $target->position->name,
-            ];
-        }
-
-        $jsonData = [
-            'id' => intval($id),
-            'name' => $request->name . ' -+- ' . $id,
-            'modified_date' => $time,
-            'targets' => $jsonTarget,
-        ];
-        $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
-        ])->post("{$this->url}/groups/", $jsonData);
-        if ($response->successful() && $response->body() != []) {
-            $group->save();
-            $group->target()->sync($request->members);
-            return response()->json([
-                'message' => 'Group created successfully',
+        if (Gate::allows('IsAdmin')) {
+            return response()->json(['error' => 'You are not allowed to create group'], 403);
+        } else if (Gate::allows('IsUser')) {
+            $request->validate([
+                'name' => 'required|',
+                'department' => 'required|exists:target_departments,id',
+                'status' => 'required|in:1,0',
+                'members' => 'required|array|min:1',
+                'members.*' => 'required|exists:targets,id',
+                'description' => 'nullable',
             ]);
+            $id = $this->getIdFromGophish('groups');
+            $time = $this->getTimeGoPhish();
+            $group = new Group();
+            $group->gophish_id = $id;
+            $group->department_id = $request->department;
+            $group->status = $request->status;
+            $group->description = $request->description;
+            $group->company_id = auth()->user()->company_id;
+            $targets = auth()->user()->accessibleTarget()->whereIn('id', $request->members)->get();
+            $jsonTarget = [];
+            foreach ($targets as $target) {
+                $jsonTarget[] = [
+                    'first_name' => $target->first_name,
+                    'last_name' => $target->last_name,
+                    'email' => $target->email,
+                    'position' => $target->position->name,
+                ];
+            }
+            $jsonData = [
+                'id' => intval($id),
+                'name' => $request->name . ' -+- ' . $id,
+                'modified_date' => $time,
+                'targets' => $jsonTarget,
+            ];
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
+            ])->post("{$this->url}/groups/", $jsonData);
+            if ($response->successful() && $response->body() != []) {
+                $group->save();
+                $group->target()->sync($request->members);
+                return response()->json([
+                    'message' => 'Group created successfully',
+                ]);
+            }
+            return response()->json(['error' => $response->json()], 500);
+        } else {
+            return response()->json(['error' => 'You are not allowed to create group'], 403);
         }
-        return response()->json(['error' => $response->json()], 500);
 
     }
 

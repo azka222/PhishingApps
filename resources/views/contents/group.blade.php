@@ -7,6 +7,7 @@
         <div class="">
             <div class="flex p-4 items-center justify-between">
                 <h1 class="text-3xl font-semibold">Company Groups</h1>
+                @IsUser()
                 <div>
                     <button onclick="showAddGroupModal()"
                         class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 flex items-center">
@@ -19,6 +20,7 @@
                         <span class="hidden md:inline ml-2">Create Campaign</span>
                     </button>
                 </div>
+                @endIsUser()
             </div>
             <div class="flex flex-col gap-4 p-4">
                 <div class="md:max-w-xs max-w-full">
@@ -70,7 +72,6 @@
                             placeholder="Search...">
                     </div>
                 </div>
-
                 <div class="min-w-32 overflow-x-auto md:min-w-full">
                     <table class="p-4 min-w-full divide-y divide-gray-200 dark:divide-gray-700 mt-4">
                         <thead class="bg-gray-300 dark:bg-gray-700">
@@ -104,64 +105,66 @@
                 </nav>
             </div>
         </div>
+    </div>
 
-        <script>
-            let targets = [];
-            let tempTargets = [];
-            let tempTargetValues = [];
-            let groups = null;
-            $(document).ready(function() {
-                getGroupResources();
-                getGroups();
 
+    <script>
+        let targets = [];
+        let tempTargets = [];
+        let tempTargetValues = [];
+        let groups = null;
+        $(document).ready(function() {
+            getGroupResources();
+            getGroups();
+
+        });
+
+        function getGroupResources() {
+            $.ajax({
+                url: "{{ route('getGroupResources') }}",
+                type: 'GET',
+                success: function(response) {
+                    let department = response.department;
+                    targets = response.users;
+                    setFilter(department, targets);
+
+                },
+                error: function(error) {
+                    console.log(error);
+                }
             });
+        }
 
-            function getGroupResources() {
-                $.ajax({
-                    url: "{{ route('getGroupResources') }}",
-                    type: 'GET',
-                    success: function(response) {
-                        let department = response.department;
-                        targets = response.users;
-                        setFilter(department, targets);
-
-                    },
-                    error: function(error) {
-                        console.log(error);
-                    }
-                });
-            }
-
-            function getGroups(page = 1) {
-                let department = $('#department').val();
-                let show = $('#show').val();
-                let status = $('#status').val();
-                let search = $('#search').val() ? $('#search').val() : '';
-                let company = $('#companyCheckAdmin').val();
-                $.ajax({
-                    url: "{{ route('getGroups') }}" + '?page=' + page,
-                    type: 'GET',
-                    data: {
-                        department: department,
-                        show: show,
-                        status: status,
-                        search: search,
-                        companyId: company
-                    },
-                    success: function(response) {
-                        groups = response.data;
-                        console.log(groups);
-                        $("#list-groups-tbody").empty();
-                        if (groups.length == 0) {
-                            $("#list-groups-tbody").append(`
+        function getGroups(page = 1) {
+            let department = $('#department').val();
+            let show = $('#show').val();
+            let status = $('#status').val();
+            let search = $('#search').val() ? $('#search').val() : '';
+            let company = $('#companyCheckAdmin').val();
+            $.ajax({
+                url: "{{ route('getGroups') }}" + '?page=' + page,
+                type: 'GET',
+                data: {
+                    department: department,
+                    show: show,
+                    status: status,
+                    search: search,
+                    companyId: company
+                },
+                success: function(response) {
+                    groups = response.data;
+                    console.log(groups);
+                    $("#list-groups-tbody").empty();
+                    if (groups.length == 0) {
+                        $("#list-groups-tbody").append(`
                             <tr class="text-xs md:text-sm font-light text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800">
                             <td class="p-4" colspan="6">No data available</td>
                         </tr>
                         `);
-                        } else {
-                            groups.forEach(function(group) {
-                                let status = group.status == 1 ? 'Active' : 'Inactive';
-                                $("#list-groups-tbody").append(`
+                    } else {
+                        groups.forEach(function(group) {
+                            let status = group.status == 1 ? 'Active' : 'Inactive';
+                            $("#list-groups-tbody").append(`
                             <tr class="text-xs md:text-sm font-normal text-gray-900 dark:text-gray-400 bg-white dark:bg-gray-800">
                                 <td class="p-4">${group.name}</td>
                                 <td class="p-4">${group.member}</td>
@@ -174,78 +177,78 @@
                                 </td>
                             </tr>
                        `);
-                            });
-                        }
-                        paginationGroupCompany("#pagination-group-button", response.pageCount, response
-                            .currentPage);
-                        $("#numberFirstItem").text(
-                            response.totalGroup != 0 ? (page - 1) * $("#show").val() + 1 : 0
-                        );
-                        $("#numberLastItem").text(
-                            (page - 1) * $("#show").val() + response.data.length
-                        );
-                        $("#totalTemplatesCount").text(response.totalGroup);
-                    },
-                    error: function(error) {
-                        console.log(error);
+                        });
                     }
-                });
-            }
+                    paginationGroupCompany("#pagination-group-button", response.pageCount, response
+                        .currentPage);
+                    $("#numberFirstItem").text(
+                        response.totalGroup != 0 ? (page - 1) * $("#show").val() + 1 : 0
+                    );
+                    $("#numberLastItem").text(
+                        (page - 1) * $("#show").val() + response.data.length
+                    );
+                    $("#totalTemplatesCount").text(response.totalGroup);
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+        }
 
-            function setFilter(department, users) {
-                let departmentSelectModal = $('#group_department');
-                departmentSelectModal.empty();
-                departmentSelectModal.append('<option value="" selected>Select Department</option>');
-                let departmentSelect = $('#department');
-                departmentSelect.empty();
-                departmentSelect.append('<option value=null selected>Select Department</option>');
-                department.forEach(function(department) {
-                    departmentSelect.append('<option value="' + department.id + '">' + department.name + '</option>');
-                });
-                department.forEach(function(department) {
-                    departmentSelectModal.append('<option value="' + department.id + '">' + department.name +
-                        '</option>');
-                });
-                // for target selection
-                let usersSelectModal = $('#group_member');
-                usersSelectModal.empty();
-                usersSelectModal.append('<option value="" selected>Select User</option>');
-                users.forEach(function(user) {
-                    usersSelectModal.append('<option value="' + user.id + '">' + user.first_name + ' ' + user
-                        .last_name + '</option>');
-                });
-            }
+        function setFilter(department, users) {
+            let departmentSelectModal = $('#group_department');
+            departmentSelectModal.empty();
+            departmentSelectModal.append('<option value="" selected>Select Department</option>');
+            let departmentSelect = $('#department');
+            departmentSelect.empty();
+            departmentSelect.append('<option value=null selected>Select Department</option>');
+            department.forEach(function(department) {
+                departmentSelect.append('<option value="' + department.id + '">' + department.name + '</option>');
+            });
+            department.forEach(function(department) {
+                departmentSelectModal.append('<option value="' + department.id + '">' + department.name +
+                    '</option>');
+            });
+            // for target selection
+            let usersSelectModal = $('#group_member');
+            usersSelectModal.empty();
+            usersSelectModal.append('<option value="" selected>Select User</option>');
+            users.forEach(function(user) {
+                usersSelectModal.append('<option value="' + user.id + '">' + user.first_name + ' ' + user
+                    .last_name + '</option>');
+            });
+        }
 
-            function showAddGroupModal() {
-                showModal('add-group-modal');
-                $("#group_name").val('');
-                $("#group_department").val('');
-                $("#group_status").val('1');
-                $("#group_member_list").empty();
-                $("#group_description").val('');
-                $("#strict_user_selected_department").prop('checked', false);
-                $("#title-add-group-modal").text('Add Group');
-                $("#button-for-group").removeAttr('onclick').attr('onclick', 'createGroup()');
-                $("#group_status").prop('disabled', true);
-                setTargetSelection();
-            }
+        function showAddGroupModal() {
+            showModal('add-group-modal');
+            $("#group_name").val('');
+            $("#group_department").val('');
+            $("#group_status").val('1');
+            $("#group_member_list").empty();
+            $("#group_description").val('');
+            $("#strict_user_selected_department").prop('checked', false);
+            $("#title-add-group-modal").text('Add Group');
+            $("#button-for-group").removeAttr('onclick').attr('onclick', 'createGroup()');
+            $("#group_status").prop('disabled', true);
+            setTargetSelection();
+        }
 
-            function showEditGroupModal(id) {
-                tempGroup = groups.find(group => group.id == id);
-                console.log(tempGroup);
-                showModal('add-group-modal');
-                $("#group_status").prop('disabled', false);
-                $("#strict_user_selected_department").prop('checked', false);
-                $("#title-add-group-modal").text('Edit Group');
-                $("#button-for-group").removeAttr('onclick').attr('onclick', `updateGroup(${id})`);
-                $("#button-for-group").text('Update');
-                $("#group_name").val(tempGroup.name);
-                $("#group_department").val(tempGroup.department_id);
-                $("#group_status").val(tempGroup.status);
-                $("#group_description").val(tempGroup.description);
-                $("#group_member_list").empty();
-                tempGroup.targets.forEach(function(target) {
-                    $("#group_member_list").append(`
+        function showEditGroupModal(id) {
+            tempGroup = groups.find(group => group.id == id);
+            console.log(tempGroup);
+            showModal('add-group-modal');
+            $("#group_status").prop('disabled', false);
+            $("#strict_user_selected_department").prop('checked', false);
+            $("#title-add-group-modal").text('Edit Group');
+            $("#button-for-group").removeAttr('onclick').attr('onclick', `updateGroup(${id})`);
+            $("#button-for-group").text('Update');
+            $("#group_name").val(tempGroup.name);
+            $("#group_department").val(tempGroup.department_id);
+            $("#group_status").val(tempGroup.status);
+            $("#group_description").val(tempGroup.description);
+            $("#group_member_list").empty();
+            tempGroup.targets.forEach(function(target) {
+                $("#group_member_list").append(`
                     <div class="group-member flex items-center justify-between mb-4 shadow-md p-3 rounded-xl"
                         value="${target.id}" id="group_member_${target.id}">
                         <div class="flex flex-col gap-1">
@@ -260,45 +263,45 @@
                         </div>
                     </div>
                 `);
-                });
-                setTargetSelection();
-            }
+            });
+            setTargetSelection();
+        }
 
-            function setTargetSelection() {
-                tempTargets = [];
-                let strict = $("#strict_user_selected_department").is(":checked") ? 1 : 0;
-                let department = $("#group_department").val();
-                let groupMembers = [];
-                if (strict == 1 && department) {
-                    tempTargets = targets.filter(target => target.department_id == department);
-                } else {
-                    tempTargets = targets;
-                }
-                $(".group-member").each(function() {
-                    groupMembers.push($(this).attr("value"));
-                });
-                $("#group_member").empty();
+        function setTargetSelection() {
+            tempTargets = [];
+            let strict = $("#strict_user_selected_department").is(":checked") ? 1 : 0;
+            let department = $("#group_department").val();
+            let groupMembers = [];
+            if (strict == 1 && department) {
+                tempTargets = targets.filter(target => target.department_id == department);
+            } else {
+                tempTargets = targets;
+            }
+            $(".group-member").each(function() {
+                groupMembers.push($(this).attr("value"));
+            });
+            $("#group_member").empty();
+            $("#group_member").append(
+                `<option value="" selected>Select User</option>`);
+            tempTargets.forEach(function(target) {
                 $("#group_member").append(
-                    `<option value="" selected>Select User</option>`);
-                tempTargets.forEach(function(target) {
-                    $("#group_member").append(
-                        `<option value="${target.id}">${target.first_name} ${target.last_name}</option>`);
-                });
-                $("#group_member option").each(function() {
-                    if (groupMembers.includes($(this).val())) {
-                        $(this).remove();
-                    }
-                });
-            }
+                    `<option value="${target.id}">${target.first_name} ${target.last_name}</option>`);
+            });
+            $("#group_member option").each(function() {
+                if (groupMembers.includes($(this).val())) {
+                    $(this).remove();
+                }
+            });
+        }
 
-            function removeUserFromGroup(id) {
-                $(`#group_member_${id}`).remove();
-                setTargetSelection();
-            }
+        function removeUserFromGroup(id) {
+            $(`#group_member_${id}`).remove();
+            setTargetSelection();
+        }
 
-            function addUserToGroup(id) {
-                let tempUser = tempTargets.find(target => target.id == id);
-                $("#group_member_list").append(`
+        function addUserToGroup(id) {
+            let tempUser = tempTargets.find(target => target.id == id);
+            $("#group_member_list").append(`
                 <div class="group-member flex items-center justify-between mb-4 shadow-md p-3 rounded-xl"
                     value="${tempUser.id}" id="group_member_${tempUser.id}">
                     <div class="flex flex-col gap-1">
@@ -313,26 +316,26 @@
                     </div>
                 </div>
             `);
-                setTargetSelection();
-            }
+            setTargetSelection();
+        }
 
-            function importTargetFromDepartment() {
-                let department = $("#group_department").val();
-                let tempMemberForImport = [];
-                $(".group-member").each(function() {
-                    tempMemberForImport.push($(this).attr("value"));
-                });
-                if (department) {
+        function importTargetFromDepartment() {
+            let department = $("#group_department").val();
+            let tempMemberForImport = [];
+            $(".group-member").each(function() {
+                tempMemberForImport.push($(this).attr("value"));
+            });
+            if (department) {
 
 
-                    tempTargets = targets.filter(target => target.department_id == department);
-                    if (tempMemberForImport.length > 0) {
-                        tempTargets = tempTargets.filter(target =>
-                            !tempMemberForImport.map(Number).includes(target.id)
-                        );
-                    }
-                    tempTargets.forEach(function(target) {
-                        $("#group_member_list").append(`
+                tempTargets = targets.filter(target => target.department_id == department);
+                if (tempMemberForImport.length > 0) {
+                    tempTargets = tempTargets.filter(target =>
+                        !tempMemberForImport.map(Number).includes(target.id)
+                    );
+                }
+                tempTargets.forEach(function(target) {
+                    $("#group_member_list").append(`
                         <div class="group-member flex items-center justify-between mb-4 shadow-md p-3 rounded-xl"
                             value="${target.id}" id="group_member_${target.id}">
                             <div class="flex flex-col gap-1">
@@ -347,192 +350,192 @@
                             </div>
                         </div>
                 `);
-                    });
-
-                    setTargetSelection();
-                } else {
-                    $("#import_user_selected_department").prop('checked', false);
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: 'Please select department!',
-                        confirmButtonColor: '#ef4444',
-                        confirmButtonText: 'Close'
-
-                    });
-                    return;
-                }
-            }
-
-            function createGroup() {
-                let name = $("#group_name").val();
-                let department = $("#group_department").val();
-                let status = $("#group_status").val();
-                let description = $("#group_description").val();
-                let members = [];
-                $(".group-member").each(function() {
-                    members.push($(this).attr("value"));
                 });
-                $.ajax({
-                    url: "{{ route('createGroup') }}",
-                    type: 'POST',
-                    data: {
-                        name: name,
-                        department: department,
-                        status: status,
-                        members: members,
-                        description: description,
-                        _token: "{{ csrf_token() }}"
-                    },
-                    success: function(response) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Success',
-                            text: response.message,
-                            confirmButtonColor: '#10b981',
-                            confirmButtonText: 'Close'
-                        });
-                        hideModal('add-group-modal');
-                        $("#error_message_field").hide();
-                        getGroups();
-                    },
-                    error: function(xhr) {
-                        var errorMessage = JSON.parse(xhr.responseText) ? JSON.parse(xhr.responseText) : xhr
-                            .responseText;
-                        var errors = errorMessage.errors ? errorMessage.errors : errorMessage;
-                        $('#error_message_field').show();
-                        $('#error_message').empty();
-                        $.each(errors, function(field, messages) {
-                            $.each(messages, function(index, message) {
-                                let data = `<li>${message}</li>`;
-                                $('#error_message').append(data);
-                            });
-                        });
-                    }
-                });
-            }
 
-            function updateGroup(id) {
-                let name = $("#group_name").val();
-                let department = $("#group_department").val();
-                let status = $("#group_status").val();
-                let description = $("#group_description").val();
-                let members = [];
-                $(".group-member").each(function() {
-                    members.push($(this).attr("value"));
-                });
-                $.ajax({
-                    url: "{{ route('updateGroup') }}",
-                    type: 'POST',
-                    data: {
-                        id: id,
-                        name: name,
-                        department: department,
-                        status: status,
-                        members: members,
-                        description: description,
-                        _token: "{{ csrf_token() }}"
-                    },
-                    success: function(response) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Success',
-                            text: response.message,
-                            confirmButtonColor: '#10b981',
-                            confirmButtonText: 'Close'
-                        });
-                        hideModal('add-group-modal');
-                        $("#error_message_field").hide();
-                        getGroups();
-                    },
-                    error: function(xhr) {
-                        var errorMessage = JSON.parse(xhr.responseText) ? JSON.parse(xhr.responseText) : xhr
-                            .responseText;
-                        var errors = errorMessage.errors ? errorMessage.errors : errorMessage;
-                        $('#error_message_field').show();
-                        $('#error_message').empty();
-                        $.each(errors, function(field, messages) {
-                            $.each(messages, function(index, message) {
-                                let data = `<li>${message}</li>`;
-                                $('#error_message').append(data);
-                            });
-                        });
-                    }
-                });
-            }
-
-            function showDeleteGroupModal(id) {
-                tempGroup = groups.find(group => group.id == id);
+                setTargetSelection();
+            } else {
+                $("#import_user_selected_department").prop('checked', false);
                 Swal.fire({
-                    title: 'Are you sure?',
-                    text: `You want to delete ${tempGroup.name} group!`,
-                    icon: 'warning',
-                    showCancelButton: true,
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Please select department!',
                     confirmButtonColor: '#ef4444',
-                    confirmButtonText: 'Yes, delete it!',
-                    cancelButtonText: 'No, cancel!',
-                    cancelButtonColor: '#3b82f6',
-                    reverseButtons: true
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        $.ajax({
-                            url: "{{ route('deleteGroup') }}",
-                            type: 'POST',
-                            data: {
-                                id: id,
-                                _token: "{{ csrf_token() }}"
-                            },
-                            success: function(response) {
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'Success',
-                                    text: response.message,
-                                    confirmButtonColor: '#10b981',
-                                    confirmButtonText: 'Close'
-                                });
-                                getGroups();
-                            },
-                            error: function(xhr) {
-                                var errorMessage = JSON.parse(xhr.responseText) ? JSON.parse(xhr
-                                        .responseText) : xhr
-                                    .responseText;
-                                var errors = errorMessage.errors ? errorMessage.errors : errorMessage;
-                                $('#error_message_field').show();
-                                $('#error_message').empty();
-                                $.each(errors, function(field, messages) {
-                                    $.each(messages, function(index, message) {
-                                        let data = `<li>${message}</li>`;
-                                        $('#error_message').append(data);
-                                    });
-                                });
-                            }
-                        });
-                    }
-                });
-            }
+                    confirmButtonText: 'Close'
 
-            function showDetailsGroupModal(id) {
-                tempGroup = groups.find(group => group.id == id);
-                console.log(tempGroup);
-                showModal('details-group-modal');
-                $("#group_name_details").text(tempGroup.name);
-                $("#group_status_details").text(tempGroup.status == 1 ? 'Active' : 'Inactive');
-                $("#group_created_at_details").text(new Date(tempGroup.created_at).toLocaleDateString('id-ID', {
-                    day: '2-digit',
-                    month: 'long',
-                    year: 'numeric'
-                }));
-                $("#group_updated_at_details").text(new Date(tempGroup.updated_at).toLocaleDateString('id-ID', {
-                    day: '2-digit',
-                    month: 'long',
-                    year: 'numeric'
-                }));
-                $("#group_department_details").text(tempGroup.department.name);
-                $("#group_member_count_details").text(tempGroup.target_count);
-                $("#group_description_details").text(tempGroup.description);
-                $("#list-targets-groups-tbody").empty();
-                tempGroup.targets.forEach(function(target) {
-                    $("#list-targets-groups-tbody").append(`
+                });
+                return;
+            }
+        }
+
+        function createGroup() {
+            let name = $("#group_name").val();
+            let department = $("#group_department").val();
+            let status = $("#group_status").val();
+            let description = $("#group_description").val();
+            let members = [];
+            $(".group-member").each(function() {
+                members.push($(this).attr("value"));
+            });
+            $.ajax({
+                url: "{{ route('createGroup') }}",
+                type: 'POST',
+                data: {
+                    name: name,
+                    department: department,
+                    status: status,
+                    members: members,
+                    description: description,
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(response) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: response.message,
+                        confirmButtonColor: '#10b981',
+                        confirmButtonText: 'Close'
+                    });
+                    hideModal('add-group-modal');
+                    $("#error_message_field").hide();
+                    getGroups();
+                },
+                error: function(xhr) {
+                    var errorMessage = JSON.parse(xhr.responseText) ? JSON.parse(xhr.responseText) : xhr
+                        .responseText;
+                    var errors = errorMessage.errors ? errorMessage.errors : errorMessage;
+                    $('#error_message_field').show();
+                    $('#error_message').empty();
+                    $.each(errors, function(field, messages) {
+                        $.each(messages, function(index, message) {
+                            let data = `<li>${message}</li>`;
+                            $('#error_message').append(data);
+                        });
+                    });
+                }
+            });
+        }
+
+        function updateGroup(id) {
+            let name = $("#group_name").val();
+            let department = $("#group_department").val();
+            let status = $("#group_status").val();
+            let description = $("#group_description").val();
+            let members = [];
+            $(".group-member").each(function() {
+                members.push($(this).attr("value"));
+            });
+            $.ajax({
+                url: "{{ route('updateGroup') }}",
+                type: 'POST',
+                data: {
+                    id: id,
+                    name: name,
+                    department: department,
+                    status: status,
+                    members: members,
+                    description: description,
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(response) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: response.message,
+                        confirmButtonColor: '#10b981',
+                        confirmButtonText: 'Close'
+                    });
+                    hideModal('add-group-modal');
+                    $("#error_message_field").hide();
+                    getGroups();
+                },
+                error: function(xhr) {
+                    var errorMessage = JSON.parse(xhr.responseText) ? JSON.parse(xhr.responseText) : xhr
+                        .responseText;
+                    var errors = errorMessage.errors ? errorMessage.errors : errorMessage;
+                    $('#error_message_field').show();
+                    $('#error_message').empty();
+                    $.each(errors, function(field, messages) {
+                        $.each(messages, function(index, message) {
+                            let data = `<li>${message}</li>`;
+                            $('#error_message').append(data);
+                        });
+                    });
+                }
+            });
+        }
+
+        function showDeleteGroupModal(id) {
+            tempGroup = groups.find(group => group.id == id);
+            Swal.fire({
+                title: 'Are you sure?',
+                text: `You want to delete ${tempGroup.name} group!`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'No, cancel!',
+                cancelButtonColor: '#3b82f6',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "{{ route('deleteGroup') }}",
+                        type: 'POST',
+                        data: {
+                            id: id,
+                            _token: "{{ csrf_token() }}"
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success',
+                                text: response.message,
+                                confirmButtonColor: '#10b981',
+                                confirmButtonText: 'Close'
+                            });
+                            getGroups();
+                        },
+                        error: function(xhr) {
+                            var errorMessage = JSON.parse(xhr.responseText) ? JSON.parse(xhr
+                                    .responseText) : xhr
+                                .responseText;
+                            var errors = errorMessage.errors ? errorMessage.errors : errorMessage;
+                            $('#error_message_field').show();
+                            $('#error_message').empty();
+                            $.each(errors, function(field, messages) {
+                                $.each(messages, function(index, message) {
+                                    let data = `<li>${message}</li>`;
+                                    $('#error_message').append(data);
+                                });
+                            });
+                        }
+                    });
+                }
+            });
+        }
+
+        function showDetailsGroupModal(id) {
+            tempGroup = groups.find(group => group.id == id);
+            console.log(tempGroup);
+            showModal('details-group-modal');
+            $("#group_name_details").text(tempGroup.name);
+            $("#group_status_details").text(tempGroup.status == 1 ? 'Active' : 'Inactive');
+            $("#group_created_at_details").text(new Date(tempGroup.created_at).toLocaleDateString('id-ID', {
+                day: '2-digit',
+                month: 'long',
+                year: 'numeric'
+            }));
+            $("#group_updated_at_details").text(new Date(tempGroup.updated_at).toLocaleDateString('id-ID', {
+                day: '2-digit',
+                month: 'long',
+                year: 'numeric'
+            }));
+            $("#group_department_details").text(tempGroup.department.name);
+            $("#group_member_count_details").text(tempGroup.target_count);
+            $("#group_description_details").text(tempGroup.description);
+            $("#list-targets-groups-tbody").empty();
+            tempGroup.targets.forEach(function(target) {
+                $("#list-targets-groups-tbody").append(`
                     <tr class="text-xs md:text-sm font-normal text-gray-900 dark:text-gray-400 bg-white dark:bg-gray-700">
                         <td class="p-4">${target.first_name} ${target.last_name}</td>
                         <td class="p-4">${target.position.name}</td>
@@ -540,10 +543,10 @@
                         <td class="p-4">${target.email}</td>
                     </tr>
                 `);
-                });
-            }
-        </script>
+            });
+        }
+    </script>
 
 
 
-    @endSection
+@endSection

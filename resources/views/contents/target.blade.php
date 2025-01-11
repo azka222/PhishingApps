@@ -8,6 +8,7 @@
         <div class="">
             <div class="flex p-4 items-center justify-between">
                 <h1 class="md:text-3xl text-xl font-semibold">Company Target</h1>
+                @IsUser()
                 <div class="flex items-center justify-center flex-row gap-2">
                     <button onclick="showImportTargetModal()"
                         class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-green-600 rounded-xl hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 flex items-center"
@@ -35,6 +36,7 @@
                     </button>
 
                 </div>
+                @endIsUser()
             </div>
             <div class="flex flex-col gap-4 p-4">
                 <div class="md:max-w-xs max-w-full">
