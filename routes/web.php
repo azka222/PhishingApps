@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthenticateController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\GophishController;
@@ -113,7 +114,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         Route::post('/testSendingProfile', [GophishController::class, 'testSendingProfile'])->name('testSendingProfile');
     });
 
-    Route::group(['prefix' => 'campaigns'], function(){
+    Route::group(['prefix' => 'campaigns'], function () {
         Route::get('/', [ViewController::class, 'campaignView'])->name('campaignView');
         Route::get('/campaignDetails/{id}', [ViewController::class, 'campaignDetailsView'])->name('campaignDetailsView');
         Route::get('/getCampaignResources', [GophishController::class, 'getCampaignResources'])->name('getCampaignResources');
@@ -124,6 +125,16 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         Route::get('/getCampaignData', [GophishController::class, 'getCampaignData'])->name('getCampaignData');
     });
 
+    Route::group(['prefix' => 'admin'], function () {
+        Route::group(['prefix' => 'user'], function () {
+            Route::get('/', [ViewController::class, 'adminUserView'])->name('adminUserView');
+            Route::get('/getAllUser', [AdminController::class, 'getAllUser'])->name('getAllUser');
 
+        });
+        Route::group(['prefix' => 'company'], function () {
+            Route::get('/', [ViewController::class, 'adminCompanyView'])->name('adminCompanyView');
+            Route::get('/getAllCompany', [AdminController::class, 'getAllCompany'])->name('getAllCompany');
+        });
+    });
 
 });
