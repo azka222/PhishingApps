@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\CompanyCampaign;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
@@ -89,5 +88,21 @@ class ViewController extends Controller
             abort(404);
         }
         return view('contents.campaign-details', ['id' => $id]);
+    }
+
+    public function adminUserView()
+    {
+        $companies = $this->getCompanies();
+        if (Gate::allows('IsAdmin')) {
+            return view('contents.admin.admin-user', ['companies' => $companies]);
+        }
+    }
+
+    public function adminCompanyView()
+    {
+        $companies = $this->getCompanies();
+        if (Gate::allows('IsAdmin')) {
+            return view('contents.admin.admin-company', ['companies' => $companies]);
+        }
     }
 }
