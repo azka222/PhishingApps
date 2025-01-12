@@ -63,14 +63,10 @@ class AuthenticateController extends Controller
         $user->gender = $request->gender;
         $user->is_admin = 0;
         $user->save();
-
-        $apiKey = sha1(time());
-
         $checkUser = User::where('company_id', $request->company)->count();
         if ($checkUser == 1) {
             $company = Company::findOrFail($request->company);
             $company->user_id = $user->id;
-            $company->api_key = $apiKey;
             $company->save();
         }
 
