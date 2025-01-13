@@ -6,7 +6,7 @@
         <div class="">
             <div class="flex p-4 items-center justify-between">
                 <h1 class="text-3xl font-semibold">Email Templates</h1>
-                @IsUser()
+                @CanCreateEmailTemplate()
                 <div>
                     <button onclick="showAddEmailTemplatesModal()"
                         class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 flex items-center">
@@ -19,7 +19,7 @@
                         <span class="hidden md:inline ml-2">Create Campaign</span>
                     </button>
                 </div>
-                @endIsUser()
+                @endCanCreateEmailTemplate()
             </div>
             <div class="flex flex-col gap-4 p-4">
                 <div class="max-w-full md:max-w-xs">
@@ -74,7 +74,9 @@
                                 <th scope="col" class="p-4">Sender</th>
                                 <th scope="col" class="p-4">Email</th>
                                 <th scope="col" class="p-4">Subject</th>
+                                @CanModifyEmailTemplate()
                                 <th scope="col" class="p-4">Action</th>
+                                @endCanModifyEmailTemplate()
                             </tr>
                         </thead>
                         <tbody id="list-email-templates-tbody"
@@ -83,7 +85,8 @@
                         </tbody>
                     </table>
                 </div>
-                <nav class="flex items-center flex-column flex-col md:flex-row justify-between p-4" aria-label="Table navigation">
+                <nav class="flex items-center flex-column flex-col md:flex-row justify-between p-4"
+                    aria-label="Table navigation">
                     <span
                         class="mb-4 md:mb-0 text-xs md:text-sm font-normal text-gray-500 dark:text-gray-400 block w-full md:inline md:w-auto">Showing
                         <span class="font-semibold text-gray-900 dark:text-white"> <span id="numberFirstItem">0</span> -
@@ -246,11 +249,18 @@
                             <td class="p-4">${sender.name}</td>
                             <td class="p-4">${sender.email}</td>
                             <td class="p-4">${emailTemplate.subject}</td>
+                            @CanModifyEmailTemplate()
                             <td class="p-4 flex gap-2">
+                                @CanUpdateEmailTemplate()
                                 ${button} 
+                                @endCanUpdateEmailTemplate()
+                                @CanDeleteEmailTemplate()
                                 <button onclick="removeEmailTemplate(${emailTemplate.id})"
                                     class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-red-600 rounded-xl hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600">Remove</button>
-                            </td>
+                                @endCanDeleteEmailTemplate()
+                                    </td>
+                            @endCanModifyEmailTemplate
+                            
                         </tr>`;
                                 $('#list-email-templates-tbody').append(data);
                             });

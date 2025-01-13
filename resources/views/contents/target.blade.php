@@ -8,7 +8,7 @@
         <div class="">
             <div class="flex p-4 items-center justify-between">
                 <h1 class="md:text-3xl text-xl font-semibold">Company Target</h1>
-                @IsUser()
+                @CanCreateTarget()
                 <div class="flex items-center justify-center flex-row gap-2">
                     <button onclick="showImportTargetModal()"
                         class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-green-600 rounded-xl hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 flex items-center"
@@ -36,7 +36,7 @@
                     </button>
 
                 </div>
-                @endIsUser()
+                @endCanCreateTarget()
             </div>
             <div class="flex flex-col gap-4 p-4">
                 <div class="md:max-w-xs max-w-full">
@@ -98,7 +98,9 @@
                                 <th scope="col" class="p-4">Position</th>
                                 <th scope="col" class="p-4">Department</th>
                                 <th scope="col" class="p-4">Email</th>
+                                @IsCompanyOwner()
                                 <th scope="col" class="p-4">Action</th>
+                                @endIsCompanyOwner()
                             </tr>
                         </thead>
                         <tbody id="list-targets-tbody"
@@ -198,12 +200,18 @@
                         <td class="p-4">${target.position.name}</td>
                         <td class="p-4">${target.department.name}</td>
                         <td class="p-4">${target.email}</td>
+                        @CanModifyTarget()
                         <td class="p-4 flex gap-2">
+                            @CanUpdateTarget()
                             <button onclick="showUpdateTargetModal(${target.id}, '${target.first_name}', '${target.last_name}','${target.email}', '${target.position.id}', '${target.department.id}')"
                                 class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">Update</button>
+                            @endCanUpdateTarget()
+                            @CanDeleteTarget()
                             <button onclick="deleteTarget(${target.id})"
-                                class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-red-600 rounded-xl hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600">Delete</button>
-                        </td>
+                                class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-red-600 rounded-xl hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600">Delete</>
+                            @endCanDeleteTarget()
+                                </td>
+                        @endCanModifyTarget()
 
                     </tr>
                     `);

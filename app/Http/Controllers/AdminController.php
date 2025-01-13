@@ -16,7 +16,6 @@ class AdminController extends Controller
             $user = User::with('company');
             if ($request->has('search') && !empty($request->search)) {
                 $searchTerms = explode(' ', $request->search);
-
                 $user->where(function ($query) use ($searchTerms) {
                     foreach ($searchTerms as $term) {
                         $query->where('first_name', 'like', '%' . $term . '%')

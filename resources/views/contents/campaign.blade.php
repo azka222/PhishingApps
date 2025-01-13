@@ -6,7 +6,7 @@
         <div class="">
             <div class="flex p-4 items-center justify-between">
                 <h1 class="text-3xl font-semibold">Campaigns</h1>
-                @IsUser()
+                @CanCreateCampaign
                 <div>
                     <button onclick="showAddCampaignModal()"
                         class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 flex items-center">
@@ -19,7 +19,7 @@
                         <span class="hidden md:inline ml-2">Create Campaign</span>
                     </button>
                 </div>
-                @endIsUser()
+                @endCanCreateCampaign
             </div>
             <div class="flex flex-col gap-4 p-4">
                 <div class="max-w-full md:max-w-xs">
@@ -383,7 +383,9 @@
                                     <td class="p-4">
                                         <div class="flex items-center">
                                             <button onclick="showDetailCampaign(${campaign.id})" class="px-4 me-2 py-2 text-xs md:text-sm font-medium text-white bg-green-600 rounded-xl hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600">Details</button>
-                                        <button onclick="deleteCampaign(${campaign.id})" class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-red-600 rounded-xl hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600">Delete</button>
+                                        @CanDeleteCampaign()
+                                            <button onclick="deleteCampaign(${campaign.id})" class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-red-600 rounded-xl hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600">Delete</button>
+                                        @endCanDeleteCampaign()
                                     </div>
                                 </td>
                             </tr>

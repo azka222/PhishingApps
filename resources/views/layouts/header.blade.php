@@ -1,6 +1,6 @@
 @php
     $url = explode('/', Route::current()->uri)[0];
-    $home = $user = $landingPage = $attribute = $dashboard = $campaign = false;
+    $home = $user = $landingPage = $attribute = $dashboard = $campaign = $admin = false;
     switch ($url) {
         case 'dashboard':
             $dashboard = true;
@@ -22,6 +22,9 @@
             break;
         case 'campaigns':
             $campaign = true;
+            break;
+        case 'admin':
+            $admin = true;
             break;
         default:
             $home = true;
@@ -58,12 +61,10 @@
                     </div>
                     <ul class="py-2 px-2 text-sm text-gray-700 dark:text-gray-200"
                         aria-labelledby="dropdownInformdropdownAvatarNameButtonationButton">
-                        @IsUser()
                         <li>
                             <a href="{{ route('userSettingView') }}"
                                 class="block py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Settings</a>
                         </li>
-                        @endIsUser()
                     </ul>
                     <div class="py-2 px-2">
                         <a href="{{ route('logout') }}"
@@ -91,12 +92,15 @@
             <div class="flex flex-row gap-4">
                 <div class="items-center justify-between hidden lg:flex gap-4 lg:w-auto lg:order-1"
                     data-collapse-target="navbar-menu">
+                    @CanAccessDashboard()
                     <div>
                         <button
                             class="px-3 py-2 text-sm font-medium border-2 {{ $dashboard ? 'text-white border-blue-500 shadow-blue-500/50 dark:bg-blue-500 bg-blue-500 dark:border-blue-500' : 'border-gray-700 text-gray-900 dark:text-white ' }} rounded-full">
                             <a href="{{ url('/dashboard') }}">Dashboard</a>
                         </button>
                     </div>
+                    @endCanAccessDashboard()
+                    @CanAccessTargetGroup()
                     <div>
                         <button id="dropdownHoverButton" data-dropdown-toggle="hoverTargetGroup"
                             data-dropdown-trigger="hover"
@@ -107,16 +111,22 @@
                     <div id="hoverTargetGroup"
                         class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
                         <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownHoverButton">
+                            @CanAccess('Target', 'read')
                             <li>
                                 <a href="{{ url('/target') }}"
                                     class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Target</a>
                             </li>
+                            @endCanAccess()
+                            @CanAccess('Group', 'read')
                             <li>
                                 <a href="{{ url('/groups') }}"
                                     class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Groups</a>
                             </li>
+                            @endCanAccess()
                         </ul>
                     </div>
+                    @endCanAccessTargetGroup()
+                    @CanAccessAttribute()
                     <div>
                         <button id="dropdownHoverButton2" data-dropdown-toggle="hoverAttribute"
                             data-dropdown-trigger="hover"
@@ -145,17 +155,20 @@
                             </li>
                         </ul>
                     </div>
+                    @endCanAccessAttribute()
+                    @CanAccess('Campaign', 'read')
                     <div>
                         <button
                             class="px-3 py-2 text-sm font-medium border-2 {{ $campaign ? 'text-white border-blue-500 shadow-blue-500/50 dark:bg-blue-500 bg-blue-500 dark:border-blue-500' : 'border-gray-700 text-gray-900 dark:text-white ' }} rounded-full">
                             <a href="{{ url('/campaigns') }}">Campaign</a>
                         </button>
                     </div>
+                    @endCanAccess()
                     @IsAdmin()
                     <div>
                         <button id="dropdownHoverButton" data-dropdown-toggle="hoverAdminGroup"
                             data-dropdown-trigger="hover"
-                            class="px-3 py-2 text-sm font-medium border-2 {{ $user ? 'text-white border-blue-500 shadow-blue-500/50 dark:bg-blue-500 bg-blue-500 dark:border-blue-500' : 'border-gray-700 text-gray-900 dark:text-white ' }} rounded-full"
+                            class="px-3 py-2 text-sm font-medium border-2 {{ $admin ? 'text-white border-blue-500 shadow-blue-500/50 dark:bg-blue-500 bg-blue-500 dark:border-blue-500' : 'border-gray-700 text-gray-900 dark:text-white ' }} rounded-full"
                             type="button">Admin
                         </button>
                     </div>

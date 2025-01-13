@@ -114,7 +114,7 @@ class GroupController extends Controller
     {
         if (Gate::allows('IsAdmin')) {
             return response()->json(['error' => 'You are not allowed to create group'], 403);
-        } else if (Gate::allows('IsUser')) {
+        } else if (Gate::allows('IsCompanyOwner')) {
             $request->validate([
                 'name' => 'required|',
                 'department' => 'required|exists:target_departments,id',
@@ -166,69 +166,77 @@ class GroupController extends Controller
 
     public function updateGroup(Request $request)
     {
-        $request->validate([
-            'id' => 'required|exists:groups,gophish_id',
-            'name' => 'required',
-            'department' => 'required|exists:target_departments,id',
-            'status' => 'required|in:1,0',
-            'members' => 'required|array|min:1',
-            'members.*' => 'required|exists:targets,id',
-            'description' => 'nullable',
-        ]);
-
-        $group = auth()->user()->accessibleGroup()->where('gophish_id', $request->id)->first();
-        $group->department_id = $request->department;
-        $group->status = $request->status;
-        $group->description = $request->description;
-        $targets = auth()->user()->accessibleTarget()->whereIn('id', $request->members)->get();
-        $jsonTarget = [];
-        foreach ($targets as $target) {
-            $jsonTarget[] = [
-                'first_name' => $target->first_name,
-                'last_name' => $target->last_name,
-                'email' => $target->email,
-                'position' => $target->position->name,
-            ];
-        }
-        $jsonData = [
-            'id' => intval($request->id),
-            'name' => $request->name . ' -+- ' . $request->id,
-            'modified_date' => $this->getTimeGoPhish(),
-            'targets' => $jsonTarget,
-        ];
-        $idGroup = intval($request->id);
-
-        $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
-        ])->put("{$this->url}/groups/{$idGroup}", $jsonData);
-        if ($response->successful() && $response->body() != []) {
-            $group->save();
-            $group->target()->sync($request->members);
-            return response()->json([
-                'message' => 'Group updated successfully',
+        if (Gate::allows('IsCompanyOwner')) {
+            $request->validate([
+                'id' => 'required|exists:groups,gophish_id',
+                'name' => 'required',
+                'department' => 'required|exists:target_departments,id',
+                'status' => 'required|in:1,0',
+                'members' => 'required|array|min:1',
+                'members.*' => 'required|exists:targets,id',
+                'description' => 'nullable',
             ]);
+
+            $group = auth()->user()->accessibleGroup()->where('gophish_id', $request->id)->first();
+            $group->department_id = $request->department;
+            $group->status = $request->status;
+            $group->description = $request->description;
+            $targets = auth()->user()->accessibleTarget()->whereIn('id', $request->members)->get();
+            $jsonTarget = [];
+            foreach ($targets as $target) {
+                $jsonTarget[] = [
+                    'first_name' => $target->first_name,
+                    'last_name' => $target->last_name,
+                    'email' => $target->email,
+                    'position' => $target->position->name,
+                ];
+            }
+            $jsonData = [
+                'id' => intval($request->id),
+                'name' => $request->name . ' -+- ' . $request->id,
+                'modified_date' => $this->getTimeGoPhish(),
+                'targets' => $jsonTarget,
+            ];
+            $idGroup = intval($request->id);
+
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
+            ])->put("{$this->url}/groups/{$idGroup}", $jsonData);
+            if ($response->successful() && $response->body() != []) {
+                $group->save();
+                $group->target()->sync($request->members);
+                return response()->json([
+                    'message' => 'Group updated successfully',
+                ]);
+            }
+            return response()->json(['error' => $response->json()], 500);
+        } else {
+            return response()->json(['error' => 'You are not allowed to update group'], 403);
         }
-        return response()->json(['error' => $response->json()], 500);
     }
 
     public function deleteGroup(Request $request)
     {
-        $request->validate([
-            'id' => 'required|exists:groups,gophish_id',
-        ]);
-
-        $group = auth()->user()->accessibleGroup()->where('gophish_id', $request->id)->first();
-        $id = intval($request->id);
-        $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
-        ])->delete("{$this->url}/groups/{$id}");
-        if ($response->successful() && $response->body() != []) {
-            $group->delete();
-            return response()->json([
-                'message' => 'Group deleted successfully',
+        if (Gate::allows('IsCompanyOwner')) {
+            $request->validate([
+                'id' => 'required|exists:groups,gophish_id',
             ]);
+
+            $group = auth()->user()->accessibleGroup()->where('gophish_id', $request->id)->first();
+            $id = intval($request->id);
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
+            ])->delete("{$this->url}/groups/{$id}");
+            if ($response->successful() && $response->body() != []) {
+                $group->delete();
+                return response()->json([
+                    'message' => 'Group deleted successfully',
+                ]);
+            }
+            return response()->json(['error' => $response->json()], 500);
+        } else {
+            return response()->json(['error' => 'You are not allowed to delete group'], 403);
         }
-        return response()->json(['error' => $response->json()], 500);
     }
 
 }

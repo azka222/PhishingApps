@@ -6,7 +6,7 @@
         <div class="">
             <div class="flex p-4 items-center justify-between">
                 <h1 class="text-3xl font-semibold">Sending Profiles</h1>
-                @IsUser()
+                @CanCreateSendingProfile
                 <div>
                     <button onclick="showAddSendingProfileModal()"
                         class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 flex items-center">
@@ -19,7 +19,7 @@
                         <span class="hidden md:inline ml-2">Create Profile</span>
                     </button>
                 </div>
-                @endIsUser()
+                @endCanCreateSendingProfile
             </div>
             <div class="flex flex-col gap-4 p-4">
                 <div class="md:max-w-xs max-w-full">
@@ -75,7 +75,9 @@
                                 <th scope="col" class="p-4">Host</th>
                                 <th scope="col" class="p-4">From Address</th>
                                 <th scope="col" class="p-4">Ignore Certificate</th>
+                                @CanModifySendingProfile
                                 <th scope="col" class="p-4">Action</th>
+                                @endCanModifySendingProfile
                             </tr>
                         </thead>
                         <tbody id="list-sending-profile-tbody"
@@ -84,7 +86,8 @@
                         </tbody>
                     </table>
                 </div>
-                <nav class="flex items-center flex-column flex-col md:flex-row justify-between p-4" aria-label="Table navigation">
+                <nav class="flex items-center flex-column flex-col md:flex-row justify-between p-4"
+                    aria-label="Table navigation">
                     <span
                         class="mb-4 md:mb-0 text-xs md:text-sm font-normal text-gray-500 dark:text-gray-400 block w-full md:inline md:w-auto">Showing
                         <span class="font-semibold text-gray-900 dark:text-white"> <span id="numberFirstItem">0</span> -
@@ -280,11 +283,17 @@
                             <td class="p-4">${sendingProfile.host}</td>
                             <td class="p-4">${sendingProfile.from_address}</td>
                             <td class="p-4">${sendingProfile.ignore_cert_errors}</td>
+                            @CanModifySendingProfile()
                             <td class="p-4 flex gap-2">
+                                @CanUpdateSendingProfile
                                 ${button} 
+                                @endCanUpdateSendingProfile
+                                @CanDeleteSendingProfile
                                 <button onclick="deleteSendingProfile(${sendingProfile.id})"
                                     class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-red-600 rounded-xl hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600">Remove</button>
-                            </td>
+                                @endCanDeleteSendingProfile
+                                    </td>
+                            @endCanModifySendingProfile
                         </tr>`;
                             $('#list-sending-profile-tbody').append(data);
                         });

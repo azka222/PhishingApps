@@ -3,6 +3,7 @@
 @include('contents.modal.user-setting.edit-profile-modal')
 @include('contents.modal.user-setting.otp-modal')
 @include('contents.modal.user-setting.edit-company-modal')
+@include('contents.modal.user-setting.create-role-modal')
 
 @section('content')
     <div class="flex justify-center h-screen pt-28 pe-4 ps-4 bg-gray-50 dark:bg-gray-800">
@@ -44,8 +45,31 @@
                                         d="M4.5 2.25a.75.75 0 0 0 0 1.5v16.5h-.75a.75.75 0 0 0 0 1.5h16.5a.75.75 0 0 0 0-1.5h-.75V3.75a.75.75 0 0 0 0-1.5h-15ZM9 6a.75.75 0 0 0 0 1.5h1.5a.75.75 0 0 0 0-1.5H9Zm-.75 3.75A.75.75 0 0 1 9 9h1.5a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75ZM9 12a.75.75 0 0 0 0 1.5h1.5a.75.75 0 0 0 0-1.5H9Zm3.75-5.25A.75.75 0 0 1 13.5 6H15a.75.75 0 0 1 0 1.5h-1.5a.75.75 0 0 1-.75-.75ZM13.5 9a.75.75 0 0 0 0 1.5H15A.75.75 0 0 0 15 9h-1.5Zm-.75 3.75a.75.75 0 0 1 .75-.75H15a.75.75 0 0 1 0 1.5h-1.5a.75.75 0 0 1-.75-.75ZM9 19.5v-2.25a.75.75 0 0 1 .75-.75h4.5a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-.75.75h-4.5A.75.75 0 0 1 9 19.5Z"
                                         clip-rule="evenodd" />
                                 </svg>
-
                                 <span class="ms-3">Company</span>
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <div id="button-setting-user" onclick="handleSidebar('user');getUser()"
+                                class="side-button flex items-center p-2 rounded-lg">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                                    class="w-5 h-5">
+                                    <path fill-rule="evenodd"
+                                        d="M4.5 2.25a.75.75 0 0 0 0 1.5v16.5h-.75a.75.75 0 0 0 0 1.5h16.5a.75.75 0 0 0 0-1.5h-.75V3.75a.75.75 0 0 0 0-1.5h-15ZM9 6a.75.75 0 0 0 0 1.5h1.5a.75.75 0 0 0 0-1.5H9Zm-.75 3.75A.75.75 0 0 1 9 9h1.5a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75ZM9 12a.75.75 0 0 0 0 1.5h1.5a.75.75 0 0 0 0-1.5H9Zm3.75-5.25A.75.75 0 0 1 13.5 6H15a.75.75 0 0 1 0 1.5h-1.5a.75.75 0 0 1-.75-.75ZM13.5 9a.75.75 0 0 0 0 1.5H15A.75.75 0 0 0 15 9h-1.5Zm-.75 3.75a.75.75 0 0 1 .75-.75H15a.75.75 0 0 1 0 1.5h-1.5a.75.75 0 0 1-.75-.75ZM9 19.5v-2.25a.75.75 0 0 1 .75-.75h4.5a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-.75.75h-4.5A.75.75 0 0 1 9 19.5Z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                                <span class="ms-3">User</span>
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <div id="button-setting-role" onclick="handleSidebar('role');getRole()"
+                                class="side-button flex items-center p-2 rounded-lg">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                                    class="w-5 h-5">
+                                    <path fill-rule="evenodd"
+                                        d="M4.5 2.25a.75.75 0 0 0 0 1.5v16.5h-.75a.75.75 0 0 0 0 1.5h16.5a.75.75 0 0 0 0-1.5h-.75V3.75a.75.75 0 0 0 0-1.5h-15ZM9 6a.75.75 0 0 0 0 1.5h1.5a.75.75 0 0 0 0-1.5H9Zm-.75 3.75A.75.75 0 0 1 9 9h1.5a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75ZM9 12a.75.75 0 0 0 0 1.5h1.5a.75.75 0 0 0 0-1.5H9Zm3.75-5.25A.75.75 0 0 1 13.5 6H15a.75.75 0 0 1 0 1.5h-1.5a.75.75 0 0 1-.75-.75ZM13.5 9a.75.75 0 0 0 0 1.5H15A.75.75 0 0 0 15 9h-1.5Zm-.75 3.75a.75.75 0 0 1 .75-.75H15a.75.75 0 0 1 0 1.5h-1.5a.75.75 0 0 1-.75-.75ZM9 19.5v-2.25a.75.75 0 0 1 .75-.75h4.5a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-.75.75h-4.5A.75.75 0 0 1 9 19.5Z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                                <span class="ms-3">Role</span>
                             </div>
                         </div>
                     </div>
@@ -219,15 +243,76 @@
                                 <h1 class="text-md dark:text-white font-semibold">Visibility</h1>
                                 <h2 id="company_visibility_display" class="text-sm pt-2 dark:text-white">Not Set</h2>
                             </div>
-
                         </div>
                     </div>
+                </fieldset>
+                <fieldset id="content-user" class="content-user-setting p-4">
+                    <div class="w-full bg-gray-300 dark:bg-gray-700 rounded-xl p-4">
+                        <h1 class="text-xl font-semibold dark:text-white">User</h1>
+                        <p class="text-sm dark:text-white">This is the user setting page</p>
+                    </div>
+                    <div class="w-full mt-4 bg-gray-300 dark:bg-gray-700 rounded-xl ">
+                        <div class="relative overflow-x-auto">
+                            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                                <thead
+                                    class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3">
+                                            No
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            Name
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            Email
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            Role
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            Action
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbody-company-user">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset id="content-role" class="content-user-setting p-4">
+                    <div class="w-full bg-gray-300 dark:bg-gray-700 rounded-xl p-4">
+                        <h1 class="text-xl font-semibold dark:text-white">Role</h1>
+                        <p class="text-sm dark:text-white">This is the role setting page</p>
+                    </div>
+                    <div class="w-full mt-4 bg-gray-300 dark:bg-gray-700 rounded-xl ">
+                        <div class="relative overflow-x-auto">
+                            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                                <thead
+                                    class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3">
+                                            No
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            Name
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            Action
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbody-role-user">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </fieldset>
             </div>
-
         </div>
-
-
-    </div>
     </div>
 
 
@@ -524,7 +609,7 @@
             $("#company_visibility").val(company.visibility_id);
         }
 
-        function submitEditCompanyModal(){
+        function submitEditCompanyModal() {
             let data = {
                 id: company.id,
                 name: $("#company_name").val(),
@@ -550,6 +635,140 @@
                         })
                         getCompany();
                         hideModal("edit-company-modal");
+                    }
+                },
+                error: function(xhr) {
+                    var error = JSON.parse(xhr.responseText);
+                    Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: error.message,
+                        confirmButtonColor: '#ef4444',
+                        confirmButtonText: 'Close'
+                    });
+                }
+            })
+        }
+
+        function getUser() {
+            $.ajax({
+                url: "{{ route('getCompanyUsers') }}",
+                type: "GET",
+                success: function(response) {
+                    let users = response.data;
+                    console.log(users);
+                    let html = "";
+                    $("#tbody-company-user").empty();
+                    users.forEach((user, index) => {
+                        html = `
+                            <tr>
+                                <td class="px-6 py-4">
+                                    ${index + 1}
+                                </td>
+                                <td class="px-6 py-4">
+                                    ${user.first_name} ${user.last_name}
+                                </td>
+                                <td class="px-6 py-4">
+                                    ${user.email}
+                                </td>
+                                <td class="px-6 py-4">
+                                    ${user.role ? user.role.name : "Not Set"}
+                                </td>
+                                <td class="px-6 py-4">
+                                    <button onclick="showEditUserModal(${user.id})" class="p-2 bg-blue-600 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-800 text-white rounded-lg">Edit</button>
+                                </td>
+                            </tr>
+                        `;
+                        $("#tbody-company-user").append(html);
+                    });
+                }
+            })
+        }
+
+        function getRole() {
+            $.ajax({
+                url: "{{ route('getRoles') }}",
+                type: "GET",
+                success: function(response) {
+                    let roles = response.data;
+                    let html = "";
+                    $("#tbody-role-user").empty();
+                    roles.forEach((role, index) => {
+                        html = `
+                            <tr>
+                                <td class="px-6 py-4">
+                                    ${index + 1}
+                                </td>
+                                <td class="px-6 py-4">
+                                    ${role.name}
+                                </td>
+                                <td class="px-6 py-4">
+                                </td>
+                                <td class="px-6 py-4">
+                                    <button onclick="showEditRoleModal(${role.id})" class="p-2 bg-blue-600 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-800 text-white rounded-lg">Edit</button>
+                                </td>
+                            </tr>
+                        `;
+                        $("#tbody-role-user").append(html);
+                    });
+                }
+            })
+        }
+
+        function showEditRoleModal(id) {
+            $.ajax({
+                url: "{{ route('getRoleDetails') }}",
+                type: "GET",
+                data: {
+                    id: id
+                },
+                success: function(response) {
+                    let roleAttribute = response.data;
+                    let role = response.role;
+                    setRoleAccess(roleAttribute, role);
+                }
+            })
+            $("#button-for-submit-role").text("Update");
+            $("#button-for-submit-role").removeAttr('onclick').attr('onclick', 'updateRole()');
+            showModal('create-role-modal');
+        }
+
+        function setRoleAccess(roleAttribute, role) {
+            $(".access-role-checkbox input[type='checkbox']").prop("checked", false);
+            $("#role_id").val(role.id);
+            $("#role_name").val(role.name);
+            roleAttribute.forEach((attribute) => {
+                $(`#access-${attribute.module_abilities_id}`).prop("checked", true);
+            })
+        }
+
+        function updateRole() {
+            let data = {
+                id: $("#role_id").val(),
+                name: $("#role_name").val(),
+                access: [],
+                _token: "{{ csrf_token() }}"
+            }
+            $(".access-role-checkbox input[type='checkbox']").each(function() {
+                if ($(this).is(":checked")) {
+                    data.access.push($(this).data('value'));
+                }
+            })
+            $.ajax({
+                url: "{{ route('updateRole') }}",
+                type: "POST",
+                data: data,
+                success: function(response) {
+                    if (response.status == "success") {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: response.message,
+                            confirmButtonColor: '#22c55e',
+                            confirmButtonText: 'Ok'
+                        })
+                        getRole();
+                        hideModal("create-role-modal");
                     }
                 },
                 error: function(xhr) {

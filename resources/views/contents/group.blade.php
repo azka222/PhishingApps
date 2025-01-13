@@ -7,7 +7,7 @@
         <div class="">
             <div class="flex p-4 items-center justify-between">
                 <h1 class="text-3xl font-semibold">Company Groups</h1>
-                @IsUser()
+                @CanCreateGroup()
                 <div>
                     <button onclick="showAddGroupModal()"
                         class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 flex items-center">
@@ -20,7 +20,7 @@
                         <span class="hidden md:inline ml-2">Create Campaign</span>
                     </button>
                 </div>
-                @endIsUser()
+                @endCanCreateGroup()
             </div>
             <div class="flex flex-col gap-4 p-4">
                 <div class="md:max-w-xs max-w-full">
@@ -81,7 +81,10 @@
                                 <th scope="col" class="p-4">Member</th>
                                 <th scope="col" class="p-4">Department</th>
                                 <th scope="col" class="p-4">Status</th>
+                                @CanModifyGroup()
                                 <th scope="col" class="p-4">Action</th>
+                                @endCanModifyGroup()
+
                             </tr>
                         </thead>
                         <tbody id="list-groups-tbody"
@@ -170,11 +173,17 @@
                                 <td class="p-4">${group.member}</td>
                                 <td class="p-4">${group.department.name}</td>
                                 <td class="p-4">${status}</td>
+                                @CanModifyGroup()
                                 <td class="p-4 flex gap-2">
                                     <button onclick="showDetailsGroupModal(${group.id})" class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-green-600 rounded-xl hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600">Details</button>
+                                    @CanUpdateGroup()
                                     <button onclick="showEditGroupModal(${group.id})" class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">Edit</button>
+                                    @endCanUpdateGroup()
+                                    @CanDeleteGroup()
                                     <button onclick="showDeleteGroupModal(${group.id})" class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-red-600 rounded-xl hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600">Delete</button>
-                                </td>
+                                    @endCanDeleteGroup()
+                                    </td>
+                                @endCanModifyGroup()
                             </tr>
                        `);
                         });

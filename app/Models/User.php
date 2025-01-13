@@ -60,83 +60,200 @@ class User extends Authenticatable implements MustVerifyEmailContract
         return $this->belongsTo(Company::class);
     }
 
-    // public function accessible($module)
-    // {
-    //     $admin = $this->adminCheck();
-    //     if ($admin) {
-
-    //     } else {
-
-    //     }
-    //     switch ($module) {
-    //         case 'Target':
-    //             return Target::with('department', 'position')->where('company_id', auth()->user()->company_id);
-    //         case 'Group':
-    //             return Group::with('department', 'target.department', 'target.position')->where('company_id', auth()->user()->company_id);
-    //         case 'SendingProfile':
-    //             return SendingProfileCompany::where('company_id', auth()->user()->company_id);
-    //         case 'EmailTemplate':
-    //             return EmailTemplateCompany::where('company_id', auth()->user()->company_id);
-    //         case 'Campaign':
-    //             return CompanyCampaign::where('company_id', auth()->user()->company_id);
-    //         default:
-    //             break;
-    //     }
-    // }
-
-    public function accessibleTarget()
+    public function role()
     {
-        $admin = $this->adminCheck();
-        if ($admin) {
-            return Target::with('department', 'position');
-        } else {
-            return Target::with('department', 'position')->where('company_id', auth()->user()->company_id);
-        }
-    }
-
-    public function accessibleGroup()
-    {
-        $admin = $this->adminCheck();
-        if ($admin) {
-            return Group::with('department', 'target.department', 'target.position');
-        } else {
-            return Group::with('department', 'target.department', 'target.position')->where('company_id', auth()->user()->company_id);
-        }
-    }
-
-    public function accessibleEmailTemplate()
-    {
-        $admin = $this->adminCheck();
-        if ($admin) {
-            return EmailTemplateCompany::with('company');
-        } else {
-            return EmailTemplateCompany::with('company')->where('company_id', auth()->user()->company_id);
-        }
-    }
-
-    public function accessibleSendingProfile()
-    {
-        $admin = $this->adminCheck();
-        if ($admin) {
-            return SendingProfileCompany::with('company');
-        } else {
-            return SendingProfileCompany::with('company')->where('company_id', auth()->user()->company_id);
-        }
-    }
-
-    public function accessibleCampaign()
-    {
-        $admin = $this->adminCheck();
-        if ($admin) {
-            return CompanyCampaign::with('company');
-        } else {
-            return CompanyCampaign::with('company')->where('company_id', auth()->user()->company_id);
-        }
+        return $this->belongsTo(Role::class);
     }
 
     public static function adminCheck()
     {
         return auth()->user()->is_admin;
+    }
+
+    public function companyOwner()
+    {
+        $company = Company::find($this->company_id);
+
+        if ($company->user_id === auth()->user()->id) {
+            return true;
+        }
+        return false;
+
+    }
+
+    public function getModule($module)
+    {
+        return Module::where('name', $module)->first();
+    }
+
+    public function getAbility($ability)
+    {
+        return Ability::where('name', $ability)->first();
+    }
+
+    // Access
+
+    public function haveAccess($module, $ability)
+    {
+        $role = $this->role;
+        $module = $this->getModule($module);
+        $ability = $this->getAbility($ability);
+        $moduleAbility = ModuleAbility::where('module_id', $module->id)->where('ability_id', $ability->id)->first();
+        $roleModuleAbility = RoleModuleAbilities::where('role_id', $role->id)->where('module_abilities_id', $moduleAbility->id)->first();
+        if ($roleModuleAbility) {
+            return true;
+        }
+        return false;
+    }
+
+    public function canAccessDashboard()
+    {
+        return $this->haveAccess('Dashboard', 'read');
+    }
+
+    public function canAccessTargetGroup()
+    {
+        return $this->haveAccess('Target', 'read') || $this->haveAccess('Group', 'read');
+    }
+
+    public function canAccessAttribute()
+    {
+        return $this->haveAccess('Sending Profile', 'read') || $this->haveAccess('Landing Page', 'read') || $this->haveAccess('Email Template', 'read');
+    }
+
+    public function canCreateTarget()
+    {
+        return $this->haveAccess('Target', 'create');
+    }
+
+    public function accessibleTarget()
+    {
+        if ($this->haveAccess('Target', 'read') && !$this->adminCheck()) {
+            return Target::with('department', 'position')->where('company_id', $this->company_id);
+        } else if ($this->adminCheck()) {
+            return Target::with('department', 'position');
+        }
+    }
+
+    public function canUpdateTarget()
+    {
+        return $this->haveAccess('Target', 'update');
+    }
+
+    public function canDeleteTarget()
+    {
+        return $this->haveAccess('Target', 'delete');
+    }
+
+    public function canModifyTarget()
+    {
+        return $this->canUpdateTarget() || $this->canDeleteTarget();
+    }
+
+    public function canCreateGroup()
+    {
+        return $this->haveAccess('Group', 'create');
+    }
+
+    public function accessibleGroup()
+    {
+        if ($this->haveAccess('Group', 'read') && !$this->adminCheck()) {
+            return Group::where('company_id', $this->company_id);
+        } else if ($this->adminCheck()) {
+            return Group::all();
+        }
+    }
+
+    public function canModifyGroup()
+    {
+        return $this->canUpdateGroup() || $this->canDeleteGroup();
+    }
+
+    public function canUpdateGroup()
+    {
+        return $this->haveAccess('Group', 'update');
+    }
+
+    public function canDeleteGroup()
+    {
+        return $this->haveAccess('Group', 'delete');
+    }
+
+    public function canCreateSendingProfile()
+    {
+        return $this->haveAccess('Sending Profile', 'create');
+    }
+
+    public function canUpdateSendingProfile()
+    {
+        return $this->haveAccess('Sending Profile', 'update');
+    }
+
+    public function canDeleteSendingProfile()
+    {
+        return $this->haveAccess('Sending Profile', 'delete');
+    }
+
+    public function canModifySendingProfile()
+    {
+        return $this->canUpdateSendingProfile() || $this->canDeleteSendingProfile();
+    }
+
+    public function accessibleSendingProfile()
+    {
+        if ($this->haveAccess('Sending Profile', 'read') && !$this->adminCheck()) {
+            return SendingProfileCompany::where('company_id', $this->company_id);
+        } else if ($this->adminCheck()) {
+            return SendingProfileCompany::all();
+        }
+    }
+
+    public function canCreateEmailTemplate()
+    {
+        return $this->haveAccess('Email Template', 'create');
+    }
+
+    public function canUpdateEmailTemplate()
+    {
+        return $this->haveAccess('Email Template', 'update');
+    }
+
+    public function canDeleteEmailTemplate()
+    {
+        return $this->haveAccess('Email Template', 'delete');
+    }
+
+    public function canModifyEmailTemplate()
+    {
+        return $this->canUpdateEmailTemplate() || $this->canDeleteEmailTemplate();
+    }
+
+    public function accessibleEmailTemplate()
+    {
+        if ($this->haveAccess('Email Template', 'read') && !$this->adminCheck()) {
+            return EmailTemplateCompany::where('company_id', $this->company_id);
+        } else if ($this->adminCheck()) {
+            return EmailTemplateCompany::all();
+        }
+    }
+
+    public function canCreateCampaign()
+    {
+        return $this->haveAccess('Campaign', 'create');
+    }
+
+    public function canDeleteCampaign()
+    {
+        return $this->haveAccess('Campaign', 'delete');
+    }
+
+    public function accessibleCampaign()
+    {
+        if ($this->haveAccess('Campaign', 'read') && !$this->adminCheck()) {
+            return CompanyCampaign::where('company_id', $this->company_id);
+        } else if ($this->adminCheck()) {
+            return CompanyCampaign::all();
+        }
     }
 
 }

@@ -46,12 +46,8 @@ Route::post('/reset-password', [AuthenticateController::class, 'resetPasswordSub
 
 // ==================================== if user login success ====================================
 Route::group(['middleware' => ['auth', 'verified']], function () {
-    Route::get('/dashboard', function () {
-        return view('contents.dashboard');
-    })->name('dashboard');
-    Route::get('/', function () {
-        return view('contents.dashboard');
-    });
+    Route::get('/dashboard', [ViewController::class, 'dashboardView'])->name('dashboard');
+    Route::get('/', [ViewController::class, 'dashboardView'])->name('dashboard');
     Route::get('/logout', [AuthenticateController::class, 'logout'])->name('logout');
     Route::group(['prefix' => 'user-setting'], function () {
         Route::get('/', [ViewController::class, 'userSettingView'])->name('userSettingView');
@@ -63,6 +59,10 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         Route::post('/changePassword', [AuthenticateController::class, 'changePassword'])->name('changePassword');
         Route::get('/getCompanyDetails', [CompanyController::class, 'getCompanyDetails'])->name('getCompanyDetails');
         Route::post('/updateCompany', [CompanyController::class, 'updateCompany'])->name('updateCompany');
+        Route::get('/getCompanyUsers', [CompanyController::class, 'getCompanyUsers'])->name('getCompanyUsers');
+        Route::get('/getRoles', [CompanyController::class, 'getRoles'])->name('getRoles');
+        Route::get('/getRoleDetails', [CompanyController::class, 'getRoleDetails'])->name('getRoleDetails');
+        Route::post('/updateRole', [CompanyController::class, 'updateRole'])->name('updateRole');
 
     });
 
