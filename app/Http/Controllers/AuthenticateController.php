@@ -6,7 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Mail\OtpEmail;
 use App\Mail\ResetPasswordMail;
 use App\Models\Company;
-use App\Models\Gophish;
+use App\Models\ModuleAbility;
+use App\Models\Role;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Auth\Events\Registered;
@@ -38,6 +39,9 @@ class AuthenticateController extends Controller
                 'email' => ['Your email isn’t verified yet. Please check your inbox and verify your email to continue'],
             ]);
         }
+        return auth()->user()->canAccessDashboard()
+        ? redirect()->route('dashboard')
+        : redirect()->route('userSettingView');
 
     }
 
@@ -68,11 +72,30 @@ class AuthenticateController extends Controller
             $company = Company::findOrFail($request->company);
             $company->user_id = $user->id;
             $company->save();
+
+            $role = new Role();
+            $role->name = 'Company Admin';
+            $role->company_id = $request->company;
+            $role->company_admin = 1;
+            $role->save();
+            $user->role_id = $role->id;
+            $user->save();
+
+            $moduleAbilities = ModuleAbility::all()->pluck('id');
+            $role->moduleAbility()->syncWithoutDetaching($moduleAbilities);
+
+            $userRole = new Role();
+            $userRole->name = 'User';
+            $userRole->company_id = $request->company;
+            $userRole->company_admin = 0;
+            $userRole->save();
+        } else {
+            $userRole = Role::where('company_id', $request->company)->where('company_admin', 0)->first();
+            $user->role_id = $userRole->id;
+            $user->save();
         }
 
         event(new Registered($user));
-
-        
 
         return response()->json([
             'message' => 'User created successfully',

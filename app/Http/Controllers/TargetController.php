@@ -26,9 +26,13 @@ class TargetController extends Controller
     public function getTargets(Request $request)
     {
         $query = auth()->user()->accessibleTarget();
-        if ($request->has('search') && !empty($request->search) && $request->search != null) {
-            $query->where('first_name', 'like', '%' . $request->search . '%')->orWhere('last_name', 'like', '%' . $request->search . '%');
+        if ($request->has('search') && !empty($request->search)) {
+            $searchTerm = $request->search;
+            $query->where(function ($check) use ($searchTerm) {
+                $check->whereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%{$searchTerm}%"]);
+            });
         }
+
         if ($request->has('department') && !empty($request->department) && $request->department != null) {
             $query->where('department_id', $request->department);
         }
@@ -60,7 +64,7 @@ class TargetController extends Controller
                 'message' => 'You are not authorized to perform this action',
                 'success' => false,
             ], 403);
-        } else if (Gate::allows('IsUser')) {
+        } else if (Gate::allows('IsCompanyOwner')) {
             $request->validate([
                 'first_name' => 'required|string|max:50',
                 'last_name' => 'required|string|max:50',
@@ -93,56 +97,70 @@ class TargetController extends Controller
 
     public function updateTarget(Request $request)
     {
-        $request->validate([
-            'id' => 'required|integer|exists:targets,id',
-            'first_name' => 'required|string|max:50',
-            'last_name' => 'required|string|max:50',
-            'department' => 'required|integer|exists:target_departments,id',
-            'email' => 'required|email',
-            'position' => 'required|integer|exists:target_positions,id',
-        ]);
+        if (Gate::allows('IsCompanyOwner')) {
+            $request->validate([
+                'id' => 'required|integer|exists:targets,id',
+                'first_name' => 'required|string|max:50',
+                'last_name' => 'required|string|max:50',
+                'department' => 'required|integer|exists:target_departments,id',
+                'email' => 'required|email',
+                'position' => 'required|integer|exists:target_positions,id',
+            ]);
 
-        $target = auth()->user()->accessibleTarget()->where('id', $request->id)->first();
-        $original = [
-            'first_name' => $target->first_name,
-            'last_name' => $target->last_name,
-            'email' => $target->email,
-            'position' => $target->position_id,
-        ];
+            $target = auth()->user()->accessibleTarget()->where('id', $request->id)->first();
+            $original = [
+                'first_name' => $target->first_name,
+                'last_name' => $target->last_name,
+                'email' => $target->email,
+                'position' => $target->position_id,
+            ];
 
-        $target->first_name = $request->first_name;
-        $target->last_name = $request->last_name;
-        $target->department_id = $request->department;
-        $target->email = $request->email;
-        $target->position_id = $request->position;
-        $target->save();
-        if (
-            $original['first_name'] !== $target->first_name ||
-            $original['last_name'] !== $target->last_name ||
-            $original['email'] !== $target->email || $original['position'] !== $target->position_id
-        ) {
-            GophishController::updateTarget($target, $original);
+            $target->first_name = $request->first_name;
+            $target->last_name = $request->last_name;
+            $target->department_id = $request->department;
+            $target->email = $request->email;
+            $target->position_id = $request->position;
+            $target->save();
+            if (
+                $original['first_name'] !== $target->first_name ||
+                $original['last_name'] !== $target->last_name ||
+                $original['email'] !== $target->email || $original['position'] !== $target->position_id
+            ) {
+                GophishController::updateTarget($target, $original);
+            }
+
+            return response()->json([
+                'message' => 'Target updated successfully',
+                'success' => true,
+            ]);
+        } else {
+            return response()->json([
+                'message' => 'You are not authorized to perform this action',
+                'success' => false,
+            ], 403);
         }
-
-        return response()->json([
-            'message' => 'Target updated successfully',
-            'success' => true,
-        ]);
     }
 
     public function deleteTarget(Request $request)
     {
-        $request->validate([
-            'id' => 'required|integer|exists:targets,id',
-        ]);
+        if (Gate::allows('IsCompanyOwner')) {
+            $request->validate([
+                'id' => 'required|integer|exists:targets,id',
+            ]);
 
-        $target = auth()->user()->accessibleTarget()->where('id', $request->id)->first();
-        $target->delete();
+            $target = auth()->user()->accessibleTarget()->where('id', $request->id)->first();
+            $target->delete();
 
-        return response()->json([
-            'message' => 'Target deleted successfully',
-            'success' => true,
-        ]);
+            return response()->json([
+                'message' => 'Target deleted successfully',
+                'success' => true,
+            ]);
+        } else {
+            return response()->json([
+                'message' => 'You are not authorized to perform this action',
+                'success' => false,
+            ], 403);
+        }
     }
 
     public function previewImportTarget(Request $request)
@@ -227,82 +245,90 @@ class TargetController extends Controller
 
     public function importTarget(Request $request)
     {
-        $request->validate([
-            'target' => 'required|file|mimes:csv,txt',
-            'separator' => 'required|string',
-        ]);
-        $cantReadCsv = false;
-        $targetCsv = $request->file("target")->get();
-        $projectsSeparator = $request->input("separator", ',');
-        if ($targetCsv) {
-            $targetCsv = trim($targetCsv, "\n");
-            $csvRowsColumns = FileHelper::convertCsvToCollection($targetCsv, $projectsSeparator);
-            $csvRowsColumns->shift();
-            $validator = Validator::make(
-                ["RowColumns" => $csvRowsColumns->toArray()],
-                [
-                    "RowColumns.*" => "size:6",
-                    "RowColumns.*.0" => "distinct",
-                    "RowColumns.*.1" => "max:256|required",
-                    "RowColumns.*.2" => "max:256|required",
-                    "RowColumns.*.3" => "max:256|required|email|unique:targets,email",
-                    "RowColumns.*.4" => "exists:target_departments,id",
-                    "RowColumns.*.5" => "exists:target_positions,id",
-                ],
-                [
-                    "RowColumns.*.size" => "Invalid row at :attribute",
-                    "RowColumns.*.0.distinct" => "Duplicate row at :attribute",
-                    "RowColumns.*.1.required" => "First Name is required at :attribute",
-                    "RowColumns.*.1.max" => "First Name is too long at :attribute",
-                    "RowColumns.*.2.required" => "Last Name is required at :attribute",
-                    "RowColumns.*.2.max" => "Last Name is too long at :attribute",
-                    "RowColumns.*.3.required" => "Email is required at :attribute",
-                    "RowColumns.*.3.email" => "Email is invalid at :attribute",
-                    "RowColumns.*.3.unique" => "Email is already taken at :attribute",
-                    "RowColumns.*.3.max" => "Email is too long at :attribute",
-                    "RowColumns.*.4.exists" => "Department not found at :attribute",
-                    "RowColumns.*.5.exists" => "Position not found at :attribute",
-                ]
-            )->setAttributeNames(
-                collect($csvRowsColumns->toArray())->mapWithKeys(function ($_, $index) {
-                    return [
-                        "RowColumns.$index" => "Row " . ($index + 1),
-                        "RowColumns.$index.1" => "Row " . ($index + 1),
-                        "RowColumns.$index.2" => "Row " . ($index + 1),
-                        "RowColumns.$index.3" => "Row " . ($index + 1),
-                        "RowColumns.$index.4" => "Row " . ($index + 1),
-                        "RowColumns.$index.5" => "Row " . ($index + 1),
-                    ];
-                })->toArray()
-            );
+        if (Gate::allows('IsCompanyOwner')) {
+            $request->validate([
+                'target' => 'required|file|mimes:csv,txt',
+                'separator' => 'required|string',
+            ]);
+            $cantReadCsv = false;
+            $targetCsv = $request->file("target")->get();
+            $projectsSeparator = $request->input("separator", ',');
+            if ($targetCsv) {
+                $targetCsv = trim($targetCsv, "\n");
+                $csvRowsColumns = FileHelper::convertCsvToCollection($targetCsv, $projectsSeparator);
+                $csvRowsColumns->shift();
+                $validator = Validator::make(
+                    ["RowColumns" => $csvRowsColumns->toArray()],
+                    [
+                        "RowColumns.*" => "size:6",
+                        "RowColumns.*.0" => "distinct",
+                        "RowColumns.*.1" => "max:256|required",
+                        "RowColumns.*.2" => "max:256|required",
+                        "RowColumns.*.3" => "max:256|required|email|unique:targets,email",
+                        "RowColumns.*.4" => "exists:target_departments,id",
+                        "RowColumns.*.5" => "exists:target_positions,id",
+                    ],
+                    [
+                        "RowColumns.*.size" => "Invalid row at :attribute",
+                        "RowColumns.*.0.distinct" => "Duplicate row at :attribute",
+                        "RowColumns.*.1.required" => "First Name is required at :attribute",
+                        "RowColumns.*.1.max" => "First Name is too long at :attribute",
+                        "RowColumns.*.2.required" => "Last Name is required at :attribute",
+                        "RowColumns.*.2.max" => "Last Name is too long at :attribute",
+                        "RowColumns.*.3.required" => "Email is required at :attribute",
+                        "RowColumns.*.3.email" => "Email is invalid at :attribute",
+                        "RowColumns.*.3.unique" => "Email is already taken at :attribute",
+                        "RowColumns.*.3.max" => "Email is too long at :attribute",
+                        "RowColumns.*.4.exists" => "Department not found at :attribute",
+                        "RowColumns.*.5.exists" => "Position not found at :attribute",
+                    ]
+                )->setAttributeNames(
+                    collect($csvRowsColumns->toArray())->mapWithKeys(function ($_, $index) {
+                        return [
+                            "RowColumns.$index" => "Row " . ($index + 1),
+                            "RowColumns.$index.1" => "Row " . ($index + 1),
+                            "RowColumns.$index.2" => "Row " . ($index + 1),
+                            "RowColumns.$index.3" => "Row " . ($index + 1),
+                            "RowColumns.$index.4" => "Row " . ($index + 1),
+                            "RowColumns.$index.5" => "Row " . ($index + 1),
+                        ];
+                    })->toArray()
+                );
 
-            if ($validator->errors()->any()) {
+                if ($validator->errors()->any()) {
+                    return response()->json([
+                        "errors" => $validator->errors()->all(),
+                    ], 400);
+                }
+                $targetCollection = Target::makeCollectionFromCsvForImport($csvRowsColumns);
+                if ($targetCollection->isEmpty()) {
+                    return response()->json([
+                        "message" => "No valid data found in the file",
+                        "success" => false,
+                    ], 422);
+                }
+                Target::insert($targetCollection->toArray());
                 return response()->json([
-                    "errors" => $validator->errors()->all(),
-                ], 400);
+                    "message" => "Target imported successfully",
+                    "success" => true,
+                    "targets" => $targetCollection,
+                ]);
+
+            } else {
+                $cantReadCsv = true;
             }
-            $targetCollection = Target::makeCollectionFromCsvForImport($csvRowsColumns);
-            if ($targetCollection->isEmpty()) {
+            if ($cantReadCsv) {
                 return response()->json([
-                    "message" => "No valid data found in the file",
+                    "message" => "Can't read the file",
                     "success" => false,
                 ], 422);
             }
-            Target::insert($targetCollection->toArray());
-            return response()->json([
-                "message" => "Target imported successfully",
-                "success" => true,
-                "targets" => $targetCollection,
-            ]);
-
         } else {
-            $cantReadCsv = true;
-        }
-        if ($cantReadCsv) {
             return response()->json([
-                "message" => "Can't read the file",
-                "success" => false,
-            ], 422);
+                'message' => 'You are not authorized to perform this action',
+                'success' => false,
+            ], 403);
         }
     }
+
 }

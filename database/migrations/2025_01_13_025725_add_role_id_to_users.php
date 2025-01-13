@@ -11,12 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sending_profile_companies', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('company_id')->nullable()->constrained('companies')->onDelete('cascade');
-            $table->integer('sending_profile_id');
-            $table->boolean('status')->default(1)->nullable();
-            $table->timestamps();
+        Schema::table('users', function (Blueprint $table) {
+            $table->foreignId('role_id')->nullable()->default(null)->constrained('roles');
+
         });
     }
 
@@ -25,5 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::table('users', function (Blueprint $table) {
+            //
+        });
     }
 };

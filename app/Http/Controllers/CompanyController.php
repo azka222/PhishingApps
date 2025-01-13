@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Company;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Models\Company;
+use App\Models\Role;
+use App\Models\RoleModuleAbilities;
 use App\Models\User;
+use Illuminate\Http\Request;
 
 class CompanyController extends Controller
 {
@@ -17,38 +19,39 @@ class CompanyController extends Controller
         $companies = Company::where('visibility_id', 1)->get();
         return response()->json([
             'status' => 'success',
-            'data' => $companies
+            'data' => $companies,
         ]);
     }
 
-    public function checkCompany(Request $request){
+    public function checkCompany(Request $request)
+    {
         $request->validate([
-            'id' => 'required|integer|exists:companies,id'
+            'id' => 'required|integer|exists:companies,id',
         ]);
-        $company = Company::findOrFail( $request->id)->max_account;
+        $company = Company::findOrFail($request->id)->max_account;
         $userCount = User::where('company_id', $request->id)->count();
-        if($userCount < $company){
+        if ($userCount < $company) {
             return response()->json([
                 'status' => 'success',
-                'message' => 'Company is available'
+                'message' => 'Company is available',
             ]);
-        }
-        else{
+        } else {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Cannot use this company',
-                'suggest' => 'Please contact the company admin or create a new one.'
+                'suggest' => 'Please contact the company admin or create a new one.',
             ], 400);
         }
     }
 
-    public function createCompany(Request $request){
+    public function createCompany(Request $request)
+    {
         $request->validate([
             'name' => 'required|string',
             'email' => 'required|email',
-            'address' => 'required|string'
+            'address' => 'required|string',
         ]);
-   
+
         $company = new Company();
         $company->name = $request->name;
         $company->address = $request->address;
@@ -63,22 +66,24 @@ class CompanyController extends Controller
         ]);
     }
 
-    public function getCompanyDetails(){
+    public function getCompanyDetails()
+    {
         $company = Company::with('status', 'visibility', 'user')->where('id', auth()->user()->company_id)->first();
         return response()->json([
             'status' => 'success',
-            'data' => $company
+            'data' => $company,
         ]);
     }
 
-    public function updateCompany(Request $request){
+    public function updateCompany(Request $request)
+    {
         $request->validate([
             'name' => 'required|string',
             'email' => 'required|email',
             'address' => 'required|string',
             'max_account' => 'required|integer|min:1',
             'status_id' => 'required|integer|exists:company_statuses,id',
-            'visibility_id' => 'required|integer|exists:company_visibilities,id'
+            'visibility_id' => 'required|integer|exists:company_visibilities,id',
         ]);
 
         $company = Company::findOrFail(auth()->user()->company_id);
@@ -92,6 +97,58 @@ class CompanyController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'Company updated successfully',
+        ]);
+    }
+
+    public function getCompanyUsers()
+    {
+        $users = User::with('role')->where('company_id', auth()->user()->company_id)->get();
+        return response()->json([
+            'status' => 'success',
+            'data' => $users,
+        ]);
+    }
+
+    public function getRoles()
+    {
+        $roles = Role::where('company_id', auth()->user()->company_id)->get();
+        return response()->json([
+            'status' => 'success',
+            'data' => $roles,
+        ]);
+    }
+
+    public function getRoleDetails(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|integer|exists:roles,id',
+        ]);
+        $roleModuleAbility = RoleModuleAbilities::where('role_id', $request->id)->get();
+        return response()->json([
+            'status' => 'success',
+            'data' => $roleModuleAbility,
+            'role' => Role::findOrFail($request->id),
+        ]);
+    }
+
+    public function updateRole(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|integer|exists:roles,id',
+            'name' => 'required|string',
+            'access' => 'required|array',
+        ]);
+
+        $role = Role::findOrFail($request->id);
+        $role->name = $request->name;
+        $role->save();
+
+        if ($request->has('access') && is_array($request->access)) {
+            $role->moduleAbility()->sync($request->access);
+        }
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Role updated successfully',
         ]);
     }
 }
