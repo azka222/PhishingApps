@@ -25,36 +25,41 @@ class TargetController extends Controller
 
     public function getTargets(Request $request)
     {
-        $query = auth()->user()->accessibleTarget();
-        if ($request->has('search') && !empty($request->search)) {
-            $searchTerm = $request->search;
-            $query->where(function ($check) use ($searchTerm) {
-                $check->whereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%{$searchTerm}%"]);
-            });
-        }
-
-        if ($request->has('department') && !empty($request->department) && $request->department != null) {
-            $query->where('department_id', $request->department);
-        }
-        if ($request->has('position') && !empty($request->position) && $request->position != null) {
-            $query->where('position_id', $request->position);
-        }
-        if (Gate::allows("IsAdmin")) {
-            if ($request->has('companyId') && !empty($request->companyId) && $request->companyId != null) {
-                $query->where('company_id', $request->companyId);
+        if (Gate::allows('CanReadTarget')) {
+            $query = auth()->user()->accessibleTarget();
+            if ($request->has('search') && !empty($request->search)) {
+                $searchTerm = $request->search;
+                $query->where(function ($check) use ($searchTerm) {
+                    $check->whereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%{$searchTerm}%"]);
+                });
             }
-        }
-        $totalTarget = $query->count();
-        $query = $query->paginate($request->show);
-        $firstPageTotal = count($query->items());
-        return response()->json([
-            'targets' => $query->items(),
-            'targetTotal' => $totalTarget,
-            'currentPage' => $query->currentPage(),
-            'firstPageTotal' => $firstPageTotal,
-            'pageCount' => $query->lastPage(),
 
-        ]);
+            if ($request->has('department') && !empty($request->department) && $request->department != null) {
+                $query->where('department_id', $request->department);
+            }
+            if ($request->has('position') && !empty($request->position) && $request->position != null) {
+                $query->where('position_id', $request->position);
+            }
+            if (Gate::allows("IsAdmin")) {
+                if ($request->has('companyId') && !empty($request->companyId) && $request->companyId != null) {
+                    $query->where('company_id', $request->companyId);
+                }
+            }
+            $totalTarget = $query->count();
+            $query = $query->paginate($request->show);
+            $firstPageTotal = count($query->items());
+            return response()->json([
+                'targets' => $query->items(),
+                'targetTotal' => $totalTarget,
+                'currentPage' => $query->currentPage(),
+                'firstPageTotal' => $firstPageTotal,
+                'pageCount' => $query->lastPage(),
+
+            ]);
+        }
+        else{
+            abort(403);
+        }
     }
 
     public function createTarget(Request $request)
@@ -64,7 +69,7 @@ class TargetController extends Controller
                 'message' => 'You are not authorized to perform this action',
                 'success' => false,
             ], 403);
-        } else if (Gate::allows('IsCompanyOwner')) {
+        } else if (Gate::allows('CanCreateTarget')) {
             $request->validate([
                 'first_name' => 'required|string|max:50',
                 'last_name' => 'required|string|max:50',
@@ -97,7 +102,7 @@ class TargetController extends Controller
 
     public function updateTarget(Request $request)
     {
-        if (Gate::allows('IsCompanyOwner')) {
+        if (Gate::allows('CanUpdateTarget')) {
             $request->validate([
                 'id' => 'required|integer|exists:targets,id',
                 'first_name' => 'required|string|max:50',
@@ -143,7 +148,7 @@ class TargetController extends Controller
 
     public function deleteTarget(Request $request)
     {
-        if (Gate::allows('IsCompanyOwner')) {
+        if (Gate::allows('CanDeleteTarget')) {
             $request->validate([
                 'id' => 'required|integer|exists:targets,id',
             ]);
@@ -245,7 +250,7 @@ class TargetController extends Controller
 
     public function importTarget(Request $request)
     {
-        if (Gate::allows('IsCompanyOwner')) {
+        if (Gate::allows('CanCreateTarget')) {
             $request->validate([
                 'target' => 'required|file|mimes:csv,txt',
                 'separator' => 'required|string',

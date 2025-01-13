@@ -36,6 +36,7 @@
                                 <span class="ms-3">Security</span>
                             </div>
                         </div>
+                        @IsCompanyOwner()
                         <div class="mb-2">
                             <div id="button-setting-company" onclick="handleSidebar('company');getCompany()"
                                 class="side-button flex items-center p-2 rounded-lg">
@@ -72,6 +73,7 @@
                                 <span class="ms-3">Role</span>
                             </div>
                         </div>
+                        @endIsCompanyOwner()
                     </div>
                 </div>
             </div>
@@ -192,6 +194,7 @@
                     </div>
 
                 </fieldset>
+                @IsCompanyOwner()
                 <fieldset id="content-company" class="content-user-setting p-4">
                     <div class="w-full bg-gray-300 dark:bg-gray-700 rounded-xl p-4">
                         <h1 class="text-xl font-semibold dark:text-white">Company</h1>
@@ -311,6 +314,7 @@
                         </div>
                     </div>
                 </fieldset>
+                @endIsCompanyOwner()
             </div>
         </div>
     </div>

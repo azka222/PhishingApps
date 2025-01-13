@@ -45,76 +45,78 @@ class GroupController extends Controller
     }
     public function getGroups(Request $request)
     {
-        $query = auth()->user()->accessibleGroup();
-        if ($request->has('status') && $request->status != null) {
-            $query = $query->where('status', $request->status);
-        }
-        if ($request->has('department') && $request->department != 'null') {
-            $query = $query->where('department_id', $request->department);
-        }
-        if (Gate::allows('IsAdmin')) {
-            if ($request->has('companyId') && $request->companyId != null) {
-                $query = $query->where('company_id', $request->companyId);
+        if (Gate::allows('CanReadGroup')) {
+            $query = auth()->user()->accessibleGroup();
+            if ($request->has('status') && $request->status != null) {
+                $query = $query->where('status', $request->status);
             }
-        }
-        $ids = $query->pluck('gophish_id');
-        $responses = [];
-        foreach ($ids as $id) {
-            $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
-            ])->get("{$this->url}/groups/{$id}");
-            if ($response->successful()) {
-                $data = $response->json();
-                if (isset($data['name'])) {
-                    $data['name'] = explode('-+-', $data['name'])[0];
+            if ($request->has('department') && $request->department != 'null') {
+                $query = $query->where('department_id', $request->department);
+            }
+            if (Gate::allows('IsAdmin')) {
+                if ($request->has('companyId') && $request->companyId != null) {
+                    $query = $query->where('company_id', $request->companyId);
                 }
-                $group = auth()->user()->accessibleGroup()->where('gophish_id', $id)->first();
-                $data['department'] = $group->department;
-                $data['status'] = $group->status;
-                $data['member'] = count($data['targets']);
-                $data['description'] = $group->description;
-                $data['department_id'] = $group->department_id;
-                $data['targets'] = [];
-                $data['targets'] = $group->target;
-                $data['created_at'] = $group->created_at;
-                $data['updated_at'] = $group->updated_at;
-                $data['target_count'] = count($data['targets']);
-                $responses[] = $data;
-
             }
+            $ids = $query->pluck('gophish_id');
+            $responses = [];
+            foreach ($ids as $id) {
+                $response = Http::withHeaders([
+                    'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
+                ])->get("{$this->url}/groups/{$id}");
+                if ($response->successful()) {
+                    $data = $response->json();
+                    if (isset($data['name'])) {
+                        $data['name'] = explode('-+-', $data['name'])[0];
+                    }
+                    $group = auth()->user()->accessibleGroup()->where('gophish_id', $id)->first();
+                    $data['department'] = $group->department;
+                    $data['status'] = $group->status;
+                    $data['member'] = count($data['targets']);
+                    $data['description'] = $group->description;
+                    $data['department_id'] = $group->department_id;
+                    $data['targets'] = [];
+                    $data['targets'] = $group->target;
+                    $data['created_at'] = $group->created_at;
+                    $data['updated_at'] = $group->updated_at;
+                    $data['target_count'] = count($data['targets']);
+                    $responses[] = $data;
+
+                }
+            }
+            $responseCollection = collect($responses);
+            if ($request->has('search') && $request->search != null) {
+                $responseCollection = $responseCollection->filter(function ($item) use ($request) {
+                    return stripos($item['name'], $request->search) !== false;
+                });
+            }
+            $perPage = $request->has('show') ? (int) $request->show : 10;
+            $currentPage = $request->has('page') ? (int) $request->page : 1;
+            $pagedData = $responseCollection->slice(($currentPage - 1) * $perPage, $perPage)->values();
+            $paginatedData = new LengthAwarePaginator(
+                $pagedData,
+                $responseCollection->count(),
+                $perPage,
+                $currentPage,
+                ['path' => $request->url(), 'query' => $request->query()]
+            );
+            $totalGroup = $responseCollection->count();
+            $firstPageTotal = $responseCollection->slice(0, $perPage)->count();
+            return response()->json([
+                'data' => $paginatedData->items(),
+                'totalGroup' => $totalGroup,
+                'currentPage' => $paginatedData->currentPage(),
+                'firstPageTotal' => $firstPageTotal,
+                'pageCount' => $paginatedData->lastPage(),
+            ]);
         }
-        $responseCollection = collect($responses);
-        if ($request->has('search') && $request->search != null) {
-            $responseCollection = $responseCollection->filter(function ($item) use ($request) {
-                return stripos($item['name'], $request->search) !== false;
-            });
-        }
-        $perPage = $request->has('show') ? (int) $request->show : 10;
-        $currentPage = $request->has('page') ? (int) $request->page : 1;
-        $pagedData = $responseCollection->slice(($currentPage - 1) * $perPage, $perPage)->values();
-        $paginatedData = new LengthAwarePaginator(
-            $pagedData,
-            $responseCollection->count(),
-            $perPage,
-            $currentPage,
-            ['path' => $request->url(), 'query' => $request->query()]
-        );
-        $totalGroup = $responseCollection->count();
-        $firstPageTotal = $responseCollection->slice(0, $perPage)->count();
-        return response()->json([
-            'data' => $paginatedData->items(),
-            'totalGroup' => $totalGroup,
-            'currentPage' => $paginatedData->currentPage(),
-            'firstPageTotal' => $firstPageTotal,
-            'pageCount' => $paginatedData->lastPage(),
-        ]);
 
     }
     public function createGroup(Request $request)
     {
         if (Gate::allows('IsAdmin')) {
             return response()->json(['error' => 'You are not allowed to create group'], 403);
-        } else if (Gate::allows('IsCompanyOwner')) {
+        } else if (Gate::allows('CanCreateGroup')) {
             $request->validate([
                 'name' => 'required|',
                 'department' => 'required|exists:target_departments,id',
@@ -166,7 +168,7 @@ class GroupController extends Controller
 
     public function updateGroup(Request $request)
     {
-        if (Gate::allows('IsCompanyOwner')) {
+        if (Gate::allows('CanUpdateGroup')) {
             $request->validate([
                 'id' => 'required|exists:groups,gophish_id',
                 'name' => 'required',
@@ -217,7 +219,7 @@ class GroupController extends Controller
 
     public function deleteGroup(Request $request)
     {
-        if (Gate::allows('IsCompanyOwner')) {
+        if (Gate::allows('CanDeleteGroup')) {
             $request->validate([
                 'id' => 'required|exists:groups,gophish_id',
             ]);
