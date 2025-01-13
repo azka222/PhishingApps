@@ -123,5 +123,81 @@ class AppServiceProvider extends ServiceProvider
             return $user->canAccessDashboard();
         });
 
+        Gate::define('CanCreateTarget', function ($user) {
+            return $user->canCreateTarget();
+        });
+
+        Gate::define('CanUpdateTarget', function ($user) {
+            return $user->canUpdateTarget();
+        });
+
+        Gate::define('CanDeleteTarget', function ($user) {
+            return $user->canDeleteTarget();
+        });
+
+        Gate::define('CanReadTarget', function ($user) {
+            return $user->haveAccess('Target', 'read');
+        });
+
+        Gate::define('CanReadGroup', function ($user) {
+            return $user->haveAccess('Group', 'read');
+        });
+
+        Gate::define('CanCreateGroup', function ($user) {
+            return $user->canCreateGroup();
+        });
+
+        Gate::define('CanUpdateGroup', function ($user) {
+            return $user->canUpdateGroup();
+        });
+
+        Gate::define('CanDeleteGroup', function ($user) {
+            return $user->canDeleteGroup();
+        });
+
+        Gate::define('CanCreateSendingProfile', function ($user) {
+            return $user->canCreateSendingProfile();
+        });
+
+        Gate::define('CanUpdateSendingProfile', function ($user) {
+            return $user->canUpdateSendingProfile();
+        });
+
+        Gate::define('CanDeleteSendingProfile', function ($user) {
+            return $user->canDeleteSendingProfile();
+        });
+
+        Gate::define('CanReadSendingProfile', function ($user) {
+            return $user->haveAccess('Sending Profile', 'read');
+        });
+
+        Gate::define('CanReadEmailTemplate', function ($user) {
+            return $user->haveAccess('Email Template', 'read');
+        });
+
+        Gate::define('CanCreateEmailTemplate', function ($user) {
+            return $user->canCreateEmailTemplate();
+        });
+
+        Gate::define('CanUpdateEmailTemplate', function ($user) {
+            return $user->canUpdateEmailTemplate();
+        });
+
+        Gate::define('CanDeleteEmailTemplate', function ($user) {
+            return $user->canDeleteEmailTemplate();
+        });
+
+        Gate::define('CanCreateCampaign', function ($user) {
+            return $user->canCreateCampaign();
+        });
+
+        Gate::define('CanDeleteCampaign', function ($user) {
+            return $user->canDeleteCampaign();
+        });
+
+        Gate::define('CanReadCampaign', function ($user) {
+            return $user->haveAccess('Campaign', 'read');
+        });
+
     }
 }

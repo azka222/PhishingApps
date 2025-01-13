@@ -98,9 +98,9 @@
                                 <th scope="col" class="p-4">Position</th>
                                 <th scope="col" class="p-4">Department</th>
                                 <th scope="col" class="p-4">Email</th>
-                                @IsCompanyOwner()
+                                @CanModifyTarget()
                                 <th scope="col" class="p-4">Action</th>
-                                @endIsCompanyOwner()
+                                @endCanModifyTarget()
                             </tr>
                         </thead>
                         <tbody id="list-targets-tbody"
