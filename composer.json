@@ -67,10 +67,7 @@
             "pestphp/pest-plugin": true,
             "php-http/discovery": true
         },
-        "cache-dir": "C:\\Users\\USER\\AppData\\Local\\Composer\\cache",
-        "platform": {
-            "php": "8.4.1"
-        }
+        "cache-dir": "/Users/nihil24/.composer/cache"
     },
     "minimum-stability": "stable",
     "prefer-stable": true,
