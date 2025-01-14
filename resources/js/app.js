@@ -1,1 +1,2 @@
-import { Modal } from 'flowbite';
+import 'flowbite';  
+

@@ -8,4 +8,9 @@ export default defineConfig({
             refresh: true,
         }),
     ],
+    build: {
+        rollupOptions: {
+            external: ['flowbite'], // Menambahkan flowbite ke dalam external jika perlu
+        },
+    },
 });
