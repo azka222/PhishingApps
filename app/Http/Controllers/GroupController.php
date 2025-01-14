@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\Group;
@@ -30,17 +29,17 @@ class GroupController extends Controller
             'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
         ])->get('http://127.0.0.1:3333/api/' . $module);
         $existingIds = collect($response->json())->pluck('id');
-        $newId = $existingIds->max() + 1;
+        $newId       = $existingIds->max() + 1;
         return $newId;
     }
 
     public function getGroupResources()
     {
         $department = TargetDepartment::all();
-        $users = auth()->user()->accessibleTarget()->get();
+        $users      = auth()->user()->accessibleTarget()->get();
         return response()->json([
             'department' => $department,
-            'users' => $users,
+            'users'      => $users,
         ]);
     }
     public function getGroups(Request $request)
@@ -58,7 +57,7 @@ class GroupController extends Controller
                     $query = $query->where('company_id', $request->companyId);
                 }
             }
-            $ids = $query->pluck('gophish_id');
+            $ids       = $query->pluck('gophish_id');
             $responses = [];
             foreach ($ids as $id) {
                 $response = Http::withHeaders([
@@ -69,18 +68,18 @@ class GroupController extends Controller
                     if (isset($data['name'])) {
                         $data['name'] = explode('-+-', $data['name'])[0];
                     }
-                    $group = auth()->user()->accessibleGroup()->where('gophish_id', $id)->first();
-                    $data['department'] = $group->department;
-                    $data['status'] = $group->status;
-                    $data['member'] = count($data['targets']);
-                    $data['description'] = $group->description;
+                    $group                 = auth()->user()->accessibleGroup()->where('gophish_id', $id)->first();
+                    $data['department']    = $group->department;
+                    $data['status']        = $group->status;
+                    $data['member']        = count($data['targets']);
+                    $data['description']   = $group->description;
                     $data['department_id'] = $group->department_id;
-                    $data['targets'] = [];
-                    $data['targets'] = $group->target;
-                    $data['created_at'] = $group->created_at;
-                    $data['updated_at'] = $group->updated_at;
-                    $data['target_count'] = count($data['targets']);
-                    $responses[] = $data;
+                    $data['targets']       = [];
+                    $data['targets']       = $group->target;
+                    $data['created_at']    = $group->created_at;
+                    $data['updated_at']    = $group->updated_at;
+                    $data['target_count']  = count($data['targets']);
+                    $responses[]           = $data;
 
                 }
             }
@@ -90,9 +89,9 @@ class GroupController extends Controller
                     return stripos($item['name'], $request->search) !== false;
                 });
             }
-            $perPage = $request->has('show') ? (int) $request->show : 10;
-            $currentPage = $request->has('page') ? (int) $request->page : 1;
-            $pagedData = $responseCollection->slice(($currentPage - 1) * $perPage, $perPage)->values();
+            $perPage       = $request->has('show') ? (int) $request->show : 10;
+            $currentPage   = $request->has('page') ? (int) $request->page : 1;
+            $pagedData     = $responseCollection->slice(($currentPage - 1) * $perPage, $perPage)->values();
             $paginatedData = new LengthAwarePaginator(
                 $pagedData,
                 $responseCollection->count(),
@@ -100,54 +99,57 @@ class GroupController extends Controller
                 $currentPage,
                 ['path' => $request->url(), 'query' => $request->query()]
             );
-            $totalGroup = $responseCollection->count();
+            $totalGroup     = $responseCollection->count();
             $firstPageTotal = $responseCollection->slice(0, $perPage)->count();
             return response()->json([
-                'data' => $paginatedData->items(),
-                'totalGroup' => $totalGroup,
-                'currentPage' => $paginatedData->currentPage(),
+                'data'           => $paginatedData->items(),
+                'totalGroup'     => $totalGroup,
+                'currentPage'    => $paginatedData->currentPage(),
                 'firstPageTotal' => $firstPageTotal,
-                'pageCount' => $paginatedData->lastPage(),
+                'pageCount'      => $paginatedData->lastPage(),
             ]);
         }
 
     }
     public function createGroup(Request $request)
     {
-        if (Gate::allows('IsAdmin')) {
-            return response()->json(['error' => 'You are not allowed to create group'], 403);
-        } else if (Gate::allows('CanCreateGroup')) {
+        if (Gate::allows('CanCreateGroup')) {
             $request->validate([
-                'name' => 'required|',
-                'department' => 'required|exists:target_departments,id',
-                'status' => 'required|in:1,0',
-                'members' => 'required|array|min:1',
-                'members.*' => 'required|exists:targets,id',
+                'name'        => 'required|',
+                'department'  => 'required|exists:target_departments,id',
+                'status'      => 'required|in:1,0',
+                'members'     => 'required|array|min:1',
+                'members.*'   => 'required|exists:targets,id',
                 'description' => 'nullable',
             ]);
-            $id = $this->getIdFromGophish('groups');
-            $time = $this->getTimeGoPhish();
-            $group = new Group();
-            $group->gophish_id = $id;
+            if (auth()->user()->adminCheck()) {
+                $request->validate([
+                    'company' => 'required|exists:companies,id',
+                ]);
+            }
+            $id                   = $this->getIdFromGophish('groups');
+            $time                 = $this->getTimeGoPhish();
+            $group                = new Group();
+            $group->gophish_id    = $id;
             $group->department_id = $request->department;
-            $group->status = $request->status;
-            $group->description = $request->description;
-            $group->company_id = auth()->user()->company_id;
-            $targets = auth()->user()->accessibleTarget()->whereIn('id', $request->members)->get();
-            $jsonTarget = [];
+            $group->status        = $request->status;
+            $group->description   = $request->description;
+            $group->company_id    = auth()->user()->adminCheck() ? $request->company_id : auth()->user()->company_id;
+            $targets              = auth()->user()->accessibleTarget()->whereIn('id', $request->members)->get();
+            $jsonTarget           = [];
             foreach ($targets as $target) {
                 $jsonTarget[] = [
                     'first_name' => $target->first_name,
-                    'last_name' => $target->last_name,
-                    'email' => $target->email,
-                    'position' => $target->position->name,
+                    'last_name'  => $target->last_name,
+                    'email'      => $target->email,
+                    'position'   => $target->position->name,
                 ];
             }
             $jsonData = [
-                'id' => intval($id),
-                'name' => $request->name . ' -+- ' . $id,
+                'id'            => intval($id),
+                'name'          => $request->name . ' -+- ' . $id,
                 'modified_date' => $time,
-                'targets' => $jsonTarget,
+                'targets'       => $jsonTarget,
             ];
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
@@ -170,34 +172,34 @@ class GroupController extends Controller
     {
         if (Gate::allows('CanUpdateGroup')) {
             $request->validate([
-                'id' => 'required|exists:groups,gophish_id',
-                'name' => 'required',
-                'department' => 'required|exists:target_departments,id',
-                'status' => 'required|in:1,0',
-                'members' => 'required|array|min:1',
-                'members.*' => 'required|exists:targets,id',
+                'id'          => 'required|exists:groups,gophish_id',
+                'name'        => 'required',
+                'department'  => 'required|exists:target_departments,id',
+                'status'      => 'required|in:1,0',
+                'members'     => 'required|array|min:1',
+                'members.*'   => 'required|exists:targets,id',
                 'description' => 'nullable',
             ]);
 
-            $group = auth()->user()->accessibleGroup()->where('gophish_id', $request->id)->first();
+            $group                = auth()->user()->accessibleGroup()->where('gophish_id', $request->id)->first();
             $group->department_id = $request->department;
-            $group->status = $request->status;
-            $group->description = $request->description;
-            $targets = auth()->user()->accessibleTarget()->whereIn('id', $request->members)->get();
-            $jsonTarget = [];
+            $group->status        = $request->status;
+            $group->description   = $request->description;
+            $targets              = auth()->user()->accessibleTarget()->whereIn('id', $request->members)->get();
+            $jsonTarget           = [];
             foreach ($targets as $target) {
                 $jsonTarget[] = [
                     'first_name' => $target->first_name,
-                    'last_name' => $target->last_name,
-                    'email' => $target->email,
-                    'position' => $target->position->name,
+                    'last_name'  => $target->last_name,
+                    'email'      => $target->email,
+                    'position'   => $target->position->name,
                 ];
             }
             $jsonData = [
-                'id' => intval($request->id),
-                'name' => $request->name . ' -+- ' . $request->id,
+                'id'            => intval($request->id),
+                'name'          => $request->name . ' -+- ' . $request->id,
                 'modified_date' => $this->getTimeGoPhish(),
-                'targets' => $jsonTarget,
+                'targets'       => $jsonTarget,
             ];
             $idGroup = intval($request->id);
 
@@ -224,8 +226,8 @@ class GroupController extends Controller
                 'id' => 'required|exists:groups,gophish_id',
             ]);
 
-            $group = auth()->user()->accessibleGroup()->where('gophish_id', $request->id)->first();
-            $id = intval($request->id);
+            $group    = auth()->user()->accessibleGroup()->where('gophish_id', $request->id)->first();
+            $id       = intval($request->id);
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
             ])->delete("{$this->url}/groups/{$id}");

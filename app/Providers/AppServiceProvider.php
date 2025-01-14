@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Providers;
 
 use Illuminate\Support\Facades\Blade;
@@ -25,6 +24,11 @@ class AppServiceProvider extends ServiceProvider
         Blade::if('IsAdmin', function () {
             return auth()->user()->is_admin;
         });
+
+        Blade::if('IsUser', function () {
+            return ! auth()->user()->is_admin;
+        });
+        
         Blade::if('IsCompanyOwner', function () {
             return auth()->user()->companyOwner();
         });

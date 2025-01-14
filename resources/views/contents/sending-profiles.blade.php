@@ -17,7 +17,7 @@
                                 d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25V9Z"
                                 clip-rule="evenodd" />
                         </svg>
-                        <span class="hidden md:inline ml-2">Create Profile</span>
+                        <span class="hidden md:inline">Create Profile</span>
                     </button>
                 </div>
                 @endCanCreateSendingProfile
@@ -122,7 +122,9 @@
             $("#header_value").val("");
             $("#error-message-field").hide();
             $("#button-for-profile").text('Add');
-            $("#title-add-sending-profile-modal").text('Create Sending Profile')
+            $("#title-add-sending-profile-modal").text('Create Sending Profile');
+            $("#admin_company_input").val("");
+            $("#admin_company_input_div").show();
             showModal('add-sending-profile-modal');
 
         }
@@ -167,6 +169,7 @@
             let ignore_certificate = $("#ignore_certificate").val();
             let username = $("#username_profile").val();
             let password = $("#password_profile").val();
+            let company = $("#admin_company_input").val() ? $("#admin_company_input").val() : '';
             let http_headers = [];
             $("#http-header-list").children().each(function() {
                 let header_email = $(this).data('header');
@@ -189,7 +192,8 @@
                     ignore_certificate,
                     username,
                     password,
-                    http_headers
+                    http_headers,
+                    company
 
                 },
                 success: function(response) {
@@ -316,7 +320,9 @@
         function showEditSendingProfileModal(id) {
             let sendingProfile = sendingProfiles.find(x => x.id == id);
             let headers = sendingProfile.headers
+            let val = "X-Custom-Header";
             let sender = sendingProfile.from_address;
+            $("#header_email").val(val);
             $("#profile_name").val(sendingProfile.name);
             $("#interface_type").val(sendingProfile.interface_type);
             $("#email_smtp").val(sender);
@@ -324,6 +330,7 @@
             $("#ignore_certificate").val(sendingProfile.ignore_cert_errors == true ? 1 : 0);
             $("#username_profile").val(sendingProfile.username);
             $("#password_profile").val(sendingProfile.password);
+            $("#admin_company_input_div").hide();
             $("#http-header-list").empty();
             headers.forEach(function(header) {
                 let id = $("#http-header-list").children().last().attr('value') ? parseInt($("#http-header-list")
@@ -348,7 +355,7 @@
             $(".for-create-profile").hide();
             $("#error-http-header").hide();
             $("#error-message-field").hide();
-            $("#header_email").val("");
+
             $("#header_value").val("");
             $("#title-add-sending-profile-modal").text('Edit Sending Profile');
             $("#error_message_field").hide();
@@ -594,7 +601,7 @@
         function showTestModal() {
             showModal('test-connection-modal');
             $("#test_name").val("");
-            $("#test_email").val("");   
+            $("#test_email").val("");
         }
     </script>
 @endsection

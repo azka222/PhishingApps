@@ -16,7 +16,7 @@
                                 d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25V9Z"
                                 clip-rule="evenodd" />
                         </svg>
-                        <span class="hidden md:inline ml-2">Create Campaign</span>
+                        <span class="hidden md:inline">Create Campaign</span>
                     </button>
                 </div>
                 @endCanCreateEmailTemplate()
@@ -120,6 +120,11 @@
                 $("#sender_name").val('');
                 $("#sender_email").val('');
                 $("#email_html").val('');
+                $("#title-add-email-templates-modal").text('Add Email Templates');
+                $("#button-for-email-template").text('Create');
+                $("#button-for-email-template").removeAttr('onclick').attr('onclick',
+                    'createEmailTemplates()');
+                $("#admin_company_input_div").show();
             }
 
             function createEmailTemplates() {
@@ -131,6 +136,7 @@
                 let body_type = $("#email_body").val();
                 let sender_email = $("#sender_email").val();
                 let email_attachment = $("#email_attachment")[0].files[0];
+                let company = $("#admin_company_input").val() ? $("#admin_company_input").val() : '';
                 let formData = new FormData();
                 formData.append('template_name', template_name);
                 formData.append('email_subject', email_subject);
@@ -140,6 +146,7 @@
                 formData.append('sender_name', sender_name);
                 formData.append('body_type', body_type);
                 formData.append('sender_email', sender_email);
+                formData.append('company', company);
                 formData.append('_token', "{{ csrf_token() }}");
 
                 $.ajax({

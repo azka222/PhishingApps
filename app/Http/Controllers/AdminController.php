@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
@@ -14,7 +13,7 @@ class AdminController extends Controller
     {
         if (Gate::allows('IsAdmin')) {
             $user = User::with('company');
-            if ($request->has('search') && !empty($request->search)) {
+            if ($request->has('search') && ! empty($request->search)) {
                 $searchTerms = explode(' ', $request->search);
                 $user->where(function ($query) use ($searchTerms) {
                     foreach ($searchTerms as $term) {
@@ -32,25 +31,45 @@ class AdminController extends Controller
             if ($request->has('company') && $request->company != null) {
                 $user->where('company_id', $request->company);
             }
-            $totalUser = $user->count();
-            $user = $user->paginate($request->show);
+            $totalUser      = $user->count();
+            $user           = $user->paginate($request->show);
             $firstPageTotal = count($user->items());
             return response()->json([
-                'users' => $user->items(),
-                'userTotal' => $totalUser,
-                'currentPage' => $user->currentPage(),
+                'users'          => $user->items(),
+                'userTotal'      => $totalUser,
+                'currentPage'    => $user->currentPage(),
                 'firstPageTotal' => $firstPageTotal,
-                'pageCount' => $user->lastPage(),
+                'pageCount'      => $user->lastPage(),
 
             ]);
         }
 
     }
 
-    public function getAllCompany()
+    public function getAllCompany(Request $request)
     {
         if (Gate::allows('IsAdmin')) {
-            return Company::with('user')->get();
+            $company = Company::with('user');
+            if ($request->has('search') && ! empty($request->search)) {
+                $searchTerms = explode(' ', $request->search);
+                $company->where(function ($query) use ($searchTerms) {
+                    foreach ($searchTerms as $term) {
+                        $query->where('name', 'like', '%' . $term . '%');
+                    }
+                });
+            }
+            if ($request->has('status') && $request->status != null) {
+                $company->where('visibility_id', $request->status);
+            }
+            $totalCompany = $company->count();
+            $company      = $company->paginate($request->show);
+            return response()->json([
+                'companies'      => $company->items(),
+                'companyTotal'   => $totalCompany,
+                'currentPage'    => $company->currentPage(),
+                'firstPageTotal' => count($company->items()),
+                'pageCount'      => $company->lastPage(),
+            ]);
         }
     }
 }

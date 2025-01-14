@@ -88,9 +88,19 @@
                                     placeholder="Enter password"
                                     class="mt-1 bg-gray-100 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-xs md:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
                             </div>
-
-
-
+                            @IsAdmin()
+                            <div class="col-span-2 md:col-span-1" id="admin_company_input_div">
+                                <label for="admin_company_input"
+                                    class="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-200">Company</label>
+                                <select id="admin_company_input" name="admin_company_input"
+                                    class="mt-1 bg-gray-100 border border-gray-300 text-gray-900 text-xs md:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                    <option value="">Select Company</option>
+                                    @foreach ($companies as $company)
+                                        <option value="{{ $company->id }}">{{ $company->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            @endIsAdmin()
                             <div class="col-span-2">
                                 <div id="error_message_field" hidden>
                                     <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg shadow-md relative"
@@ -151,7 +161,8 @@
             <!-- Modal footer -->
             <div
                 class="flex items-center justify-end p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600 gap-2">
-                <button id="button-test-mail" data-modal-hide="static-modal" type="button" onclick="showTestModal()"
+                <button id="button-test-mail" data-modal-hide="static-modal" type="button"
+                    onclick="showTestModal()"
                     class="text-white bg-yellow-700 hover:bg-yellow-800 focus:ring-4 focus:outline-none focus:ring-yellow-300 font-medium rounded-lg text-xs md:text-sm px-5 py-2.5 text-center dark:bg-yellow-600 dark:hover:bg-yellow-700 dark:focus:ring-yellow-800">Test
                 </button>
                 <button data-modal-hide="static-modal" type="button"
