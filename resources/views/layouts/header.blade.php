@@ -32,7 +32,7 @@
     }
 
 @endphp
-<nav class="border-b-2 p-4 border-b-gray-900 bg-white border-gray-200 dark:border-gray-600 dark:bg-gray-800 items-center"
+<nav class="border-b-2 p-4 border-b-gray-100 bg-white border-gray-200 dark:border-gray-600 dark:bg-gray-800 items-center"
     id="navbar-header">
     <div class="max-w-full flex flex-wrap items-center justify-between mx-4">
         <a href="{{ url('/dashboard') }}" class="flex items-center space-x-3 rtl:space-x-reverse">
@@ -95,7 +95,7 @@
                     @CanAccessDashboard()
                     <div>
                         <button
-                            class="px-3 py-2 text-sm font-medium border-2 {{ $dashboard ? 'text-white border-blue-500 shadow-blue-500/50 dark:bg-blue-500 bg-blue-500 dark:border-blue-500' : 'border-gray-700 text-gray-900 dark:text-white ' }} rounded-full">
+                            class="px-3 py-2 text-sm font-medium  {{ $dashboard ? 'border-2 text-white border-blue-500 shadow-blue-500/50 dark:bg-blue-500 bg-blue-500 dark:border-blue-500' : 'border-gray-700 text-gray-900 dark:text-white ' }} rounded-full">
                             <a href="{{ url('/dashboard') }}">Dashboard</a>
                         </button>
                     </div>
@@ -104,7 +104,7 @@
                     <div>
                         <button id="dropdownHoverButton" data-dropdown-toggle="hoverTargetGroup"
                             data-dropdown-trigger="hover"
-                            class="px-3 py-2 text-sm font-medium border-2 {{ $user ? 'text-white border-blue-500 shadow-blue-500/50 dark:bg-blue-500 bg-blue-500 dark:border-blue-500' : 'border-gray-700 text-gray-900 dark:text-white ' }} rounded-full"
+                            class="px-3 py-2 text-sm font-medium  {{ $user ? 'border-2 text-white border-blue-500 shadow-blue-500/50 dark:bg-blue-500 bg-blue-500 dark:border-blue-500' : 'border-gray-700 text-gray-900 dark:text-white ' }} rounded-full"
                             type="button">Group & Target
                         </button>
                     </div>
@@ -130,7 +130,7 @@
                     <div>
                         <button id="dropdownHoverButton2" data-dropdown-toggle="hoverAttribute"
                             data-dropdown-trigger="hover"
-                            class="px-3 py-2 text-sm font-medium border-2 {{ $attribute ? 'text-white border-blue-500 shadow-blue-500/50 dark:bg-blue-500 bg-blue-500 dark:border-blue-500' : 'border-gray-700 text-gray-900 dark:text-white ' }} rounded-full"
+                            class="px-3 py-2 text-sm font-medium  {{ $attribute ? 'border-2 text-white border-blue-500 shadow-blue-500/50 dark:bg-blue-500 bg-blue-500 dark:border-blue-500' : 'border-gray-700 text-gray-900 dark:text-white ' }} rounded-full"
                             type="button">Attribute
                         </button>
                     </div>
@@ -159,7 +159,7 @@
                     @CanAccess('Campaign', 'read')
                     <div>
                         <button
-                            class="px-3 py-2 text-sm font-medium border-2 {{ $campaign ? 'text-white border-blue-500 shadow-blue-500/50 dark:bg-blue-500 bg-blue-500 dark:border-blue-500' : 'border-gray-700 text-gray-900 dark:text-white ' }} rounded-full">
+                            class="px-3 py-2 text-sm font-medium  {{ $campaign ? 'border-2 text-white border-blue-500 shadow-blue-500/50 dark:bg-blue-500 bg-blue-500 dark:border-blue-500' : 'border-gray-700 text-gray-900 dark:text-white ' }} rounded-full">
                             <a href="{{ url('/campaigns') }}">Campaign</a>
                         </button>
                     </div>
@@ -168,7 +168,7 @@
                     <div>
                         <button id="dropdownHoverButton" data-dropdown-toggle="hoverAdminGroup"
                             data-dropdown-trigger="hover"
-                            class="px-3 py-2 text-sm font-medium border-2 {{ $admin ? 'text-white border-blue-500 shadow-blue-500/50 dark:bg-blue-500 bg-blue-500 dark:border-blue-500' : 'border-gray-700 text-gray-900 dark:text-white ' }} rounded-full"
+                            class="px-3 py-2 text-sm font-medium  {{ $admin ? 'border-2 text-white border-blue-500 shadow-blue-500/50 dark:bg-blue-500 bg-blue-500 dark:border-blue-500' : 'border-gray-700 text-gray-900 dark:text-white ' }} rounded-full"
                             type="button">Admin
                         </button>
                     </div>
