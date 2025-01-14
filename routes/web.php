@@ -23,7 +23,7 @@ Route::group(['middleware' => 'guest'], function () {
     })->middleware('auth')->name('verification.notice');
     Route::get('/email/verify/{id}/{hash}', function (Request $request) {
         $user = User::find($request->route('id'));
-        if (!hash_equals((string) $request->route('hash'), sha1($user->getEmailForVerification()))) {
+        if (! hash_equals((string) $request->route('hash'), sha1($user->getEmailForVerification()))) {
             throw new AuthorizationException();
         }
         if ($user->markEmailAsVerified()) {
@@ -63,6 +63,8 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         Route::get('/getRoles', [CompanyController::class, 'getRoles'])->name('getRoles');
         Route::get('/getRoleDetails', [CompanyController::class, 'getRoleDetails'])->name('getRoleDetails');
         Route::post('/updateRole', [CompanyController::class, 'updateRole'])->name('updateRole');
+        Route::post('/createRole', [CompanyController::class, 'createRole'])->name('createRole');
+        Route::post('/deleteRole', [CompanyController::class, 'deleteRole'])->name('deleteRole');   
 
     });
 

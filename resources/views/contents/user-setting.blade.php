@@ -782,7 +782,7 @@
                 }
             })
             $.ajax({
-                url: "{{ route('addRole') }}",
+                url: "{{ route('createRole') }}",
                 type: "POST",
                 data: data,
                 success: function(response) {
@@ -849,6 +849,51 @@
                         confirmButtonColor: '#ef4444',
                         confirmButtonText: 'Close'
                     });
+                }
+            })
+        }
+
+        function deleteRole(id) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#22c55e',
+                cancelButtonColor: '#ef4444',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "{{ route('deleteRole') }}",
+                        type: "POST",
+                        data: {
+                            id: id,
+                            _token: "{{ csrf_token() }}"
+                        },
+                        success: function(response) {
+                            if (response.status == "success") {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Success',
+                                    text: response.message,
+                                    confirmButtonColor: '#22c55e',
+                                    confirmButtonText: 'Ok'
+                                })
+                                getRole();
+                            }
+                        },
+                        error: function(xhr) {
+                            var error = JSON.parse(xhr.responseText);
+                            Swal.fire({
+                                icon: "error",
+                                title: "Oops...",
+                                text: error.message,
+                                confirmButtonColor: '#ef4444',
+                                confirmButtonText: 'Close'
+                            });
+                        }
+                    })
                 }
             })
         }
