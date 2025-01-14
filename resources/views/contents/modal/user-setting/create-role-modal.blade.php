@@ -28,12 +28,12 @@
                             class="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-200">Role
                             Name</label>
                         <input type="text" id="role_name" name="role_name" placeholder="Enter role name"
-                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-xs md:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
+                            class="mt-1 block w-full bg-gray-100 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-xs md:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
                     </div>
 
 
                     @foreach ($modules as $module)
-                        <div class="col-span-1 dark:bg-gray-600 rounded-lg p-2 my-2">
+                        <div class="col-span-1 bg-gray-100 dark:bg-gray-600 rounded-lg p-2 my-2">
                             <div class="flex items-center justify-between">
                                 <label for=""
                                     class="mb-2 text-xs md:text-sm font-medium text-gray-700 dark:text-gray-200">{{ $module['module_name'] }}</label>

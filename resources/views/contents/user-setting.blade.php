@@ -55,9 +55,12 @@
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
                                     class="w-5 h-5">
                                     <path fill-rule="evenodd"
-                                        d="M4.5 2.25a.75.75 0 0 0 0 1.5v16.5h-.75a.75.75 0 0 0 0 1.5h16.5a.75.75 0 0 0 0-1.5h-.75V3.75a.75.75 0 0 0 0-1.5h-15ZM9 6a.75.75 0 0 0 0 1.5h1.5a.75.75 0 0 0 0-1.5H9Zm-.75 3.75A.75.75 0 0 1 9 9h1.5a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75ZM9 12a.75.75 0 0 0 0 1.5h1.5a.75.75 0 0 0 0-1.5H9Zm3.75-5.25A.75.75 0 0 1 13.5 6H15a.75.75 0 0 1 0 1.5h-1.5a.75.75 0 0 1-.75-.75ZM13.5 9a.75.75 0 0 0 0 1.5H15A.75.75 0 0 0 15 9h-1.5Zm-.75 3.75a.75.75 0 0 1 .75-.75H15a.75.75 0 0 1 0 1.5h-1.5a.75.75 0 0 1-.75-.75ZM9 19.5v-2.25a.75.75 0 0 1 .75-.75h4.5a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-.75.75h-4.5A.75.75 0 0 1 9 19.5Z"
+                                        d="M8.25 6.75a3.75 3.75 0 1 1 7.5 0 3.75 3.75 0 0 1-7.5 0ZM15.75 9.75a3 3 0 1 1 6 0 3 3 0 0 1-6 0ZM2.25 9.75a3 3 0 1 1 6 0 3 3 0 0 1-6 0ZM6.31 15.117A6.745 6.745 0 0 1 12 12a6.745 6.745 0 0 1 6.709 7.498.75.75 0 0 1-.372.568A12.696 12.696 0 0 1 12 21.75c-2.305 0-4.47-.612-6.337-1.684a.75.75 0 0 1-.372-.568 6.787 6.787 0 0 1 1.019-4.38Z"
                                         clip-rule="evenodd" />
+                                    <path
+                                        d="M5.082 14.254a8.287 8.287 0 0 0-1.308 5.135 9.687 9.687 0 0 1-1.764-.44l-.115-.04a.563.563 0 0 1-.373-.487l-.01-.121a3.75 3.75 0 0 1 3.57-4.047ZM20.226 19.389a8.287 8.287 0 0 0-1.308-5.135 3.75 3.75 0 0 1 3.57 4.047l-.01.121a.563.563 0 0 1-.373.486l-.115.04c-.567.2-1.156.349-1.764.441Z" />
                                 </svg>
+
                                 <span class="ms-3">User</span>
                             </div>
                         </div>
@@ -67,9 +70,10 @@
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
                                     class="w-5 h-5">
                                     <path fill-rule="evenodd"
-                                        d="M4.5 2.25a.75.75 0 0 0 0 1.5v16.5h-.75a.75.75 0 0 0 0 1.5h16.5a.75.75 0 0 0 0-1.5h-.75V3.75a.75.75 0 0 0 0-1.5h-15ZM9 6a.75.75 0 0 0 0 1.5h1.5a.75.75 0 0 0 0-1.5H9Zm-.75 3.75A.75.75 0 0 1 9 9h1.5a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75ZM9 12a.75.75 0 0 0 0 1.5h1.5a.75.75 0 0 0 0-1.5H9Zm3.75-5.25A.75.75 0 0 1 13.5 6H15a.75.75 0 0 1 0 1.5h-1.5a.75.75 0 0 1-.75-.75ZM13.5 9a.75.75 0 0 0 0 1.5H15A.75.75 0 0 0 15 9h-1.5Zm-.75 3.75a.75.75 0 0 1 .75-.75H15a.75.75 0 0 1 0 1.5h-1.5a.75.75 0 0 1-.75-.75ZM9 19.5v-2.25a.75.75 0 0 1 .75-.75h4.5a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-.75.75h-4.5A.75.75 0 0 1 9 19.5Z"
+                                        d="M11.828 2.25c-.916 0-1.699.663-1.85 1.567l-.091.549a.798.798 0 0 1-.517.608 7.45 7.45 0 0 0-.478.198.798.798 0 0 1-.796-.064l-.453-.324a1.875 1.875 0 0 0-2.416.2l-.243.243a1.875 1.875 0 0 0-.2 2.416l.324.453a.798.798 0 0 1 .064.796 7.448 7.448 0 0 0-.198.478.798.798 0 0 1-.608.517l-.55.092a1.875 1.875 0 0 0-1.566 1.849v.344c0 .916.663 1.699 1.567 1.85l.549.091c.281.047.508.25.608.517.06.162.127.321.198.478a.798.798 0 0 1-.064.796l-.324.453a1.875 1.875 0 0 0 .2 2.416l.243.243c.648.648 1.67.733 2.416.2l.453-.324a.798.798 0 0 1 .796-.064c.157.071.316.137.478.198.267.1.47.327.517.608l.092.55c.15.903.932 1.566 1.849 1.566h.344c.916 0 1.699-.663 1.85-1.567l.091-.549a.798.798 0 0 1 .517-.608 7.52 7.52 0 0 0 .478-.198.798.798 0 0 1 .796.064l.453.324a1.875 1.875 0 0 0 2.416-.2l.243-.243c.648-.648.733-1.67.2-2.416l-.324-.453a.798.798 0 0 1-.064-.796c.071-.157.137-.316.198-.478.1-.267.327-.47.608-.517l.55-.091a1.875 1.875 0 0 0 1.566-1.85v-.344c0-.916-.663-1.699-1.567-1.85l-.549-.091a.798.798 0 0 1-.608-.517 7.507 7.507 0 0 0-.198-.478.798.798 0 0 1 .064-.796l.324-.453a1.875 1.875 0 0 0-.2-2.416l-.243-.243a1.875 1.875 0 0 0-2.416-.2l-.453.324a.798.798 0 0 1-.796.064 7.462 7.462 0 0 0-.478-.198.798.798 0 0 1-.517-.608l-.091-.55a1.875 1.875 0 0 0-1.85-1.566h-.344ZM12 15.75a3.75 3.75 0 1 0 0-7.5 3.75 3.75 0 0 0 0 7.5Z"
                                         clip-rule="evenodd" />
                                 </svg>
+
                                 <span class="ms-3">Role</span>
                             </div>
                         </div>
@@ -284,9 +288,17 @@
                     </div>
                 </fieldset>
                 <fieldset id="content-role" class="content-user-setting p-4">
-                    <div class="w-full bg-gray-300 dark:bg-gray-700 rounded-xl p-4">
-                        <h1 class="text-xl font-semibold dark:text-white">Role</h1>
-                        <p class="text-sm dark:text-white">This is the role setting page</p>
+                    <div class="w-full bg-gray-300 dark:bg-gray-700 rounded-xl p-4 flex items-center justify-between">
+                        <div>
+                            <h1 class="text-xl font-semibold dark:text-white">Role</h1>
+                            <p class="text-sm dark:text-white">This is the role setting page</p>
+                        </div>
+                        <div>
+                            <button onclick="showAddRoleModal()"
+                                class="mx-4 bg-blue-600 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-800 text-white text-sm p-2 rounded-lg mt-1">
+                                Add Role
+                            </button>
+                        </div>
                     </div>
                     <div class="w-full mt-4 bg-gray-300 dark:bg-gray-700 rounded-xl ">
                         <div class="relative overflow-x-auto">
@@ -708,8 +720,9 @@
                                 </td>
                                 <td class="px-6 py-4">
                                 </td>
-                                <td class="px-6 py-4">
-                                    <button onclick="showEditRoleModal(${role.id})" class="p-2 bg-blue-600 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-800 text-white rounded-lg">Edit</button>
+                                <td class="px-6 py-4 flex gap-2">
+                                    <button onclick="showEditRoleModal(${role.id})" class="px-4 py-2 bg-blue-600 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-800 text-white rounded-lg">Edit</button>
+                                    <button onclick="deleteRole(${role.id})" class="px-4 py-2 bg-red-600 dark:bg-red-700 hover:bg-red-700 dark:hover:bg-red-800 text-white rounded-lg">Delete</button>
                                 </td>
                             </tr>
                         `;
@@ -734,6 +747,17 @@
             })
             $("#button-for-submit-role").text("Update");
             $("#button-for-submit-role").removeAttr('onclick').attr('onclick', 'updateRole()');
+            $("#title-create-role-modal").text("Update Role");
+            showModal('create-role-modal');
+        }
+
+        function showAddRoleModal() {
+            $("#button-for-submit-role").text("Add");
+            $("#title-create-role-modal").text("Add Role");
+            $("#button-for-submit-role").removeAttr('onclick').attr('onclick', 'addRole()');
+            $(".access-role-checkbox input[type='checkbox']").prop("checked", false);
+            $("#role_id").val("");
+            $("#role_name").val("");
             showModal('create-role-modal');
         }
 
@@ -743,6 +767,47 @@
             $("#role_name").val(role.name);
             roleAttribute.forEach((attribute) => {
                 $(`#access-${attribute.module_abilities_id}`).prop("checked", true);
+            })
+        }
+
+        function addRole() {
+            let data = {
+                name: $("#role_name").val(),
+                access: [],
+                _token: "{{ csrf_token() }}"
+            }
+            $(".access-role-checkbox input[type='checkbox']").each(function() {
+                if ($(this).is(":checked")) {
+                    data.access.push($(this).data('value'));
+                }
+            })
+            $.ajax({
+                url: "{{ route('createRole') }}",
+                type: "POST",
+                data: data,
+                success: function(response) {
+                    if (response.status == "success") {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: response.message,
+                            confirmButtonColor: '#22c55e',
+                            confirmButtonText: 'Ok'
+                        })
+                        getRole();
+                        hideModal("create-role-modal");
+                    }
+                },
+                error: function(xhr) {
+                    var error = JSON.parse(xhr.responseText);
+                    Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: error.message,
+                        confirmButtonColor: '#ef4444',
+                        confirmButtonText: 'Close'
+                    });
+                }
             })
         }
 
@@ -784,6 +849,51 @@
                         confirmButtonColor: '#ef4444',
                         confirmButtonText: 'Close'
                     });
+                }
+            })
+        }
+
+        function deleteRole(id) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#22c55e',
+                cancelButtonColor: '#ef4444',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "{{ route('deleteRole') }}",
+                        type: "POST",
+                        data: {
+                            id: id,
+                            _token: "{{ csrf_token() }}"
+                        },
+                        success: function(response) {
+                            if (response.status == "success") {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Success',
+                                    text: response.message,
+                                    confirmButtonColor: '#22c55e',
+                                    confirmButtonText: 'Ok'
+                                })
+                                getRole();
+                            }
+                        },
+                        error: function(xhr) {
+                            var error = JSON.parse(xhr.responseText);
+                            Swal.fire({
+                                icon: "error",
+                                title: "Oops...",
+                                text: error.message,
+                                confirmButtonColor: '#ef4444',
+                                confirmButtonText: 'Close'
+                            });
+                        }
+                    })
                 }
             })
         }

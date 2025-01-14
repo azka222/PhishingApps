@@ -92,7 +92,6 @@ class User extends Authenticatable implements MustVerifyEmailContract
     }
 
     // Access
-
     public function haveAccess($module, $ability)
     {
         if ($this->adminCheck()) {

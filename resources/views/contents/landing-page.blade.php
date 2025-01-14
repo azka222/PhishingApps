@@ -63,12 +63,13 @@
                         </thead>
                         <tbody id="list-page-tbody"
                             class="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
-        
+
                         </tbody>
                     </table>
                 </div>
-    
-                <nav class="flex items-center flex-column flex-col md:flex-row justify-between p-4" aria-label="Table navigation">
+
+                <nav class="flex items-center flex-column flex-col md:flex-row justify-between p-4"
+                    aria-label="Table navigation">
                     <span
                         class="mb-4 md:mb-0 text-xs md:text-sm font-normal text-gray-500 dark:text-gray-400 block w-full md:inline md:w-auto">Showing
                         <span class="font-semibold text-gray-900 dark:text-white"> <span id="numberFirstItem">0</span> -
@@ -77,47 +78,67 @@
                     </span>
                     <ul id="pagination-page-button"
                         class="inline-flex space-x-2 rtl:space-x-reverse text-xs md:text-sm h-8">
-    
+
                     </ul>
                 </nav>
             </div>
-          
-            <
+
+            < </div>
         </div>
-    </div>
 
-    <script>
-        $(document).ready(function() {
-            getLandingPage();
-        });
+        <script>
+            $(document).ready(function() {
+                getLandingPage();
+            });
 
-        function getLandingPage(page = 1) {
-            let show = $("#show").val();
-            let search = $("#search").val();
-            let capture_credentials = $("#capture_credentials").val();
-            let capture_passwords = $("#capture_passwords").val();
-            $.ajax({
-                url: "{{ route('getLandingPage') }}" + "?page=" + page,
-                type: "GET",
-                data: {
-                    show: show,
-                    search: search,
-                    page: page,
-                    capture_credentials: capture_credentials,
-                    capture_passwords: capture_passwords
-                },
-                success: function(response) {
-                    console.log(response)
-                    $("#list-page-tbody").empty();
-                    $("#pagination-page-button").empty();
-                    let landingPage = response.landingPage;
-                    Object.keys(landingPage).forEach(function(key) {
-                        let value = landingPage[key];
-                        $("#list-page-tbody").append(`
+            function getLandingPage(page = 1) {
+                let show = $("#show").val();
+                let search = $("#search").val();
+                let capture_credentials = $("#capture_credentials").val();
+                let capture_passwords = $("#capture_passwords").val();
+                $.ajax({
+                    url: "{{ route('getLandingPage') }}" + "?page=" + page,
+                    type: "GET",
+                    data: {
+                        show: show,
+                        search: search,
+                        page: page,
+                        capture_credentials: capture_credentials,
+                        capture_passwords: capture_passwords
+                    },
+                    success: function(response) {
+                        console.log(response)
+                        $("#list-page-tbody").empty();
+                        $("#pagination-page-button").empty();
+                        let landingPage = response.landingPage;
+                        Object.keys(landingPage).forEach(function(key) {
+                            let value = landingPage[key];
+                            let credentials = '';
+                            let password = '';
+                            if (value.capture_credentials != 0) {
+                                credentials = `<div class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300 inline-block">
+                                                True
+                                            </div>`;
+                            } else {
+                                credentials = `<div class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300 inline-block">
+                                                False
+                                            </div>`;
+                            }
+                            if (value.capture_passwords != 0) {
+                                password = `<div class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300 inline-block">
+                                                True
+                                            </div>`;
+                            } else {
+                                password = `<div class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300 inline-block">
+                                                False
+                                            </div>`;
+                            }
+
+                            $("#list-page-tbody").append(`
                             <tr class="text-xs md:text-sm font-light text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800">
                                 <td class="p-4">${value.name}</td>
-                                <td class="p-4">${value.capture_credentials}</td>
-                                <td class="p-4">${value.capture_passwords}</td>
+                                <td class="p-4">${credentials}</td>
+                                <td class="p-4">${password}</td>
                                 <td class="p-4">
                                     <button onclick="showLandingPage(${value.id})" class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">Show Preview</button>
                                 </td>
@@ -125,22 +146,22 @@
                         `);
 
 
-                    });
-                    paginationLandingPage("#pagination-page-button", response.pageCount, response.currentPage);
-                    $("#numberFirstItem").text(
-                        response.targetTotal != 0 ? (page - 1) * $("#show").val() + 1 : 0
-                    );
-                    $("#numberLastItem").text(
-                        (page - 1) * $("#show").val() + response.landingPage.length
-                    );
-                    $("#totalTemplatesCount").text(response.targetTotal);
+                        });
+                        paginationLandingPage("#pagination-page-button", response.pageCount, response.currentPage);
+                        $("#numberFirstItem").text(
+                            response.targetTotal != 0 ? (page - 1) * $("#show").val() + 1 : 0
+                        );
+                        $("#numberLastItem").text(
+                            (page - 1) * $("#show").val() + response.landingPage.length
+                        );
+                        $("#totalTemplatesCount").text(response.targetTotal);
 
-                }
-            });
-        }
+                    }
+                });
+            }
 
-        function showLandingPage(id) {
-            window.open("{{ route('landingPagePreview', ['id' => '__ID__']) }}".replace('__ID__', id));
-        }
-    </script>
-@endsection
+            function showLandingPage(id) {
+                window.open("{{ route('landingPagePreview', ['id' => '__ID__']) }}".replace('__ID__', id));
+            }
+        </script>
+    @endsection

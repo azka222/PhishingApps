@@ -26,32 +26,32 @@
                         <label for="first_name" class="block text-sm font-medium text-gray-700 dark:text-gray-200">First
                             Name</label>
                         <input type="text" id="first_name" name="first_name"
-                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
+                            class="mt-1 block w-full bg-gray-100 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
                     </div>
                     <div class="col-span-1">
                         <label for="last_name" class="block text-sm font-medium text-gray-700 dark:text-gray-200">Last
                             Name</label>
                         <input type="text" id="last_name" name="last_name"
-                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
+                            class="mt-1 block w-full bg-gray-100 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
                     </div>
                     <div class="col-span-1">
                         <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-200">Email
                         </label>
                         <input type="email" id="email" name="email" disabled
-                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
+                            class="mt-1 block w-full bg-gray-100 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
                     </div>
                     <div class="col-span-1">
                         <label for="phone_number"
                             class="block text-sm font-medium text-gray-700 dark:text-gray-200">Phone Number
                         </label>
                         <input type="text" id="phone_number" name="phone_number"
-                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
+                            class="mt-1 block w-full bg-gray-100 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
                     </div>
                     <div class="col-span-1">
                         <label for="gender" class="block text-sm font-medium text-gray-700 dark:text-gray-200">Gender
                         </label>
                         <input type="text" id="gender" name="gender" disabled
-                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
+                            class="mt-1 block w-full bg-gray-100 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
                     </div>
 
                 </div>

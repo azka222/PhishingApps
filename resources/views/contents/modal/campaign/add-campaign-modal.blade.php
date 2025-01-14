@@ -94,7 +94,7 @@
                                         </div>
                                     </div>
                                     <div class="w-1/6 flex justify-end">
-                                        <button id="button-for-test" type="button" onclick="testConnection()"
+                                        <button id="button-for-test" type="button" onclick="showTestConnectionModal()"
                                             class=" text-white bg-yellow-700 hover:bg-yellow-800 focus:ring-4 focus:outline-none focus:ring-yellow-300 font-medium rounded-lg text-xs md:text-sm px-5 py-2.5 text-center dark:bg-yellow-600 dark:hover:bg-yellow-700 dark:focus:ring-yellow-800">Test
                                         </button>
                                         </button>
