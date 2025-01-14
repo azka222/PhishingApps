@@ -103,7 +103,7 @@
                     @CanAccessTargetGroup()
                     <div>
                         <button id="dropdownHoverButton" data-dropdown-toggle="hoverTargetGroup"
-                            data-dropdown-trigger="hover"
+                            data-dropdown-trigger="click"
                             class="px-3 py-2 text-sm font-medium  {{ $user ? 'border-2 text-white border-blue-500 shadow-blue-500/50 dark:bg-blue-500 bg-blue-500 dark:border-blue-500' : 'border-gray-700 text-gray-900 dark:text-white ' }} rounded-full"
                             type="button">Group & Target
                         </button>
@@ -129,7 +129,7 @@
                     @CanAccessAttribute()
                     <div>
                         <button id="dropdownHoverButton2" data-dropdown-toggle="hoverAttribute"
-                            data-dropdown-trigger="hover"
+                            data-dropdown-trigger="click"
                             class="px-3 py-2 text-sm font-medium  {{ $attribute ? 'border-2 text-white border-blue-500 shadow-blue-500/50 dark:bg-blue-500 bg-blue-500 dark:border-blue-500' : 'border-gray-700 text-gray-900 dark:text-white ' }} rounded-full"
                             type="button">Attribute
                         </button>
@@ -166,15 +166,15 @@
                     @endCanAccess()
                     @IsAdmin()
                     <div>
-                        <button id="dropdownHoverButton" data-dropdown-toggle="hoverAdminGroup"
-                            data-dropdown-trigger="hover"
+                        <button id="dropdownHoverButton3" data-dropdown-toggle="hoverAdminGroup"
+                            data-dropdown-trigger="click"
                             class="px-3 py-2 text-sm font-medium  {{ $admin ? 'border-2 text-white border-blue-500 shadow-blue-500/50 dark:bg-blue-500 bg-blue-500 dark:border-blue-500' : 'border-gray-700 text-gray-900 dark:text-white ' }} rounded-full"
                             type="button">Admin
                         </button>
                     </div>
                     <div id="hoverAdminGroup"
                         class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
-                        <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownHoverButton">
+                        <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownHoverButton3">
                             <li>
                                 <a href="{{ route('adminUserView') }}"
                                     class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">User</a>

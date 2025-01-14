@@ -140,6 +140,7 @@
 
         function getGroups(page = 1) {
             let department = $('#department').val();
+         
             let show = $('#show').val();
             let status = $('#status').val();
             let search = $('#search').val() ? $('#search').val() : '';

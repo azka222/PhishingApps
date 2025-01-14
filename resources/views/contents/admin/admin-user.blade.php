@@ -1,6 +1,7 @@
 @extends('layouts.master')
 @section('title', 'Admin Users')
 @section('content')
+    @include('contents.modal.admin.update-user-admin')
     <div class=" p-4 w-full flex flex-col h-full min-h-screen  bg-gray-50 dark:bg-gray-800 dark:text-white text-gray-900">
         <div class="">
             <div class="flex p-4 items-center justify-between">
@@ -109,6 +110,7 @@
                     },
                     success: function(data) {
                         users = data.users;
+                        console.log(users);
                         $("#list-admin-user-tbody").empty();
                         let verified = '';
                         users.forEach(function(user) {
@@ -129,9 +131,9 @@
                                 <td class="p-4">${user.company.name}</td>
                                 <td class="p-4">${verified}</td>
                                 <td class="p-4 flex gap-2">
-                                    <button onclick=""
+                                    <button onclick="showEditUserModal(${user.id})"
                                     class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">Edit</button>
-                                      <button onclick=""
+                                      <button onclick="deleteUser(${user.id})"
                                     class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-red-600 rounded-xl hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600">Remove</button>
                                 </td>
                             </tr>`;
@@ -141,5 +143,98 @@
                     }
                 });
             };
+
+            function showEditUserModal(id) {
+                showModal('update-user-admin');
+                let user = users.find(user => user.id == id);
+                $("#first_name").val(user.first_name);
+                $("#last_name").val(user.last_name);
+                $("#email_user").val(user.email);
+                $("#phone_user").val(user.phone);
+                $("#button-for-target").attr('onclick', `editUser(${id})`);
+
+            }
+
+            function editUser(id) {
+                let first_name = $("#first_name").val();
+                let last_name = $("#last_name").val();
+                let email = $("#email_user").val();
+                let phone = $("#phone_user").val();
+                $.ajax({
+                    url: "{{ route('editUser') }}",
+                    type: "POST",
+                    data: {
+                        id: id,
+                        first_name: first_name,
+                        last_name: last_name,
+                        email: email,
+                        phone: phone,
+                        _token: "{{ csrf_token() }}"
+                    },
+                    success: function(data) {
+                        if (data.status == 'success') {
+                            getAllUser();
+                            hideModal('update-user-admin');
+                            Swal.fire({
+                                title: 'Success',
+                                text: 'Success updated user.',
+                                icon: 'success',
+                                confirmButtonColor: '#10b981',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                    },
+                    error: function(xhr) {
+                        if (xhr.status === 422) {
+                            var errorMessage = JSON.parse(xhr.responseText) ? JSON.parse(xhr.responseText) : xhr
+                                .responseText;
+                            var errors = errorMessage.errors ? errorMessage.errors : errorMessage;
+                            $('#error_message_field').show();
+                            $('#error_message').empty();
+                            $.each(errors, function(field, messages) {
+                                $.each(messages, function(index, message) {
+                                    let data = `<li>${message}</li>`;
+                                    $('#error_message').append(data);
+                                });
+                            });
+                        }
+                    }
+                });
+            }
+
+            function deleteUser(id){
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d97706',
+                    cancelButtonColor: '#e3342f',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: "{{ route('deleteUser') }}",
+                            type: "POST",
+                            data: {
+                                id: id,
+                                _token: "{{ csrf_token() }}"
+                            },
+                            success: function(data) {
+                                if (data.status == 'success') {
+                                    getAllUser();
+                                    Swal.fire({
+                                        title: 'Success',
+                                        text: 'Success deleted user.',
+                                        icon: 'success',
+                                        confirmButtonColor: '#10b981',
+                                        confirmButtonText: 'OK'
+                                    });
+                                }
+                            }
+                        });
+                    }
+                });
+            }
         </script>
     @endsection

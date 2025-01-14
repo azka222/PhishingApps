@@ -72,4 +72,53 @@ class AdminController extends Controller
             ]);
         }
     }
+
+    public function editUser(Request $request){
+
+        if (Gate::allows('IsAdmin')) {
+            $request->validate([
+                'id'         => 'required',
+                'first_name' => 'required',
+                'last_name'  => 'required',
+                'email'      => 'required|email',
+                'phone'      => 'required',
+            ]);
+            $user = User::find($request->id);
+            $user->first_name = $request->first_name;
+            $user->last_name = $request->last_name;
+            $user->email = $request->email;
+            $user->phone = $request->phone;
+            $user->save();
+            return response()->json([
+                'message' => 'User updated successfully',
+                'status'  => 'success',
+            ]);
+        }
+        else{
+            return response()->json([
+                'message' => 'You are not authorized to perform this action',
+                'status'  => 'error',
+            ],403);
+        }
+    }
+
+    public function deleteUser(Request $request){
+        if (Gate::allows('IsAdmin')) {
+            $request->validate([
+                'id' => 'required',
+            ]);
+            $user = User::find($request->id);
+            $user->delete();
+            return response()->json([
+                'message' => 'User deleted successfully',
+                'status'  => 'success',
+            ]);
+        }
+        else{
+            return response()->json([
+                'message' => 'You are not authorized to perform this action',
+                'status'  => 'error',
+            ],403);
+        }
+    }
 }
