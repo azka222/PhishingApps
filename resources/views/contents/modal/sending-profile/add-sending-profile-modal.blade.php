@@ -30,14 +30,14 @@
                                     Name</label>
                                 <input type="text" id="profile_name" name="profile_name"
                                     placeholder="Enter profile name"
-                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-xs md:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
+                                    class="mt-1 bg-gray-100 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-xs md:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
                             </div>
                             <div class="col-span-2">
                                 <label for="email_smtp"
                                     class="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-200">SMTP
                                     Email</label>
                                 <input type="text" id="email_smtp" name="email_smtp" placeholder="Enter email"
-                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-xs md:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
+                                    class="mt-1 bg-gray-100 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-xs md:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
                             </div>
                             <div class="col-span-2 lg:col-span-1">
                                 <label for="interface_type"
@@ -45,7 +45,7 @@
                                     Type</label>
                                 <input type="text" id="interface_type" name="interface_type"
                                     placeholder="should be smtp" value="smtp" disabled
-                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-xs md:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
+                                    class="mt-1 bg-gray-100 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-xs md:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
                             </div>
                             <div class="col-span-2 lg:col-span-1 for-edit-profile">
                                 <label for="status"
@@ -59,9 +59,10 @@
 
                             <div class="col-span-2 lg:col-span-1">
                                 <label for="smtp_host"
-                                    class="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-200">SMTP Host</label>
+                                    class="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-200">SMTP
+                                    Host</label>
                                 <input type="text" id="smtp_host" name="smtp_host" placeholder="smtp.example.com:587"
-                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-xs md:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
+                                    class="mt-1 bg-gray-100 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-xs md:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
                             </div>
                             <div class="col-span-2 lg:col-span-1">
                                 <label for="ignore_certificate"
@@ -78,14 +79,14 @@
                                     class="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-200">Username</label>
                                 <input type="text" id="username_profile" name="username_profile"
                                     placeholder="Enter username"
-                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-xs md:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
+                                    class="bg-gray-100 mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-xs md:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
                             </div>
                             <div class="col-span-2 lg:col-span-1">
                                 <label for="password_profile"
                                     class="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-200">Password</label>
                                 <input type="password" id="password_profile" name="password_profile"
                                     placeholder="Enter password"
-                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-xs md:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
+                                    class="mt-1 bg-gray-100 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-xs md:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
                             </div>
 
 
@@ -113,15 +114,15 @@
                                                 class="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-200">Email
                                                 Headers</label>
                                             <input type="text" id="header_email" name="header_email"
-                                                placeholder="X-Custom-Header"
-                                                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-xs md:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
+                                                placeholder="X-Custom-Header" disabled
+                                                class="bg-gray-100 mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-xs md:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
                                         </div>
                                         <div class="flex flex-col w-1/2">
                                             <label for="header_value"
                                                 class="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-200">Value</label>
                                             <input type="text" id="header_value" name="header_value"
                                                 placeholder="Enter header value"
-                                                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-xs md:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
+                                                class="bg-gray-100 mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-xs md:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
                                         </div>
                                     </div>
                                     <div class="w-1/6 flex justify-end">
@@ -150,7 +151,7 @@
             <!-- Modal footer -->
             <div
                 class="flex items-center justify-end p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600 gap-2">
-                <button id="button-test-mail" data-modal-hide="static-modal" type="button" onclick="testMail()"
+                <button id="button-test-mail" data-modal-hide="static-modal" type="button" onclick="showTestModal()"
                     class="text-white bg-yellow-700 hover:bg-yellow-800 focus:ring-4 focus:outline-none focus:ring-yellow-300 font-medium rounded-lg text-xs md:text-sm px-5 py-2.5 text-center dark:bg-yellow-600 dark:hover:bg-yellow-700 dark:focus:ring-yellow-800">Test
                 </button>
                 <button data-modal-hide="static-modal" type="button"

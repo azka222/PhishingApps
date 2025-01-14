@@ -52,8 +52,8 @@
                                 @endforeach
                             </select>
                         </div>
-                        @endIsAdmin()
                     </div>
+                    @endIsAdmin()
                 </div>
                 <div class="flex md:flex-row flex-col justify-between items-start md:items-center mt-8">
                     <div class="flex md:flex-row flex-col items-start md:items-center mb-4 md:mb-0">
@@ -168,7 +168,7 @@
                         groups.forEach(function(group) {
                             let status = group.status == 1 ? 'Active' : 'Inactive';
                             $("#list-groups-tbody").append(`
-                            <tr class="text-xs md:text-sm font-normal text-gray-900 dark:text-gray-400 bg-white dark:bg-gray-800">
+                            <tr class="text-xs md:text-sm font-light text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800">
                                 <td class="p-4">${group.name}</td>
                                 <td class="p-4">${group.member}</td>
                                 <td class="p-4">${group.department.name}</td>
@@ -545,7 +545,7 @@
             $("#list-targets-groups-tbody").empty();
             tempGroup.targets.forEach(function(target) {
                 $("#list-targets-groups-tbody").append(`
-                    <tr class="text-xs md:text-sm font-normal text-gray-900 dark:text-gray-400 bg-white dark:bg-gray-700">
+                    <tr class="text-xs md:text-sm font-light text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800">
                         <td class="p-4">${target.first_name} ${target.last_name}</td>
                         <td class="p-4">${target.position.name}</td>
                         <td class="p-4">${target.department.name}</td>

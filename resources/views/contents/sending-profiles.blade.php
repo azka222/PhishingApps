@@ -2,6 +2,7 @@
 @section('title', 'Sending Profiles')
 @section('content')
     @include('contents.modal.sending-profile.add-sending-profile-modal')
+    @include('contents.modal.sending-profile.test-connection')
     <div class=" p-4 w-full flex flex-col h-full min-h-screen  bg-gray-50 dark:bg-gray-800 dark:text-white text-gray-900">
         <div class="">
             <div class="flex p-4 items-center justify-between">
@@ -117,7 +118,7 @@
             $(".for-edit-profile").hide();
             $(".for-create-profile").show();
             $("#error-http-header").hide();
-            $("#header_email").val("");
+            $("#header_email").val("X-Custom-Header");
             $("#header_value").val("");
             $("#error-message-field").hide();
             $("#button-for-profile").text('Add');
@@ -145,7 +146,6 @@
                         </div>
                     </div>`;
                 $("#http-header-list").append(html);
-                $("#header_email").val("");
                 $("#header_value").val("");
                 $("#error-http-header").hide();
             } else {
@@ -510,6 +510,8 @@
             let ignore_certificate = $("#ignore_certificate").val();
             let username = $("#username_profile").val();
             let password = $("#password_profile").val();
+            let target_email = $("#test_email").val();
+            let target_name = $("#test_name").val();
             let http_headers = [];
             $("#http-header-list").children().each(function() {
                 let header_email = $(this).data('header');
@@ -541,7 +543,9 @@
                     ignore_certificate,
                     username,
                     password,
-                    http_headers
+                    http_headers,
+                    target_email,
+                    target_name
 
                 },
                 success: function(response) {
@@ -554,7 +558,8 @@
                         confirmButtonColor: '#10b981',
                         confirmButtonText: 'Close'
 
-                    })
+                    });
+                    hideModal('test-connection-modal');
                 },
                 error: function(xhr) {
                     clearTimeout(timeout);
@@ -584,6 +589,12 @@
                     }
                 }
             })
+        }
+
+        function showTestModal() {
+            showModal('test-connection-modal');
+            $("#test_name").val("");
+            $("#test_email").val("");   
         }
     </script>
 @endsection

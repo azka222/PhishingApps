@@ -21,62 +21,62 @@
             </div>
             <!-- Modal body -->
             <div class="p-4 md:p-5 space-y-4">
-                <div class="grid grid-cols-2 gap-8">
-                    <div class="col-span-2">
-                        <div class="grid grid-cols-2 gap-6">
+                <div class="grid grid-cols-2 gap-8 ">
+                    <div class="col-span-2 ">
+                        <div class="grid grid-cols-2 gap-6 p-2 rounded-lg bg-gray-100 dark:bg-gray-800">
                             <div class="col-span-2 md:col-span-1">
                                 <label for="group_name_details"
-                                    class="block text-xs md:text-md font-medium text-gray-700 dark:text-gray-200">Group
+                                    class="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-200">Group
                                     Name</label>
-                                <div id="group_name_details" class="mt-1 text-gray-900 text-xs md:text-sm dark:text-white">Group
+                                <div id="group_name_details" class="mt-1 text-gray-600 text-xs md:text-sm dark:text-white">Group
                                     Name Value
                                 </div>
                             </div>
                             <div class="col-span-2 md:col-span-1">
                                 <label for="group_status_details"
-                                    class="block text-xs md:text-md font-medium text-gray-700 dark:text-gray-200">Group
+                                    class="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-200">Group
                                     Status</label>
-                                <div id="group_status_details" class="mt-1 text-gray-900 text-xs md:text-sm dark:text-white">Group
+                                <div id="group_status_details" class="mt-1 text-gray-600 text-xs md:text-sm dark:text-white">Group
                                     Status
                                     Value</div>
                             </div>
                             <div class="col-span-2 md:col-span-1">
                                 <label for="group_created_at_details"
-                                    class="block text-xs md:text-md font-medium text-gray-700 dark:text-gray-200">Created
+                                    class="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-200">Created
                                     At</label>
-                                <div id="group_created_at_details" class="mt-1 text-gray-900 text-xs md:text-sm dark:text-white">
+                                <div id="group_created_at_details" class="mt-1 text-gray-600 text-xs md:text-sm dark:text-white">
                                     Created At
                                     Value</div>
                             </div>
                             <div class="col-span-2 md:col-span-1">
                                 <label for="group_updated_at_details"
-                                    class="block text-xs md:text-md font-medium text-gray-700 dark:text-gray-200">Updated
+                                    class="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-200">Updated
                                     At</label>
-                                <div id="group_updated_at_details" class="mt-1 text-gray-900 text-xs md:text-sm dark:text-white">
+                                <div id="group_updated_at_details" class="mt-1 text-gray-600 text-xs md:text-sm dark:text-white">
                                     Updated At
                                     Value</div>
                             </div>
                             <div class="col-span-2 md:col-span-1">
                                 <label for="group_department_details"
-                                    class="block text-xs md:text-md font-medium text-gray-700 dark:text-gray-200">Group
+                                    class="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-200">Group
                                     Department</label>
-                                <div id="group_department_details" class="mt-1 text-gray-900 text-xs md:text-sm dark:text-white">
+                                <div id="group_department_details" class="mt-1 text-gray-600 text-xs md:text-sm dark:text-white">
                                     Updated At
                                     Value</div>
                             </div>
                             <div class="col-span-2 md:col-span-1">
                                 <label for="group_member_count_details"
-                                    class="block text-xs md:text-md font-medium text-gray-700 dark:text-gray-200">Total
+                                    class="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-200">Total
                                     Members</label>
-                                <div id="group_member_count_details" class="mt-1 text-gray-900 text-xs md:text-sm dark:text-white">
+                                <div id="group_member_count_details" class="mt-1 text-gray-600 text-xs md:text-sm dark:text-white">
                                     Updated At
                                     Value</div>
                             </div>
                             <div class="col-span-2">
                                 <label for="group_description_details"
-                                    class="block text-xs md:text-md font-medium text-gray-700 dark:text-gray-200">Group
+                                    class="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-200">Group
                                     Description</label>
-                                <div id="group_description_details" class="mt-1 text-gray-900 text-xs md:text-sm dark:text-white">
+                                <div id="group_description_details" class="mt-1 text-gray-600 text-xs md:text-sm dark:text-white">
                                     Group
                                     Description Value</div>
                             </div>

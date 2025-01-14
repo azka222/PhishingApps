@@ -28,7 +28,7 @@
                             Name</label>
                         <input type="text" id="target_first_name" name="target_name"
                             placeholder="Enter target first name"
-                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-xs md:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
+                            class="mt-1 block w-full px-3 py-2 border bg-gray-100 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-xs md:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
                     </div>
                     <div class="col-span-2 md:col-span-1">
                         <label for="target_name"
@@ -36,14 +36,14 @@
                             Name</label>
                         <input type="text" id="target_last_name" name="target_name"
                             placeholder="Enter target last name"
-                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-xs md:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
+                            class="mt-1 block w-full px-3 py-2 border bg-gray-100 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-xs md:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
                     </div>
                     <div class="col-span-2 md:col-span-1">
                         <label for="target_email"
                             class="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-200">Target
                             Email</label>
                         <input type="email" id="target_email" name="target_email" placeholder="Enter target email"
-                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-xs md:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
+                            class="mt-1 block w-full px-3 py-2 border bg-gray-100 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-xs md:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
                     </div>
                     <div class="col-span-2 md:col-span-1">
                         <label for="target_position"

@@ -46,8 +46,8 @@
                             @endforeach
                         </select>
                     </div>
-                    @endIsAdmin()
                 </div>
+                @endIsAdmin()
                 <div class="flex md:flex-row flex-col justify-between items-start md:items-center mt-8">
                     <div class="flex md:flex-row flex-col items-start md:items-center mb-4 md:mb-0">
                         <label for="show" class="mr-2 text-xs md:text-sm font-medium mb-2 md:mb-0">Show</label>
@@ -125,20 +125,20 @@
             function createEmailTemplates() {
                 let template_name = $("#template_name").val();
                 let email_subject = $("#email_subject").val();
-                let email_text = $("#email_text").val();
-                let email_html = $("#email_html").val();
+                let email_body = $("#email_body").val() == 'text' ? $("#email_text").val() : $("#email_html").val();
                 let status = $("#email_status").val();
                 let sender_name = $("#sender_name").val();
+                let body_type = $("#email_body").val();
                 let sender_email = $("#sender_email").val();
                 let email_attachment = $("#email_attachment")[0].files[0];
                 let formData = new FormData();
                 formData.append('template_name', template_name);
                 formData.append('email_subject', email_subject);
-                formData.append('email_text', email_text);
-                formData.append('email_html', email_html);
+                formData.append('email_body', email_body);
                 formData.append('status', status);
                 formData.append('email_attachment', email_attachment);
                 formData.append('sender_name', sender_name);
+                formData.append('body_type', body_type);
                 formData.append('sender_email', sender_email);
                 formData.append('_token', "{{ csrf_token() }}");
 

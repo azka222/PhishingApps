@@ -170,9 +170,8 @@ class GophishController extends Controller
             $request->validate([
                 'template_name' => 'required|string',
                 'email_subject' => 'required|string',
-                'email_text' => 'required|string',
                 'status' => 'required|boolean',
-                'email_html' => 'required|string',
+                'email_body' => 'required|string',
                 'email_attachment' => 'required|file|mimes:jpg,jpeg,png|max:1000',
                 'sender_name' => 'required|string',
                 'sender_email' => 'required|email',
@@ -189,6 +188,14 @@ class GophishController extends Controller
                 $attachments = [];
             }
 
+            if ($request->body_type == 'html') {
+                $email_html = $request->email_body;
+                $email_text = null;
+            } else {
+                $email_text = $request->email_body;
+                $email_html = null;
+            }
+
             $formattedDate = $this->getTimeGoPhish();
             $newId = $this->getIdFromGophish('templates');
             $envelope = $request->sender_name . ' <' . $request->sender_email . '>';
@@ -197,8 +204,8 @@ class GophishController extends Controller
                 'name' => $request->template_name . ' -+-' . $newId,
                 'subject' => $request->email_subject,
                 'envelope_sender' => $envelope,
-                'text' => $request->email_text,
-                'html' => $request->email_html,
+                'text' => $email_text,
+                'html' => $email_html,
                 'modified_date' => $formattedDate,
                 'attachments' => $attachments,
             ];
@@ -627,8 +634,9 @@ class GophishController extends Controller
             'username' => 'nullable|string',
             'password' => 'nullable|string',
             'http_headers' => 'nullable|array',
+            'target_email' => 'required|email',
+            'target_name' => 'required|string',
         ]);
-
         [$host, $port] = explode(':', $request->input('host'));
         config([
             'mail.mailers.smtp.host' => $host,
@@ -642,8 +650,8 @@ class GophishController extends Controller
 
         try {
             Mail::raw('This is a test email to validate the SMTP configuration.', function ($message) use ($request) {
-                $message->to('test@example.com')
-                    ->subject('Test Email from Gophish Configuration');
+                $message->to($request->target_email)
+                    ->subject('Hi ' . $request->target_name . ', Test Email from Gophish Configuration');
                 if ($request->input('http_headers')) {
                     foreach ($request->input('http_headers') as $header => $value) {
                         if (is_array($value)) {
@@ -732,6 +740,11 @@ class GophishController extends Controller
     }
     public function testConnection(Request $request)
     {
+        $request->validate([
+            'id' => 'required|integer',
+            'name' => 'required|string',
+            'email' => 'required|email',
+        ]);
         $id = $request->input('id');
         $response = Http::withHeaders([
             'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
@@ -757,8 +770,8 @@ class GophishController extends Controller
                 'mail.from.name' => $formattedAddress['name'],
             ]);
             Mail::raw('This is a test email to validate the SMTP configuration.', function ($message) use ($request) {
-                $message->to('test@example.com')
-                    ->subject('Test Email from Gophish Configuration');
+                $message->to($request->input('email'))
+                    ->subject('Hi ' . $request->input('name') . ', this is a test email from Gophish');
                 if ($request->input('http_headers')) {
                     foreach ($request->input('http_headers') as $header => $value) {
                         if (is_array($value)) {
@@ -990,8 +1003,7 @@ class GophishController extends Controller
             }
 
             return response()->json($data);
-        }
-        else{
+        } else {
             abort(403);
         }
     }

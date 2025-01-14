@@ -68,8 +68,8 @@
                                 @endforeach
                             </select>
                         </div>
-                        @endIsAdmin()
                     </div>
+                    @endIsAdmin()
                 </div>
                 <div class="flex md:flex-row flex-col justify-between items-start md:items-center mt-8">
                     <div class="flex md:flex-row flex-col items-start md:items-center mb-4 md:mb-0">
@@ -124,76 +124,77 @@
                 </nav>
             </div>
         </div>
+    </div>
 
 
-        <script>
-            $(document).ready(function() {
-                getTargetResources();
-                getTargets();
+    <script>
+        $(document).ready(function() {
+            getTargetResources();
+            getTargets();
+        });
+
+
+        function getTargetResources() {
+            $.ajax({
+                url: "{{ route('getTargetResources') }}",
+                type: 'GET',
+                success: function(response) {
+                    let department = response.department;
+                    let position = response.position;
+                    setFilter(department, position);
+                    setSelectForModal(position, department);
+                },
+                error: function(error) {
+                    console.log(error);
+                }
             });
+        }
 
+        function getTargets(page = 1) {
+            let department = $('#department').val() ? $('#department').val() : '';
+            let position = $('#position').val() ? $('#position').val() : '';
+            let show = $('#show').val() ? $('#show').val() : '';
+            let search = $('#search').val() ? $('#search').val() : '';
+            let company = $('#companyCheckAdmin').val();
+            $.ajax({
+                url: "{{ route('getTargets') }}" + '?page=' + page,
+                type: 'GET',
+                data: {
+                    department: department,
+                    position: position,
+                    show: show,
+                    search: search,
+                    companyId: company
+                },
+                success: function(response) {
+                    let targets = response.targets;
+                    setTargets(targets, response.pageCount, response.currentPage);
+                    $("#numberFirstItem").text(
+                        response.targetTotal != 0 ? (page - 1) * $("#show").val() + 1 : 0
+                    );
+                    $("#numberLastItem").text(
+                        (page - 1) * $("#show").val() + response.targets.length
+                    );
+                    $("#totalTemplatesCount").text(response.targetTotal);
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+        }
 
-            function getTargetResources() {
-                $.ajax({
-                    url: "{{ route('getTargetResources') }}",
-                    type: 'GET',
-                    success: function(response) {
-                        let department = response.department;
-                        let position = response.position;
-                        setFilter(department, position);
-                        setSelectForModal(position, department);
-                    },
-                    error: function(error) {
-                        console.log(error);
-                    }
-                });
-            }
-
-            function getTargets(page = 1) {
-                let department = $('#department').val() ? $('#department').val() : '';
-                let position = $('#position').val() ? $('#position').val() : '';
-                let show = $('#show').val() ? $('#show').val() : '';
-                let search = $('#search').val() ? $('#search').val() : '';
-                let company = $('#companyCheckAdmin').val();
-                $.ajax({
-                    url: "{{ route('getTargets') }}" + '?page=' + page,
-                    type: 'GET',
-                    data: {
-                        department: department,
-                        position: position,
-                        show: show,
-                        search: search,
-                        companyId: company
-                    },
-                    success: function(response) {
-                        let targets = response.targets;
-                        setTargets(targets, response.pageCount, response.currentPage);
-                        $("#numberFirstItem").text(
-                            response.targetTotal != 0 ? (page - 1) * $("#show").val() + 1 : 0
-                        );
-                        $("#numberLastItem").text(
-                            (page - 1) * $("#show").val() + response.targets.length
-                        );
-                        $("#totalTemplatesCount").text(response.targetTotal);
-                    },
-                    error: function(error) {
-                        console.log(error);
-                    }
-                });
-            }
-
-            function setTargets(targets, count, current) {
-                let table = $('tbody');
-                table.empty();
-                if (targets.length == 0) {
-                    $("#list-targets-tbody").append(`
+        function setTargets(targets, count, current) {
+            let table = $('tbody');
+            table.empty();
+            if (targets.length == 0) {
+                $("#list-targets-tbody").append(`
                   <tr class="text-xs md:text-sm font-light text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800">
                             <td class="p-4" colspan="6">No data available</td>
                         </tr>
                 `);
-                } else {
-                    targets.forEach(function(target, index) {
-                        $("#list-targets-tbody").append(`
+            } else {
+                targets.forEach(function(target, index) {
+                    $("#list-targets-tbody").append(`
                     <tr class="text-xs md:text-sm font-light text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800">
                         <td class="p-4">${target.first_name}</td>
                         <td class="p-4">${target.last_name}</td>
@@ -215,232 +216,232 @@
 
                     </tr>
                     `);
+                });
+                paginationTargetCompany("#page-button-target-company", count, current)
+
+            }
+        }
+
+        function setFilter(department, position) {
+            let departmentSelect = $('#department');
+            let positionSelect = $('#position');
+            departmentSelect.empty();
+            positionSelect.empty();
+            departmentSelect.append('<option value="">Select Department</option>');
+            positionSelect.append('<option value="">Select Position</option>');
+            department.forEach(function(department) {
+                departmentSelect.append('<option value="' + department.id + '">' + department.name + '</option>');
+            });
+
+            position.forEach(function(position) {
+                positionSelect.append('<option value="' + position.id + '">' + position.name + '</option>');
+            });
+        }
+
+        function setSelectForModal(position, department) {
+            let departmentSelect = $('#target_department');
+            let positionSelect = $('#target_position');
+            departmentSelect.empty();
+            positionSelect.empty();
+            departmentSelect.append('<option value="">Select Department</option>');
+            positionSelect.append('<option value="">Select Position</option>');
+            department.forEach(function(department) {
+                departmentSelect.append('<option value="' + department.id + '">' + department.name + '</option>');
+            });
+
+            position.forEach(function(position) {
+                positionSelect.append('<option value="' + position.id + '">' + position.name + '</option>');
+            });
+        }
+
+        function showAddTargetModal() {
+            $("#target_first_name").val('');
+            $("#target_last_name").val('');
+            $("#target_email").val('');
+            $("#target_department").val('');
+            $("#target_position").val('');
+            $("#title-add-target-modal").text('Add Target');
+            $("#button-for-target").removeAttr('onclick').attr('onclick', 'createTarget()');
+            $("#button-for-target").text('Add');
+            showModal('add-target-modal');
+        }
+
+        function showUpdateTargetModal(id, firstName, lastName, email, position, department) {
+            $("#target_first_name").val(firstName);
+            $("#target_last_name").val(lastName);
+            $("#target_email").val(email);
+            $("#target_department").val(department);
+            $("#target_position").val(position);
+            $("#title-add-target-modal").text('Update Target');
+            $("#button-for-target").removeAttr('onclick').attr('onclick', `updateTarget(${id})`);
+            $("#button-for-target").text('Update');
+            showModal('add-target-modal');
+
+        }
+
+        function createTarget() {
+            let firstName = $('#target_first_name').val();
+            let lastName = $('#target_last_name').val();
+            let email = $('#target_email').val();
+            let position = $('#target_position').val();
+            let department = $('#target_department').val();
+
+            $.ajax({
+                url: "{{ route('createTarget') }}",
+                type: 'POST',
+                data: {
+                    first_name: firstName,
+                    last_name: lastName,
+                    email: email,
+                    position: position,
+                    department: department,
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(response) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Success",
+                        text: response.message,
+                        confirmButtonColor: '#10b981',
+                        confirmButtonText: 'Close'
                     });
-                    paginationTargetCompany("#page-button-target-company", count, current)
-
+                    $("#error_message_field").hide();
+                    hideModal('add-target-modal');
+                    getTargets();
+                },
+                error: function(xhr) {
+                    var errorMessage = JSON.parse(xhr.responseText) ? JSON.parse(xhr.responseText) : xhr
+                        .responseText;
+                    var errors = errorMessage.errors ? errorMessage.errors : errorMessage;
+                    $('#error_message_field').show();
+                    $('#error_message').empty();
+                    $.each(errors, function(field, messages) {
+                        $.each(messages, function(index, message) {
+                            let data = `<li>${message}</li>`;
+                            $('#error_message').append(data);
+                        });
+                    });
                 }
-            }
+            });
+        }
 
-            function setFilter(department, position) {
-                let departmentSelect = $('#department');
-                let positionSelect = $('#position');
-                departmentSelect.empty();
-                positionSelect.empty();
-                departmentSelect.append('<option value="">Select Department</option>');
-                positionSelect.append('<option value="">Select Position</option>');
-                department.forEach(function(department) {
-                    departmentSelect.append('<option value="' + department.id + '">' + department.name + '</option>');
-                });
+        function updateTarget(id) {
+            let firstName = $('#target_first_name').val();
+            let lastName = $('#target_last_name').val();
+            let email = $('#target_email').val();
+            let position = $('#target_position').val();
+            let department = $('#target_department').val();
 
-                position.forEach(function(position) {
-                    positionSelect.append('<option value="' + position.id + '">' + position.name + '</option>');
-                });
-            }
-
-            function setSelectForModal(position, department) {
-                let departmentSelect = $('#target_department');
-                let positionSelect = $('#target_position');
-                departmentSelect.empty();
-                positionSelect.empty();
-                departmentSelect.append('<option value="">Select Department</option>');
-                positionSelect.append('<option value="">Select Position</option>');
-                department.forEach(function(department) {
-                    departmentSelect.append('<option value="' + department.id + '">' + department.name + '</option>');
-                });
-
-                position.forEach(function(position) {
-                    positionSelect.append('<option value="' + position.id + '">' + position.name + '</option>');
-                });
-            }
-
-            function showAddTargetModal() {
-                $("#target_first_name").val('');
-                $("#target_last_name").val('');
-                $("#target_email").val('');
-                $("#target_department").val('');
-                $("#target_position").val('');
-                $("#title-add-target-modal").text('Add Target');
-                $("#button-for-target").removeAttr('onclick').attr('onclick', 'createTarget()');
-                $("#button-for-target").text('Add');
-                showModal('add-target-modal');
-            }
-
-            function showUpdateTargetModal(id, firstName, lastName, email, position, department) {
-                $("#target_first_name").val(firstName);
-                $("#target_last_name").val(lastName);
-                $("#target_email").val(email);
-                $("#target_department").val(department);
-                $("#target_position").val(position);
-                $("#title-add-target-modal").text('Update Target');
-                $("#button-for-target").removeAttr('onclick').attr('onclick', `updateTarget(${id})`);
-                $("#button-for-target").text('Update');
-                showModal('add-target-modal');
-
-            }
-
-            function createTarget() {
-                let firstName = $('#target_first_name').val();
-                let lastName = $('#target_last_name').val();
-                let email = $('#target_email').val();
-                let position = $('#target_position').val();
-                let department = $('#target_department').val();
-
-                $.ajax({
-                    url: "{{ route('createTarget') }}",
-                    type: 'POST',
-                    data: {
-                        first_name: firstName,
-                        last_name: lastName,
-                        email: email,
-                        position: position,
-                        department: department,
-                        _token: "{{ csrf_token() }}"
-                    },
-                    success: function(response) {
-                        Swal.fire({
-                            icon: "success",
-                            title: "Success",
-                            text: response.message,
-                            confirmButtonColor: '#10b981',
-                            confirmButtonText: 'Close'
+            $.ajax({
+                url: "{{ route('updateTarget') }}",
+                type: 'POST',
+                data: {
+                    id: id,
+                    first_name: firstName,
+                    last_name: lastName,
+                    email: email,
+                    position: position,
+                    department: department,
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(response) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Success",
+                        text: response.message,
+                        confirmButtonColor: '#10b981',
+                        confirmButtonText: 'Close'
+                    });
+                    $("#error_message_field").hide();
+                    hideModal('add-target-modal');
+                    getTargets();
+                },
+                error: function(xhr) {
+                    var errorMessage = JSON.parse(xhr.responseText) ? JSON.parse(xhr.responseText) : xhr
+                        .responseText;
+                    var errors = errorMessage.errors ? errorMessage.errors : errorMessage;
+                    $('#error_message_field').show();
+                    $('#error_message').empty();
+                    $.each(errors, function(field, messages) {
+                        $.each(messages, function(index, message) {
+                            let data = `<li>${message}</li>`;
+                            $('#error_message').append(data);
                         });
-                        $("#error_message_field").hide();
-                        hideModal('add-target-modal');
-                        getTargets();
-                    },
-                    error: function(xhr) {
-                        var errorMessage = JSON.parse(xhr.responseText) ? JSON.parse(xhr.responseText) : xhr
-                            .responseText;
-                        var errors = errorMessage.errors ? errorMessage.errors : errorMessage;
-                        $('#error_message_field').show();
-                        $('#error_message').empty();
-                        $.each(errors, function(field, messages) {
-                            $.each(messages, function(index, message) {
-                                let data = `<li>${message}</li>`;
-                                $('#error_message').append(data);
+                    });
+                }
+            });
+        }
+
+        function deleteTarget(id) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#10b981',
+                cancelButtonColor: '#d97706',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "{{ route('deleteTarget') }}",
+                        type: 'POST',
+                        data: {
+                            id: id,
+                            _token: "{{ csrf_token() }}"
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                icon: "success",
+                                title: "Success",
+                                text: response.message,
+                                confirmButtonColor: '#10b981',
+                                confirmButtonText: 'Close'
                             });
-                        });
-                    }
-                });
-            }
-
-            function updateTarget(id) {
-                let firstName = $('#target_first_name').val();
-                let lastName = $('#target_last_name').val();
-                let email = $('#target_email').val();
-                let position = $('#target_position').val();
-                let department = $('#target_department').val();
-
-                $.ajax({
-                    url: "{{ route('updateTarget') }}",
-                    type: 'POST',
-                    data: {
-                        id: id,
-                        first_name: firstName,
-                        last_name: lastName,
-                        email: email,
-                        position: position,
-                        department: department,
-                        _token: "{{ csrf_token() }}"
-                    },
-                    success: function(response) {
-                        Swal.fire({
-                            icon: "success",
-                            title: "Success",
-                            text: response.message,
-                            confirmButtonColor: '#10b981',
-                            confirmButtonText: 'Close'
-                        });
-                        $("#error_message_field").hide();
-                        hideModal('add-target-modal');
-                        getTargets();
-                    },
-                    error: function(xhr) {
-                        var errorMessage = JSON.parse(xhr.responseText) ? JSON.parse(xhr.responseText) : xhr
-                            .responseText;
-                        var errors = errorMessage.errors ? errorMessage.errors : errorMessage;
-                        $('#error_message_field').show();
-                        $('#error_message').empty();
-                        $.each(errors, function(field, messages) {
-                            $.each(messages, function(index, message) {
-                                let data = `<li>${message}</li>`;
-                                $('#error_message').append(data);
+                            getTargets();
+                        },
+                        error: function(xhr) {
+                            var errorMessage = JSON.parse(xhr.responseText) ? JSON.parse(xhr
+                                    .responseText) : xhr
+                                .responseText;
+                            var errors = errorMessage.errors ? errorMessage.errors : errorMessage;
+                            $('#error_message_field').show();
+                            $('#error_message').empty();
+                            $.each(errors, function(field, messages) {
+                                $.each(messages, function(index, message) {
+                                    let data = `<li>${message}</li>`;
+                                    $('#error_message').append(data);
+                                });
                             });
-                        });
-                    }
-                });
-            }
+                        }
+                    });
+                }
+            });
+        }
 
-            function deleteTarget(id) {
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: "You won't be able to revert this!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#10b981',
-                    cancelButtonColor: '#d97706',
-                    confirmButtonText: 'Yes, delete it!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        $.ajax({
-                            url: "{{ route('deleteTarget') }}",
-                            type: 'POST',
-                            data: {
-                                id: id,
-                                _token: "{{ csrf_token() }}"
-                            },
-                            success: function(response) {
-                                Swal.fire({
-                                    icon: "success",
-                                    title: "Success",
-                                    text: response.message,
-                                    confirmButtonColor: '#10b981',
-                                    confirmButtonText: 'Close'
-                                });
-                                getTargets();
-                            },
-                            error: function(xhr) {
-                                var errorMessage = JSON.parse(xhr.responseText) ? JSON.parse(xhr
-                                        .responseText) : xhr
-                                    .responseText;
-                                var errors = errorMessage.errors ? errorMessage.errors : errorMessage;
-                                $('#error_message_field').show();
-                                $('#error_message').empty();
-                                $.each(errors, function(field, messages) {
-                                    $.each(messages, function(index, message) {
-                                        let data = `<li>${message}</li>`;
-                                        $('#error_message').append(data);
-                                    });
-                                });
-                            }
-                        });
-                    }
-                });
-            }
+        function showImportTargetModal() {
+            showModal('import-target-modal');
+        }
 
-            function showImportTargetModal() {
-                showModal('import-target-modal');
-            }
-
-            function previewImportTarget() {
-                var formData = new FormData();
-                formData.append('_token', "{{ csrf_token() }}");
-                formData.append('target', $('#targetFile').prop('files')[0]);
-                formData.append('separator', $('#separator').val());
-                $.ajax({
-                    url: "{{ route('previewImportTarget') }}",
-                    type: "POST",
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function(response) {
-                        hideModal('import-target-modal');
-                        showModal('preview-import-target-modal');
-                        $("#target-preview-body").empty();
-                        Object.keys(response.targets).forEach(function(key) {
-                            let target = response.targets[key];
-                            $("#target-preview-body").append(`
-                        <tr class="text-sm font-normal text-gray-900 dark:text-gray-400 bg-white dark:bg-gray-800">
+        function previewImportTarget() {
+            var formData = new FormData();
+            formData.append('_token', "{{ csrf_token() }}");
+            formData.append('target', $('#targetFile').prop('files')[0]);
+            formData.append('separator', $('#separator').val());
+            $.ajax({
+                url: "{{ route('previewImportTarget') }}",
+                type: "POST",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    hideModal('import-target-modal');
+                    showModal('preview-import-target-modal');
+                    $("#target-preview-body").empty();
+                    Object.keys(response.targets).forEach(function(key) {
+                        let target = response.targets[key];
+                        $("#target-preview-body").append(`
+                        <tr class=text-xs md:text-sm font-light text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800">
                             <td class="p-4">${target.first_name}</td>
                             <td class="p-4">${target.last_name}</td>
                             <td class="p-4">${target.email}</td>
@@ -448,58 +449,22 @@
                             <td class="p-4">${target.department}</td>
                         </tr>
                         `);
-                        });
-                    },
-                    error: function(xhr, status, error) {
-                        if (xhr.status == 403 || xhr.status == 400) {
-                            var errorMessage = JSON.parse(xhr.responseText) ? JSON.parse(xhr.responseText) : xhr
-                                .responseText;
-                            console.log(errorMessage);
-                            Swal.fire({
-                                icon: "error",
-                                title: "Oops...",
-                                text: errorMessage.errors[0],
-                                confirmButtonColor: '#ef4444',
-                                confirmButtonText: 'Close'
-
-                            })
-                        } else {
-                            let errorMessage = JSON.parse(xhr.responseText);
-                            swal.fire({
-                                icon: "error",
-                                title: "Oops...",
-                                text: errorMessage.message,
-                                confirmButtonColor: '#ef4444',
-                                confirmButtonText: 'Close'
-                            })
-                        }
-                    }
-                });
-            }
-
-            function importTarget() {
-                var formData = new FormData();
-                formData.append('_token', "{{ csrf_token() }}");
-                formData.append('target', $('#targetFile').prop('files')[0]);
-                formData.append('separator', $('#separator').val());
-                $.ajax({
-                    url: "{{ route('importTarget') }}",
-                    type: "POST",
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function(response) {
+                    });
+                },
+                error: function(xhr, status, error) {
+                    if (xhr.status == 403 || xhr.status == 400) {
+                        var errorMessage = JSON.parse(xhr.responseText) ? JSON.parse(xhr.responseText) : xhr
+                            .responseText;
+                        console.log(errorMessage);
                         Swal.fire({
-                            icon: "success",
-                            title: "Success",
-                            text: response.message,
-                            confirmButtonColor: '#10b981',
+                            icon: "error",
+                            title: "Oops...",
+                            text: errorMessage.errors[0],
+                            confirmButtonColor: '#ef4444',
                             confirmButtonText: 'Close'
-                        });
-                        hideModal('preview-import-target-modal');
-                        getTargets();
-                    },
-                    error: function(xhr, status, error) {
+
+                        })
+                    } else {
                         let errorMessage = JSON.parse(xhr.responseText);
                         swal.fire({
                             icon: "error",
@@ -507,9 +472,45 @@
                             text: errorMessage.message,
                             confirmButtonColor: '#ef4444',
                             confirmButtonText: 'Close'
-                        });
+                        })
                     }
-                });
-            }
-        </script>
-    @endSection
+                }
+            });
+        }
+
+        function importTarget() {
+            var formData = new FormData();
+            formData.append('_token', "{{ csrf_token() }}");
+            formData.append('target', $('#targetFile').prop('files')[0]);
+            formData.append('separator', $('#separator').val());
+            $.ajax({
+                url: "{{ route('importTarget') }}",
+                type: "POST",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Success",
+                        text: response.message,
+                        confirmButtonColor: '#10b981',
+                        confirmButtonText: 'Close'
+                    });
+                    hideModal('preview-import-target-modal');
+                    getTargets();
+                },
+                error: function(xhr, status, error) {
+                    let errorMessage = JSON.parse(xhr.responseText);
+                    swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: errorMessage.message,
+                        confirmButtonColor: '#ef4444',
+                        confirmButtonText: 'Close'
+                    });
+                }
+            });
+        }
+    </script>
+@endSection

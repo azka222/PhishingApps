@@ -29,7 +29,7 @@
                                     class="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-200">Group
                                     Name</label>
                                 <input type="text" id="group_name" name="group_name" placeholder="Enter group name"
-                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-xs md:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
+                                    class="mt-1 bg-gray-100 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-xs md:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
                             </div>
 
                             <div class="col-span-2">
@@ -37,7 +37,7 @@
                                     class="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-200">Group
                                     Description</label>
                                 <textarea id="group_description" name="group_description" rows="4" placeholder="Enter group description"
-                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-xs md:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300"></textarea>
+                                    class="mt-1 bg-gray-100 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-xs md:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300"></textarea>
 
                             </div>
                             <div class="col-span-2 lg:col-span-1">

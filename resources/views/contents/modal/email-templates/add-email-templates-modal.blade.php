@@ -81,7 +81,6 @@
                                     uploaded.</p>
                             </div>
                             <div class="col-span-2" id="attachment-file">
-
                             </div>
                             <div class="col-span-2">
                                 <div id="error_message_field" hidden>
@@ -102,25 +101,16 @@
                                 class="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-200">Email
                                 Body</label>
                             <div class="flex items-center justify-start gap-4 mt-2">
-                                <div class="flex items-center">
-                                    <input checked id="radio-html" type="radio" value="html" name="default-radio"
-                                        onchange="showTextArea('html')"
-                                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                    <label for="radio-html"
-                                        class="ms-2 text-xs md:text-sm font-medium text-gray-900 dark:text-gray-300">HTML</label>
-                                </div>
-                                <div class="flex items-center">
-                                    <input id="radio-text" type="radio" value="plain-text" name="default-radio"
-                                        onchange="showTextArea('text')"
-                                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                    <label for="radio-text"
-                                        class="ms-2 text-xs md:text-sm font-medium text-gray-900 dark:text-gray-300">Plain
-                                        Text</label>
-                                </div>
+                                <select id="email_body" name="email_body" onchange="showTextArea(this.value)"
+                                    class="mt-1 bg-gray-100 border border-gray-300 text-gray-900 text-xs md:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                    <option value="html">HTML</option>
+                                    <option value="text">Plain Text</option>
+                                </select>
                             </div>
                             <div class="mt-7" id="html-body">
                                 <label for="email_html"
-                                    class="block mb-2 text-xs md:text-sm font-medium text-gray-900 dark:text-white">HTML Format
+                                    class="block mb-2 text-xs md:text-sm font-medium text-gray-900 dark:text-white">HTML
+                                    Format
                                 </label>
                                 <textarea id="email_html" rows="9"
                                     class="block p-2.5 w-full text-xs md:text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -128,7 +118,8 @@
                             </div>
                             <div class="mt-7" id="text-body" hidden>
                                 <label for="email_text"
-                                    class="block mb-2 text-xs md:text-sm font-medium text-gray-900 dark:text-white">Plain Text
+                                    class="block mb-2 text-xs md:text-sm font-medium text-gray-900 dark:text-white">Plain
+                                    Text
                                 </label>
                                 <textarea id="email_text" rows="9"
                                     class="block p-2.5 w-full text-xs md:text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"

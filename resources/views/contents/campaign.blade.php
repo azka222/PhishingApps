@@ -2,6 +2,7 @@
 @section('title', 'Campaign')
 @section('content')
     @include('contents.modal.campaign.add-campaign-modal')
+    @include('contents.modal.sending-profile.test-connection')
     <div class=" p-4 w-full flex flex-col h-full min-h-screen  bg-gray-50 dark:bg-gray-800 dark:text-white text-gray-900">
         <div class="">
             <div class="flex p-4 items-center justify-between">
@@ -208,7 +209,7 @@
             setGroupSelection();
         }
 
-        function testConnection() {
+        function testMail() {
             Swal.fire({
                 title: 'Testing...',
                 text: 'Please wait while we test your email profile.',
@@ -219,6 +220,8 @@
             });
 
             let id = $("#campaign_profile").val();
+            let name = $("#test_name").val();
+            let email = $("#test_email").val();
             let timeout = setTimeout(() => {
                 Swal.close();
                 Swal.fire({
@@ -235,6 +238,8 @@
                 type: "POST",
                 data: {
                     id: id,
+                    name: name,
+                    email: email,
                     _token: "{{ csrf_token() }}"
                 },
                 success: function(response) {
@@ -360,19 +365,34 @@
                         campaigns.forEach(function(campaign) {
                             console.log(campaign);
                             let date = new Date(campaign.launch_date);
+                            let formattedStatus = '';
                             let formattedDate =
                                 `${date.toLocaleDateString('id-ID', {
                             day: '2-digit',
                             month: 'long',
                             year: 'numeric'
                         })} ${String(date.getUTCHours()).padStart(2, '0')}:${String(date.getUTCMinutes()).padStart(2, '0')}`;
+
+                            if (campaign.status === 'In progress') {
+                                formattedStatus = `<div class="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300 inline-block">
+                                                In Progress
+                                            </div>`
+                            } else if (campaign.status === 'Queued') {
+                                formattedStatus = `<div class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300 inline-block">
+                                                Scheduled
+                                            </div>`
+                            } else {
+                                formattedStatus = `<div class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300 inline-block">
+                                                Completed
+                                            </div>`
+                            }
                             $("#list-campaign-tbody").append(`
                             <tr class="text-xs md:text-sm font-normal text-gray-900 dark:text-gray-400 bg-white dark:bg-gray-800">
                                 <td class="p-4">
                                    ${campaign.name}
                                 </td>
                                 <td class="p-4">
-                                    ${campaign.status}
+                                    ${formattedStatus}
                                 </td>
                                 <td class="p-4">
                                     ${formattedDate}
@@ -450,6 +470,12 @@
 
         function showDetailCampaign(id) {
             window.location.href = "{{ route('campaignDetailsView', '') }}/" + id;
+        }
+
+        function showTestConnectionModal() {
+            showModal('test-connection-modal');
+            $("#test_name").val('');
+            $("#test_email").val('');
         }
     </script>
 @endSection
