@@ -17,7 +17,7 @@
                                 d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25V9Z"
                                 clip-rule="evenodd" />
                         </svg>
-                        <span class="hidden md:inline ml-2">Create Campaign</span>
+                        <span class="hidden md:inline">Create Campaign</span>
                     </button>
                 </div>
                 @endCanCreateGroup()
@@ -239,6 +239,7 @@
             $("#title-add-group-modal").text('Add Group');
             $("#button-for-group").removeAttr('onclick').attr('onclick', 'createGroup()');
             $("#group_status").prop('disabled', true);
+            $("#admin_company_input_div").show();
             setTargetSelection();
         }
 
@@ -251,6 +252,7 @@
             $("#title-add-group-modal").text('Edit Group');
             $("#button-for-group").removeAttr('onclick').attr('onclick', `updateGroup(${id})`);
             $("#button-for-group").text('Update');
+            $("#admin_company_input_div").hide();
             $("#group_name").val(tempGroup.name);
             $("#group_department").val(tempGroup.department_id);
             $("#group_status").val(tempGroup.status);
@@ -381,6 +383,7 @@
             let department = $("#group_department").val();
             let status = $("#group_status").val();
             let description = $("#group_description").val();
+            let company = $("#admin_company_input").val() ? $("#admin_company_input").val() : '';
             let members = [];
             $(".group-member").each(function() {
                 members.push($(this).attr("value"));
@@ -394,6 +397,7 @@
                     status: status,
                     members: members,
                     description: description,
+                    company: company,
                     _token: "{{ csrf_token() }}"
                 },
                 success: function(response) {

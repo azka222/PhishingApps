@@ -80,6 +80,19 @@
                                 <p class="text-xs mt-2 text-red-700 dark:text-red-500">* Only image files can be
                                     uploaded.</p>
                             </div>
+                            @IsAdmin()
+                            <div class="col-span-2 md:col-span-1" id="admin_company_input_div">
+                                <label for="admin_company_input"
+                                    class="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-200">Company</label>
+                                <select id="admin_company_input" name="admin_company_input"
+                                    class="mt-1 bg-gray-100 border border-gray-300 text-gray-900 text-xs md:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                    <option value="">Select Company</option>
+                                    @foreach ($companies as $company)
+                                        <option value="{{ $company->id }}">{{ $company->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            @endIsAdmin()
                             <div class="col-span-2" id="attachment-file">
                             </div>
                             <div class="col-span-2">

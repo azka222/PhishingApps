@@ -17,7 +17,7 @@
                                 d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25V9Z"
                                 clip-rule="evenodd" />
                         </svg>
-                        <span class="hidden md:inline ml-2">Create Campaign</span>
+                        <span class="hidden md:inline">Create Campaign</span>
                     </button>
                 </div>
                 @endCanCreateCampaign
@@ -371,7 +371,7 @@
                             day: '2-digit',
                             month: 'long',
                             year: 'numeric'
-                        })} ${String(date.getUTCHours()).padStart(2, '0')}:${String(date.getUTCMinutes()).padStart(2, '0')}`;
+                        })} ${String(date.getUTCHours() + 7).padStart(2, '0')}:${String(date.getUTCMinutes()).padStart(2, '0')}`;
 
                             if (campaign.status === 'In progress') {
                                 formattedStatus = `<div class="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300 inline-block">

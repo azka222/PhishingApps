@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Auth\MustVerifyEmail;
@@ -46,7 +45,7 @@ class User extends Authenticatable implements MustVerifyEmailContract
     {
         return [
             'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            'password'          => 'hashed',
         ];
     }
 
@@ -97,10 +96,10 @@ class User extends Authenticatable implements MustVerifyEmailContract
         if ($this->adminCheck()) {
             return true;
         }
-        $role = $this->role;
-        $module = $this->getModule($module);
-        $ability = $this->getAbility($ability);
-        $moduleAbility = ModuleAbility::where('module_id', $module->id)->where('ability_id', $ability->id)->first();
+        $role              = $this->role;
+        $module            = $this->getModule($module);
+        $ability           = $this->getAbility($ability);
+        $moduleAbility     = ModuleAbility::where('module_id', $module->id)->where('ability_id', $ability->id)->first();
         $roleModuleAbility = RoleModuleAbilities::where('role_id', $role->id)->where('module_abilities_id', $moduleAbility->id)->first();
         if ($roleModuleAbility) {
             return true;
@@ -131,7 +130,7 @@ class User extends Authenticatable implements MustVerifyEmailContract
 
     public function accessibleTarget()
     {
-        if ($this->haveAccess('Target', 'read') && !$this->adminCheck()) {
+        if ($this->haveAccess('Target', 'read') && ! $this->adminCheck()) {
             return Target::with('department', 'position')->where('company_id', $this->company_id);
         } else if ($this->adminCheck()) {
             return Target::with('department', 'position');
@@ -155,15 +154,15 @@ class User extends Authenticatable implements MustVerifyEmailContract
 
     public function canCreateGroup()
     {
-        return $this->haveAccess('Group', 'create');
+        return $this->haveAccess('Group', 'create') && !$this->adminCheck();
     }
 
     public function accessibleGroup()
     {
-        if ($this->haveAccess('Group', 'read') && !$this->adminCheck()) {
+        if ($this->haveAccess('Group', 'read') && ! $this->adminCheck()) {
             return Group::with('target.position', 'target.department')->where('company_id', $this->company_id);
         } else if ($this->adminCheck()) {
-            return Group::query();
+            return Group::with('target.position', 'target.department');
         }
     }
 
@@ -204,7 +203,7 @@ class User extends Authenticatable implements MustVerifyEmailContract
 
     public function accessibleSendingProfile()
     {
-        if ($this->haveAccess('Sending Profile', 'read') && !$this->adminCheck()) {
+        if ($this->haveAccess('Sending Profile', 'read') && ! $this->adminCheck()) {
             return SendingProfileCompany::where('company_id', $this->company_id);
         } else if ($this->adminCheck()) {
             return SendingProfileCompany::query();
@@ -233,7 +232,7 @@ class User extends Authenticatable implements MustVerifyEmailContract
 
     public function accessibleEmailTemplate()
     {
-        if ($this->haveAccess('Email Template', 'read') && !$this->adminCheck()) {
+        if ($this->haveAccess('Email Template', 'read') && ! $this->adminCheck()) {
             return EmailTemplateCompany::where('company_id', $this->company_id);
         } else if ($this->adminCheck()) {
             return EmailTemplateCompany::query();
@@ -242,7 +241,7 @@ class User extends Authenticatable implements MustVerifyEmailContract
 
     public function canCreateCampaign()
     {
-        return $this->haveAccess('Campaign', 'create');
+        return $this->haveAccess('Campaign', 'create') && !$this->adminCheck();
     }
 
     public function canDeleteCampaign()
@@ -252,7 +251,7 @@ class User extends Authenticatable implements MustVerifyEmailContract
 
     public function accessibleCampaign()
     {
-        if ($this->haveAccess('Campaign', 'read') && !$this->adminCheck()) {
+        if ($this->haveAccess('Campaign', 'read') && ! $this->adminCheck()) {
             return CompanyCampaign::where('company_id', $this->company_id);
         } else if ($this->adminCheck()) {
             return CompanyCampaign::query();

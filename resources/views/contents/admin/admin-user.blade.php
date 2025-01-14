@@ -4,7 +4,7 @@
     <div class=" p-4 w-full flex flex-col h-full min-h-screen  bg-gray-50 dark:bg-gray-800 dark:text-white text-gray-900">
         <div class="">
             <div class="flex p-4 items-center justify-between">
-                <h1 class="text-3xl font-semibold">Users</h1>
+                <h1 class="text-3xl font-semibold">User List</h1>
             </div>
             <div class="flex flex-col gap-4 p-4">
                 <div class="max-w-full md:max-w-xs">

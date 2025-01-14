@@ -10,6 +10,7 @@
                 <h1 class="md:text-3xl text-xl font-semibold">Company Target</h1>
                 @CanCreateTarget()
                 <div class="flex items-center justify-center flex-row gap-2">
+                    @IsUser()
                     <button onclick="showImportTargetModal()"
                         class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-green-600 rounded-xl hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 flex items-center"
                         title="Import Target">
@@ -22,6 +23,7 @@
 
                         <span class="hidden md:inline">Import Target</span>
                     </button>
+                    @endIsUser()
 
                     <button onclick="showAddTargetModal()"
                         class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 flex items-center"
@@ -263,6 +265,7 @@
             $("#title-add-target-modal").text('Add Target');
             $("#button-for-target").removeAttr('onclick').attr('onclick', 'createTarget()');
             $("#button-for-target").text('Add');
+            $("#admin_company_input_div").show();
             showModal('add-target-modal');
         }
 
@@ -275,6 +278,7 @@
             $("#title-add-target-modal").text('Update Target');
             $("#button-for-target").removeAttr('onclick').attr('onclick', `updateTarget(${id})`);
             $("#button-for-target").text('Update');
+            $("#admin_company_input_div").hide();
             showModal('add-target-modal');
 
         }
@@ -285,6 +289,7 @@
             let email = $('#target_email').val();
             let position = $('#target_position').val();
             let department = $('#target_department').val();
+            let company = $('#admin_company_input').val() == '' ? '' : $('#admin_company_input').val();
 
             $.ajax({
                 url: "{{ route('createTarget') }}",
@@ -295,7 +300,8 @@
                     email: email,
                     position: position,
                     department: department,
-                    _token: "{{ csrf_token() }}"
+                    _token: "{{ csrf_token() }}",
+                    company: company
                 },
                 success: function(response) {
                     Swal.fire({
