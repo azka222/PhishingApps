@@ -46,7 +46,7 @@ Route::post('/reset-password', [AuthenticateController::class, 'resetPasswordSub
 
 // ==================================== if user login success ====================================
 Route::group(['middleware' => ['auth', 'verified']], function () {
-    Route::get('/dashboard', [ViewController::class, 'dashboardView'])->name('dashboard');
+    Route::get('/dashboard', [ViewController::class, 'dashboardView'])->name('dashboard1');
     Route::get('/', [ViewController::class, 'dashboardView'])->name('dashboard');
     Route::get('/logout', [AuthenticateController::class, 'logout'])->name('logout');
     Route::group(['prefix' => 'user-setting'], function () {

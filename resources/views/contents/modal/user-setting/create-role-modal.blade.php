@@ -33,7 +33,7 @@
 
 
                     @foreach ($modules as $module)
-                        <div class="col-span-1 bg-gray-100 dark:bg-gray-600 rounded-lg p-2 my-2">
+                        <div class="col-span-2 md:col-span-1 bg-gray-100 dark:bg-gray-600 rounded-lg p-2 my-2">
                             <div class="flex items-center justify-between">
                                 <label for=""
                                     class="mb-2 text-xs md:text-sm font-medium text-gray-700 dark:text-gray-200">{{ $module['module_name'] }}</label>
