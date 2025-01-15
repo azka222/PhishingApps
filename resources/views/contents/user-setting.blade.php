@@ -6,11 +6,11 @@
 @include('contents.modal.user-setting.create-role-modal')
 
 @section('content')
-    <div class="flex justify-center h-screen pt-28 pe-4 ps-4 bg-gray-50 dark:bg-gray-800">
-        <div class="w-4/5 h-4/5 p-4 grid grid-cols-3 bg-gray-200 dark:bg-gray-600 rounded-xl">
-            <div class="col-span-1 border-e-2 border-e-gray-900 dark:border-e-gray-100 pe-2">
+    <div class="flex justify-center h-screen pt-28 pe-4 ps-4 dark:bg-gray-800">
+        <div class="w-4/5 h-4/5 p-4 grid grid-cols-3 gap-4 bg-white dark:bg-gray-800 rounded-xl">
+            <div class="col-span-3 lg:col-span-1 pe-2">
                 <div id="default-sidebar" class="" aria-label="Sidebar">
-                    <div class="p-4 overflow-y-auto ">
+                    <div class="overflow-y-auto ">
                         <div class="mb-2">
                             <div id="button-setting-profile" onclick="handleSidebar('profile');getProfile()"
                                 class="side-button flex items-center p-2 rounded-lg">
@@ -81,30 +81,30 @@
                     </div>
                 </div>
             </div>
-            <div class="col-span-2 ps-2">
+            <div class="col-span-3 lg:col-span-2 p-4 bg-gray-100 dark:bg-gray-600 rounded-xl">
                 <fieldset id="content-profile" class="content-user-setting p-4">
-                    <div class="w-full bg-gray-200 dark:bg-gray-600 rounded-xl">
+                    <div class="w-full bg-gray-100 dark:bg-gray-600 rounded-xl">
                         <div class="flex flex-col gap-4">
-                            <div class="p-4 bg-gray-300 dark:bg-gray-700 rounded-xl">
+                            <div class="p-4 bg-gray-100 dark:bg-gray-700 rounded-xl">
                                 <div class="flex flex-row justify-between">
                                     <div class="flex flex-row items-center justify-start ps-4 gap-8 ">
-                                        <div class="h-full flex items-center">
+                                        <div class="h-full flex items-center hidden md:flex">
                                             <img src="{{ asset('image/user.png') }}" class="w-20 h-20 rounded-full">
                                         </div>
                                         <div class="h-full flex gap-4 items-center">
                                             <div>
-                                                <h1 id="username" class="text-xl font-semibold dark:text-white">User Name
+                                                <h1 id="username" class="text-xs md:text-sm font-semibold dark:text-white">User Name
                                                 </h1>
-                                                <p id="company_display" class="text-sm dark:text-white">Company Name</p>
+                                                <p id="company_display" class="text-xs md:text-sm dark:text-white">Company Name</p>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="flex items-center p-4">
                                         <button onclick="showEditProfileModal()"
                                             class="flex items-center p-2 rounded-lg  bg-blue-600 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-800 text-gray-900 dark:text-white">
-                                            <span class="ms-2 me-2 text-sm text-white">Edit</span>
+                                            <span class="hidden lg:flex ms-2 me-2 text-xs md:text-sm text-white">Edit</span>
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                                                class="size-4">
+                                                class="w-4 h-4">
                                                 <path
                                                     d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32l8.4-8.4Z" />
                                                 <path
@@ -114,39 +114,39 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="w-full h-4/5 bg-gray-300 dark:bg-gray-700 rounded-xl">
+                            <div class="w-full h-4/5 bg-gray-100 dark:bg-gray-700 rounded-xl">
                                 <div class="grid grid-cols-2 p-4 gap-4">
                                     <div class="ps-2 pt-2 col-span-1">
-                                        <h1 class="text-md dark:text-white font-semibold">First Name</h1>
-                                        <h2 id="first_name_display" class="text-sm pt-2 dark:text-white"></h2>
+                                        <h1 class="text-xs md:text-sm dark:text-white font-semibold">First Name</h1>
+                                        <h2 id="first_name_display" class="text-xs md:text-sm pt-2 dark:text-white"></h2>
                                     </div>
                                     <div class="ps-2 pt-2 col-span-1">
-                                        <h1 class="text-md dark:text-white font-semibold">Last Name</h1>
-                                        <h2 id="last_name_display" class="text-sm pt-2 dark:text-white"></h2>
+                                        <h1 class="text-xs md:text-sm dark:text-white font-semibold">Last Name</h1>
+                                        <h2 id="last_name_display" class="text-xs md:text-sm pt-2 dark:text-white"></h2>
                                     </div>
                                     <div class="ps-2 pt-2 col-span-1">
-                                        <h1 class="text-md dark:text-white font-semibold">Phone Number</h1>
-                                        <h2 id="phone_number_display" class="text-sm pt-2 dark:text-white"></h2>
+                                        <h1 class="text-xs md:text-sm dark:text-white font-semibold">Phone Number</h1>
+                                        <h2 id="phone_number_display" class="text-xs md:text-sm pt-2 dark:text-white"></h2>
                                     </div>
                                     <div class="ps-2 pt-2 col-span-1 mb-4">
-                                        <h1 class="text-md dark:text-white font-semibold">Gender</h1>
-                                        <h2 id="gender_display" class="text-sm pt-2 dark:text-white"></h2>
+                                        <h1 class="text-xs md:text-sm dark:text-white font-semibold">Gender</h1>
+                                        <h2 id="gender_display" class="text-xs md:text-sm pt-2 dark:text-white"></h2>
                                     </div>
 
                                     <div class="relative flex items-center justify-center col-span-2">
                                         <hr class="w-full border-gray-400 dark:border-gray-500">
                                         <span
-                                            class="absolute px-3 text-gray-700 rounded-full bg-gray-200 dark:bg-gray-600 dark:text-white">Additional
+                                            class="absolute px-3 text-gray-700 rounded-full bg-gray-100 dark:bg-gray-600 dark:text-white">Additional
                                             Info</span>
                                     </div>
 
                                     <div class="ps-2 pt-4 col-span-1">
-                                        <h1 class="text-md dark:text-white font-semibold">Company Address</h1>
-                                        <h2 id="address_display" class="text-sm pt-2 dark:text-white">Not Set</h2>
+                                        <h1 class="text-xs md:text-sm dark:text-white font-semibold">Company Address</h1>
+                                        <h2 id="address_display" class="text-xs md:text-sm pt-2 dark:text-white">Not Set</h2>
                                     </div>
                                     <div class="ps-2 pt-4 col-span-1">
-                                        <h1 class="text-md dark:text-white font-semibold">Company Type</h1>
-                                        <h2 id="company_type_display" class="text-sm pt-2 dark:text-white">Not Set</h2>
+                                        <h1 class="text-xs md:text-sm dark:text-white font-semibold">Company Type</h1>
+                                        <h2 id="company_type_display" class="text-xs md:text-sm pt-2 dark:text-white">Not Set</h2>
                                     </div>
                                 </div>
                             </div>
@@ -157,12 +157,12 @@
 
                 </fieldset>
                 <fieldset id="content-security" class="content-user-setting p-4">
-                    <div class="w-full bg-gray-300 dark:bg-gray-700 rounded-xl p-4">
-                        <h1 class="text-xl font-semibold dark:text-white">Security</h1>
-                        <p class="text-sm dark:text-white">This is the security setting page</p>
+                    <div class="w-full bg-gray-100 dark:bg-gray-700 rounded-xl p-4">
+                        <h1 class="text-xs  md:text-sm font-semibold dark:text-white">Security</h1>
+                        <p class="text-xs md:text-sm dark:text-white">This is the security setting page</p>
 
                         <div class="mt-4 mb-4">
-                            <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">New
+                            <label for="password" class="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-300">New
                                 Password</label>
                             <div class="flex pb-4 items-center gap-2">
                                 <input type="password" name="password" id="password" disabled
@@ -200,19 +200,19 @@
                 </fieldset>
                 @IsCompanyOwner()
                 <fieldset id="content-company" class="content-user-setting p-4">
-                    <div class="w-full bg-gray-300 dark:bg-gray-700 rounded-xl p-4">
-                        <h1 class="text-xl font-semibold dark:text-white">Company</h1>
-                        <p class="text-sm dark:text-white">This is the company setting page</p>
+                    <div class="w-full bg-gray-100 dark:bg-gray-700 rounded-xl p-4">
+                        <h1 class="text-xs  md:text-sm font-semibold dark:text-white">Company</h1>
+                        <p class="text-xs md:text-sm dark:text-white">This is the company setting page</p>
                     </div>
-                    <div class="w-full mt-4 bg-gray-300 dark:bg-gray-700 rounded-xl ">
+                    <div class="w-full mt-4 bg-gray-100 dark:bg-gray-700 rounded-xl ">
                         <div class="grid grid-cols-2 gap-4 p-4">
                             <div class="ps-2 pt-2 col-span-2">
                                 <div class="flex flex-row justify-between">
-                                    <div id="company-name-display" class="text-xl dark:text-white font-semibold">Company
+                                    <div id="company-name-display" class="text-xs  md:text-sm dark:text-white font-semibold">Company
                                         Name</div>
                                     <button onclick="showEditCompanyModal()"
                                         class="flex items-center p-2 rounded-lg  bg-blue-600 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-800 text-gray-900 dark:text-white">
-                                        <span class="ms-2 me-2 text-sm text-white">Edit</span>
+                                        <span class="ms-2 me-2 text-xs md:text-sm text-white">Edit</span>
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
                                             class="size-4">
                                             <path
@@ -227,40 +227,40 @@
                                 <hr class="w-full border-gray-400 dark:border-gray-500">
                             </div>
                             <div class="ps-2 pt-2 col-span-1">
-                                <h1 class="text-md dark:text-white font-semibold">Company Email</h1>
-                                <h2 id="company_email_display" class="text-sm pt-2 dark:text-white">Not Set</h2>
+                                <h1 class="text-xs md:text-sm dark:text-white font-semibold">Company Email</h1>
+                                <h2 id="company_email_display" class="text-xs md:text-sm pt-2 dark:text-white">Not Set</h2>
                             </div>
                             <div class="ps-2 pt-2 col-span-1">
-                                <h1 class="text-md dark:text-white font-semibold">Owner</h1>
-                                <h2 id="company_owner_display" class="text-sm pt-2 dark:text-white">Not Set</h2>
+                                <h1 class="text-xs md:text-sm dark:text-white font-semibold">Owner</h1>
+                                <h2 id="company_owner_display" class="text-xs md:text-sm pt-2 dark:text-white">Not Set</h2>
                             </div>
                             <div class="ps-2 pt-2 col-span-1">
-                                <h1 class="text-md dark:text-white font-semibold">Allowed User</h1>
-                                <h2 id="company_user_display" class="text-sm pt-2 dark:text-white">Not Set</h2>
+                                <h1 class="text-xs md:text-sm dark:text-white font-semibold">Allowed User</h1>
+                                <h2 id="company_user_display" class="text-xs md:text-sm pt-2 dark:text-white">Not Set</h2>
                             </div>
                             <div class="ps-2 pt-2 col-span-1">
-                                <h1 class="text-md dark:text-white font-semibold">Address</h1>
-                                <h2 id="company_address_display" class="text-sm pt-2 dark:text-white">Not Set</h2>
+                                <h1 class="text-xs md:text-sm dark:text-white font-semibold">Address</h1>
+                                <h2 id="company_address_display" class="text-xs md:text-sm pt-2 dark:text-white">Not Set</h2>
                             </div>
                             <div class="ps-2 pt-2 col-span-1">
-                                <h1 class="text-md dark:text-white font-semibold">Status</h1>
-                                <h2 id="company_status_display" class="text-sm pt-2 dark:text-white">Not Set</h2>
+                                <h1 class="text-xs md:text-sm dark:text-white font-semibold">Status</h1>
+                                <h2 id="company_status_display" class="text-xs md:text-sm pt-2 dark:text-white">Not Set</h2>
                             </div>
                             <div class="ps-2 pt-2 col-span-1">
-                                <h1 class="text-md dark:text-white font-semibold">Visibility</h1>
-                                <h2 id="company_visibility_display" class="text-sm pt-2 dark:text-white">Not Set</h2>
+                                <h1 class="text-xs md:text-sm dark:text-white font-semibold">Visibility</h1>
+                                <h2 id="company_visibility_display" class="text-xs md:text-sm pt-2 dark:text-white">Not Set</h2>
                             </div>
                         </div>
                     </div>
                 </fieldset>
                 <fieldset id="content-user" class="content-user-setting p-4">
-                    <div class="w-full bg-gray-300 dark:bg-gray-700 rounded-xl p-4">
-                        <h1 class="text-xl font-semibold dark:text-white">User</h1>
-                        <p class="text-sm dark:text-white">This is the user setting page</p>
+                    <div class="w-full bg-gray-100 dark:bg-gray-700 rounded-xl p-4">
+                        <h1 class="text-xs  md:text-sm font-semibold dark:text-white">User</h1>
+                        <p class="text-xs md:text-sm dark:text-white">This is the user setting page</p>
                     </div>
-                    <div class="w-full mt-4 bg-gray-300 dark:bg-gray-700 rounded-xl ">
+                    <div class="w-full mt-4 bg-gray-100 dark:bg-gray-700 rounded-xl ">
                         <div class="relative overflow-x-auto">
-                            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                            <table class="w-full text-xs md:text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                                 <thead
                                     class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                     <tr>
@@ -288,21 +288,21 @@
                     </div>
                 </fieldset>
                 <fieldset id="content-role" class="content-user-setting p-4">
-                    <div class="w-full bg-gray-300 dark:bg-gray-700 rounded-xl p-4 flex items-center justify-between">
+                    <div class="w-full bg-gray-100 dark:bg-gray-700 rounded-xl p-4 flex items-center justify-between">
                         <div>
-                            <h1 class="text-xl font-semibold dark:text-white">Role</h1>
-                            <p class="text-sm dark:text-white">This is the role setting page</p>
+                            <h1 class="text-xs  md:text-sm font-semibold dark:text-white">Role</h1>
+                            <p class="text-xs md:text-sm dark:text-white">This is the role setting page</p>
                         </div>
                         <div>
                             <button onclick="showAddRoleModal()"
-                                class="mx-4 bg-blue-600 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-800 text-white text-sm p-2 rounded-lg mt-1">
+                                class="mx-4 bg-blue-600 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-800 text-white text-xs md:text-sm p-2 rounded-lg mt-1">
                                 Add Role
                             </button>
                         </div>
                     </div>
-                    <div class="w-full mt-4 bg-gray-300 dark:bg-gray-700 rounded-xl ">
+                    <div class="w-full mt-4 bg-gray-100 dark:bg-gray-700 rounded-xl ">
                         <div class="relative overflow-x-auto">
-                            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                            <table class="w-full text-xs md:text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                                 <thead
                                     class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                     <tr>
@@ -335,7 +335,7 @@
     <script>
         const active = ' bg-blue-600 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-800 text-white';
         const inactive =
-            ' bg-gray-300 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-700 text-gray-900 dark:text-white';
+            ' bg-gray-100 dark:bg-gray-700 hover:bg-white dark:hover:bg-gray-700 text-gray-900 dark:text-white';
 
         let profile = null;
         let company = null;
