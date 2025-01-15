@@ -5,7 +5,7 @@
         <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
             <!-- Modal header -->
             <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                <h3 class="text-xs md:text-lg font-semibold text-gray-900 dark:text-white">
                     Edit Company
                 </h3>
                 <button type="button" onclick="hideModal('edit-company-modal')"
@@ -22,50 +22,57 @@
             <!-- Modal body -->
             <div class="p-4 md:p-5 space-y-4">
                 <div class="grid grid-cols-2 gap-4">
-                    <div class="col-span-1">
-                        <label for="company_name" class="block text-sm font-medium text-gray-700 dark:text-gray-200">Company
+                    <div class="col-span-2 md:col-span-1">
+                        <label for="company_name"
+                            class="block text-xs md:text-sm  text-gray-700 dark:text-gray-200">Company
                             Name</label>
                         <input type="text" id="company_name" name="company_name"
-                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
+                            class="mt-1 bg-gray-100 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-xs md:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
                     </div>
-                    <div class="col-span-1">
-                        <label for="company_email" class="block text-sm font-medium text-gray-700 dark:text-gray-200">Company
+                    <div class="col-span-2 md:col-span-1">
+                        <label for="company_email"
+                            class="block text-xs md:text-sm  text-gray-700 dark:text-gray-200">Company
                             Email</label>
                         <input type="email" id="company_email" name="company_email" disabled
-                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
+                            class="mt-1 bg-gray-100 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-xs md:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
                     </div>
-                <div class="col-span-1">
-                    <label for="max_account" class="block text-sm font-medium text-gray-700 dark:text-gray-200">Max Account</label>
-                    <input type="number" id="company_max_account" name="max_account"
-                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
-                </div>
-               
-                <div class="col-span-1">
-                    <label for="owner" class="block text-sm font-medium text-gray-700 dark:text-gray-200">Owner</label>
-                    <input type="text" id="company_owner" name="owner" disabled
-                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
-                </div>
-                <div class="col-span-1">
-                    <label for="status_id" class="block text-sm font-medium text-gray-700 dark:text-gray-200">Status</label>
-                    <select id="company_status" name="status_id" disabled
-                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
-                        <option value="1">Active</option>
-                        <option value="2">Inactive</option>
-                    </select>
-                </div>
-                <div class="col-span-1">
-                    <label for="visibility_id" class="block text-sm font-medium text-gray-700 dark:text-gray-200">Visibility</label>
-                    <select id="company_visibility" name="visibility_id"
-                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
-                        <option value="1">Public</option>
-                        <option value="2">Private</option>
-                    </select>
-                </div>
-                <div class="col-span-2">
-                    <label for="company_address" class="block text-sm font-medium text-gray-700 dark:text-gray-200">Company Address</label>
-                    <textarea id="company_address" name="company_address" rows="4"
-                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300"></textarea>
-                </div>
+                    <div class="col-span-2 md:col-span-1">
+                        <label for="max_account" class="block text-xs md:text-sm  text-gray-700 dark:text-gray-200">Max
+                            Account</label>
+                        <input type="number" id="company_max_account" name="max_account"
+                            class="mt-1 bg-gray-100 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-xs md:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
+                    </div>
+
+                    <div class="col-span-2 md:col-span-1">
+                        <label for="owner"
+                            class="block text-xs md:text-sm  text-gray-700 dark:text-gray-200">Owner</label>
+                        <input type="text" id="company_owner" name="owner" disabled
+                            class="mt-1 bg-gray-100 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-xs md:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
+                    </div>
+                    <div class="col-span-2 md:col-span-1">
+                        <label for="status_id"
+                            class="block text-xs md:text-sm  text-gray-700 dark:text-gray-200">Status</label>
+                        <select id="company_status" name="status_id" disabled
+                            class="mt-1 bg-gray-100 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-xs md:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
+                            <option value="1">Active</option>
+                            <option value="2">Inactive</option>
+                        </select>
+                    </div>
+                    <div class="col-span-2 md:col-span-1">
+                        <label for="visibility_id"
+                            class="block text-xs md:text-sm  text-gray-700 dark:text-gray-200">Visibility</label>
+                        <select id="company_visibility" name="visibility_id"
+                            class="mt-1 bg-gray-100 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-xs md:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
+                            <option value="1">Public</option>
+                            <option value="2">Private</option>
+                        </select>
+                    </div>
+                    <div class="col-span-2">
+                        <label for="company_address"
+                            class="block text-xs md:text-sm  text-gray-700 dark:text-gray-200">Company Address</label>
+                        <textarea id="company_address" name="company_address" rows="4"
+                            class="mt-1 bg-gray-100 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-xs md:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300"></textarea>
+                    </div>
 
                 </div>
             </div>
@@ -73,10 +80,10 @@
             <div
                 class="flex items-center justify-end p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600 gap-2">
                 <button data-modal-hide="static-modal" type="button" onclick="hideModal('edit-company-modal')"
-                    class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Close</button>
+                    class="py-2.5 px-5 ms-3 text-sm  text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Close</button>
                 <button data-modal-hide="static-modal" type="button" onclick="submitEditCompanyModal()"
-                    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Edit
-                    </button>
+                    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300  rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Edit
+                </button>
             </div>
         </div>
     </div>

@@ -266,7 +266,27 @@
                         Object.keys(sendingProfiles).forEach(function(key) {
                             let button = '';
                             let sendingProfile = sendingProfiles[key];
+                            let color = '';
+                            let text = '';
+                            switch (sendingProfile.ignore_cert_errors) {
+                                case false:
+                                    color = 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300';
+                                    text = 'False';
+                                    break;
+                                case true:
+                                    color =
+                                        'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300';
+                                    text = 'True';
+                                    break;
+                                default:
+                                    color =
+                                        'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300';
+                                    text = 'Not Set';
 
+                            }
+                            let certError = `<div class="${color} text-xs font-medium me-2 px-2.5 py-0.5 rounded inline-block">
+                                                ${text}
+                                            </div>`;
                             if ($("#status").val() == 1) {
                                 button =
                                     `
@@ -286,7 +306,7 @@
                             <td class="p-4">${sendingProfile.username ?? 'Not Set'}</td>
                             <td class="p-4">${sendingProfile.host}</td>
                             <td class="p-4">${sendingProfile.from_address}</td>
-                            <td class="p-4">${sendingProfile.ignore_cert_errors}</td>
+                            <td class="p-4">${certError}</td>
                             @CanModifySendingProfile()
                             <td class="p-4 flex gap-2">
                                 @CanUpdateSendingProfile
@@ -333,7 +353,8 @@
             $("#admin_company_input_div").hide();
             $("#http-header-list").empty();
             headers.forEach(function(header) {
-                let id = $("#http-header-list").children().last().attr('value') ? parseInt($("#http-header-list")
+                let id = $("#http-header-list").children().last().attr('value') ? parseInt($(
+                        "#http-header-list")
                     .children()
                     .last().attr('value')) + 1 : 1;
                 let html = ` <div class="http-header flex items-center justify-between mb-4 shadow-md p-3 rounded-xl"

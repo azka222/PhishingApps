@@ -30,7 +30,7 @@
                                     Name</label>
                                 <input type="text" id="campaign_name" name="campaign_name"
                                     placeholder="Enter campaign name"
-                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-xs md:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
+                                    class="mt-1 block bg-gray-100 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-xs md:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
                             </div>
                             <div class="col-span-2 lg:col-span-1">
                                 <label for="campaign_template"
@@ -55,14 +55,14 @@
                                     class="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-200">Campaign Launch
                                     Date</label>
                                 <input type="datetime-local" id="campaign_launch_date" name="campaign_launch_date"
-                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-xs md:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
+                                    class="bg-gray-100 mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-xs md:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
                             </div>
                             <div class="col-span-2 lg:col-span-1">
                                 <label for="campaign_end_date"
                                     class="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-200">Campaign End
                                     Date</label>
                                 <input type="datetime-local" id="campaign_end_date" name="campaign_end_date"
-                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-xs md:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
+                                    class="bg-gray-100 mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-xs md:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
                             </div>
                             <div class="col-span-2 lg:col-span-1">
                                 <label for="campaign_status"
@@ -78,7 +78,7 @@
                                     class="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-200">URL
                                 </label>
                                 <input type="text" id="campaign_url" name="campaign_url" placeholder="Enter url"
-                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-xs md:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
+                                    class="bg-gray-100 mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-xs md:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
                             </div>
                             <div class="col-span-2">
                                 <div class="flex flex-row items-end justify-between gap-4">
