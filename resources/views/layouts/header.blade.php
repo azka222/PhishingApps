@@ -58,6 +58,7 @@
                         <div class="font-medium ">{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}</div>
                         <div class="truncate text-xs pb-2">{{ Auth::user()->email }}</div>
                     </div>
+                    @IsUser()
                     <ul class=" text-sm text-gray-700 dark:text-gray-200"
                         aria-labelledby="dropdownInformdropdownAvatarNameButtonationButton">
                         <li>
@@ -65,6 +66,7 @@
                                 class="block p-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Settings</a>
                         </li>
                     </ul>
+                    @endIsUser()
                     <div class="">
                         <a href="{{ route('logout') }}"
                             class="block p-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign
@@ -325,7 +327,7 @@
                 @endIsAdmin()
             </div>
 
-          
+
 
 
         </div>
