@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', 'Dashboard')
+@section('title', 'Fischsim - Dashboard')
 
 @section('content')
 <div class="container">

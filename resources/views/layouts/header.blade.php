@@ -58,16 +58,16 @@
                         <div class="font-medium ">{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}</div>
                         <div class="truncate text-xs pb-2">{{ Auth::user()->email }}</div>
                     </div>
-                    <ul class="py-2 px-2 text-sm text-gray-700 dark:text-gray-200"
+                    <ul class=" text-sm text-gray-700 dark:text-gray-200"
                         aria-labelledby="dropdownInformdropdownAvatarNameButtonationButton">
                         <li>
                             <a href="{{ route('userSettingView') }}"
-                                class="block py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Settings</a>
+                                class="block p-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Settings</a>
                         </li>
                     </ul>
-                    <div class="py-2 px-2">
+                    <div class="">
                         <a href="{{ route('logout') }}"
-                            class="block py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign
+                            class="block p-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign
                             out</a>
                     </div>
                 </div>
@@ -93,7 +93,7 @@
                 <div class="flex justify-end">
                     <button
                         class="w-full px-3 py-2 text-xs font-medium text-left 
-                               {{ $dashboard ? 'border-2 dark:text-white text-black border-blue-500 shadow-blue-500/50 lg:dark:bg-gray-800 dark:bg-gray-800 dark:border-blue-500' : 'border-gray-700 text-gray-900 dark:text-white ' }} 
+                               {{ $dashboard ? 'dark:text-blue-500 text-blue-500  shadow-blue-500/50 lg:dark:bg-gray-800 dark:bg-gray-800' : 'border-gray-700 text-gray-900 dark:text-white ' }} 
                                rounded-xl "
                         type="button">
                         <a href="{{ url('/dashboard') }}">Dashboard</a>
@@ -167,7 +167,7 @@
                     <button id="dropdownHoverButton" data-dropdown-toggle="hoverTargetGroup"
                         data-dropdown-trigger="click"
                         class="w-full px-3 py-1 text-xs font-medium text-left 
-                               {{ $user ? 'border-2 dark:text-white text-black border-blue-500 shadow-blue-500/50 lg:dark:bg-gray-800 dark:bg-gray-800 dark:border-blue-500' : 'border-gray-700 text-gray-900 dark:text-white ' }} 
+                               {{ $user ? 'dark:text-blue-500 text-blue-500  shadow-blue-500/50 lg:dark:bg-gray-800 dark:bg-gray-800' : 'border-gray-700 text-gray-900 dark:text-white ' }} 
                                rounded-xl "
                         type="button">
                         <span>Target</span>
@@ -205,7 +205,7 @@
                 <div class="flex justify-end">
                     <button id="dropdownHoverButton2" data-dropdown-toggle="hoverAttribute"
                         data-dropdown-trigger="click"
-                        class="w-full px-3 py-2 text-xs font-medium text-left  {{ $attribute ? 'border-2 dark:text-white text-black border-blue-500 shadow-blue-500/50 lg:dark:bg-gray-800 dark:bg-gray-800 dark:border-blue-500' : 'border-gray-700 text-gray-900 dark:text-white ' }} rounded-xl "
+                        class="w-full px-3 py-2 text-xs font-medium text-left  {{ $attribute ? 'dark:text-blue-500 text-blue-500  shadow-blue-500/50 lg:dark:bg-gray-800 dark:bg-gray-800' : 'border-gray-700 text-gray-900 dark:text-white ' }} rounded-xl "
                         type="button">
                         <span>Attribute</span>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
@@ -260,7 +260,7 @@
                 <div class="flex justify-end">
                     <button
                         class="w-full px-3 py-1 text-xs font-medium text-left 
-                               {{ $campaign ? 'border-2 dark:text-white text-black border-blue-500 shadow-blue-500/50 lg:dark:bg-gray-800 dark:bg-gray-800 dark:border-blue-500' : 'border-gray-700 text-gray-900 dark:text-white ' }} 
+                               {{ $campaign ? 'dark:text-blue-500 text-blue-500  shadow-blue-500/50 lg:dark:bg-gray-800 dark:bg-gray-800' : 'border-gray-700 text-gray-900 dark:text-white ' }} 
                                rounded-xl "
                         type="button">
                         <a href="{{ url('/campaigns') }}">Campaign</a>
@@ -305,7 +305,7 @@
                 <div>
                     <button id="dropdownHoverButton3" data-dropdown-toggle="hoverAdminGroup"
                         data-dropdown-trigger="click"
-                        class="w-full px-3 py-2 text-xs font-medium text-left  {{ $admin ? 'border-2 dark:text-white text-black border-blue-500 shadow-blue-500/50 lg:dark:bg-gray-800 dark:bg-gray-800 dark:border-blue-500' : 'border-gray-700 text-gray-900 dark:text-white ' }} rounded-xl "
+                        class="w-full px-3 py-2 text-xs font-medium text-left  {{ $admin ? 'dark:text-blue-500 text-blue-500  shadow-blue-500/50 lg:dark:bg-gray-800 dark:bg-gray-800' : 'border-gray-700 text-gray-900 dark:text-white ' }} rounded-xl "
                         type="button">Admin
                     </button>
                 </div>
@@ -325,32 +325,7 @@
                 @endIsAdmin()
             </div>
 
-            <div class="fixed top-16 right-4 z-50 flex flex-col gap-2 bg-white dark:bg-gray-800 rounded-md shadow-lg p-4 w-64 hidden"
-                id="mobileDropdown">
-                <a href="{{ url('/dashboard') }}" class="block px-4 py-2 text-sm text-gray-900 dark:text-white">
-                    Dashboard
-                </a>
-                <a href="{{ url('/target') }}" class="block px-4 py-2 text-sm text-gray-900 dark:text-white">
-                    Target
-                </a>
-                <a href="{{ url('/groups') }}" class="block px-4 py-2 text-sm text-gray-900 dark:text-white">
-                    Groups
-                </a>
-                <a href="{{ url('/sending-profile') }}"
-                    class="block px-4 py-2 text-sm text-gray-900 dark:text-white">
-                    Sending Profile
-                </a>
-                <a href="{{ url('/email-templates') }}"
-                    class="block px-4 py-2 text-sm text-gray-900 dark:text-white">
-                    Email Template
-                </a>
-                <a href="{{ url('/landing-page') }}" class="block px-4 py-2 text-sm text-gray-900 dark:text-white">
-                    Landing Page
-                </a>
-                <a href="{{ url('/campaigns') }}" class="block px-4 py-2 text-sm text-gray-900 dark:text-white">
-                    Campaign
-                </a>
-            </div>
+          
 
 
         </div>

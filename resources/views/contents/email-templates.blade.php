@@ -1,5 +1,5 @@
 @extends('layouts.master')
-@section('title', 'Email Template')
+@section('title', 'Fischsim - Email Template')
 @section('content')
     @include('contents.modal.email-templates.add-email-templates-modal')
     <div class=" p-4 w-full flex flex-col h-full min-h-screen  bg-gray-50 dark:bg-gray-800 dark:text-white text-gray-900">
