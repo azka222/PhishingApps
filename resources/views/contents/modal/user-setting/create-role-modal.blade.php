@@ -33,19 +33,19 @@
 
 
                     @foreach ($modules as $module)
-                        <div class="col-span-2 md:col-span-1 bg-gray-100 dark:bg-gray-600 rounded-lg p-2 my-2">
-                            <div class="flex items-center justify-between">
+                        <div class="col-span-2 lg:col-span-1 bg-gray-100 dark:bg-gray-600 rounded-lg p-2 my-2">
+                            <div class="flex items-center justify-center">
                                 <label for=""
-                                    class="mb-2 text-xs md:text-sm font-medium text-gray-700 dark:text-gray-200">{{ $module['module_name'] }}</label>
+                                    class="mb-2 text-xs md:text-sm font-bold text-gray-700 dark:text-gray-200">{{ $module['module_name'] }}</label>
                             </div>
-                            <div class="grid-grid-cols-4 flex items-center justify-start gap-8">
+                            <div class="grid grid-cols-2 md:grid-cols-4 p-2 items-center dark:bg-gray-800 rounded-lg bg-white gap-2 md:gap-8">
                                 @foreach ($module['abilities'] as $item)
-                                    <div class="col flex items-center mb-4 access-role-checkbox">
+                                    <div class="col-span-1 flex items-center mb-4 access-role-checkbox">
                                         <input id="access-{{ $item['id_module_ability'] }}" type="checkbox"
                                             data-value="{{ $item['id_module_ability'] }}"
                                             class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                         <label for="default-checkbox"
-                                            class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{ $item['name'] }}</label>
+                                            class="ms-2 text-sm font-light text-gray-900 dark:text-gray-300">{{ $item['name'] }}</label>
                                     </div>
                                 @endforeach
                             </div>

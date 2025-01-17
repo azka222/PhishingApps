@@ -1,5 +1,5 @@
 @extends('layouts.master-login')
-@section('title', 'Register')
+@section('title', 'Fischsim - Register')
 @section('content')
     <div class="grid grid-cols-3 bg-darkerBlue">
         <fieldset id="register" class="lg:col-span-2 col-span-3" hidden>

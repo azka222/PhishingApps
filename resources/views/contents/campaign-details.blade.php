@@ -1,5 +1,5 @@
 @extends('layouts.master')
-@section('title', 'Campaign Details')
+@section('title', 'Fischsim - Campaign Details')
 @section('content')
     <div class=" p-4 w-full flex flex-col h-full min-h-screen  bg-gray-50 dark:bg-gray-800 dark:text-white text-gray-900">
         <div class="">
@@ -97,7 +97,8 @@
                             id="numberLastItem">0</span></span> of
                     <span id="totalTemplatesCount" class="font-semibold text-gray-900 dark:text-white">0</span>
                 </span>
-                <ul id="page-button-campaign-details" class="inline-flex space-x-2 rtl:space-x-reverse text-xs md:text-sm h-8">
+                <ul id="page-button-campaign-details"
+                    class="inline-flex space-x-2 rtl:space-x-reverse text-xs md:text-sm h-8">
 
                 </ul>
             </nav>
@@ -176,7 +177,7 @@
                         }
                         let reportedColor = reported ? 'bg-red-200 dark:bg-red-500' : '';
                         let reportedText = reported ? 'Reported' : 'Not Reported';
-                        let html = `<tr class="text-xs md:text-sm font-normal text-gray-900 dark:text-gray-400 bg-white dark:bg-gray-800">
+                        let html = `<tr class="text-xs md:text-sm font-light text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800">
                             <td class="p-4">
                                 ${result.first_name}
                             </td>
@@ -214,7 +215,7 @@
                     $("#numberLastItem").text(
                         (page - 1) * 5 + response.paginated_results.length
                     );
-                    $("#totalTemplatesCount").text(response.pagination.total_results );
+                    $("#totalTemplatesCount").text(response.pagination.total_results);
                 }
 
             })
