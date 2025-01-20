@@ -64,7 +64,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         Route::get('/getRoleDetails', [CompanyController::class, 'getRoleDetails'])->name('getRoleDetails');
         Route::post('/updateRole', [CompanyController::class, 'updateRole'])->name('updateRole');
         Route::post('/createRole', [CompanyController::class, 'createRole'])->name('createRole');
-        Route::post('/deleteRole', [CompanyController::class, 'deleteRole'])->name('deleteRole');   
+        Route::post('/deleteRole', [CompanyController::class, 'deleteRole'])->name('deleteRole');
 
     });
 
@@ -77,6 +77,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         Route::post('/deleteTarget', [TargetController::class, 'deleteTarget'])->name('deleteTarget');
         Route::post('/previewImportTarget', [TargetController::class, 'previewImportTarget'])->name('previewImportTarget');
         Route::post('/importTarget', [TargetController::class, 'importTarget'])->name('importTarget');
+        Route::get('/downloadTemplateTarget', [TargetController::class, 'downloadTemplateTarget'])->name('downloadTemplateTarget');
     });
 
     Route::group(['prefix' => 'groups'], function () {
