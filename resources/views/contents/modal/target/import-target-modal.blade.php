@@ -38,7 +38,7 @@
                 </div>
                 <div class="flex justify-between items-center">
                     <div class="flex flex-col gap-1 text-xs">
-                        <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Download
+                        <a href="{{ route('downloadTemplateTarget') }}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Download
                             template target</a>
                     </div>
                     <button type="button" onclick="previewImportTarget()"

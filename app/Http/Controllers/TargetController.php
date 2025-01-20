@@ -335,4 +335,11 @@ class TargetController extends Controller
         }
     }
 
+    public function downloadTemplateTarget()
+    {
+        $filePath = storage_path('template/importTarget.zip');
+        return response()->download($filePath, 'template.zip');
+
+    }
+
 }
