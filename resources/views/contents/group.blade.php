@@ -1,5 +1,5 @@
 @extends('layouts.master')
-@section('title', 'Groups')
+@section('title', 'Fischsim - Groups')
 @section('content')
     @include('contents.modal.group.add-group-modal')
     @include('contents.modal.group.details-group-modal')

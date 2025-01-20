@@ -1,5 +1,5 @@
 @extends('layouts.master')
-@section('title', 'Admin Users')
+@section('title', 'Fischsim - Admin Users')
 @section('content')
     @include('contents.modal.admin.update-user-admin')
     <div class=" p-4 w-full flex flex-col h-full min-h-screen  bg-gray-50 dark:bg-gray-800 dark:text-white text-gray-900">
@@ -110,7 +110,6 @@
                     },
                     success: function(data) {
                         users = data.users;
-                        console.log(users);
                         $("#list-admin-user-tbody").empty();
                         let verified = '';
                         users.forEach(function(user) {
@@ -139,6 +138,14 @@
                             </tr>`;
                             $("#list-admin-user-tbody").append(tr);
                         });
+                        $("#numberFirstItem").text(
+                            data.userTotal != 0 ? (page - 1) * $("#show").val() + 1 : 0
+                        );
+                        $("#numberLastItem").text(
+                            (page - 1) * $("#show").val() + data.users.length
+                        );
+                        $("#totalTemplatesCount").text(data.userTotal);
+                        paginationUserAdminList("#page-button-admin-user", data.pageCount, data.currentPage);
 
                     }
                 });
@@ -152,6 +159,8 @@
                 $("#email_user").val(user.email);
                 $("#phone_user").val(user.phone);
                 $("#button-for-target").attr('onclick', `editUser(${id})`);
+                user.email_verified_at != null ? $("#verified-user").prop('checked', true) : $(
+                    "#verified-user").prop('checked', false);
 
             }
 
@@ -160,6 +169,7 @@
                 let last_name = $("#last_name").val();
                 let email = $("#email_user").val();
                 let phone = $("#phone_user").val();
+                let verified = $("#verified-user").is(":checked") ? 1 : 0;
                 $.ajax({
                     url: "{{ route('editUser') }}",
                     type: "POST",
@@ -169,6 +179,7 @@
                         last_name: last_name,
                         email: email,
                         phone: phone,
+                        verified: verified,
                         _token: "{{ csrf_token() }}"
                     },
                     success: function(data) {
@@ -202,7 +213,7 @@
                 });
             }
 
-            function deleteUser(id){
+            function deleteUser(id) {
                 Swal.fire({
                     title: 'Are you sure?',
                     text: "You won't be able to revert this!",

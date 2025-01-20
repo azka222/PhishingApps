@@ -1,5 +1,5 @@
 @extends('layouts.master')
-@section('title', 'Target')
+@section('title', 'Fischsim - Target')
 @section('content')
     @include('contents.modal.target.import-target-modal')
     @include('contents.modal.target.add-target-modal')

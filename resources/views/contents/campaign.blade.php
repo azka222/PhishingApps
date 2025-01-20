@@ -1,5 +1,5 @@
 @extends('layouts.master')
-@section('title', 'Campaign')
+@section('title', 'Fischsim - Campaign')
 @section('content')
     @include('contents.modal.campaign.add-campaign-modal')
     @include('contents.modal.sending-profile.test-connection')

@@ -1,107 +1,237 @@
 @extends('layouts.master')
-@section('title', 'User Setting')
+@section('title', 'Fischsim - User Setting')
 @section('content')
     @include('contents.modal.user-setting.edit-profile-modal')
     @include('contents.modal.user-setting.otp-modal')
     @include('contents.modal.user-setting.edit-company-modal')
     @include('contents.modal.user-setting.create-role-modal')
-    <div
-        class="grid grid-cols-4 gap-2 md:gap-4 justify-center min-h-screen pt-8 lg:pt-28 pb-8 px-4 lg:px-28 dark:bg-gray-800">
-        <div class="col-span-4 lg:col-span-1 pe-0 md:pe-2 ">
-            <div id="default-sidebar" class="" aria-label="Sidebar">
-                <div class="overflow-y-auto ">
-                    <div class="mb-2">
-                        <div id="button-setting-profile" onclick="handleSidebar('profile');getProfile()"
-                            class="side-button flex items-center p-2 rounded-lg">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
-                                <path fill-rule="evenodd"
-                                    d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z"
-                                    clip-rule="evenodd" />
-                            </svg>
+    <div class="min-h-screen dark:bg-gray-800">
+        <div class="grid grid-cols-4 gap-2 md:gap-4 justify-center pt-8 lg:pt-28 pb-8 px-4 lg:px-28 ">
+            <div class="col-span-4 lg:col-span-1 pe-0 md:pe-2 ">
+                <div id="default-sidebar" class="" aria-label="Sidebar">
+                    <div class="overflow-y-auto ">
+                        <div class="mb-2">
+                            <div id="button-setting-profile" onclick="handleSidebar('profile');getProfile()"
+                                class="side-button flex items-center p-2 rounded-lg">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                                    class="w-5 h-5">
+                                    <path fill-rule="evenodd"
+                                        d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z"
+                                        clip-rule="evenodd" />
+                                </svg>
 
-                            <span class="ms-3 text-xs md:text-sm">Profile</span>
+                                <span class="ms-3 text-xs md:text-sm">Profile</span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="mb-2">
-                        <div id="button-setting-security" onclick="handleSidebar('security')"
-                            class="side-button flex items-center p-2 rounded-lg">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
-                                <path fill-rule="evenodd"
-                                    d="M12 1.5a5.25 5.25 0 0 0-5.25 5.25v3a3 3 0 0 0-3 3v6.75a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3v-6.75a3 3 0 0 0-3-3v-3c0-2.9-2.35-5.25-5.25-5.25Zm3.75 8.25v-3a3.75 3.75 0 1 0-7.5 0v3h7.5Z"
-                                    clip-rule="evenodd" />
-                            </svg>
-                            <span class="ms-3 text-xs md:text-sm">Security</span>
+                        <div class="mb-2">
+                            <div id="button-setting-security" onclick="handleSidebar('security')"
+                                class="side-button flex items-center p-2 rounded-lg">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                                    class="w-5 h-5">
+                                    <path fill-rule="evenodd"
+                                        d="M12 1.5a5.25 5.25 0 0 0-5.25 5.25v3a3 3 0 0 0-3 3v6.75a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3v-6.75a3 3 0 0 0-3-3v-3c0-2.9-2.35-5.25-5.25-5.25Zm3.75 8.25v-3a3.75 3.75 0 1 0-7.5 0v3h7.5Z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                                <span class="ms-3 text-xs md:text-sm">Security</span>
+                            </div>
                         </div>
-                    </div>
-                    @IsCompanyOwner()
-                    <div class="mb-2">
-                        <div id="button-setting-company" onclick="handleSidebar('company');getCompany()"
-                            class="side-button flex items-center p-2 rounded-lg">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
-                                <path fill-rule="evenodd"
-                                    d="M4.5 2.25a.75.75 0 0 0 0 1.5v16.5h-.75a.75.75 0 0 0 0 1.5h16.5a.75.75 0 0 0 0-1.5h-.75V3.75a.75.75 0 0 0 0-1.5h-15ZM9 6a.75.75 0 0 0 0 1.5h1.5a.75.75 0 0 0 0-1.5H9Zm-.75 3.75A.75.75 0 0 1 9 9h1.5a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75ZM9 12a.75.75 0 0 0 0 1.5h1.5a.75.75 0 0 0 0-1.5H9Zm3.75-5.25A.75.75 0 0 1 13.5 6H15a.75.75 0 0 1 0 1.5h-1.5a.75.75 0 0 1-.75-.75ZM13.5 9a.75.75 0 0 0 0 1.5H15A.75.75 0 0 0 15 9h-1.5Zm-.75 3.75a.75.75 0 0 1 .75-.75H15a.75.75 0 0 1 0 1.5h-1.5a.75.75 0 0 1-.75-.75ZM9 19.5v-2.25a.75.75 0 0 1 .75-.75h4.5a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-.75.75h-4.5A.75.75 0 0 1 9 19.5Z"
-                                    clip-rule="evenodd" />
-                            </svg>
-                            <span class="ms-3 text-xs md:text-sm">Company</span>
+                        @IsCompanyOwner()
+                        <div class="mb-2">
+                            <div id="button-setting-company" onclick="handleSidebar('company');getCompany()"
+                                class="side-button flex items-center p-2 rounded-lg">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                                    class="w-5 h-5">
+                                    <path fill-rule="evenodd"
+                                        d="M4.5 2.25a.75.75 0 0 0 0 1.5v16.5h-.75a.75.75 0 0 0 0 1.5h16.5a.75.75 0 0 0 0-1.5h-.75V3.75a.75.75 0 0 0 0-1.5h-15ZM9 6a.75.75 0 0 0 0 1.5h1.5a.75.75 0 0 0 0-1.5H9Zm-.75 3.75A.75.75 0 0 1 9 9h1.5a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75ZM9 12a.75.75 0 0 0 0 1.5h1.5a.75.75 0 0 0 0-1.5H9Zm3.75-5.25A.75.75 0 0 1 13.5 6H15a.75.75 0 0 1 0 1.5h-1.5a.75.75 0 0 1-.75-.75ZM13.5 9a.75.75 0 0 0 0 1.5H15A.75.75 0 0 0 15 9h-1.5Zm-.75 3.75a.75.75 0 0 1 .75-.75H15a.75.75 0 0 1 0 1.5h-1.5a.75.75 0 0 1-.75-.75ZM9 19.5v-2.25a.75.75 0 0 1 .75-.75h4.5a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-.75.75h-4.5A.75.75 0 0 1 9 19.5Z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                                <span class="ms-3 text-xs md:text-sm">Company</span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="mb-2">
-                        <div id="button-setting-user" onclick="handleSidebar('user');getUser()"
-                            class="side-button flex items-center p-2 rounded-lg">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
-                                <path fill-rule="evenodd"
-                                    d="M8.25 6.75a3.75 3.75 0 1 1 7.5 0 3.75 3.75 0 0 1-7.5 0ZM15.75 9.75a3 3 0 1 1 6 0 3 3 0 0 1-6 0ZM2.25 9.75a3 3 0 1 1 6 0 3 3 0 0 1-6 0ZM6.31 15.117A6.745 6.745 0 0 1 12 12a6.745 6.745 0 0 1 6.709 7.498.75.75 0 0 1-.372.568A12.696 12.696 0 0 1 12 21.75c-2.305 0-4.47-.612-6.337-1.684a.75.75 0 0 1-.372-.568 6.787 6.787 0 0 1 1.019-4.38Z"
-                                    clip-rule="evenodd" />
-                                <path
-                                    d="M5.082 14.254a8.287 8.287 0 0 0-1.308 5.135 9.687 9.687 0 0 1-1.764-.44l-.115-.04a.563.563 0 0 1-.373-.487l-.01-.121a3.75 3.75 0 0 1 3.57-4.047ZM20.226 19.389a8.287 8.287 0 0 0-1.308-5.135 3.75 3.75 0 0 1 3.57 4.047l-.01.121a.563.563 0 0 1-.373.486l-.115.04c-.567.2-1.156.349-1.764.441Z" />
-                            </svg>
+                        <div class="mb-2">
+                            <div id="button-setting-user" onclick="handleSidebar('user');getUser()"
+                                class="side-button flex items-center p-2 rounded-lg">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                                    class="w-5 h-5">
+                                    <path fill-rule="evenodd"
+                                        d="M8.25 6.75a3.75 3.75 0 1 1 7.5 0 3.75 3.75 0 0 1-7.5 0ZM15.75 9.75a3 3 0 1 1 6 0 3 3 0 0 1-6 0ZM2.25 9.75a3 3 0 1 1 6 0 3 3 0 0 1-6 0ZM6.31 15.117A6.745 6.745 0 0 1 12 12a6.745 6.745 0 0 1 6.709 7.498.75.75 0 0 1-.372.568A12.696 12.696 0 0 1 12 21.75c-2.305 0-4.47-.612-6.337-1.684a.75.75 0 0 1-.372-.568 6.787 6.787 0 0 1 1.019-4.38Z"
+                                        clip-rule="evenodd" />
+                                    <path
+                                        d="M5.082 14.254a8.287 8.287 0 0 0-1.308 5.135 9.687 9.687 0 0 1-1.764-.44l-.115-.04a.563.563 0 0 1-.373-.487l-.01-.121a3.75 3.75 0 0 1 3.57-4.047ZM20.226 19.389a8.287 8.287 0 0 0-1.308-5.135 3.75 3.75 0 0 1 3.57 4.047l-.01.121a.563.563 0 0 1-.373.486l-.115.04c-.567.2-1.156.349-1.764.441Z" />
+                                </svg>
 
-                            <span class="ms-3 text-xs md:text-sm">User</span>
+                                <span class="ms-3 text-xs md:text-sm">User</span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="mb-2">
-                        <div id="button-setting-role" onclick="handleSidebar('role');getRole()"
-                            class="side-button flex items-center p-2 rounded-lg">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
-                                <path fill-rule="evenodd"
-                                    d="M11.828 2.25c-.916 0-1.699.663-1.85 1.567l-.091.549a.798.798 0 0 1-.517.608 7.45 7.45 0 0 0-.478.198.798.798 0 0 1-.796-.064l-.453-.324a1.875 1.875 0 0 0-2.416.2l-.243.243a1.875 1.875 0 0 0-.2 2.416l.324.453a.798.798 0 0 1 .064.796 7.448 7.448 0 0 0-.198.478.798.798 0 0 1-.608.517l-.55.092a1.875 1.875 0 0 0-1.566 1.849v.344c0 .916.663 1.699 1.567 1.85l.549.091c.281.047.508.25.608.517.06.162.127.321.198.478a.798.798 0 0 1-.064.796l-.324.453a1.875 1.875 0 0 0 .2 2.416l.243.243c.648.648 1.67.733 2.416.2l.453-.324a.798.798 0 0 1 .796-.064c.157.071.316.137.478.198.267.1.47.327.517.608l.092.55c.15.903.932 1.566 1.849 1.566h.344c.916 0 1.699-.663 1.85-1.567l.091-.549a.798.798 0 0 1 .517-.608 7.52 7.52 0 0 0 .478-.198.798.798 0 0 1 .796.064l.453.324a1.875 1.875 0 0 0 2.416-.2l.243-.243c.648-.648.733-1.67.2-2.416l-.324-.453a.798.798 0 0 1-.064-.796c.071-.157.137-.316.198-.478.1-.267.327-.47.608-.517l.55-.091a1.875 1.875 0 0 0 1.566-1.85v-.344c0-.916-.663-1.699-1.567-1.85l-.549-.091a.798.798 0 0 1-.608-.517 7.507 7.507 0 0 0-.198-.478.798.798 0 0 1 .064-.796l.324-.453a1.875 1.875 0 0 0-.2-2.416l-.243-.243a1.875 1.875 0 0 0-2.416-.2l-.453.324a.798.798 0 0 1-.796.064 7.462 7.462 0 0 0-.478-.198.798.798 0 0 1-.517-.608l-.091-.55a1.875 1.875 0 0 0-1.85-1.566h-.344ZM12 15.75a3.75 3.75 0 1 0 0-7.5 3.75 3.75 0 0 0 0 7.5Z"
-                                    clip-rule="evenodd" />
-                            </svg>
+                        <div class="mb-2">
+                            <div id="button-setting-role" onclick="handleSidebar('role');getRole()"
+                                class="side-button flex items-center p-2 rounded-lg">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                                    class="w-5 h-5">
+                                    <path fill-rule="evenodd"
+                                        d="M11.828 2.25c-.916 0-1.699.663-1.85 1.567l-.091.549a.798.798 0 0 1-.517.608 7.45 7.45 0 0 0-.478.198.798.798 0 0 1-.796-.064l-.453-.324a1.875 1.875 0 0 0-2.416.2l-.243.243a1.875 1.875 0 0 0-.2 2.416l.324.453a.798.798 0 0 1 .064.796 7.448 7.448 0 0 0-.198.478.798.798 0 0 1-.608.517l-.55.092a1.875 1.875 0 0 0-1.566 1.849v.344c0 .916.663 1.699 1.567 1.85l.549.091c.281.047.508.25.608.517.06.162.127.321.198.478a.798.798 0 0 1-.064.796l-.324.453a1.875 1.875 0 0 0 .2 2.416l.243.243c.648.648 1.67.733 2.416.2l.453-.324a.798.798 0 0 1 .796-.064c.157.071.316.137.478.198.267.1.47.327.517.608l.092.55c.15.903.932 1.566 1.849 1.566h.344c.916 0 1.699-.663 1.85-1.567l.091-.549a.798.798 0 0 1 .517-.608 7.52 7.52 0 0 0 .478-.198.798.798 0 0 1 .796.064l.453.324a1.875 1.875 0 0 0 2.416-.2l.243-.243c.648-.648.733-1.67.2-2.416l-.324-.453a.798.798 0 0 1-.064-.796c.071-.157.137-.316.198-.478.1-.267.327-.47.608-.517l.55-.091a1.875 1.875 0 0 0 1.566-1.85v-.344c0-.916-.663-1.699-1.567-1.85l-.549-.091a.798.798 0 0 1-.608-.517 7.507 7.507 0 0 0-.198-.478.798.798 0 0 1 .064-.796l.324-.453a1.875 1.875 0 0 0-.2-2.416l-.243-.243a1.875 1.875 0 0 0-2.416-.2l-.453.324a.798.798 0 0 1-.796.064 7.462 7.462 0 0 0-.478-.198.798.798 0 0 1-.517-.608l-.091-.55a1.875 1.875 0 0 0-1.85-1.566h-.344ZM12 15.75a3.75 3.75 0 1 0 0-7.5 3.75 3.75 0 0 0 0 7.5Z"
+                                        clip-rule="evenodd" />
+                                </svg>
 
-                            <span class="ms-3 text-xs md:text-sm">Role</span>
+                                <span class="ms-3 text-xs md:text-sm">Role</span>
+                            </div>
                         </div>
+                        @endIsCompanyOwner()
                     </div>
-                    @endIsCompanyOwner()
                 </div>
             </div>
-        </div>
-        <div class="col-span-4 lg:col-span-3 p-0 md:p-4 bg-gray-100 dark:bg-gray-600 rounded-xl">
-            <fieldset id="content-profile" class="content-user-setting p-4">
-                <div class="w-full  dark:bg-gray-600 rounded-xl">
-                    <div class="flex flex-col gap-4">
-                        <div class="p-4 bg-gray-200 dark:bg-gray-700 rounded-xl">
-                            <div class="flex flex-row justify-between">
-                                <div class="flex flex-row items-center justify-start ps-2 md:ps-4 gap-8 ">
-                                    <div class="h-full flex items-center hidden md:flex">
-                                        <img src="{{ asset('image/user.png') }}" class="w-20 h-20 rounded-full">
-                                    </div>
-                                    <div class="h-full flex gap-4 items-center">
-                                        <div>
-                                            <h1 id="username" class="text-xs md:text-lg font-semibold dark:text-white">
-                                                User Name
-                                            </h1>
-                                            <p id="company_display" class="text-xs font-light md:text-sm dark:text-white">
-                                                Company
-                                                Name</p>
+            <div class="col-span-4 lg:col-span-3 p-0 md:p-4 bg-gray-100 dark:bg-gray-600 rounded-xl">
+                <div id="content-profile" class="content-user-setting p-4">
+                    <div class="w-full  dark:bg-gray-600 rounded-xl">
+                        <div class="flex flex-col gap-4">
+                            <div class="p-4 bg-gray-200 dark:bg-gray-700 rounded-xl">
+                                <div class="flex flex-row justify-between">
+                                    <div class="flex flex-row items-center justify-start ps-2 md:ps-4 gap-8 ">
+                                        <div class="h-full flex items-center hidden md:flex">
+                                            <img src="{{ asset('image/user.png') }}" class="w-20 h-20 rounded-full">
+                                        </div>
+                                        <div class="h-full flex gap-4 items-center">
+                                            <div>
+                                                <h1 id="username" class="text-xs md:text-lg font-semibold dark:text-white">
+                                                    User Name
+                                                </h1>
+                                                <p id="company_display"
+                                                    class="text-xs font-light md:text-sm dark:text-white">
+                                                    Company
+                                                    Name</p>
+                                            </div>
                                         </div>
                                     </div>
+                                    <div class="flex items-center p-4">
+                                        <button onclick="showEditProfileModal()"
+                                            class="flex items-center p-2 rounded-lg  bg-blue-600 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-800 text-gray-900 dark:text-white">
+                                            <span class="hidden lg:flex ms-2 me-2 text-xs md:text-sm text-white">Edit</span>
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                                                class="w-4 h-4">
+                                                <path
+                                                    d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32l8.4-8.4Z" />
+                                                <path
+                                                    d="M5.25 5.25a3 3 0 0 0-3 3v10.5a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3V13.5a.75.75 0 0 0-1.5 0v5.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5V8.25a1.5 1.5 0 0 1 1.5-1.5h5.25a.75.75 0 0 0 0-1.5H5.25Z" />
+                                            </svg>
+                                        </button>
+                                    </div>
                                 </div>
-                                <div class="flex items-center p-4">
-                                    <button onclick="showEditProfileModal()"
-                                        class="flex items-center p-2 rounded-lg  bg-blue-600 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-800 text-gray-900 dark:text-white">
-                                        <span class="hidden lg:flex ms-2 me-2 text-xs md:text-sm text-white">Edit</span>
+                            </div>
+                            <div class="w-full h-4/5 bg-gray-200 dark:bg-gray-700 rounded-xl">
+                                <div class="grid grid-cols-2 p-4 gap-4">
+                                    <div class="ps-2 pt-2 col-span-2 md:col-span-1">
+                                        <h1 class="text-xs md:text-sm text-gray-800 dark:text-white font-semibold">First
+                                            Name
+                                        </h1>
+                                        <h2 id="first_name_display" class="text-xs md:text-sm pt-2 dark:text-white"></h2>
+                                    </div>
+                                    <div class="ps-2 pt-2 col-span-2 md:col-span-1">
+                                        <h1 class="text-xs md:text-sm text-gray-800 dark:text-white font-semibold">Last Name
+                                        </h1>
+                                        <h2 id="last_name_display" class="text-xs md:text-sm pt-2 dark:text-white"></h2>
+                                    </div>
+                                    <div class="ps-2 pt-2 col-span-2 md:col-span-1">
+                                        <h1 class="text-xs md:text-sm text-gray-800 dark:text-white font-semibold">Phone
+                                            Number
+                                        </h1>
+                                        <h2 id="phone_number_display" class="text-xs md:text-sm pt-2 dark:text-white"></h2>
+                                    </div>
+                                    <div class="ps-2 pt-2 col-span-2 md:col-span-1 mb-4">
+                                        <h1 class="text-xs md:text-sm text-gray-800 dark:text-white font-semibold">Gender
+                                        </h1>
+                                        <h2 id="gender_display" class="text-xs md:text-sm pt-2 dark:text-white"></h2>
+                                    </div>
+
+                                    <div class="relative flex items-center justify-center col-span-2">
+                                        <hr class="w-full border-gray-400 dark:border-gray-500">
+                                        <span
+                                            class="absolute px-3 text-gray-700 rounded-full bg-gray-100 dark:bg-gray-600 dark:text-white">Additional
+                                            Info</span>
+                                    </div>
+
+                                    <div class="ps-2 pt-4 col-span-2 md:col-span-1">
+                                        <h1 class="text-xs md:text-sm text-gray-800 dark:text-white font-semibold">Company
+                                            Address</h1>
+                                        <h2 id="address_display" class="text-xs md:text-sm pt-2 dark:text-white">Not Set
+                                        </h2>
+                                    </div>
+                                    <div class="ps-2 pt-4 col-span-2 md:col-span-1">
+                                        <h1 class="text-xs md:text-sm text-gray-800 dark:text-white font-semibold">Company
+                                            Type
+                                        </h1>
+                                        <h2 id="company_type_display" class="text-xs md:text-sm pt-2 dark:text-white">Not
+                                            Set</h2>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+                <div id="content-security" class="content-user-setting">
+                    <div class=" bg-gray-100 dark:bg-gray-600 rounded-xl p-4">
+                        <div class="bg-gray-200 dark:bg-gray-700 rounded-xl p-4">
+                            <h1 class="text-xs md:text-lg font-semibold dark:text-white">Security</h1>
+                            <p class="text-xs md:text-sm dark:text-white">This is the security setting page</p>
+                        </div>
+                        <div class="bg-gray-200 dark:bg-gray-700 rounded-xl p-4 mt-4">
+                            <label for="password"
+                                class="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-300">New
+                                Password</label>
+                            <div class="flex pb-4 flex-col md:flex-row items-start md:items-center justify-start gap-2">
+                                <input type="password" name="password" id="password" disabled
+                                    class="mt-1 block min-w-64  p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white">
+                                <button onclick="authCheckPassword()" id="button-password-check"
+                                    class="bg-blue-600 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-800 text-white p-2 text-xs md:text-sm rounded-lg mt-1">
+                                    Change
+                                </button>
+                                <div id="button-password-group" hidden>
+                                    <button onclick="changePassword()"
+                                        class="me-1 bg-green-600 dark:bg-green-700 hover:bg-green-700 dark:hover:bg-green-800 text-white p-2 rounded-lg mt-1">
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                                            class="w-4 h-4">
+                                            class="size-6">
+                                            <path fill-rule="evenodd"
+                                                d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                    </button>
+                                    <button onclick="cancelChangePassword()"
+                                        class="bg-red-600 dark:bg-red-700 hover:bg-red-700 dark:hover:bg-red-800 text-white p-2 rounded-lg mt-1">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                                            class="size-6">
+                                            <path fill-rule="evenodd"
+                                                d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-1.72 6.97a.75.75 0 1 0-1.06 1.06L10.94 12l-1.72 1.72a.75.75 0 1 0 1.06 1.06L12 13.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L13.06 12l1.72-1.72a.75.75 0 1 0-1.06-1.06L12 10.94l-1.72-1.72Z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                @IsCompanyOwner()
+                <div id="content-company" class="content-user-setting p-4">
+                    <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-xl p-4">
+                        <h1 class="text-xs  md:text-sm font-semibold dark:text-white">Company</h1>
+                        <p class="text-xs md:text-sm dark:text-white">This is the company setting page</p>
+                    </div>
+                    <div class="w-full mt-4 bg-gray-200 dark:bg-gray-700 rounded-xl ">
+                        <div class="grid grid-cols-2 gap-4 p-4">
+                            <div class="ps-2 pt-2 col-span-2">
+                                <div class="flex flex-row justify-between">
+                                    <div id="company-name-display"
+                                        class="text-xs  md:text-sm dark:text-white font-semibold">
+                                        Company
+                                        Name</div>
+                                    <button onclick="showEditCompanyModal()"
+                                        class="flex items-center p-2 rounded-lg  bg-blue-600 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-800 text-gray-900 dark:text-white">
+                                        <span class="ms-2 me-2 text-xs md:text-sm text-white">Edit</span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                                            class="size-4">
                                             <path
                                                 d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32l8.4-8.4Z" />
                                             <path
@@ -110,223 +240,107 @@
                                     </button>
                                 </div>
                             </div>
-                        </div>
-                        <div class="w-full h-4/5 bg-gray-200 dark:bg-gray-700 rounded-xl">
-                            <div class="grid grid-cols-2 p-4 gap-4">
-                                <div class="ps-2 pt-2 col-span-2 md:col-span-1">
-                                    <h1 class="text-xs md:text-sm text-gray-800 dark:text-white font-semibold">First Name
-                                    </h1>
-                                    <h2 id="first_name_display" class="text-xs md:text-sm pt-2 dark:text-white"></h2>
-                                </div>
-                                <div class="ps-2 pt-2 col-span-2 md:col-span-1">
-                                    <h1 class="text-xs md:text-sm text-gray-800 dark:text-white font-semibold">Last Name
-                                    </h1>
-                                    <h2 id="last_name_display" class="text-xs md:text-sm pt-2 dark:text-white"></h2>
-                                </div>
-                                <div class="ps-2 pt-2 col-span-2 md:col-span-1">
-                                    <h1 class="text-xs md:text-sm text-gray-800 dark:text-white font-semibold">Phone Number
-                                    </h1>
-                                    <h2 id="phone_number_display" class="text-xs md:text-sm pt-2 dark:text-white"></h2>
-                                </div>
-                                <div class="ps-2 pt-2 col-span-2 md:col-span-1 mb-4">
-                                    <h1 class="text-xs md:text-sm text-gray-800 dark:text-white font-semibold">Gender</h1>
-                                    <h2 id="gender_display" class="text-xs md:text-sm pt-2 dark:text-white"></h2>
-                                </div>
-
-                                <div class="relative flex items-center justify-center col-span-2">
-                                    <hr class="w-full border-gray-400 dark:border-gray-500">
-                                    <span
-                                        class="absolute px-3 text-gray-700 rounded-full bg-gray-100 dark:bg-gray-600 dark:text-white">Additional
-                                        Info</span>
-                                </div>
-
-                                <div class="ps-2 pt-4 col-span-2 md:col-span-1">
-                                    <h1 class="text-xs md:text-sm text-gray-800 dark:text-white font-semibold">Company
-                                        Address</h1>
-                                    <h2 id="address_display" class="text-xs md:text-sm pt-2 dark:text-white">Not Set
-                                    </h2>
-                                </div>
-                                <div class="ps-2 pt-4 col-span-2 md:col-span-1">
-                                    <h1 class="text-xs md:text-sm text-gray-800 dark:text-white font-semibold">Company Type
-                                    </h1>
-                                    <h2 id="company_type_display" class="text-xs md:text-sm pt-2 dark:text-white">Not
-                                        Set</h2>
-                                </div>
+                            <div class="relative flex items-center justify-center col-span-2">
+                                <hr class="w-full border-gray-400 dark:border-gray-500">
+                            </div>
+                            <div class="ps-2 pt-2 col-span-2 md:col-span-1">
+                                <h1 class="text-xs md:text-sm dark:text-white font-semibold">Company Email</h1>
+                                <h2 id="company_email_display" class="text-xs md:text-sm pt-2 dark:text-white">Not Set
+                                </h2>
+                            </div>
+                            <div class="ps-2 pt-2 col-span-2 md:col-span-1">
+                                <h1 class="text-xs md:text-sm dark:text-white font-semibold">Owner</h1>
+                                <h2 id="company_owner_display" class="text-xs md:text-sm pt-2 dark:text-white">Not Set
+                                </h2>
+                            </div>
+                            <div class="ps-2 pt-2 col-span-2 md:col-span-1">
+                                <h1 class="text-xs md:text-sm dark:text-white font-semibold">Allowed User</h1>
+                                <h2 id="company_user_display" class="text-xs md:text-sm pt-2 dark:text-white">Not Set</h2>
+                            </div>
+                            <div class="ps-2 pt-2 col-span-2 md:col-span-1">
+                                <h1 class="text-xs md:text-sm dark:text-white font-semibold">Address</h1>
+                                <h2 id="company_address_display" class="text-xs md:text-sm pt-2 dark:text-white">Not Set
+                                </h2>
+                            </div>
+                            <div class="ps-2 pt-2 col-span-2 md:col-span-1">
+                                <h1 class="text-xs md:text-sm dark:text-white font-semibold">Status</h1>
+                                <h2 id="company_status_display" class="text-xs md:text-sm pt-2 dark:text-white">Not Set
+                                </h2>
+                            </div>
+                            <div class="ps-2 pt-2 col-span-2 md:col-span-1">
+                                <h1 class="text-xs md:text-sm dark:text-white font-semibold">Visibility</h1>
+                                <h2 id="company_visibility_display" class="text-xs md:text-sm pt-2 dark:text-white">Not
+                                    Set</h2>
                             </div>
                         </div>
-
                     </div>
-
                 </div>
-
-            </fieldset>
-            <fieldset id="content-security" class="content-user-setting">
-                <div class="w-full flex flex-col bg-gray-100 dark:bg-gray-700 rounded-xl p-4">
+                <div id="content-user" class="content-user-setting m-4">
                     <div class="bg-gray-200 dark:bg-gray-700 rounded-xl p-4">
-                        <h1 class="text-xs md:text-lg font-semibold dark:text-white">Security</h1>
-                        <p class="text-xs md:text-sm dark:text-white">This is the security setting page</p>
+                        <h1 class="text-xs md:text-sm font-semibold dark:text-white">User</h1>
+                        <p class="text-xs md:text-sm dark:text-white">This is the user setting page</p>
                     </div>
-                    <div class="bg-gray-200 dark:bg-gray-700 rounded-xl p-4 mt-4">
-                        <label for="password"
-                            class="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-300">New
-                            Password</label>
-                        <div class="flex pb-4 items-center md:justify-start justify-between gap-2">
-                            <input type="password" name="password" id="password" disabled
-                                class="mt-1 block min-w-64  p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white">
-                            <button onclick="authCheckPassword()" id="button-password-check"
-                                class="bg-blue-600 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-800 text-white p-2 text-xs md:text-sm rounded-lg mt-1">
-                                Change
+                    <div class="rounded-lg overflow-x-auto mt-4">
+                        <table
+                            class="w-full min-w-[600px] text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-200 dark:bg-gray-700 dark:text-gray-400">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3">No</th>
+                                    <th scope="col" class="px-6 py-3">Name</th>
+                                    <th scope="col" class="px-6 py-3">Email</th>
+                                    <th scope="col" class="px-6 py-3">Role</th>
+                                    <th scope="col" class="px-6 py-3">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-company-user">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+
+                <div id="content-role" class="content-user-setting p-4">
+                    <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-xl p-4 flex items-center justify-between">
+                        <div>
+                            <h1 class="text-xs  md:text-sm font-semibold dark:text-white">Role</h1>
+                            <p class="text-xs md:text-sm dark:text-white">This is the role setting page</p>
+                        </div>
+                        <div>
+                            <button onclick="showAddRoleModal()"
+                                class="mx-4 bg-blue-600 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-800 text-white text-xs md:text-sm p-2 rounded-lg mt-1">
+                                Add Role
                             </button>
-                            <div id="button-password-group" hidden>
-                                <button onclick="changePassword()"
-                                    class="me-1 bg-green-600 dark:bg-green-700 hover:bg-green-700 dark:hover:bg-green-800 text-white p-2 rounded-lg mt-1">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                                        class="size-6">
-                                        <path fill-rule="evenodd"
-                                            d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z"
-                                            clip-rule="evenodd" />
-                                    </svg>
-                                </button>
-                                <button onclick="cancelChangePassword()"
-                                    class="bg-red-600 dark:bg-red-700 hover:bg-red-700 dark:hover:bg-red-800 text-white p-2 rounded-lg mt-1">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                                        class="size-6">
-                                        <path fill-rule="evenodd"
-                                            d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-1.72 6.97a.75.75 0 1 0-1.06 1.06L10.94 12l-1.72 1.72a.75.75 0 1 0 1.06 1.06L12 13.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L13.06 12l1.72-1.72a.75.75 0 1 0-1.06-1.06L12 10.94l-1.72-1.72Z"
-                                            clip-rule="evenodd" />
-                                    </svg>
-
-                                </button>
-                            </div>
                         </div>
                     </div>
-                </div>
+                    <div class="rounded-lg overflow-x-auto mt-4">
+                        <table
+                            class="w-full min-w-[600px] text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-200 dark:bg-gray-700 dark:text-gray-400">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3">
+                                        No
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        Name
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
 
-            </fieldset>
-            @IsCompanyOwner()
-            <fieldset id="content-company" class="content-user-setting p-4">
-                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-xl p-4">
-                    <h1 class="text-xs  md:text-sm font-semibold dark:text-white">Company</h1>
-                    <p class="text-xs md:text-sm dark:text-white">This is the company setting page</p>
-                </div>
-                <div class="w-full mt-4 bg-gray-200 dark:bg-gray-700 rounded-xl ">
-                    <div class="grid grid-cols-2 gap-4 p-4">
-                        <div class="ps-2 pt-2 col-span-2">
-                            <div class="flex flex-row justify-between">
-                                <div id="company-name-display" class="text-xs  md:text-sm dark:text-white font-semibold">
-                                    Company
-                                    Name</div>
-                                <button onclick="showEditCompanyModal()"
-                                    class="flex items-center p-2 rounded-lg  bg-blue-600 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-800 text-gray-900 dark:text-white">
-                                    <span class="ms-2 me-2 text-xs md:text-sm text-white">Edit</span>
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                                        class="size-4">
-                                        <path
-                                            d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32l8.4-8.4Z" />
-                                        <path
-                                            d="M5.25 5.25a3 3 0 0 0-3 3v10.5a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3V13.5a.75.75 0 0 0-1.5 0v5.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5V8.25a1.5 1.5 0 0 1 1.5-1.5h5.25a.75.75 0 0 0 0-1.5H5.25Z" />
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="relative flex items-center justify-center col-span-2">
-                            <hr class="w-full border-gray-400 dark:border-gray-500">
-                        </div>
-                        <div class="ps-2 pt-2 col-span-2 md:col-span-1">
-                            <h1 class="text-xs md:text-sm dark:text-white font-semibold">Company Email</h1>
-                            <h2 id="company_email_display" class="text-xs md:text-sm pt-2 dark:text-white">Not Set
-                            </h2>
-                        </div>
-                        <div class="ps-2 pt-2 col-span-2 md:col-span-1">
-                            <h1 class="text-xs md:text-sm dark:text-white font-semibold">Owner</h1>
-                            <h2 id="company_owner_display" class="text-xs md:text-sm pt-2 dark:text-white">Not Set
-                            </h2>
-                        </div>
-                        <div class="ps-2 pt-2 col-span-2 md:col-span-1">
-                            <h1 class="text-xs md:text-sm dark:text-white font-semibold">Allowed User</h1>
-                            <h2 id="company_user_display" class="text-xs md:text-sm pt-2 dark:text-white">Not Set</h2>
-                        </div>
-                        <div class="ps-2 pt-2 col-span-2 md:col-span-1">
-                            <h1 class="text-xs md:text-sm dark:text-white font-semibold">Address</h1>
-                            <h2 id="company_address_display" class="text-xs md:text-sm pt-2 dark:text-white">Not Set
-                            </h2>
-                        </div>
-                        <div class="ps-2 pt-2 col-span-2 md:col-span-1">
-                            <h1 class="text-xs md:text-sm dark:text-white font-semibold">Status</h1>
-                            <h2 id="company_status_display" class="text-xs md:text-sm pt-2 dark:text-white">Not Set
-                            </h2>
-                        </div>
-                        <div class="ps-2 pt-2 col-span-2 md:col-span-1">
-                            <h1 class="text-xs md:text-sm dark:text-white font-semibold">Visibility</h1>
-                            <h2 id="company_visibility_display" class="text-xs md:text-sm pt-2 dark:text-white">Not
-                                Set</h2>
-                        </div>
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        Action
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-role-user">
+                            </tbody>
+                        </table>
+
                     </div>
                 </div>
-            </fieldset>
-            <fieldset id="content-user" class="content-user-setting p-4">
-                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-xl p-4">
-                    <h1 class="text-xs  md:text-sm font-semibold dark:text-white">User</h1>
-                    <p class="text-xs md:text-sm dark:text-white">This is the user setting page</p>
-                </div>
-                <div class="w-full relative overflow-x-auto mt-4 bg-gray-100 dark:bg-gray-700 rounded-xl">
-                    <table
-                        class="w-full min-w-16 text-xs md:text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                        <thead class="text-xs text-gray-700 uppercase bg-gray-200 dark:bg-gray-700 dark:text-gray-400">
-                            <tr>
-                                <th scope="col" class="px-6 py-3">No</th>
-                                <th scope="col" class="px-6 py-3">Name</th>
-                                <th scope="col" class="px-6 py-3">Email</th>
-                                <th scope="col" class="px-6 py-3">Role</th>
-                                <th scope="col" class="px-6 py-3">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tbody-company-user">
-                        </tbody>
-                    </table>
-                </div>
+                @endIsCompanyOwner()
+            </div>
 
-            </fieldset>
-            <fieldset id="content-role" class="content-user-setting p-4">
-                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-xl p-4 flex items-center justify-between">
-                    <div>
-                        <h1 class="text-xs  md:text-sm font-semibold dark:text-white">Role</h1>
-                        <p class="text-xs md:text-sm dark:text-white">This is the role setting page</p>
-                    </div>
-                    <div>
-                        <button onclick="showAddRoleModal()"
-                            class="mx-4 bg-blue-600 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-800 text-white text-xs md:text-sm p-2 rounded-lg mt-1">
-                            Add Role
-                        </button>
-                    </div>
-                </div>
-                <div class="w-full relative overflow-x-auto mt-4 bg-gray-100 dark:bg-gray-700 rounded-xl ">
-                    <table class="w-full text-xs md:text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                        <thead class="text-gray-700 uppercase bg-gray-200 dark:bg-gray-700 dark:text-gray-400">
-                            <tr>
-                                <th scope="col" class="px-6 py-3">
-                                    No
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    Name
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    Action
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody id="tbody-role-user">
-                        </tbody>
-                    </table>
-
-                </div>
-            </fieldset>
-            @endIsCompanyOwner()
         </div>
-
     </div>
 
 
@@ -472,11 +486,8 @@
                         closeOnClickOutside: false,
                         confirmButtonColor: '#40c3ed',
                         confirmButtonText: 'Ok'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            showModal("otp-modal");
-                        }
                     });
+                    showStaticModal("otp-modal");
                 },
                 error: function(xhr) {}
             })
@@ -675,7 +686,7 @@
                     $("#tbody-company-user").empty();
                     users.forEach((user, index) => {
                         html = `
-                            <tr>
+                            <tr class="text-xs md:text-sm font-normal text-gray-900 dark:text-gray-400 bg-white dark:bg-gray-800">
                                 <td class="px-6 py-4">
                                     ${index + 1}
                                 </td>
@@ -709,7 +720,7 @@
                     $("#tbody-role-user").empty();
                     roles.forEach((role, index) => {
                         html = `
-                            <tr>
+                            <tr class="text-xs md:text-sm font-normal text-gray-900 dark:text-gray-400 bg-white dark:bg-gray-800">
                                 <td class="px-6 py-4">
                                     ${index + 1}
                                 </td>

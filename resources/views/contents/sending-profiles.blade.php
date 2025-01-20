@@ -1,5 +1,5 @@
 @extends('layouts.master')
-@section('title', 'Sending Profiles')
+@section('title', 'Fischsim - Sending Profiles')
 @section('content')
     @include('contents.modal.sending-profile.add-sending-profile-modal')
     @include('contents.modal.sending-profile.test-connection')

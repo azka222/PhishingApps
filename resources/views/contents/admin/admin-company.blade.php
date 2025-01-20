@@ -1,5 +1,5 @@
 @extends('layouts.master')
-@section('title', 'Admin Companies')
+@section('title', 'Fischsim - Admin Companies')
 @section('content')
     <div class=" p-4 w-full flex flex-col h-full min-h-screen  bg-gray-50 dark:bg-gray-800 dark:text-white text-gray-900">
         <div class="">

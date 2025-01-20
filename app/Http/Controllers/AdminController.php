@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Company;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
@@ -12,7 +13,7 @@ class AdminController extends Controller
     public function getAllUser(Request $request)
     {
         if (Gate::allows('IsAdmin')) {
-            $user = User::with('company');
+            $user = User::with('company')->where('is_admin', 0);
             if ($request->has('search') && ! empty($request->search)) {
                 $searchTerms = explode(' ', $request->search);
                 $user->where(function ($query) use ($searchTerms) {
@@ -73,7 +74,8 @@ class AdminController extends Controller
         }
     }
 
-    public function editUser(Request $request){
+    public function editUser(Request $request)
+    {
 
         if (Gate::allows('IsAdmin')) {
             $request->validate([
@@ -83,26 +85,27 @@ class AdminController extends Controller
                 'email'      => 'required|email',
                 'phone'      => 'required',
             ]);
-            $user = User::find($request->id);
-            $user->first_name = $request->first_name;
-            $user->last_name = $request->last_name;
-            $user->email = $request->email;
-            $user->phone = $request->phone;
+            $user                    = User::find($request->id);
+            $user->first_name        = $request->first_name;
+            $user->last_name         = $request->last_name;
+            $user->email             = $request->email;
+            $user->phone             = $request->phone;
+            $user->email_verified_at = $request->verified == 1 ? Carbon::now() : null;
             $user->save();
             return response()->json([
                 'message' => 'User updated successfully',
                 'status'  => 'success',
             ]);
-        }
-        else{
+        } else {
             return response()->json([
                 'message' => 'You are not authorized to perform this action',
                 'status'  => 'error',
-            ],403);
+            ], 403);
         }
     }
 
-    public function deleteUser(Request $request){
+    public function deleteUser(Request $request)
+    {
         if (Gate::allows('IsAdmin')) {
             $request->validate([
                 'id' => 'required',
@@ -113,12 +116,11 @@ class AdminController extends Controller
                 'message' => 'User deleted successfully',
                 'status'  => 'success',
             ]);
-        }
-        else{
+        } else {
             return response()->json([
                 'message' => 'You are not authorized to perform this action',
                 'status'  => 'error',
-            ],403);
+            ], 403);
         }
     }
     public function editCompany(Request $request){
