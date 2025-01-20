@@ -486,11 +486,8 @@
                         closeOnClickOutside: false,
                         confirmButtonColor: '#40c3ed',
                         confirmButtonText: 'Ok'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            showModal("otp-modal");
-                        }
                     });
+                    showStaticModal("otp-modal");
                 },
                 error: function(xhr) {}
             })

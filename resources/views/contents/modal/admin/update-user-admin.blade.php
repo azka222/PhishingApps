@@ -26,16 +26,14 @@
                         <label for="first_name"
                             class="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-200">First
                             Name</label>
-                        <input type="text" id="first_name" name="first_name"
-                            placeholder="Enter first name"
+                        <input type="text" id="first_name" name="first_name" placeholder="Enter first name"
                             class="mt-1 block w-full px-3 py-2 border bg-gray-100 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-xs md:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
                     </div>
                     <div class="col-span-2 md:col-span-1">
                         <label for="last_name"
                             class="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-200">Last
                             Name</label>
-                        <input type="text" id="last_name" name="last_name"
-                            placeholder="Enter last name"
+                        <input type="text" id="last_name" name="last_name" placeholder="Enter last name"
                             class="mt-1 block w-full px-3 py-2 border bg-gray-100 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-xs md:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
                     </div>
                     <div class="col-span-2 md:col-span-1">
@@ -47,12 +45,26 @@
                     </div>
                     <div class="col-span-2 md:col-span-1">
                         <label for="phone_user"
-                            class="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-200">User Phone Number
-                            </label>
+                            class="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-200">User Phone
+                            Number
+                        </label>
                         <input type="text" id="phone_user" name="phone_user" placeholder="Enter phone number"
                             class="mt-1 block w-full px-3 py-2 border bg-gray-100 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-xs md:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
                     </div>
-                    
+                    <div class="col-span-2">
+                        <div class="flex items-center justify-between">
+                            <label class="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-200">Verified User ?
+                            </label>
+                            <label class="inline-flex items-center cursor-pointer">
+                                <input type="checkbox" value="" id="verified-user" class="sr-only peer" id="theme-toggle">
+                                <div
+                                    class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
+                                </div>
+
+                            </label>
+                        </div>
+                    </div>
+
                     <div class="col-span-2">
                         <div id="error_message_field" hidden>
                             <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg shadow-md relative"
