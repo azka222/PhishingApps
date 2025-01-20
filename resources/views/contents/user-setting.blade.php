@@ -5,6 +5,7 @@
     @include('contents.modal.user-setting.otp-modal')
     @include('contents.modal.user-setting.edit-company-modal')
     @include('contents.modal.user-setting.create-role-modal')
+    @include('contents.modal.user-setting.update-user-modal')
     <div class="min-h-screen dark:bg-gray-800">
         <div class="grid grid-cols-4 gap-2 md:gap-4 justify-center pt-8 lg:pt-28 pb-8 px-4 lg:px-28 ">
             <div class="col-span-4 lg:col-span-1 pe-0 md:pe-2 ">
@@ -49,7 +50,7 @@
                             </div>
                         </div>
                         <div class="mb-2">
-                            <div id="button-setting-user" onclick="handleSidebar('user');getUser()"
+                            <div id="button-setting-user" onclick="handleSidebar('user');getUser();getRole();"
                                 class="side-button flex items-center p-2 rounded-lg">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
                                     class="w-5 h-5">
@@ -349,6 +350,8 @@
 
         let profile = null;
         let company = null;
+        let users = null;
+        let roles = null;
 
         $(document).ready(function() {
             firstRender();
@@ -679,7 +682,7 @@
                 url: "{{ route('getCompanyUsers') }}",
                 type: "GET",
                 success: function(response) {
-                    let users = response.data;
+                    users = response.data;
                     console.log(users);
                     let html = "";
                     $("#tbody-company-user").empty();
@@ -712,12 +715,29 @@
             })
         }
 
+        function showEditUserModal(id) {
+
+            let tempUser = users.find(user => user.id == id);
+            $("#user_role").empty();
+            $("#user_role").append(`<option disabled value="">Select User Role</option>`);
+            roles.forEach((role) => {
+                $("#user_role").append(`<option value="${role.id}">${role.name}</option>`);
+            })
+            $("#user_role").val(tempUser.role_id);
+            $("#user_first_name").val(tempUser.first_name);
+            $("#user_last_name").val(tempUser.last_name);
+            $("#phone_user").val(tempUser.phone)
+            $("#email_user").val(tempUser.email);
+            showModal("update-user-modal");
+        }
+
+
         function getRole() {
             $.ajax({
                 url: "{{ route('getRoles') }}",
                 type: "GET",
                 success: function(response) {
-                    let roles = response.data;
+                    roles = response.data;
                     let html = "";
                     $("#tbody-role-user").empty();
                     roles.forEach((role, index) => {
@@ -869,6 +889,7 @@
                 }
             })
         }
+
 
         function deleteRole(id) {
             Swal.fire({
