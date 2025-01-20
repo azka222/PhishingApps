@@ -104,8 +104,8 @@
                                     </div>
                                     <div class="flex items-center p-4">
                                         <button onclick="showEditProfileModal()"
-                                            class="flex items-center p-2 rounded-lg  bg-blue-600 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-800 text-gray-900 dark:text-white">
-                                            <span class="hidden lg:flex ms-2 me-2 text-xs md:text-sm text-white">Edit</span>
+                                            class="px-4 flex items-center gap-2 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">
+                                            <span class="md:flex hidden">Edit</span>
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
                                                 class="w-4 h-4">
                                                 <path
@@ -184,7 +184,7 @@
                                 <input type="password" name="password" id="password" disabled
                                     class="mt-1 block min-w-64  p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white">
                                 <button onclick="authCheckPassword()" id="button-password-check"
-                                    class="bg-blue-600 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-800 text-white p-2 text-xs md:text-sm rounded-lg mt-1">
+                                    class="px-4 flex items-center gap-2 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">
                                     Change
                                 </button>
                                 <div id="button-password-group" hidden>
@@ -228,10 +228,10 @@
                                         Company
                                         Name</div>
                                     <button onclick="showEditCompanyModal()"
-                                        class="flex items-center p-2 rounded-lg  bg-blue-600 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-800 text-gray-900 dark:text-white">
-                                        <span class="ms-2 me-2 text-xs md:text-sm text-white">Edit</span>
+                                        class="px-4 flex items-center gap-2 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">
+                                        <span class="md:flex hidden">Edit</span>
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                                            class="size-4">
+                                            class="w-4 h-4">
                                             <path
                                                 d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32l8.4-8.4Z" />
                                             <path
@@ -297,8 +297,6 @@
                         </table>
                     </div>
                 </div>
-
-
                 <div id="content-role" class="content-user-setting p-4">
                     <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-xl p-4 flex items-center justify-between">
                         <div>
@@ -419,6 +417,7 @@
             $("#gender").val(profile.gender);
             $("#email").val(profile.email);
         }
+
 
         function submitEditModal() {
             let data = {
@@ -700,7 +699,10 @@
                                     ${user.role ? user.role.name : "Not Set"}
                                 </td>
                                 <td class="px-6 py-4">
-                                    <button onclick="showEditUserModal(${user.id})" class="p-2 bg-blue-600 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-800 text-white rounded-lg">Edit</button>
+                                    <button onclick="showEditUserModal(${user.id})"
+                                        class="px-4 flex items-center gap-2 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">
+                                        <span class="">Edit</span>
+                                    </button>
                                 </td>
                             </tr>
                         `;
@@ -730,8 +732,14 @@
                                 <td class="px-6 py-4">
                                 </td>
                                 <td class="px-6 py-4 flex gap-2">
-                                    <button onclick="showEditRoleModal(${role.id})" class="px-4 py-2 bg-blue-600 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-800 text-white rounded-lg">Edit</button>
-                                    <button onclick="deleteRole(${role.id})" class="px-4 py-2 bg-red-600 dark:bg-red-700 hover:bg-red-700 dark:hover:bg-red-800 text-white rounded-lg">Delete</button>
+                                    <button onclick="showEditRoleModal(${role.id})"
+                                        class="px-4 flex items-center gap-2 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">
+                                        <span class="">Edit</span>
+                                    </button>
+                                    <button onclick="deleteRole(${role.id})"
+                                        class="px-4 flex items-center gap-2 py-2 text-xs md:text-sm font-medium text-white bg-red-600 rounded-xl hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600">
+                                        <span class="">Delete</span>
+                                    </button>
                                 </td>
                             </tr>
                         `;
