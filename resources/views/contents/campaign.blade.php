@@ -3,8 +3,8 @@
 @section('content')
     @include('contents.modal.campaign.add-campaign-modal')
     @include('contents.modal.sending-profile.test-connection')
-    <div class=" p-4 w-full flex flex-col h-full min-h-screen  bg-gray-50 dark:bg-gray-800 dark:text-white text-gray-900">
-        <div class="">
+    <div class="min-h-screen  bg-gray-50 dark:bg-gray-800 dark:text-white text-gray-900">
+        <div class="p-4 flex flex-col">
             <div class="flex p-4 items-center justify-between">
                 <h1 class="text-3xl font-semibold">Campaigns</h1>
                 @CanCreateCampaign
