@@ -107,7 +107,7 @@ class AuthenticateController extends Controller
         $user = auth()->user();
         $otp = rand(100000, 999999);
         $user->otp = $otp;
-        $user->otp_expired_at = Carbon::now()->addMinutes(5);
+        $user->otp_expired_at = Carbon::now()->addMinutes(1);
         $user->save();
         Mail::to(auth()->user()->email)->send(new OtpEmail($otp));
         return response()->json(['message' => 'OTP sent successfully!']);

@@ -11,6 +11,9 @@
         case 'groups':
             $user = true;
             break;
+        case '':
+            $dashboard = true;
+            break;
         case 'landing-page':
             $attribute = true;
             break;
@@ -40,11 +43,7 @@
             <span class="self-center text-xl md:text-2xl font-semibold whitespace-nowrap dark:text-white">Fischsim</span>
         </a>
         <div class="flex flex-row items-center gap-2 lg:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
-            <button id="theme-toggle"
-                class="px-4 py-2 md:me-4 me-0 text-sm font-medium text-white bg-blue-600 rounded-full hover:bg-blue-700 dark:bg-yellow-500 dark:hover:bg-yellow-600">
-                <div id="svg">
-                </div>
-            </button>
+
             <div class="flex flex-col items-center">
                 <button id="dropdownAvatarNameButton" data-dropdown-toggle="dropdownAvatarName"
                     class="flex items-center text-sm font-medium text-gray-900 rounded-full hover:text-blue-600 dark:hover:text-blue-500 md:me-0 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:text-white"
@@ -58,6 +57,22 @@
                         <div class="font-medium ">{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}</div>
                         <div class="truncate text-xs pb-2">{{ Auth::user()->email }}</div>
                     </div>
+                    <ul class=" text-sm text-gray-700 dark:text-gray-200"
+                        aria-labelledby="dropdownInformdropdownAvatarNameButtonationButton">
+                        <li>
+                            <div class="flex items-center justify-between p-2">
+                                <span class="">Dark Mode
+                                </span>
+                                <label class="inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" value="" class="sr-only peer" id="theme-toggle">
+                                    <div
+                                        class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
+                                    </div>
+
+                                </label>
+                            </div>
+                        </li>
+                    </ul>
                     @IsUser()
                     <ul class=" text-sm text-gray-700 dark:text-gray-200"
                         aria-labelledby="dropdownInformdropdownAvatarNameButtonationButton">
@@ -72,6 +87,7 @@
                             class="block p-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign
                             out</a>
                     </div>
+
                 </div>
             </div>
             <button data-collapse-toggle="navbar-menu" id="toggle-navbar" type="button" onclick="handleClickMenu()"
@@ -352,7 +368,11 @@
 
         const themeToggleBtn = $('#theme-toggle');
         const body = $('body');
-        if (localStorage.theme === 'dark') {
+        const darkMode = localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia(
+            '(prefers-color-scheme: dark)').matches);
+        if (darkMode) {
+            $("#theme-toggle").prop('checked', true);
+            localStorage.theme === 'dark'
             body.addClass('dark');
             $("#svg").append(`
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 md:h-5 md:w-5">
@@ -362,6 +382,8 @@
             `);
 
         } else {
+            localStorage.theme === 'light'
+            $("#theme-toggle").prop('checked', false);
             body.removeClass('dark');
             $("#svg").append(`
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
