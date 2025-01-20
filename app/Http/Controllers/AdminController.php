@@ -121,4 +121,50 @@ class AdminController extends Controller
             ],403);
         }
     }
+    public function editCompany(Request $request){
+        if (Gate::allows('IsAdmin')) {
+            $request->validate([
+                'id'         => 'required',
+                'name'       => 'required',
+                'email'      => 'required|email',
+                'address'    => 'required',
+            ]);
+            $company = Company::find($request->id);
+            $company->name = $request->name;
+            $company->email = $request->email;
+            $company->address = $request->address;
+            $company->save();
+            return response()->json([
+                'message' => 'Company updated successfully',
+                'status'  => 'success',
+            ]);
+        }
+        else{
+            return response()->json([
+                'message' => 'You are not authorized to perform this action',
+                'status'  => 'error',
+            ],403);
+        }
+    }
+
+    public function deleteCompany(Request $request){
+        if (Gate::allows('IsAdmin')) {
+            $request->validate([
+                'id' => 'required',
+            ]);
+            $user = User::find($request->id);
+            $user->delete();
+            return response()->json([
+                'message' => 'User deleted successfully',
+                'status'  => 'success',
+            ]);
+        }
+        else{
+            return response()->json([
+                'message' => 'You are not authorized to perform this action',
+                'status'  => 'error',
+            ],403);
+        }
+    }
 }
+

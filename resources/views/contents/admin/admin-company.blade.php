@@ -127,5 +127,79 @@
                     }
                 });
             };
+
+            function showEditModal() {
+                showModal('update-company-admin');
+                let company = companies.find(company => company.id == id);
+                $("#company_name").val(company.name);
+                $("#company_address").val(company.address);
+                $("#company_email").val(company.email);
+                $("#button-for-target").attr('onclick', `editUser(${id})`);
+            }
+
+            function editCompany(id){
+                let name = $("#company_name").val();
+                let address = $("#company_address").val();
+                let email = $("#company_email").val();
+                $.ajax({
+                    url: "{{ route('editCompany') }}",
+                    type: "POST",
+                    data: {
+                        id: id,
+                        name: name,
+                        address: address,
+                        email: email,
+                        _token: "{{ csrf_token() }}"
+                    },
+                    success: function(data) {
+                        if (data.status == 'success') {
+                            getAllCompanies();
+                            hideModal('update-company-admin');
+                            Swal.fire({
+                                title: 'Success',
+                                text: 'Success updated company.',
+                                icon: 'success',
+                                confirmButtonColor: '#10b981',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                    }
+                });
+            }
+            
+            function deleteCompany(id) {
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d97706',
+                    cancelButtonColor: '#e3342f',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: "{{ route('deleteCompany') }}",
+                            type: "POST",
+                            data: {
+                                id: id,
+                                _token: "{{ csrf_token() }}"
+                            },
+                            success: function(data) {
+                                if (data.status == 'success') {
+                                    getAllCompanies();
+                                    Swal.fire({
+                                        title: 'Success',
+                                        text: 'Success deleted company.',
+                                        icon: 'success',
+                                        confirmButtonColor: '#10b981',
+                                        confirmButtonText: 'OK'
+                                    });
+                                }
+                            }
+                        });
+                    }
+                });
+            }
         </script>
     @endsection
