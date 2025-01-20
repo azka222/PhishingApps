@@ -21,7 +21,7 @@
             </div>
             <!-- Modal body -->
             <div class="p-4 md:p-5 space-y-4">
-                <div class="grid grid-cols-2 gap-8">
+                <div class="grid grid-cols-2 gap-0 md:gap-8">
                     <div class="col-span-2 lg:col-span-1" id="sending-profile-form">
                         <div class="grid grid-cols-2 gap-4">
                             <div class="col-span-2">
@@ -117,8 +117,8 @@
                     <div class="col-span-2 lg:col-span-1">
                         <div class="grid grid-cols-2 gap-4">
                             <div class="col-span-2">
-                                <div class="flex flex-row items-end justify-between">
-                                    <div class="w-5/6 flex flex-row gap-4">
+                                <div class="flex flex-col md:flex-row items-end justify-between">
+                                    <div class="w-full md:w-5/6 mb-2 md:mb-0 flex flex-row gap-4">
                                         <div class="flex flex-col w-1/2">
                                             <label for="header_email"
                                                 class="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-200">Email

@@ -21,7 +21,7 @@
             </div>
             <!-- Modal body -->
             <div class="p-4 md:p-5 space-y-4">
-                <div class="grid grid-cols-2 gap-8">
+                <div class="grid grid-cols-2 gap-0 md:gap-8">
                     <div class="col-span-2 md:col-span-1">
                         <div class="grid grid-cols-2 gap-4">
                             <div class="col-span-2">
