@@ -16,7 +16,7 @@
                                 d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25V9Z"
                                 clip-rule="evenodd" />
                         </svg>
-                        <span class="hidden md:inline">Create Campaign</span>
+                        <span class="hidden md:inline">Create Template</span>
                     </button>
                 </div>
                 @endCanCreateEmailTemplate()
@@ -174,15 +174,10 @@
                         if (xhr.status === 422) {
                             var errorMessage = JSON.parse(xhr.responseText) ? JSON.parse(xhr.responseText) : xhr
                                 .responseText;
-                            var errors = errorMessage.errors ? errorMessage.errors : errorMessage;
+                            var errors = errorMessage.message ? errorMessage.message : errorMessage;
                             $('#error_message_field').show();
                             $('#error_message').empty();
-                            $.each(errors, function(field, messages) {
-                                $.each(messages, function(index, message) {
-                                    let data = `<li>${message}</li>`;
-                                    $('#error_message').append(data);
-                                });
-                            });
+                            $('#error_message').append(`<li>${errors}</li>`);
                         } else {
                             Swal.fire({
                                 icon: "error",
@@ -436,15 +431,10 @@
                         if (xhr.status === 422) {
                             var errorMessage = JSON.parse(xhr.responseText) ? JSON.parse(xhr.responseText) : xhr
                                 .responseText;
-                            var errors = errorMessage.errors ? errorMessage.errors : errorMessage;
+                            var errors = errorMessage.message ? errorMessage.message : errorMessage;
                             $('#error_message_field').show();
                             $('#error_message').empty();
-                            $.each(errors, function(field, messages) {
-                                $.each(messages, function(index, message) {
-                                    let data = `<li>${message}</li>`;
-                                    $('#error_message').append(data);
-                                });
-                            });
+                            $('#error_message').append(`<li>${errors}</li>`);
                         } else {
                             Swal.fire({
                                 icon: "error",

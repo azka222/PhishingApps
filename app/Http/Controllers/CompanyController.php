@@ -68,11 +68,18 @@ class CompanyController extends Controller
 
     public function getCompanyDetails()
     {
-        $company = Company::with('status', 'visibility', 'user')->where('id', auth()->user()->company_id)->first();
-        return response()->json([
-            'status' => 'success',
-            'data'   => $company,
-        ]);
+        if (Gate::allows('IsCompanyOwner')) {
+            $company = Company::with('status', 'visibility', 'user')->where('id', auth()->user()->company_id)->first();
+            return response()->json([
+                'status' => 'success',
+                'data'   => $company,
+            ]);
+        } else {
+            return response()->json([
+                'status'  => 'error',
+                'message' => 'You are not allowed to view company details',
+            ], 403);
+        }
     }
 
     public function updateCompany(Request $request)
@@ -201,6 +208,38 @@ class CompanyController extends Controller
             return response()->json([
                 'status'  => 'error',
                 'message' => 'You are not allowed to delete role',
+            ], 403);
+        }
+    }
+
+    public function updateUserCompany(Request $request)
+    {
+        $request->validate([
+            'id'         => 'required|integer|exists:users,id',
+            'first_name' => 'required|string',
+            'last_name'  => 'required|string',
+            'phone'      => ['required', 'string', 'regex:/^08[0-9]{7,10}$/', 'min:10', 'max:13'],
+            'email'      => 'required|email',
+            'role_id'    => 'required|integer|exists:roles,id',
+        ]);
+
+        if (Gate::allows('IsCompanyOwner', auth()->user()->company_id)) {
+            $user             = User::findOrFail($request->id);
+            $user->first_name = $request->first_name;
+            $user->last_name  = $request->last_name;
+            $user->phone      = $request->phone;
+            $user->email      = $request->email;
+            $user->role_id    = $request->role_id;
+            $user->save();
+            return response()->json([
+                'status'  => 'success',
+                'message' => 'User updated successfully',
+            ]);
+
+        } else {
+            return response()->json([
+                'status'  => 'error',
+                'message' => 'You are not allowed to update user',
             ], 403);
         }
     }

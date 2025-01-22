@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
@@ -37,14 +36,14 @@ class ViewController extends Controller
 
     public function userSettingView()
     {
-        $modules = Module::with(['moduleAbilities.ability'])->get();
+        $modules          = Module::with(['moduleAbilities.ability'])->get();
         $formattedModules = $modules->map(function ($module) {
             return [
                 'module_name' => $module->name,
-                'abilities' => $module->moduleAbilities->map(function ($moduleAbility) {
+                'abilities'   => $module->moduleAbilities->map(function ($moduleAbility) {
                     return [
-                        'id' => $moduleAbility->ability->id,
-                        'name' => $moduleAbility->ability->name,
+                        'id'                => $moduleAbility->ability->id,
+                        'name'              => $moduleAbility->ability->name,
                         'id_module_ability' => $moduleAbility->id,
                     ];
                 }),
@@ -62,7 +61,7 @@ class ViewController extends Controller
     public function resetPasswordView(Request $request)
     {
         $token = $request->query('token');
-        if (!$token) {
+        if (! $token) {
             return redirect('/')->with('error', 'Invalid token.');
         }
         return view('auth.reset-password', ['token' => $token]);
@@ -70,7 +69,7 @@ class ViewController extends Controller
 
     public function targetView()
     {
-        if (!auth()->user()->haveAccess('Target', 'read')) {
+        if (! auth()->user()->haveAccess('Target', 'read')) {
             abort(403);
         }
         $companies = $this->getCompanies();
@@ -79,7 +78,7 @@ class ViewController extends Controller
 
     public function groupView()
     {
-        if (!auth()->user()->haveAccess('Group', 'read')) {
+        if (! auth()->user()->haveAccess('Group', 'read')) {
             abort(403);
         }
         $companies = $this->getCompanies();
@@ -89,7 +88,7 @@ class ViewController extends Controller
 
     public function landingPageView()
     {
-        if (!auth()->user()->haveAccess('Landing Page', 'read')) {
+        if (! auth()->user()->haveAccess('Landing Page', 'read')) {
             abort(403);
         }
         return view('contents.landing-page');
@@ -97,7 +96,7 @@ class ViewController extends Controller
 
     public function emailTemplatesView()
     {
-        if (!auth()->user()->haveAccess('Email Template', 'read')) {
+        if (! auth()->user()->haveAccess('Email Template', 'read')) {
             abort(403);
         }
         $companies = $this->getCompanies();
@@ -106,7 +105,7 @@ class ViewController extends Controller
 
     public function sendingProfileView()
     {
-        if (!auth()->user()->haveAccess('Sending Profile', 'read')) {
+        if (! auth()->user()->haveAccess('Sending Profile', 'read')) {
             abort(403);
         }
         $companies = $this->getCompanies();
@@ -115,7 +114,7 @@ class ViewController extends Controller
 
     public function campaignView()
     {
-        if (!auth()->user()->haveAccess('Campaign', 'read')) {
+        if (! auth()->user()->haveAccess('Campaign', 'read')) {
             abort(403);
         }
         $companies = $this->getCompanies();
@@ -124,11 +123,11 @@ class ViewController extends Controller
 
     public function campaignDetailsView($id)
     {
-        if (!auth()->user()->haveAccess('Campaign', 'read')) {
+        if (! auth()->user()->haveAccess('Campaign', 'read')) {
             abort(403);
         }
         $check = auth()->user()->accessibleCampaign()->where('campaign_id', $id)->first();
-        if (!$check) {
+        if (! $check) {
             abort(404);
         }
         return view('contents.campaign-details', ['id' => $id]);
@@ -136,7 +135,7 @@ class ViewController extends Controller
 
     public function adminUserView()
     {
-        if (!auth()->user()->is_admin) {
+        if (! auth()->user()->is_admin) {
             abort(403);
         }
         $companies = $this->getCompanies();
@@ -147,7 +146,7 @@ class ViewController extends Controller
 
     public function adminCompanyView()
     {
-        if (!auth()->user()->is_admin) {
+        if (! auth()->user()->is_admin) {
             abort(403);
         }
         $companies = $this->getCompanies();

@@ -65,6 +65,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         Route::post('/updateRole', [CompanyController::class, 'updateRole'])->name('updateRole');
         Route::post('/createRole', [CompanyController::class, 'createRole'])->name('createRole');
         Route::post('/deleteRole', [CompanyController::class, 'deleteRole'])->name('deleteRole');
+        Route::post('/updateUserCompany', [CompanyController::class, 'updateUserCompany'])->name('updateUserCompany');
 
     });
 
