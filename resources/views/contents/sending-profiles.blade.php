@@ -115,6 +115,7 @@
             $("#sending-profile-form input").val("");
             $("#interface_type").val("smtp");
             $("#http-header-list").empty();
+            $("#error_message_field").hide();
             $(".for-edit-profile").hide();
             $(".for-create-profile").show();
             $("#error-http-header").hide();
@@ -213,15 +214,10 @@
                     if (xhr.status === 422) {
                         var errorMessage = JSON.parse(xhr.responseText) ? JSON.parse(xhr.responseText) : xhr
                             .responseText;
-                        var errors = errorMessage.errors ? errorMessage.errors : errorMessage;
+                        var errors = errorMessage.message ? errorMessage.message : errorMessage;
                         $('#error_message_field').show();
                         $('#error_message').empty();
-                        $.each(errors, function(field, messages) {
-                            $.each(messages, function(index, message) {
-                                let data = `<li>${message}</li>`;
-                                $('#error_message').append(data);
-                            });
-                        });
+                        $('#error_message').append(`<li>${errors}</li>`);
                     } else {
                         Swal.fire({
                             icon: "error",
@@ -338,6 +334,7 @@
         }
 
         function showEditSendingProfileModal(id) {
+            $("#error_message_field").hide();
             let sendingProfile = sendingProfiles.find(x => x.id == id);
             let headers = sendingProfile.headers
             let val = "X-Custom-Header";
@@ -434,15 +431,10 @@
                     if (xhr.status === 422) {
                         var errorMessage = JSON.parse(xhr.responseText) ? JSON.parse(xhr.responseText) : xhr
                             .responseText;
-                        var errors = errorMessage.errors ? errorMessage.errors : errorMessage;
+                        var errors = errorMessage.message ? errorMessage.message : errorMessage;
                         $('#error_message_field').show();
                         $('#error_message').empty();
-                        $.each(errors, function(field, messages) {
-                            $.each(messages, function(index, message) {
-                                let data = `<li>${message}</li>`;
-                                $('#error_message').append(data);
-                            });
-                        });
+                        $('#error_message').append(`<li>${errors}</li>`);
                     } else {
                         Swal.fire({
                             icon: "error",

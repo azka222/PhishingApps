@@ -12,11 +12,11 @@
                     <div>
                         <label for="status"
                             class="mb-1 mt-4 block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-300">Visibility</label>
-                        <select id="status" name="status" onchange="getAllCompanies()"
+                        <select id="status_filter" name="status" onchange="getAllCompanies()"
                             class="bg-gray-100 border border-gray-300 text-gray-900 text-xs md:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                             <option value="">All</option>
                             <option value="1">Public</option>
-                            <option value="0">Private</option>
+                            <option value="2">Private</option>
                         </select>
                     </div>
                 </div>
@@ -81,7 +81,7 @@
             });
 
             function getAllCompanies(page = 1) {
-                let status = $("#status").val();
+                let status = $("#status_filter").val();
                 let show = $("#show").val();
                 let search = $("#search").val();
                 $.ajax({
@@ -106,7 +106,7 @@
                                             </div>`;
                             let owner = company.user ? company.user.first_name + " " + company.user
                                 .last_name : "N/A";
-                            let row = `<tr class="text-xs md:text-sm font-normal text-gray-900 dark:text-gray-400 bg-white dark:bg-gray-800">
+                            let row = `<tr class="text-xs md:text-sm font-light text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800">
                                 <td class="p-4">${company.name}</td>
                                 <td class="p-4">${company.email}</td>
                                 <td class="p-4">${company.max_account}</td>
@@ -116,9 +116,9 @@
                                 <td class="p-4">${status}</td>
                                 <td class="p-4 flex gap-2">
                                     <button onclick="showEditCompanyModal(${company.id})"
-                                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-xl">Edit</button>
+                                        class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">Edit</button>
                                     <button onclick="deleteCompany(${company.id})"
-                                        class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-xl">Delete</button>
+                                        class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-red-600 rounded-xl hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600">Delete</button>
                                 </td>
                             </tr>`;
                             $("#list-admin-company-tbody").append(row);

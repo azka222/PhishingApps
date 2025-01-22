@@ -114,6 +114,7 @@
 
         function showAddCampaignModal() {
             showModal('add-campaign-modal');
+            $("#error_message_field").hide();
         }
 
         function getCampaignsResources() {
@@ -311,15 +312,10 @@
                     if (xhr.status === 422) {
                         var errorMessage = JSON.parse(xhr.responseText) ? JSON.parse(xhr.responseText) : xhr
                             .responseText;
-                        var errors = errorMessage.errors ? errorMessage.errors : errorMessage;
+                        var errors = errorMessage.message ? errorMessage.message : errorMessage;
                         $('#error_message_field').show();
                         $('#error_message').empty();
-                        $.each(errors, function(field, messages) {
-                            $.each(messages, function(index, message) {
-                                let data = `<li>${message}</li>`;
-                                $('#error_message').append(data);
-                            });
-                        });
+                        $('#error_message').append(`<li>${errors}</li>`);
                     } else {
                         Swal.fire({
                             icon: "error",

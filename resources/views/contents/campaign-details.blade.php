@@ -58,9 +58,14 @@
                             <p class="text-xs md:text-sm font-semibold mb-4">Emails Reported</p>
                             <div id="donut-email-reported"></div>
                         </div>
-
-
                     </div>
+                </div>
+            </div>
+
+            <div class="p-4">
+                <div class="bg-white dark:bg-gray-700 dark:text-white rounded-lg p-4 flex flex-col items-center w-full">
+                    <p class="text-xs md:text-sm font-semibold mb-4">Campaign Timeline</p>
+                    <div id="timeline-campaign" class="w-full"></div>
                 </div>
             </div>
 
@@ -93,8 +98,8 @@
                 aria-label="Table navigation">
                 <span
                     class="mb-4 md:mb-0 text-xs md:text-sm font-normal text-gray-500 dark:text-gray-400 block w-full md:inline md:w-auto">Showing
-                    <span class="font-semibold text-gray-900 dark:text-white"> <span id="numberFirstItem">0</span> - <span
-                            id="numberLastItem">0</span></span> of
+                    <span class="font-semibold text-gray-900 dark:text-white"> <span id="numberFirstItem">0</span> -
+                        <span id="numberLastItem">0</span></span> of
                     <span id="totalTemplatesCount" class="font-semibold text-gray-900 dark:text-white">0</span>
                 </span>
                 <ul id="page-button-campaign-details"
@@ -142,7 +147,6 @@
                     $('#email-template-name').text(response.template.name);
                     $('#campaign-total-target').text(response.results ? response.results.length : 'Not Set');
                     $('#campaign-status').text(response.status);
-
                     let dataEmailSent = calculateEmailSent(response.results);
                     getEmailSentChart(dataEmailSent.emailSent, dataEmailSent.emailNotSent, dataEmailSent
                         .totalEmail);
@@ -204,7 +208,6 @@
                         </tr>`;
                         $('#list-campaign-tbody').append(html);
                     });
-                    console.log(typeof response.pagination.total_pages);
                     paginationCampaignDetails('#page-button-campaign-details', response.pagination.total_pages,
                         response
                         .pagination.current_page);
@@ -216,9 +219,45 @@
                         (page - 1) * 5 + response.paginated_results.length
                     );
                     $("#totalTemplatesCount").text(response.pagination.total_results);
+                    let timelineData = getTimelineData(response);
+                    getTimelineCampaignChart(timelineData)
                 }
 
             })
+        }
+
+        function getTimelineData(data) {
+
+            let timelineData = [];
+            timelineData.push({
+                message: "Campaign Created",
+                date: new Date(data.created_date)
+            });
+            timelineData.push({
+                message: "Campaign Launched",
+                date: new Date(data.launch_date)
+            });
+
+            let campaignTimeLine = data.timeline;
+            campaignTimeLine.forEach(function(timeline) {
+                if (timeline.message == "Campaign Created") {
+                    return;
+                }
+                if (timeline.email) {
+                    timelineData.push({
+                        message: `${timeline.email} - ${timeline.message}`,
+                        date: new Date(timeline.time)
+                    });
+                } else {
+                    timelineData.push({
+                        message: timeline.message,
+                        date: new Date(timeline.time)
+                    });
+                }
+            });
+            campaignTimeLine.sort((a, b) => new Date(a.time) - new Date(b.time));
+            console.log(timelineData);
+            return timelineData;
         }
 
         function calculateEmailSent(results) {
@@ -438,6 +477,118 @@
 
             }
             var chart = new ApexCharts(document.querySelector("#donut-email-reported"), options);
+            chart.render();
+        }
+
+        function getTimelineCampaignChart(timeline) {
+            const data = timeline.map(item => ({
+                x: new Date(item.date).getTime(),
+                y: 1,
+                message: item.message,
+            }));
+            const minDate = new Date(Math.min(...timeline.map(item => new Date(item.date)))).getTime();
+            const maxDate = new Date(Math.max(...timeline.map(item => new Date(item.date)))).getTime();
+
+            const options = {
+                chart: {
+                    height: 280,
+                    type: "line",
+                    toolbar: {
+                        show: false,
+                    },
+                    zoom: {
+                        enabled: true,
+                    },
+                    pan: {
+                        enabled: false,
+                    },
+                },
+                dataLabels: {
+                    enabled: false,
+                },
+                series: [{
+                    name: "Timeline",
+                    data: data.map(item => ({
+                        x: item.x,
+                        y: item.y
+                    })),
+                }],
+                stroke: {
+                    curve: "straight",
+                },
+                markers: {
+                    size: 5,
+                    shape: "circle",
+                    hover: {
+                        size: 7,
+                    },
+                },
+                grid: {
+                    show: false,
+                },
+                xaxis: {
+                    type: "datetime",
+                    labels: {
+                        format: "dd MMM yyyy HH:mm",
+                        style: {
+                            colors: '#9ca3af'
+                        },
+                        formatter: function(value) {
+                            return new Date(value).toLocaleString('en-US', {
+                                timeZone: 'Asia/Jakarta',
+                                day: '2-digit',
+                                month: 'short',
+                                year: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                hour12: false,
+                            });
+                        },
+                    },
+                    lines: {
+                        show: false,
+                        colors: 'transparent',
+                    },
+                    tickAmount: data.length,
+                    min: minDate,
+                    max: maxDate,
+
+                },
+
+                yaxis: {
+                    show: false,
+                    labels: {
+                        style: {
+                            colors: function({
+                                w
+                            }) {
+                                return w.globals.theme === 'dark' ? '#ffffff' : '#000000';
+                            }
+                        }
+                    },
+                    lines: {
+                        show: false,
+                        colors: 'transparent',
+                    },
+                },
+                tooltip: {
+                    x: {
+                        format: "dd MMM yyyy HH:mm",
+                    },
+                    custom: function({
+                        series,
+                        seriesIndex,
+                        dataPointIndex,
+                        w
+                    }) {
+                        return `<div style="padding: 5px; font-size: 12px;">
+                    <strong>${new Date(w.globals.seriesX[seriesIndex][dataPointIndex]).toLocaleDateString('En-US')} ${new Date(w.globals.seriesX[seriesIndex][dataPointIndex]).toLocaleTimeString('En-US')}</strong><br>
+                    ${data[dataPointIndex].message}
+                </div>`;
+                    },
+                },
+            };
+            const chart = new ApexCharts(document.querySelector("#timeline-campaign"), options);
             chart.render();
         }
     </script>

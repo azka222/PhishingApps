@@ -314,6 +314,7 @@
             $("#button-for-target").removeAttr('onclick').attr('onclick', 'createTarget()');
             $("#button-for-target").text('Add');
             $("#admin_company_input_div").show();
+            $("#error_message_field").hide();
             showModal('add-target-modal');
         }
 
@@ -327,6 +328,7 @@
             $("#button-for-target").removeAttr('onclick').attr('onclick', `updateTarget(${id})`);
             $("#button-for-target").text('Update');
             $("#admin_company_input_div").hide();
+            $("#error_message_field").hide();
             showModal('add-target-modal');
 
         }
@@ -366,15 +368,12 @@
                 error: function(xhr) {
                     var errorMessage = JSON.parse(xhr.responseText) ? JSON.parse(xhr.responseText) : xhr
                         .responseText;
-                    var errors = errorMessage.errors ? errorMessage.errors : errorMessage;
+                    var errors = errorMessage.message ? errorMessage.message : errorMessage;
                     $('#error_message_field').show();
                     $('#error_message').empty();
-                    $.each(errors, function(field, messages) {
-                        $.each(messages, function(index, message) {
-                            let data = `<li>${message}</li>`;
-                            $('#error_message').append(data);
-                        });
-                    });
+                    $('#error_message').append(`<li>${errors}</li>`);
+
+
                 }
             });
         }
@@ -413,15 +412,10 @@
                 error: function(xhr) {
                     var errorMessage = JSON.parse(xhr.responseText) ? JSON.parse(xhr.responseText) : xhr
                         .responseText;
-                    var errors = errorMessage.errors ? errorMessage.errors : errorMessage;
+                    var errors = errorMessage.message ? errorMessage.message : errorMessage;
                     $('#error_message_field').show();
                     $('#error_message').empty();
-                    $.each(errors, function(field, messages) {
-                        $.each(messages, function(index, message) {
-                            let data = `<li>${message}</li>`;
-                            $('#error_message').append(data);
-                        });
-                    });
+                    $('#error_message').append(`<li>${errors}</li>`);
                 }
             });
         }
@@ -455,17 +449,12 @@
                             getTargets();
                         },
                         error: function(xhr) {
-                            var errorMessage = JSON.parse(xhr.responseText) ? JSON.parse(xhr
-                                    .responseText) : xhr
-                                .responseText;
-                            var errors = errorMessage.errors ? errorMessage.errors : errorMessage;
-                            $('#error_message_field').show();
-                            $('#error_message').empty();
-                            $.each(errors, function(field, messages) {
-                                $.each(messages, function(index, message) {
-                                    let data = `<li>${message}</li>`;
-                                    $('#error_message').append(data);
-                                });
+                            swal.fire({
+                                icon: "error",
+                                title: "Oops...",
+                                text: xhr.responseJSON.message,
+                                confirmButtonColor: '#ef4444',
+                                confirmButtonText: 'Close'
                             });
                         }
                     });

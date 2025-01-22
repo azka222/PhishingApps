@@ -73,6 +73,18 @@
                         <textarea id="company_address" name="company_address" rows="4"
                             class="mt-1 bg-gray-100 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-xs md:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300"></textarea>
                     </div>
+                    <div class="col-span-2">
+                        <div id="error_message_field_update_company" hidden>
+                            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg shadow-md relative"
+                                role="alert">
+                                <strong class="font-bold">Whoops!</strong>
+                                <span class="block sm:inline">There were some problems with your input.</span>
+                                <ul id="error_message_update_company"
+                                    class="mt-3 list-disc list-inside text-xs md:text-sm">
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
 
                 </div>
             </div>

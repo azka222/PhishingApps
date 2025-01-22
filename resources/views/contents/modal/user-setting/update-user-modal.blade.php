@@ -22,6 +22,7 @@
             <!-- Modal body -->
             <div class="p-4 md:p-5 space-y-4">
                 <div class="grid grid-cols-2 gap-4">
+                    <input type="hidden" id="user_id" name="user_id">
                     <div class="col-span-2 md:col-span-1">
                         <label for="user_first_name"
                             class="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-200">First
@@ -51,7 +52,7 @@
                         <input type="text" id="phone_user" name="phone_user" placeholder="Enter phone number"
                             class="mt-1 block w-full px-3 py-2 border bg-gray-100 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-xs md:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
                     </div>
-               
+
                     <div class="col-span-2 lg:col-span-1">
                         <label for="user_role"
                             class="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-200">Role</label>
@@ -61,12 +62,12 @@
                     </div>
 
                     <div class="col-span-2">
-                        <div id="error_message_field" hidden>
+                        <div id="error_message_field_update_user" hidden>
                             <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg shadow-md relative"
                                 role="alert">
                                 <strong class="font-bold">Whoops!</strong>
                                 <span class="block sm:inline">There were some problems with your input.</span>
-                                <ul id="error_message"class="mt-3 list-disc list-inside text-xs md:text-sm">
+                                <ul id="error_message_update_user"class="mt-3 list-disc list-inside text-xs md:text-sm">
                                 </ul>
                             </div>
                         </div>
@@ -78,7 +79,7 @@
                 class="flex items-center justify-end p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600 gap-2">
                 <button data-modal-hide="static-modal" type="button" onclick="hideModal('update-user-modal')"
                     class="py-2.5 px-5 ms-3 text-xs md:text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Close</button>
-                <button id="button-for-target" data-modal-hide="static-modal" type="button"
+                <button id="button-for-target" data-modal-hide="static-modal" type="button" onclick="updateUser()"
                     class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-xs md:text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Edit
                 </button>
             </div>

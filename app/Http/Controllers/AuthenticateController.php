@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
@@ -21,19 +20,19 @@ class AuthenticateController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-            'email' => 'required|email',
+            'email'    => 'required|email',
             'password' => 'required|string',
         ]);
 
         $credentials = $request->only('email', 'password');
-        if (!auth()->attempt($credentials)) {
+        if (! auth()->attempt($credentials)) {
             throw ValidationException::withMessages([
                 'email' => ['Cannot find user with provided credentials'],
             ]);
         }
 
         $user = auth()->user();
-        if (!$user->hasVerifiedEmail()) {
+        if (! $user->hasVerifiedEmail()) {
             event(new Registered($user));
             throw ValidationException::withMessages([
                 'email' => ['Your email isn’t verified yet. Please check your inbox and verify your email to continue'],
@@ -47,35 +46,39 @@ class AuthenticateController extends Controller
 
     public function register(Request $request)
     {
+        
+
         $request->validate([
-            'first_name' => 'required|string',
-            'last_name' => 'required|string',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|string|min:6',
-            'company' => 'required|string',
-            'phone' => 'required|string|regex:/^08[0-9]{8,}$/',
+            'first_name'            => 'required|string',
+            'last_name'             => 'required|string',
+            'email'                 => 'required|email|unique:users',
+            'password'              => 'required|string|min:6',
+            'company'               => 'required|string',
+            'phone'                 => 'required|string|regex:/^08[0-9]{8,}$/',
             'password_confirmation' => 'required|same:password',
-            'gender' => 'required|string',
+            'gender'                => 'required|string',
         ]);
-        $user = new User();
+
+        $user             = new User();
         $user->first_name = $request->first_name;
-        $user->last_name = $request->last_name;
-        $user->email = $request->email;
-        $user->password = bcrypt($request->password);
+        $user->last_name  = $request->last_name;
+        $user->email      = $request->email;
+        $user->password   = bcrypt($request->password);
         $user->company_id = $request->company;
-        $user->phone = $request->phone;
-        $user->gender = $request->gender;
-        $user->is_admin = 0;
+        $user->phone      = $request->phone;
+        $user->gender     = $request->gender;
+        $user->is_admin   = 0;
         $user->save();
+        dd($user);
         $checkUser = User::where('company_id', $request->company)->count();
         if ($checkUser == 1) {
-            $company = Company::findOrFail($request->company);
+            $company          = Company::findOrFail($request->company);
             $company->user_id = $user->id;
             $company->save();
 
-            $role = new Role();
-            $role->name = 'Company Admin';
-            $role->company_id = $request->company;
+            $role                = new Role();
+            $role->name          = 'Company Admin';
+            $role->company_id    = $request->company;
             $role->company_admin = 1;
             $role->save();
             $user->role_id = $role->id;
@@ -84,13 +87,13 @@ class AuthenticateController extends Controller
             $moduleAbilities = ModuleAbility::all()->pluck('id');
             $role->moduleAbility()->syncWithoutDetaching($moduleAbilities);
 
-            $userRole = new Role();
-            $userRole->name = 'User';
-            $userRole->company_id = $request->company;
+            $userRole                = new Role();
+            $userRole->name          = 'User';
+            $userRole->company_id    = $request->company;
             $userRole->company_admin = 0;
             $userRole->save();
         } else {
-            $userRole = Role::where('company_id', $request->company)->where('company_admin', 0)->first();
+            $userRole      = Role::where('company_id', $request->company)->where('company_admin', 0)->first();
             $user->role_id = $userRole->id;
             $user->save();
         }
@@ -104,9 +107,9 @@ class AuthenticateController extends Controller
 
     public function sendOtp(Request $request)
     {
-        $user = auth()->user();
-        $otp = rand(100000, 999999);
-        $user->otp = $otp;
+        $user                 = auth()->user();
+        $otp                  = rand(100000, 999999);
+        $user->otp            = $otp;
         $user->otp_expired_at = Carbon::now()->addMinutes(1);
         $user->save();
         Mail::to(auth()->user()->email)->send(new OtpEmail($otp));
@@ -121,9 +124,9 @@ class AuthenticateController extends Controller
 
     public function resendOtp(Request $request)
     {
-        $user = auth()->user();
-        $otp = rand(100000, 999999);
-        $user->otp = $otp;
+        $user                 = auth()->user();
+        $otp                  = rand(100000, 999999);
+        $user->otp            = $otp;
         $user->otp_expired_at = Carbon::now()->addMinutes(5);
         $user->save();
         Mail::to(auth()->user()->email)->send(new OtpEmail($otp));
@@ -142,7 +145,7 @@ class AuthenticateController extends Controller
         if ($user->otp != $request->otp) {
             return response()->json(['message' => 'Invalid OTP'], 400);
         }
-        $user->otp = null;
+        $user->otp            = null;
         $user->otp_expired_at = null;
         $user->save();
         return response()->json(['message' => 'OTP is valid']);
@@ -168,9 +171,9 @@ class AuthenticateController extends Controller
             'email' => 'required|email|exists:users,email',
         ]);
 
-        $user = User::where('email', $request->email)->first();
-        $token = sha1(time());
-        $user->reset_token = $token;
+        $user                 = User::where('email', $request->email)->first();
+        $token                = sha1(time());
+        $user->reset_token    = $token;
         $user->otp_expired_at = Carbon::now()->addMinutes(5);
         $user->save();
 
@@ -182,7 +185,7 @@ class AuthenticateController extends Controller
     public function resetPassword(Request $request)
     {
         $request->validate([
-            'token' => 'required',
+            'token'    => 'required',
             'password' => 'required|min:8|confirmed',
         ]);
 
@@ -190,12 +193,12 @@ class AuthenticateController extends Controller
             ->where('otp_expired_at', '>=', Carbon::now())
             ->first();
 
-        if (!$user) {
+        if (! $user) {
             return response()->json(['message' => 'Invalid or expired token.'], 400);
         }
 
-        $user->password = bcrypt($request->password);
-        $user->reset_token = null;
+        $user->password         = bcrypt($request->password);
+        $user->reset_token      = null;
         $user->token_expiration = null;
         $user->save();
 
@@ -205,7 +208,7 @@ class AuthenticateController extends Controller
     public function resetPasswordSubmit(Request $request)
     {
         $request->validate([
-            'token' => 'required',
+            'token'    => 'required',
             'password' => 'required|min:6',
         ]);
 
@@ -213,12 +216,12 @@ class AuthenticateController extends Controller
             ->where('otp_expired_at', '>=', now())
             ->first();
 
-        if (!$user) {
+        if (! $user) {
             return redirect('/')->with('error', 'Invalid or expired token.');
         }
 
-        $user->password = bcrypt($request->password);
-        $user->reset_token = null;
+        $user->password       = bcrypt($request->password);
+        $user->reset_token    = null;
         $user->otp_expired_at = null;
         $user->save();
         return response()->json(['message' => 'Password has been reset successfully.']);

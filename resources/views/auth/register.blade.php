@@ -137,9 +137,9 @@
                         <div class="flex flex-col items-center">
                             <div class="flex w-full items-center gap-2 justify-center">
                                 <button id="chooseCompanyBtn" type="button" onclick="createCompanyView()"
-                                class="w-full max-w-32 bg-[#38A169] text-white py-2 rounded-lg hover:bg-[#2F855A] transition duration-300 ease-in-out">Create</button>
-                            <button id="nextToRegisterUser" type="button" onclick="registerView()" hidden
-                                class="w-full max-w-32 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-300 ease-in-out">Next</button>
+                                    class="w-full max-w-32 bg-[#38A169] text-white py-2 rounded-lg hover:bg-[#2F855A] transition duration-300 ease-in-out">Create</button>
+                                <button id="nextToRegisterUser" type="button" onclick="registerView()" hidden
+                                    class="w-full max-w-32 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-300 ease-in-out">Next</button>
                             </div>
                             <!-- Login -->
                             <div class="mt-2 text-center text-white">
@@ -206,19 +206,16 @@
                                 </div>
                             </div>
                         </div>
-
-
+                    </div>
+                </div>
+            </div>
         </fieldset>
         <fieldset id="content" class="col-span-1 lg:block hidden">
             <div class="min-h-screen flex items-center justify-center bg-skyBlue">
-                aaaaaaa
+                Nanti Jadiin Content Apa Gitu
             </div>
         </fieldset>
-
     </div>
-    <style>
-
-    </style>
     <script>
         $(document).ready(function() {
             $('.js-example-basic-single').select2({
@@ -252,6 +249,7 @@
                         title: 'Success!',
                         text: 'Company created successfully.',
                         icon: 'success',
+                        confirmButtonColor: '#22c55e',
                         confirmButtonText: 'Ok'
                     }).then((result) => {
                         if (result.isConfirmed) {
@@ -384,6 +382,7 @@
                         title: 'Success!',
                         text: 'Check your mailbox to verify email.',
                         icon: 'success',
+                        confirmButtonColor: '#22c55e',
                         confirmButtonText: 'Login'
                     }).then((result) => {
                         if (result.isConfirmed) {

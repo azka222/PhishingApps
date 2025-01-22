@@ -419,6 +419,7 @@
             $("#phone_number").val(profile.phone);
             $("#gender").val(profile.gender);
             $("#email").val(profile.email);
+            $("#error_message_field_profile").hide();
         }
 
 
@@ -450,14 +451,11 @@
                     }
                 },
                 error: function(xhr) {
-                    var error = JSON.parse(xhr.responseText);
-                    Swal.fire({
-                        icon: "error",
-                        title: "Oops...",
-                        text: error.message,
-                        confirmButtonColor: '#ef4444',
-                        confirmButtonText: 'Close'
-                    });
+                    var errorMessage = JSON.parse(xhr.responseText);
+                    var errors = errorMessage.message;
+                    $('#error_message_field_profile').show();
+                    $('#error_message_profile').empty();
+                    $('#error_message_profile').append(`<li>${errors}</li>`);
                 }
             })
         }
@@ -634,6 +632,7 @@
             $("#company_status").val(company.status_id);
             $("#company_owner").val(company.user.email);
             $("#company_visibility").val(company.visibility_id);
+            $("#error_message_field_update_company").hide();
         }
 
         function submitEditCompanyModal() {
@@ -665,14 +664,12 @@
                     }
                 },
                 error: function(xhr) {
-                    var error = JSON.parse(xhr.responseText);
-                    Swal.fire({
-                        icon: "error",
-                        title: "Oops...",
-                        text: error.message,
-                        confirmButtonColor: '#ef4444',
-                        confirmButtonText: 'Close'
-                    });
+                    var errorMessage = JSON.parse(xhr.responseText);
+                    var errors = errorMessage.message;
+
+                    $('#error_message_field_update_company').show();
+                    $('#error_message_update_company').empty();
+                    $('#error_message_update_company').append(`<li>${errors}</li>`);
                 }
             })
         }
@@ -728,7 +725,47 @@
             $("#user_last_name").val(tempUser.last_name);
             $("#phone_user").val(tempUser.phone)
             $("#email_user").val(tempUser.email);
+            $("#user_id").val(tempUser.id);
+            $("#error_message_field_update_user").hide();
             showModal("update-user-modal");
+        }
+
+        function updateUser() {
+            let data = {
+                id: $("#user_id").val(),
+                first_name: $("#user_first_name").val(),
+                last_name: $("#user_last_name").val(),
+                phone: $("#phone_user").val(),
+                email: $("#email_user").val(),
+                role_id: $("#user_role").val(),
+                _token: "{{ csrf_token() }}"
+            }
+            $.ajax({
+                url: "{{ route('updateUserCompany') }}",
+                type: "POST",
+                data: data,
+                success: function(response) {
+                    if (response.status == "success") {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: response.message,
+                            confirmButtonColor: '#22c55e',
+                            confirmButtonText: 'Ok'
+                        })
+                        getUser();
+                        hideModal("update-user-modal");
+                    }
+                },
+                error: function(xhr) {
+                    var errorMessage = JSON.parse(xhr.responseText);
+                    var errors = errorMessage.message;
+                    $('#error_message_field_update_user').show();
+                    $('#error_message_update_user').empty();
+                    $('#error_message_update_user').append(`<li>${errors}</li>`);
+
+                }
+            })
         }
 
 
