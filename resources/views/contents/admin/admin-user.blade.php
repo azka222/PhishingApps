@@ -123,7 +123,7 @@
                                             </div>`;
                             }
 
-                            let tr = `<tr class="text-xs md:text-sm font-normal text-gray-900 dark:text-gray-400 bg-white dark:bg-gray-800">
+                            let tr = `<tr class="text-xs md:text-sm font-light text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800">
                                 <td class="p-4">${user.first_name}</td>
                                 <td class="p-4">${user.last_name}</td>
                                 <td class="p-4">${user.email}</td>
