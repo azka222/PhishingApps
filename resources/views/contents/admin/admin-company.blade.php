@@ -1,6 +1,7 @@
 @extends('layouts.master')
 @section('title', 'Fischsim - Admin Companies')
 @section('content')
+    @include('contents.modal.admin.update-company-admin')
     <div class=" p-4 w-full flex flex-col h-full min-h-screen  bg-gray-50 dark:bg-gray-800 dark:text-white text-gray-900">
         <div class="">
             <div class="flex p-4 items-center justify-between">
@@ -114,7 +115,7 @@
                                 <td class="p-4">${company.user ? company.user.email : "N/A"}</td>
                                 <td class="p-4">${status}</td>
                                 <td class="p-4 flex gap-2">
-                                    <button onclick="editCompany(${company.id})"
+                                    <button onclick="showEditCompanyModal(${company.id})"
                                         class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-xl">Edit</button>
                                     <button onclick="deleteCompany(${company.id})"
                                         class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-xl">Delete</button>
@@ -127,5 +128,95 @@
                     }
                 });
             };
+            
+            function showEditCompanyModal(id) {
+                showModal('update-company-admin');
+                let company = companies.find(company => company.id == id);
+                $("#company_name").val(company.name);
+                $("#company_email").val(company.email);
+                $("#max_account").val(company.max_account);
+                $("#owner").val(company.user ? company.user.first_name + " " + company.user.last_name : "N/A");
+                $("#owner_email").val(company.user ? company.user.email : "N/A");
+                $("#visibility").prop('checked', company.visibility_id === 1 ? true : false);
+                $("#status").prop('checked', company.status_id === 1 ? true : false);
+                $("#button-for-target").attr('onclick', `editCompany(${id})`);
+            }
+
+            function editCompany(id) {
+                let name = $("#company_name").val();    
+                let email = $("#company_email").val();
+                let max_account = $("#max_account").val();
+                let visibility = $("#visibility").is(":checked") ? 1 : 0;
+                let owner = $("#owner").val().split(" ");
+                let first_name = owner[0];
+                let last_name = owner[1];
+                let owner_email = $("#owner_email").val();
+                let status = $("#status").is(":checked") ? 1 : 0;
+                
+                $.ajax({
+                    url: "{{ route('editCompany') }}",
+                    type: "POST",
+                    data: {
+                        id: id,
+                        name: name,
+                        email: email,
+                        max_account: max_account,
+                        visibility: visibility,
+                        first_name: first_name,
+                        last_name: last_name,
+                        owner_email: owner_email,
+                        status: status,
+                        _token: "{{ csrf_token() }}"
+                    },
+                    success: function(data) {
+                        if (data.status == 'success') {
+                            getAllCompanies();
+                            hideModal('update-company-admin');
+                            Swal.fire({
+                                title: 'Success',
+                                text: 'Successfully updated company.',
+                                icon: 'success',
+                                confirmButtonColor: '#10b981',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                    }
+                });
+            }
+            
+            function deleteCompany(id) {
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#ef4444',
+                    cancelButtonColor: '#26d43b',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: "{{ route('deleteCompany') }}",
+                            type: "POST",
+                            data: {
+                                id: id,
+                                _token: "{{ csrf_token() }}"
+                            },
+                            success: function(data) {
+                                if (data.status == 'success') {
+                                    getAllCompanies();
+                                    Swal.fire({
+                                        title: 'Success',
+                                        text: 'Success deleted company.',
+                                        icon: 'success',
+                                        confirmButtonColor: '#10b981',
+                                        confirmButtonText: 'OK'
+                                    });
+                                }
+                            }
+                        });
+                    }
+                });
+            }
         </script>
     @endsection
