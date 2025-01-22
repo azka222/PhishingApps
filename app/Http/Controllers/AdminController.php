@@ -123,4 +123,62 @@ class AdminController extends Controller
             ], 403);
         }
     }
+    public function editCompany(Request $request){
+        if (Gate::allows('IsAdmin')) {
+            $request->validate([
+                'id'          => 'required',
+                'name'        => 'required',
+                'email'       => 'required|email',
+                'visibility'  => 'required',
+                'max_account' => 'required|integer',
+                'first_name'  => 'required',
+                'last_name'   => 'required',
+                'owner_email' => 'required|email',
+                'status'      => 'required|integer',
+            ]);
+
+            $company = Company::with('user')->where('id', $request->id)->first();
+            $company->name = $request->name;
+            $company->email = $request->email;
+            $company->visibility_id = $request->visibility == 1 ? 1 : 2;    
+            $company->max_account = $request->max_account;
+            $company->user->first_name = $request->first_name;
+            $company->user->last_name = $request->last_name;
+            $company->user->email = $request->owner_email;
+            $company->status_id = $request->status == 1 ? 1 : 2;
+            $company->user->save();
+            $company->save();
+            return response()->json([
+                'message' => 'Company updated successfully',
+                'status'  => 'success',
+            ]);
+        }
+        else{
+            return response()->json([
+                'message' => 'You are not authorized to perform this action',
+                'status'  => 'error',
+            ],403);
+        }
+    }
+    
+    public function deleteCompany(Request $request)
+    {
+        if (Gate::allows('IsAdmin')) {
+            $request->validate([
+                'id' => 'required',
+            ]);
+            $company = Company::find($request->id);
+            $company->delete();
+            return response()->json([
+                'message' => 'Company deleted successfully',
+                'status'  => 'success',
+            ]);
+        } else {
+            return response()->json([
+                'message' => 'You are not authorized to perform this action',
+                'status'  => 'error',
+            ], 403);
+        }
+    }
 }
+
