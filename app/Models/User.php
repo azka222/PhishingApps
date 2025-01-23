@@ -69,14 +69,14 @@ class User extends Authenticatable implements MustVerifyEmailContract
         return auth()->user()->is_admin;
     }
 
-    public function companyOwner()
+    public function companyAdmin($id)
     {
-        $company = Company::find($this->company_id);
-
-        if ($company->user_id === auth()->user()->id) {
+        $checkRole = Role::where('company_id', $id)->where('company_admin', 1)->first();
+        if ($checkRole->id === $this->role_id) {
             return true;
+        } else {
+            return false;
         }
-        return false;
 
     }
 
@@ -154,7 +154,7 @@ class User extends Authenticatable implements MustVerifyEmailContract
 
     public function canCreateGroup()
     {
-        return $this->haveAccess('Group', 'create') && !$this->adminCheck();
+        return $this->haveAccess('Group', 'create') && ! $this->adminCheck();
     }
 
     public function accessibleGroup()
@@ -241,7 +241,7 @@ class User extends Authenticatable implements MustVerifyEmailContract
 
     public function canCreateCampaign()
     {
-        return $this->haveAccess('Campaign', 'create') && !$this->adminCheck();
+        return $this->haveAccess('Campaign', 'create') && ! $this->adminCheck();
     }
 
     public function canDeleteCampaign()

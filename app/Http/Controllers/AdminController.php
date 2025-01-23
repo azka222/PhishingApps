@@ -59,11 +59,21 @@ class AdminController extends Controller
                     }
                 });
             }
+
             if ($request->has('status') && $request->status != null) {
                 $company->where('visibility_id', $request->status);
             }
+
+            if($request->has('active') && $request->active != null){
+                $company->where('status_id', $request->active);
+            }
             $totalCompany = $company->count();
             $company      = $company->paginate($request->show);
+            foreach ($company as $comp) {
+                $totalUser = User::where('company_id', $comp->id)->count();
+                $comp->setAttribute('total_user', $totalUser);
+            }
+
             return response()->json([
                 'companies'      => $company->items(),
                 'companyTotal'   => $totalCompany,
@@ -123,7 +133,8 @@ class AdminController extends Controller
             ], 403);
         }
     }
-    public function editCompany(Request $request){
+    public function editCompany(Request $request)
+    {
         if (Gate::allows('IsAdmin')) {
             $request->validate([
                 'id'          => 'required',
@@ -137,30 +148,29 @@ class AdminController extends Controller
                 'status'      => 'required|integer',
             ]);
 
-            $company = Company::with('user')->where('id', $request->id)->first();
-            $company->name = $request->name;
-            $company->email = $request->email;
-            $company->visibility_id = $request->visibility == 1 ? 1 : 2;    
-            $company->max_account = $request->max_account;
+            $company                   = Company::with('user')->where('id', $request->id)->first();
+            $company->name             = $request->name;
+            $company->email            = $request->email;
+            $company->visibility_id    = $request->visibility == 1 ? 1 : 2;
+            $company->max_account      = $request->max_account;
             $company->user->first_name = $request->first_name;
-            $company->user->last_name = $request->last_name;
-            $company->user->email = $request->owner_email;
-            $company->status_id = $request->status == 1 ? 1 : 2;
+            $company->user->last_name  = $request->last_name;
+            $company->user->email      = $request->owner_email;
+            $company->status_id        = $request->status == 1 ? 1 : 2;
             $company->user->save();
             $company->save();
             return response()->json([
                 'message' => 'Company updated successfully',
                 'status'  => 'success',
             ]);
-        }
-        else{
+        } else {
             return response()->json([
                 'message' => 'You are not authorized to perform this action',
                 'status'  => 'error',
-            ],403);
+            ], 403);
         }
     }
-    
+
     public function deleteCompany(Request $request)
     {
         if (Gate::allows('IsAdmin')) {
@@ -181,4 +191,3 @@ class AdminController extends Controller
         }
     }
 }
-

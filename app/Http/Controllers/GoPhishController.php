@@ -968,7 +968,7 @@ class GophishController extends Controller
 
     public function deleteCampaign(Request $request)
     {
-        if (Gate::allows('IsCompanyOwner')) {
+        if (Gate::allows('IsCompanyAdmin')) {
             $campaignId = intval($request->id);
             $response   = Http::withHeaders([
                 'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),

@@ -6,6 +6,9 @@
     @include('contents.modal.user-setting.edit-company-modal')
     @include('contents.modal.user-setting.create-role-modal')
     @include('contents.modal.user-setting.update-user-modal')
+    @php
+        $companyId = Auth::user()->company_id;
+    @endphp
     <div class="min-h-screen dark:bg-gray-800">
         <div class="grid grid-cols-4 gap-2 md:gap-4 justify-center pt-8 lg:pt-28 pb-8 px-4 lg:px-28 ">
             <div class="col-span-4 lg:col-span-1 pe-0 md:pe-2 ">
@@ -36,7 +39,7 @@
                                 <span class="ms-3 text-xs md:text-sm">Security</span>
                             </div>
                         </div>
-                        @IsCompanyOwner()
+                        @IsCompanyAdmin($companyId)
                         <div class="mb-2">
                             <div id="button-setting-company" onclick="handleSidebar('company');getCompany()"
                                 class="side-button flex items-center p-2 rounded-lg">
@@ -77,7 +80,7 @@
                                 <span class="ms-3 text-xs md:text-sm">Role</span>
                             </div>
                         </div>
-                        @endIsCompanyOwner()
+                        @endIsCompanyAdmin()
                     </div>
                 </div>
             </div>
@@ -93,11 +96,11 @@
                                         </div>
                                         <div class="h-full flex gap-4 items-center">
                                             <div>
-                                                <h1 id="username" class="text-xs md:text-lg font-semibold dark:text-white">
+                                                <h1 id="username" class="text-xs md:text-lg font-semibold text-gray-800 dark:text-white">
                                                     User Name
                                                 </h1>
                                                 <p id="company_display"
-                                                    class="text-xs font-light md:text-sm dark:text-white">
+                                                    class="text-xs font-light text-gray-700 md:text-sm dark:text-white">
                                                     Company
                                                     Name</p>
                                             </div>
@@ -124,43 +127,43 @@
                                         <h1 class="text-xs md:text-sm text-gray-800 dark:text-white font-semibold">First
                                             Name
                                         </h1>
-                                        <h2 id="first_name_display" class="text-xs md:text-sm pt-2 dark:text-white"></h2>
+                                        <h2 id="first_name_display" class="text-xs text-gray-700 md:text-sm pt-2 dark:text-white"></h2>
                                     </div>
                                     <div class="ps-2 pt-2 col-span-2 md:col-span-1">
                                         <h1 class="text-xs md:text-sm text-gray-800 dark:text-white font-semibold">Last Name
                                         </h1>
-                                        <h2 id="last_name_display" class="text-xs md:text-sm pt-2 dark:text-white"></h2>
+                                        <h2 id="last_name_display" class="text-xs text-gray-700 md:text-sm pt-2 dark:text-white"></h2>
                                     </div>
                                     <div class="ps-2 pt-2 col-span-2 md:col-span-1">
                                         <h1 class="text-xs md:text-sm text-gray-800 dark:text-white font-semibold">Phone
                                             Number
                                         </h1>
-                                        <h2 id="phone_number_display" class="text-xs md:text-sm pt-2 dark:text-white"></h2>
+                                        <h2 id="phone_number_display" class="text-xs text-gray-700 md:text-sm pt-2 dark:text-white"></h2>
                                     </div>
                                     <div class="ps-2 pt-2 col-span-2 md:col-span-1 mb-4">
                                         <h1 class="text-xs md:text-sm text-gray-800 dark:text-white font-semibold">Gender
                                         </h1>
-                                        <h2 id="gender_display" class="text-xs md:text-sm pt-2 dark:text-white"></h2>
+                                        <h2 id="gender_display" class="text-xs text-gray-700 md:text-sm pt-2 dark:text-white"></h2>
                                     </div>
 
                                     <div class="relative flex items-center justify-center col-span-2">
                                         <hr class="w-full border-gray-400 dark:border-gray-500">
                                         <span
-                                            class="absolute px-3 text-gray-700 rounded-full bg-gray-100 dark:bg-gray-600 dark:text-white">Additional
+                                            class="absolute px-3 text-xs text-gray-700 rounded-full bg-gray-100 dark:bg-gray-600 dark:text-white">Additional
                                             Info</span>
                                     </div>
 
                                     <div class="ps-2 pt-4 col-span-2 md:col-span-1">
                                         <h1 class="text-xs md:text-sm text-gray-800 dark:text-white font-semibold">Company
                                             Address</h1>
-                                        <h2 id="address_display" class="text-xs md:text-sm pt-2 dark:text-white">Not Set
+                                        <h2 id="address_display" class="text-xs md:text-sm pt-2 text-gray-700 dark:text-white">Not Set
                                         </h2>
                                     </div>
                                     <div class="ps-2 pt-4 col-span-2 md:col-span-1">
                                         <h1 class="text-xs md:text-sm text-gray-800 dark:text-white font-semibold">Company
                                             Type
                                         </h1>
-                                        <h2 id="company_type_display" class="text-xs md:text-sm pt-2 dark:text-white">Not
+                                        <h2 id="company_type_display" class="text-xs text-gray-700 md:text-sm pt-2 dark:text-white">Not
                                             Set</h2>
                                     </div>
                                 </div>
@@ -174,7 +177,7 @@
                 <div id="content-security" class="content-user-setting">
                     <div class=" bg-gray-100 dark:bg-gray-600 rounded-xl p-4">
                         <div class="bg-gray-200 dark:bg-gray-700 rounded-xl p-4">
-                            <h1 class="text-xs md:text-lg font-semibold dark:text-white">Security</h1>
+                            <h1 class="text-xs md:text-sm font-semibold dark:text-white">Security</h1>
                             <p class="text-xs md:text-sm dark:text-white">This is the security setting page</p>
                         </div>
                         <div class="bg-gray-200 dark:bg-gray-700 rounded-xl p-4 mt-4">
@@ -214,18 +217,18 @@
                     </div>
 
                 </div>
-                @IsCompanyOwner()
+                @IsCompanyAdmin($companyId)
                 <div id="content-company" class="content-user-setting p-4">
                     <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-xl p-4">
-                        <h1 class="text-xs  md:text-sm font-semibold dark:text-white">Company</h1>
-                        <p class="text-xs md:text-sm dark:text-white">This is the company setting page</p>
+                        <h1 class="text-xs text-gray-800 md:text-sm font-semibold dark:text-white">Company</h1>
+                        <p class="text-xs md:text-sm text-gray-700 dark:text-white">This is the company setting page</p>
                     </div>
                     <div class="w-full mt-4 bg-gray-200 dark:bg-gray-700 rounded-xl ">
                         <div class="grid grid-cols-2 gap-4 p-4">
                             <div class="ps-2 pt-2 col-span-2">
                                 <div class="flex flex-row justify-between">
                                     <div id="company-name-display"
-                                        class="text-xs  md:text-sm dark:text-white font-semibold">
+                                        class="text-xs  md:text-sm dark:text-white text-gray-800 font-semibold">
                                         Company
                                         Name</div>
                                     <button onclick="showEditCompanyModal()"
@@ -245,32 +248,32 @@
                                 <hr class="w-full border-gray-400 dark:border-gray-500">
                             </div>
                             <div class="ps-2 pt-2 col-span-2 md:col-span-1">
-                                <h1 class="text-xs md:text-sm dark:text-white font-semibold">Company Email</h1>
-                                <h2 id="company_email_display" class="text-xs md:text-sm pt-2 dark:text-white">Not Set
+                                <h1 class="text-xs md:text-sm text-gray-800 dark:text-white font-semibold">Company Email</h1>
+                                <h2 id="company_email_display" class="text-xs text-gray-700 md:text-sm pt-2 dark:text-white">Not Set
                                 </h2>
                             </div>
                             <div class="ps-2 pt-2 col-span-2 md:col-span-1">
-                                <h1 class="text-xs md:text-sm dark:text-white font-semibold">Owner</h1>
-                                <h2 id="company_owner_display" class="text-xs md:text-sm pt-2 dark:text-white">Not Set
+                                <h1 class="text-xs md:text-sm dark:text-white text-gray-800 font-semibold">Owner</h1>
+                                <h2 id="company_owner_display" class="text-xs md:text-sm pt-2 text-gray-700 dark:text-white">Not Set
                                 </h2>
                             </div>
                             <div class="ps-2 pt-2 col-span-2 md:col-span-1">
-                                <h1 class="text-xs md:text-sm dark:text-white font-semibold">Allowed User</h1>
-                                <h2 id="company_user_display" class="text-xs md:text-sm pt-2 dark:text-white">Not Set</h2>
+                                <h1 class="text-xs md:text-sm dark:text-white text-gray-800 font-semibold">Allowed User</h1>
+                                <h2 id="company_user_display" class="text-xs md:text-sm pt-2 text-gray-700 dark:text-white">Not Set</h2>
                             </div>
                             <div class="ps-2 pt-2 col-span-2 md:col-span-1">
-                                <h1 class="text-xs md:text-sm dark:text-white font-semibold">Address</h1>
-                                <h2 id="company_address_display" class="text-xs md:text-sm pt-2 dark:text-white">Not Set
+                                <h1 class="text-xs md:text-sm dark:text-white text-gray-800 font-semibold">Address</h1>
+                                <h2 id="company_address_display" class="text-xs md:text-sm pt-2 text-gray-700 dark:text-white">Not Set
                                 </h2>
                             </div>
                             <div class="ps-2 pt-2 col-span-2 md:col-span-1">
-                                <h1 class="text-xs md:text-sm dark:text-white font-semibold">Status</h1>
-                                <h2 id="company_status_display" class="text-xs md:text-sm pt-2 dark:text-white">Not Set
+                                <h1 class="text-xs md:text-sm dark:text-white font-semibold text-gray-800">Status</h1>
+                                <h2 id="company_status_display" class="text-xs md:text-sm pt-2 text-gray-700 dark:text-white">Not Set
                                 </h2>
                             </div>
                             <div class="ps-2 pt-2 col-span-2 md:col-span-1">
-                                <h1 class="text-xs md:text-sm dark:text-white font-semibold">Visibility</h1>
-                                <h2 id="company_visibility_display" class="text-xs md:text-sm pt-2 dark:text-white">Not
+                                <h1 class="text-xs md:text-sm dark:text-white text-gray-800 font-semibold">Visibility</h1>
+                                <h2 id="company_visibility_display" class="text-xs text-gray-700 md:text-sm pt-2 dark:text-white">Not
                                     Set</h2>
                             </div>
                         </div>
@@ -336,7 +339,7 @@
 
                     </div>
                 </div>
-                @endIsCompanyOwner()
+                @endIsCompanyAdmin()
             </div>
 
         </div>
@@ -625,6 +628,7 @@
 
         function showEditCompanyModal() {
             showModal("edit-company-modal");
+            $("#company_id").val(company.id);
             $("#company_name").val(company.name);
             $("#company_email").val(company.email);
             $("#company_address").val(company.address);
@@ -637,7 +641,7 @@
 
         function submitEditCompanyModal() {
             let data = {
-                id: company.id,
+                id: $("#company_id").val(),
                 name: $("#company_name").val(),
                 email: $("#company_email").val(),
                 address: $("#company_address").val(),
@@ -685,7 +689,7 @@
                     $("#tbody-company-user").empty();
                     users.forEach((user, index) => {
                         html = `
-                            <tr class="text-xs md:text-sm font-normal text-gray-900 dark:text-gray-400 bg-white dark:bg-gray-800">
+                            <tr class="text-xs md:text-sm font-light text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800">
                                 <td class="px-6 py-4">
                                     ${index + 1}
                                 </td>
@@ -779,7 +783,7 @@
                     $("#tbody-role-user").empty();
                     roles.forEach((role, index) => {
                         html = `
-                            <tr class="text-xs md:text-sm font-normal text-gray-900 dark:text-gray-400 bg-white dark:bg-gray-800">
+                            <tr class="text-xs md:text-sm font-light text-gray-900 dark:text-gray-400 bg-white dark:bg-gray-800">
                                 <td class="px-6 py-4">
                                     ${index + 1}
                                 </td>
@@ -806,8 +810,8 @@
             })
         }
 
-        function showEditRoleModal(id) {
-            $.ajax({
+        async function showEditRoleModal(id) {
+            await $.ajax({
                 url: "{{ route('getRoleDetails') }}",
                 type: "GET",
                 data: {
@@ -832,11 +836,14 @@
             $(".access-role-checkbox input[type='checkbox']").prop("checked", false);
             $("#role_id").val("");
             $("#role_name").val("");
+            $("#is_admin_role").prop("checked", false);
             showModal('create-role-modal');
         }
 
         function setRoleAccess(roleAttribute, role) {
             $(".access-role-checkbox input[type='checkbox']").prop("checked", false);
+            role.company_admin == 1 ? $("#is_admin_role").prop("checked", true) : $("#is_admin_role").prop("checked",
+                false);
             $("#role_id").val(role.id);
             $("#role_name").val(role.name);
             roleAttribute.forEach((attribute) => {
@@ -847,6 +854,7 @@
         function addRole() {
             let data = {
                 name: $("#role_name").val(),
+                is_admin: $("#is_admin_role").is(":checked") ? 1 : 0,
                 access: [],
                 _token: "{{ csrf_token() }}"
             }
@@ -889,6 +897,7 @@
             let data = {
                 id: $("#role_id").val(),
                 name: $("#role_name").val(),
+                is_admin: $("#is_admin_role").is(":checked") ? 1 : 0,
                 access: [],
                 _token: "{{ csrf_token() }}"
             }
