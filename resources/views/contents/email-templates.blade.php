@@ -130,9 +130,9 @@
             function createEmailTemplates() {
                 let template_name = $("#template_name").val();
                 let email_subject = $("#email_subject").val();
-                let email_body = $("#email_body").val() == 'text' ? $("#email_text").val() : $("#email_html").val();
                 let status = $("#email_status").val();
                 let sender_name = $("#sender_name").val();
+                let email_body = $("#email_body").val() == 'text' ? $("#email_text").val() : $("#email_html").val();
                 let body_type = $("#email_body").val();
                 let sender_email = $("#sender_email").val();
                 let email_attachment = $("#email_attachment")[0].files[0];
@@ -141,10 +141,10 @@
                 formData.append('template_name', template_name);
                 formData.append('email_subject', email_subject);
                 formData.append('email_body', email_body);
+                formData.append('body_type', body_type);
                 formData.append('status', status);
                 formData.append('email_attachment', email_attachment);
                 formData.append('sender_name', sender_name);
-                formData.append('body_type', body_type);
                 formData.append('sender_email', sender_email);
                 formData.append('company', company);
                 formData.append('_token', "{{ csrf_token() }}");
@@ -375,8 +375,8 @@
                 let id = ids;
                 let template_name = $("#template_name").val();
                 let email_subject = $("#email_subject").val();
-                let email_text = $("#email_text").val();
-                let email_html = $("#email_html").val();
+                let email_body = $("#email_body").val() == 'text' ? $("#email_text").val() : $("#email_html").val();
+                let body_type = $("#email_body").val();
                 let status = $("#email_status").val();
                 let sender_name = $("#sender_name").val();
                 let sender_email = $("#sender_email").val();
@@ -398,8 +398,8 @@
                 formData.append('id', id);
                 formData.append('template_name', template_name);
                 formData.append('email_subject', email_subject);
-                formData.append('email_text', email_text);
-                formData.append('email_html', email_html);
+                formData.append('email_body', email_body);
+                formData.append('body_type', body_type);
                 formData.append('status', status);
                 formData.append('old_email_attachment', json_email);
                 formData.append('email_attachment', email_attachment);
