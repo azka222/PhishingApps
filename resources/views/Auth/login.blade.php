@@ -94,10 +94,10 @@
             const showPasswordBtn = document.querySelector(".show-password");
 
             showPasswordBtn.addEventListener("mousedown", () => {
-                passwordInput.type = "text"; // Change input type to text
+                passwordInput.type = "text"; 
             });
             showPasswordBtn.addEventListener("mouseup", () => {
-                passwordInput.type = "password"; // Change input type back to password
+                passwordInput.type = "password"; 
             });
             showPasswordBtn.addEventListener("mouseleave", () => {
                 passwordInput.type = "password";
