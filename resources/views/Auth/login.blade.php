@@ -7,7 +7,7 @@
                 <div class='relative bg-blueBlue rounded-3xl shadow-lg p-8  w-full max-w-md mx-auto text-white'>
                     <!-- Logo -->
                     <div class="flex items-center justify-center">
-                        <img src="{{asset('image/kittyoEat.png')}}" alt="Logo" class="w-24 h-auto object-cover">
+                        <img src="{{ asset('image/kittyoEat.png') }}" alt="Logo" class="w-24 h-auto object-cover">
                     </div>
                     <!-- Header -->
                     <div class='text-4xl font-outfit text-center mt-4'>
@@ -16,16 +16,16 @@
                     </div>
                     <!-- Email input -->
                     <div class="mt-8">
-                        <label for="user_email"
-                            class="block mb-2  text-xs md:text-sm sm:text-base font-medium">Your email</label>
+                        <label for="user_email" class="block mb-2  text-xs md:text-sm sm:text-base font-medium">Your
+                            email</label>
                         <input type="email" id="login_email"
                             class="w-full p-3 border rounded-lg text-gray-900 focus:ring-2 text-xs md:text-sm focus:ring-blue-500 focus:outline-none"
                             placeholder="Enter your email" required />
                     </div>
                     <!-- Password Input -->
                     <div class="mt-6">
-                        <label for="Password"
-                            class="block mb-2 text-xs md:text-sm sm:text-base font-medium">Your password</label>
+                        <label for="Password" class="block mb-2 text-xs md:text-sm sm:text-base font-medium">Your
+                            password</label>
                         <input type="password" id="login_password"
                             class="w-full p-3 border rounded-lg text-gray-900 text-xs md:text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
                             placeholder="Enter your password" required />
@@ -37,9 +37,10 @@
                                 class="w-4 h-4 rounded border-gray-300 focus:ring-2 focus:ring-blue-500">
                             <label for="remember" class="ml-2 text-xs md:text-sm text-gray-300">Remember me?</label>
                         </div>
-                        <a href="{{ route('forgotPasswordView') }}" class="text-xs md:text-sm text-blue-400 hover:underline">Reset Password</a>
+                        <a href="{{ route('forgotPasswordView') }}"
+                            class="text-xs md:text-sm text-blue-400 hover:underline">Reset Password</a>
                     </div>
-                     <!-- Error Message  -->
+                    <!-- Error Message  -->
                     <div class="pt-8">
                         <div id="error_message_field_login" hidden>
                             <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg shadow-md relative"
@@ -75,68 +76,16 @@
 
     <script>
         $(document).ready(function() {
-            $("#phone").on('input', function() {
-                var phone = $(this).val();
-                $(this).val(phone.replace(/[^0-9]/g, ''));
+            $(document).on('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    login(); 
+                }
             });
-
-            getCompanies();
         });
 
         function registerView() {
-         window.location.href = "{{ route('registerView') }}";
+            window.location.href = "{{ route('registerView') }}";
 
-        }
-
-        function checkCompany(id) {
-            $.ajax({
-                url: "{{ route('checkCompany') }}",
-                type: 'POST',
-                data: {
-                    id: id,
-                    "_token": "{{ csrf_token() }}"
-                },
-                success: function(response) {
-                    $('#error_message_field_company').hide();
-                    $('#success_message_field_company').show();
-                    $('#createCompanyBtn').hide();
-                    $('#nextToRegisterUser').show();
-
-                },
-                error: function(xhr, status, error) {
-                    var errorMessage = JSON.parse(xhr.responseText);
-                    var errors = errorMessage.message;
-                    var suggest = errorMessage.suggest;
-                    $('#createCompanyBtn').show();
-                    $('#nextToRegisterUser').hide();
-                    $("#success_message_field_company").hide();
-                    $('#error_message_field_company').show();
-                    $('#error_message_company').empty();
-                    $('#error_message_company').append(`<li>${errors}</li>`);
-                    $('#error_message_company').append(`<li>${suggest}</li>`);
-
-
-                }
-            })
-        }
-
-        function getCompanies() {
-            $.ajax({
-                url: "{{ route('getCompanies') }}",
-                type: 'GET',
-                success: function(response) {
-                    let companies = response.data;
-                    $("#selectCompany").empty();
-                    $("#selectCompany").append('<option value="" selected disabled>Choose a company</option>');
-                    $.each(companies, function(index, company) {
-                        $("#selectCompany").append(
-                            `<option value="${company.id}">${company.name}</option>`);
-                    });
-                },
-                error: function(xhr, status, error) {
-                    console.log(xhr.responseText);
-                }
-            });
         }
 
 
@@ -182,9 +131,6 @@
 
             });
         }
-
-
-
     </script>
 
 @endsection
