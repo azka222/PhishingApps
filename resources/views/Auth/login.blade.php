@@ -23,13 +23,27 @@
                             placeholder="Enter your email" required />
                     </div>
                     <!-- Password Input -->
-                    <div class="mt-6">
-                        <label for="Password" class="block mb-2 text-xs md:text-sm sm:text-base font-medium">Your
-                            password</label>
-                        <input type="password" id="login_password"
-                            class="w-full p-3 border rounded-lg text-gray-900 text-xs md:text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                            placeholder="Enter your password" required />
+                    <div class="mt-6 relative">
+                        <label for="Password" class="block mb-2 text-xs md:text-sm sm:text-base font-medium">
+                            Your password
+                        </label>
+                        <div class="relative">
+                            <input type="password" id="login_password"
+                                class="w-full p-3 pr-10 border rounded-lg text-gray-900 text-xs md:text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                                placeholder="Enter your password" required />
+                            <!-- SVG Icon -->
+                            <button class="show-password absolute  top-1/2 -translate-y-1/2">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                                    class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 w-6 h-6 cursor-pointer">
+                                    <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
+                                    <path fill-rule="evenodd"
+                                        d="M1.323 11.447C2.811 6.976 7.028 3.75 12.001 3.75c4.97 0 9.185 3.223 10.675 7.69.12.362.12.752 0 1.113-1.487 4.471-5.705 7.697-10.677 7.697-4.97 0-9.186-3.223-10.675-7.69a1.762 1.762 0 0 1 0-1.113ZM17.25 12a5.25 5.25 0 1 1-10.5 0 5.25 5.25 0 0 1 10.5 0Z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                        </div>
                     </div>
+
                     <!-- Remember me & Reset Password -->
                     <div class="flex items-center justify-between px-1 mt-4">
                         <div class="flex items-center">
@@ -75,10 +89,24 @@
     </div>
 
     <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const passwordInput = document.getElementById("login_password");
+            const showPasswordBtn = document.querySelector(".show-password");
+
+            showPasswordBtn.addEventListener("mousedown", () => {
+                passwordInput.type = "text"; // Change input type to text
+            });
+            showPasswordBtn.addEventListener("mouseup", () => {
+                passwordInput.type = "password"; // Change input type back to password
+            });
+            showPasswordBtn.addEventListener("mouseleave", () => {
+                passwordInput.type = "password";
+            });
+        });
         $(document).ready(function() {
             $(document).on('keydown', function(e) {
                 if (e.key === 'Enter') {
-                    login(); 
+                    login();
                 }
             });
         });
