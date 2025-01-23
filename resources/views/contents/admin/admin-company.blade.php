@@ -19,6 +19,16 @@
                             <option value="2">Private</option>
                         </select>
                     </div>
+                    <div>
+                        <label for="active"
+                            class="mb-1 mt-4 block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-300">Status</label>
+                        <select id="status_active" name="active" onchange="getAllCompanies()"
+                            class="bg-gray-100 border border-gray-300 text-gray-900 text-xs md:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            <option value="">All</option>
+                            <option value="1">Active</option>
+                            <option value="2">Inactive</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="flex md:flex-row flex-col justify-between items-start md:items-center mt-8">
                     <div class="flex md:flex-row flex-col items-start md:items-center mb-4 md:mb-0">
@@ -48,7 +58,7 @@
                                 <th scope="col" class="p-4">Visibility</th>
                                 <th scope="col" class="p-4">Owner</th>
                                 <th scope="col" class="p-4">Owner Email</th>
-                                <th scope="col" class="p-4">Status</th>
+                                <th scope="col" class="p-4">User</th>
                                 <th scope="col" class="p-4">Action</th>
                             </tr>
                         </thead>
@@ -84,6 +94,7 @@
                 let status = $("#status_filter").val();
                 let show = $("#show").val();
                 let search = $("#search").val();
+                let active = $("#status_active").val();
                 $.ajax({
                     url: "{{ route('getAllCompany') }}",
                     type: "GET",
@@ -91,6 +102,7 @@
                         status: status,
                         show: show,
                         search: search,
+                        active: active,
                         page: page
                     },
                     success: function(data) {
@@ -98,6 +110,17 @@
                         console.log(companies);
                         $("#list-admin-company-tbody").empty();
                         companies.forEach(function(company) {
+                            if ((company.max_account - company.total_user) == 0) {
+
+                                available = `<div class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300 inline-block">Full
+                                            </div>`;
+                            } else if (company.total_user == 0) {
+                                available = `<div class="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300 inline-block"  style="white-space: nowrap;">No Account
+                                            </div>`;
+                            } else if (company.total_user < company.max_account) {
+                                available = `<div class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300 inline-block">Available
+                                            </div>`;
+                            }
                             let visibility = company.visibility_id === 1 ? `<div class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300 inline-block">Public
                                             </div>` : `<div class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300 inline-block">Private
                                             </div>`;
@@ -113,7 +136,7 @@
                                 <td class="p-4">${visibility}</td>
                                 <td class="p-4">${owner}</td>
                                 <td class="p-4">${company.user ? company.user.email : "N/A"}</td>
-                                <td class="p-4">${status}</td>
+                                <td class="p-4">${available}</td>
                                 <td class="p-4 flex gap-2">
                                     <button onclick="showEditCompanyModal(${company.id})"
                                         class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">Edit</button>
@@ -128,7 +151,7 @@
                     }
                 });
             };
-            
+
             function showEditCompanyModal(id) {
                 showModal('update-company-admin');
                 let company = companies.find(company => company.id == id);
@@ -143,7 +166,7 @@
             }
 
             function editCompany(id) {
-                let name = $("#company_name").val();    
+                let name = $("#company_name").val();
                 let email = $("#company_email").val();
                 let max_account = $("#max_account").val();
                 let visibility = $("#visibility").is(":checked") ? 1 : 0;
@@ -152,7 +175,7 @@
                 let last_name = owner[1];
                 let owner_email = $("#owner_email").val();
                 let status = $("#status").is(":checked") ? 1 : 0;
-                
+
                 $.ajax({
                     url: "{{ route('editCompany') }}",
                     type: "POST",
@@ -183,7 +206,7 @@
                     }
                 });
             }
-            
+
             function deleteCompany(id) {
                 Swal.fire({
                     title: 'Are you sure?',

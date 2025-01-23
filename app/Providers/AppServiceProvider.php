@@ -29,8 +29,8 @@ class AppServiceProvider extends ServiceProvider
             return ! auth()->user()->is_admin;
         });
         
-        Blade::if('IsCompanyOwner', function () {
-            return auth()->user()->companyOwner();
+        Blade::if('IsCompanyAdmin', function ($id) {
+            return auth()->user()->companyAdmin($id);
         });
         Blade::if('CanAccess', function ($module, $ability) {
             return auth()->user()->haveAccess($module, $ability);
@@ -119,8 +119,8 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('IsAdmin', function ($user) {
             return $user->is_admin;
         });
-        Gate::define('IsCompanyOwner', function ($user) {
-            return $user->companyOwner();
+        Gate::define('IsCompanyAdmin', function ($user, $id) {
+            return $user->companyAdmin($id);
         });
 
         Gate::define('CanAccessDashboard', function ($user) {

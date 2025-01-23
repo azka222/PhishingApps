@@ -30,6 +30,18 @@
                         <input type="text" id="role_name" name="role_name" placeholder="Enter role name"
                             class="mt-1 block w-full bg-gray-100 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-xs md:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
                     </div>
+                    <div class="col-span-2">
+                        <div class="flex items-center justify-between">
+                            <span class=" text-sm font-medium text-gray-900 dark:text-gray-300">Is Admin Role?</span>
+                            <label class="inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="is_admin_role" value="" class="sr-only peer">
+                                <div
+                                    class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
+                                </div>
+                            </label>
+                            
+                        </div>
+                    </div>
 
 
                     @foreach ($modules as $module)
@@ -38,7 +50,8 @@
                                 <label for=""
                                     class="mb-2 text-xs md:text-sm font-bold text-gray-700 dark:text-gray-200">{{ $module['module_name'] }}</label>
                             </div>
-                            <div class="grid grid-cols-2 md:grid-cols-4 p-2 items-center dark:bg-gray-800 rounded-lg bg-white gap-2 md:gap-8">
+                            <div
+                                class="grid grid-cols-2 md:grid-cols-4 p-2 items-center dark:bg-gray-800 rounded-lg bg-white gap-2 md:gap-8">
                                 @foreach ($module['abilities'] as $item)
                                     <div class="col-span-1 flex items-center mb-4 access-role-checkbox">
                                         <input id="access-{{ $item['id_module_ability'] }}" type="checkbox"
