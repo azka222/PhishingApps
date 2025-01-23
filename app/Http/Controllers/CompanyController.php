@@ -230,6 +230,7 @@ class CompanyController extends Controller
             $user->phone      = $request->phone;
             $user->email      = $request->email;
             $user->role_id    = $request->role_id;
+        
             $user->save();
             return response()->json([
                 'status'  => 'success',
