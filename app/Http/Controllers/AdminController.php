@@ -131,9 +131,7 @@ class AdminController extends Controller
                 'email'       => 'required|email',
                 'visibility'  => 'required',
                 'max_account' => 'required|integer',
-                'first_name'  => 'required',
-                'last_name'   => 'required',
-                'owner_email' => 'required|email',
+                'owner'       => 'required|exists:users,id',
                 'status'      => 'required|integer',
             ]);
 
@@ -142,9 +140,7 @@ class AdminController extends Controller
             $company->email = $request->email;
             $company->visibility_id = $request->visibility == 1 ? 1 : 2;    
             $company->max_account = $request->max_account;
-            $company->user->first_name = $request->first_name;
-            $company->user->last_name = $request->last_name;
-            $company->user->email = $request->owner_email;
+            $company->user_id =$request->owner;
             $company->status_id = $request->status == 1 ? 1 : 2;
             $company->user->save();
             $company->save();
@@ -160,6 +156,16 @@ class AdminController extends Controller
             ],403);
         }
     }
+    
+    public function getUsersByCompanyId($company_id)
+    {
+        $users = User::where('company_id', $company_id)->get(); // Menyesuaikan query sesuai dengan tabel users
+        return response()->json([
+            'status' => 'success',
+            'users' => $users
+        ]);
+    }
+    
     
     public function deleteCompany(Request $request)
     {
@@ -178,6 +184,16 @@ class AdminController extends Controller
                 'message' => 'You are not authorized to perform this action',
                 'status'  => 'error',
             ], 403);
+        }
+    }
+
+    public function userGetIdCompanyUser(Request $request)
+    {
+        if (Gate::allows('IsAdmin')) {
+            $user = User::where('company_id', $request->company_id)->get();
+            return response()->json([
+                'users' => $user,
+            ]);
         }
     }
 }

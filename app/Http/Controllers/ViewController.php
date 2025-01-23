@@ -5,6 +5,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Module;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
+use App\Models\User;
 
 class ViewController extends Controller
 {
@@ -154,4 +156,63 @@ class ViewController extends Controller
             return view('contents.admin.admin-company', ['companies' => $companies]);
         }
     }
+
+    public static function getUser()
+    {
+        if (Gate::allows("IsAdmin")) {
+            return \App\Models\User::all();
+        }
+        return \App\Models\user::whereRaw(0);
+    }
+
+    public function adminGetuserbycompaniesid()
+    {
+        if (! auth()->user()->is_admin) {
+            abort(403);
+        }
+        $companies = $this->getUser();
+        Log::info('Companies:', ['companies' => $companies]);
+        if (Gate::allows('IsAdmin')) {
+            return view('contents.modal.admin.update-company-admin', ['companies' => $companies]);
+        }
+    }
+
+    // public function userByCompanyIdView($companyId)
+    // {
+    //     if (! auth()->user()->is_admin) {
+    //         abort(403);
+    //     }
+
+    //     $company = \App\Models\Company::find($companyId);
+    //     if (! $company) {
+    //         abort(404, 'Company not found.');
+    //     }
+        
+    //     $users = User::with('company')->where('company_id', $companyId)->get();
+    //     return view('contents.modal.admin-update-company-admin', ['users' => $users]);
+    // }
+
+    // public function adminCompanyUserByCompanyIdView()
+    // {
+    //     if (! auth()->user()->is_admin) {
+    //         abort(403);
+    //     }
+
+    //     // $company = \App\Models\Company::find($companyId);
+    //     // if (! $company) {
+    //     //     abort(404, 'Company not found.');
+    //     // }
+
+        
+    //     // $users = $company->users()->pluck('id');
+    //     // return view('contents.modal.admin-update-company-admin', ['users' => $users]);
+    //     $users = \App\Models\User::all();
+    //     Log::info('Users:', ['users' => $users]);
+
+    //     if (Gate::allows('IsAdmin')) {
+    //         return view('contents.modal.admin.update-company-admin', ['users' => $users]);
+    //     }
+    // }
+    
+
 }
