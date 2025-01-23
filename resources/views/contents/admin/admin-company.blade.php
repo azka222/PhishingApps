@@ -53,12 +53,12 @@
                             <tr
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-300">
                                 <th scope="col" class="p-4">Company Name</th>
+                                <th scope="col" class="p-4">Visibility</th>
                                 <th scope="col" class="p-4">Email</th>
                                 <th scope="col" class="p-4">Max Account</th>
-                                <th scope="col" class="p-4">Visibility</th>
+                                <th scope="col" class="p-4">User</th>
                                 <th scope="col" class="p-4">Owner</th>
                                 <th scope="col" class="p-4">Owner Email</th>
-                                <th scope="col" class="p-4">User</th>
                                 <th scope="col" class="p-4">Action</th>
                             </tr>
                         </thead>
@@ -74,7 +74,7 @@
                         class="mb-4 md:mb-0 text-xs md:text-sm font-normal text-gray-500 dark:text-gray-400 block w-full md:inline md:w-auto">Showing
                         <span class="font-semibold text-gray-900 dark:text-white"> <span id="numberFirstItem">0</span> -
                             <span id="numberLastItem">0</span></span> of
-                        <span id="totalTemplatesCount" class="font-semibold text-gray-900 dark:text-white">0</span>
+                        <span id="totalCompanyCount" class="font-semibold text-gray-900 dark:text-white">0</span>
                     </span>
                     <ul id="page-button-admin-company"
                         class="inline-flex space-x-2 rtl:space-x-reverse text-xs md:text-sm h-8">
@@ -107,18 +107,18 @@
                     },
                     success: function(data) {
                         companies = data.companies;
-                        console.log(companies);
+                        console.log(data);
                         $("#list-admin-company-tbody").empty();
                         companies.forEach(function(company) {
                             if ((company.max_account - company.total_user) == 0) {
 
-                                available = `<div class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300 inline-block">Full
+                                available = `<div class="bg-orange-100 text-orange-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-orange-900 dark:text-orange-300 inline-block">Full
                                             </div>`;
                             } else if (company.total_user == 0) {
                                 available = `<div class="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300 inline-block"  style="white-space: nowrap;">No Account
                                             </div>`;
                             } else if (company.total_user < company.max_account) {
-                                available = `<div class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300 inline-block">Available
+                                available = `<div class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300 inline-block">Available (${company.max_account - company.total_user})
                                             </div>`;
                             }
                             let visibility = company.visibility_id === 1 ? `<div class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300 inline-block">Public
@@ -131,12 +131,12 @@
                                 .last_name : "N/A";
                             let row = `<tr class="text-xs md:text-sm font-light text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800">
                                 <td class="p-4">${company.name}</td>
-                                <td class="p-4">${company.email}</td>
-                                <td class="p-4">${company.max_account}</td>
                                 <td class="p-4">${visibility}</td>
+                                <td class="p-4">${company.email}</td>
+                                <td class="p-4">${available}</td>
+                                <td class="p-4">${company.max_account}</td>
                                 <td class="p-4">${owner}</td>
                                 <td class="p-4">${company.user ? company.user.email : "N/A"}</td>
-                                <td class="p-4">${available}</td>
                                 <td class="p-4 flex gap-2">
                                     <button onclick="showEditCompanyModal(${company.id})"
                                         class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">Edit</button>
@@ -146,6 +146,15 @@
                             </tr>`;
                             $("#list-admin-company-tbody").append(row);
                         });
+                        paginationCompanyAdminList('#page-button-admin-company', data.pageCount, data.currentPage);
+                        $("#numberFirstItem").text(
+                            data.companyTotal != 0 ? (page - 1) * $("#show").val() + 1 : 0
+                        );
+                        $("#numberLastItem").text(
+                            (page - 1) * $("#show").val() + data.companies.length
+                        );
+                        $("#totalCompanyCount").text(data.companyTotal);
+
 
 
                     }
