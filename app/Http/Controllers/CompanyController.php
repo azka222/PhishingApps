@@ -175,12 +175,17 @@ class CompanyController extends Controller
             ]);
 
             if ($request->is_admin == 0) {
-                $checkRole = Role::where('company_admin', 1)->where('company_id', auth()->user()->company_id)->count();
-                if ($checkRole == 1) {
-                    return response()->json([
-                        'status'  => 'error',
-                        'message' => 'Company must have at least one admin role',
-                    ], 400);
+                $adminRoles = Role::where('company_admin', 1)
+                    ->where('company_id', auth()->user()->company_id)
+                    ->get();
+                if ($adminRoles->count() == 1) {
+                    $adminRole = $adminRoles->first();
+                    if ($adminRole->id == $request->id) {
+                        return response()->json([
+                            'status'  => 'error',
+                            'message' => 'Company must have at least one admin role',
+                        ], 400);
+                    }
                 }
             }
 

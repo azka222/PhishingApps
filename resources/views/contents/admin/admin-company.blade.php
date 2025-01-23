@@ -133,8 +133,8 @@
                                 <td class="p-4">${company.name}</td>
                                 <td class="p-4">${visibility}</td>
                                 <td class="p-4">${company.email}</td>
-                                <td class="p-4">${available}</td>
                                 <td class="p-4">${company.max_account}</td>
+                                <td class="p-4">${available}</td>
                                 <td class="p-4">${owner}</td>
                                 <td class="p-4">${company.user ? company.user.email : "N/A"}</td>
                                 <td class="p-4 flex gap-2">
