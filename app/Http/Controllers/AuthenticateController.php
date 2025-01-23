@@ -69,11 +69,11 @@ class AuthenticateController extends Controller
         $user->gender     = $request->gender;
         $user->is_admin   = 0;
         $user->save();
-        dd($user);
         $checkUser = User::where('company_id', $request->company)->count();
         if ($checkUser == 1) {
             $company          = Company::findOrFail($request->company);
             $company->user_id = $user->id;
+            $company->status  = 1;
             $company->save();
 
             $role                = new Role();

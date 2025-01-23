@@ -169,7 +169,7 @@ class GophishController extends Controller
                 'email_subject'    => 'required|string',
                 'status'           => 'required|boolean',
                 'email_body'       => 'required|string',
-                'email_attachment' => 'required|file|mimes:jpg,jpeg,png|max:1000',
+                'email_attachment' => 'required|file|max:1000',
                 'sender_name'      => 'required|string',
                 'sender_email'     => 'required|email',
             ]);
@@ -301,9 +301,8 @@ class GophishController extends Controller
             $request->validate([
                 'template_name'        => 'required|string',
                 'email_subject'        => 'required|string',
-                'email_text'           => 'required|string',
+                'email_body'           => 'required|string',
                 'status'               => 'required|boolean',
-                'email_html'           => 'required|string',
                 'old_email_attachment' => [
                     'nullable',
                     'string',
@@ -314,7 +313,6 @@ class GophishController extends Controller
                 'email_attachment'     => [
                     'nullable',
                     'file',
-                    'mimes:jpg,jpeg,png',
                     'max:1000',
                     Rule::requiredIf(function () use ($request) {
                         return $request->input('old_email_attachment') === 'null';
@@ -322,6 +320,7 @@ class GophishController extends Controller
                 ],
                 'sender_name'          => 'required|string',
                 'sender_email'         => 'required|email',
+                'body_type'            => 'required|in:text,html',
             ]);
 
             $formattedDate = $this->getTimeGoPhish();
@@ -346,6 +345,14 @@ class GophishController extends Controller
 
                 ];
             }
+
+            if ($request->body_type == 'html') {
+                $email_html = $request->email_body;
+                $email_text = null;
+            } else {
+                $email_text = $request->email_body;
+                $email_html = null;
+            }
             $templateId = $request->id;
             $envelope   = $request->sender_name . ' <' . $request->sender_email . '>';
             $jsonData   = [
@@ -353,9 +360,9 @@ class GophishController extends Controller
                 'template_id'     => $request->id,
                 'name'            => $request->template_name . ' -+-' . $request->id,
                 'subject'         => $request->email_subject,
-                'text'            => $request->email_text,
+                'text'            => $email_text,
                 'envelope_sender' => $envelope,
-                'html'            => $request->email_html,
+                'html'            => $email_html,
                 'modified_date'   => $formattedDate,
                 'attachments'     => $attachments,
             ];
@@ -961,7 +968,7 @@ class GophishController extends Controller
 
     public function deleteCampaign(Request $request)
     {
-        if (Gate::allows('IsCompanyOwner')) {
+        if (Gate::allows('IsCompanyAdmin')) {
             $campaignId = intval($request->id);
             $response   = Http::withHeaders([
                 'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),

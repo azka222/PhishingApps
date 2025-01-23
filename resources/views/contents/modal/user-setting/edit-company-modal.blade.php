@@ -23,6 +23,7 @@
             <div class="p-4 md:p-5 space-y-4">
                 <div class="grid grid-cols-2 gap-4">
                     <div class="col-span-2 md:col-span-1">
+                        <input type="hidden" id="company_id" name="company_id">
                         <label for="company_name"
                             class="block text-xs md:text-sm  text-gray-700 dark:text-gray-200">Company
                             Name</label>

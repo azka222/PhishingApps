@@ -59,11 +59,21 @@ class AdminController extends Controller
                     }
                 });
             }
+
             if ($request->has('status') && $request->status != null) {
                 $company->where('visibility_id', $request->status);
             }
+
+            if($request->has('active') && $request->active != null){
+                $company->where('status_id', $request->active);
+            }
             $totalCompany = $company->count();
             $company      = $company->paginate($request->show);
+            foreach ($company as $comp) {
+                $totalUser = User::where('company_id', $comp->id)->count();
+                $comp->setAttribute('total_user', $totalUser);
+            }
+
             return response()->json([
                 'companies'      => $company->items(),
                 'companyTotal'   => $totalCompany,
@@ -123,7 +133,8 @@ class AdminController extends Controller
             ], 403);
         }
     }
-    public function editCompany(Request $request){
+    public function editCompany(Request $request)
+    {
         if (Gate::allows('IsAdmin')) {
             $request->validate([
                 'id'          => 'required',
@@ -148,12 +159,11 @@ class AdminController extends Controller
                 'message' => 'Company updated successfully',
                 'status'  => 'success',
             ]);
-        }
-        else{
+        } else {
             return response()->json([
                 'message' => 'You are not authorized to perform this action',
                 'status'  => 'error',
-            ],403);
+            ], 403);
         }
     }
     
@@ -184,16 +194,6 @@ class AdminController extends Controller
                 'message' => 'You are not authorized to perform this action',
                 'status'  => 'error',
             ], 403);
-        }
-    }
-
-    public function userGetIdCompanyUser(Request $request)
-    {
-        if (Gate::allows('IsAdmin')) {
-            $user = User::where('company_id', $request->company_id)->get();
-            return response()->json([
-                'users' => $user,
-            ]);
         }
     }
 }
