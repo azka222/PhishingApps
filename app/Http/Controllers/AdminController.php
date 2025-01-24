@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Company;
 use App\Models\User;
-use App\Models\Role;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -154,12 +153,8 @@ class AdminController extends Controller
             $company->max_account = $request->max_account;
             $company->user_id =$request->owner;
             $company->status_id = $request->status == 1 ? 1 : 2;
+            $company->user->save();
             $company->save();
-
-            $role = User::where('id', $request->owner)->first();
-            $role->role_id = Role::where('company_id', $request->id)->where('company_admin', 1)->first()->id;
-            $role->save();
-
             return response()->json([
                 'message' => 'Company updated successfully',
                 'status'  => 'success',
@@ -172,9 +167,9 @@ class AdminController extends Controller
         }
     }
     
-    public function userGetIdCompanyUser(Request $request)
+    public function getUsersByCompanyId($company_id)
     {
-        $users = User::where('company_id', $request->id)->get(); // Menyesuaikan query sesuai dengan tabel users
+        $users = User::where('company_id', $company_id)->get(); // Menyesuaikan query sesuai dengan tabel users
         return response()->json([
             'status' => 'success',
             'users' => $users
