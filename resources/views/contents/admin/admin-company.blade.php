@@ -83,53 +83,54 @@
                 </nav>
             </div>
         </div>
+    </div>
 
-        <script>
-            let companies = [];
-            $(document).ready(function() {
-                getAllCompanies();
-            });
+    <script>
+        let companies = [];
+        $(document).ready(function() {
+            getAllCompanies();
+        });
 
-            function getAllCompanies(page = 1) {
-                let status = $("#status_filter").val();
-                let show = $("#show").val();
-                let search = $("#search").val();
-                let active = $("#status_active").val();
-                $.ajax({
-                    url: "{{ route('getAllCompany') }}",
-                    type: "GET",
-                    data: {
-                        status: status,
-                        show: show,
-                        search: search,
-                        active: active,
-                        page: page
-                    },
-                    success: function(data) {
-                        companies = data.companies;
-                        console.log(data);
-                        $("#list-admin-company-tbody").empty();
-                        companies.forEach(function(company) {
-                            if ((company.max_account - company.total_user) == 0) {
+        function getAllCompanies(page = 1) {
+            let status = $("#status_filter").val();
+            let show = $("#show").val();
+            let search = $("#search").val();
+            let active = $("#status_active").val();
+            $.ajax({
+                url: "{{ route('getAllCompany') }}",
+                type: "GET",
+                data: {
+                    status: status,
+                    show: show,
+                    search: search,
+                    active: active,
+                    page: page
+                },
+                success: function(data) {
+                    companies = data.companies;
+                    console.log(data);
+                    $("#list-admin-company-tbody").empty();
+                    companies.forEach(function(company) {
+                        if ((company.max_account - company.total_user) == 0) {
 
-                                available = `<div class="bg-orange-100 text-orange-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-orange-900 dark:text-orange-300 inline-block">Full
+                            available = `<div class="bg-orange-100 text-orange-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-orange-900 dark:text-orange-300 inline-block">Full
                                             </div>`;
-                            } else if (company.total_user == 0) {
-                                available = `<div class="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300 inline-block"  style="white-space: nowrap;">No Account
+                        } else if (company.total_user == 0) {
+                            available = `<div class="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300 inline-block"  style="white-space: nowrap;">No Account
                                             </div>`;
-                            } else if (company.total_user < company.max_account) {
-                                available = `<div class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300 inline-block">Available (${company.max_account - company.total_user})
+                        } else if (company.total_user < company.max_account) {
+                            available = `<div class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300 inline-block">Available (${company.max_account - company.total_user})
                                             </div>`;
-                            }
-                            let visibility = company.visibility_id === 1 ? `<div class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300 inline-block">Public
+                        }
+                        let visibility = company.visibility_id === 1 ? `<div class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300 inline-block">Public
                                             </div>` : `<div class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300 inline-block">Private
                                             </div>`;
-                            let status = company.status_id == 1 ? `<div class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300 inline-block">Active
+                        let status = company.status_id == 1 ? `<div class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300 inline-block">Active
                                             </div>` : `<div class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300 inline-block">Inactive
                                             </div>`;
-                            let owner = company.user ? company.user.first_name + " " + company.user
-                                .last_name : "N/A";
-                            let row = `<tr class="text-xs md:text-sm font-light text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800">
+                        let owner = company.user ? company.user.first_name + " " + company.user
+                            .last_name : "N/A";
+                        let row = `<tr class="text-xs md:text-sm font-light text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800">
                                 <td class="p-4">${company.name}</td>
                                 <td class="p-4">${visibility}</td>
                                 <td class="p-4">${company.email}</td>
@@ -144,129 +145,131 @@
                                         class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-red-600 rounded-xl hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600">Delete</button>
                                 </td>
                             </tr>`;
-                            $("#list-admin-company-tbody").append(row);
+                        $("#list-admin-company-tbody").append(row);
+                    });
+                    paginationCompanyAdminList('#page-button-admin-company', data.pageCount, data.currentPage);
+                    $("#numberFirstItem").text(
+                        data.companyTotal != 0 ? (page - 1) * $("#show").val() + 1 : 0
+                    );
+                    $("#numberLastItem").text(
+                        (page - 1) * $("#show").val() + data.companies.length
+                    );
+                    $("#totalCompanyCount").text(data.companyTotal);
+
+
+
+                }
+            });
+        };
+
+        async function showEditCompanyModal(id) {
+            showModal('update-company-admin');
+            await getUserIdbyCompany(id);
+            let company = companies.find(company => company.id == id);
+            $("#company_name").val(company.name);
+            $("#company_email").val(company.email);
+            $("#max_account").val(company.max_account);
+            $("#visibility").prop('checked', company.visibility_id === 1 ? true : false);
+            $("#status").prop('checked', company.status_id === 1 ? true : false);
+            $("#button-for-target").attr('onclick', `editCompany(${id})`);
+            $("#owner").val(company.user ? company.user.id : "");
+        }
+
+        function editCompany(id) {
+            let name = $("#company_name").val();
+            let email = $("#company_email").val();
+            let max_account = $("#max_account").val();
+            let visibility = $("#visibility").is(":checked") ? 1 : 0;
+            let owner = $("#owner").val();
+            let status = $("#status").is(":checked") ? 1 : 0;
+
+            $.ajax({
+                url: "{{ route('editCompany') }}",
+                type: "POST",
+                data: {
+                    id: id,
+                    name: name,
+                    email: email,
+                    max_account: max_account,
+                    visibility: visibility,
+                    owner: owner,
+                    status: status,
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(data) {
+                    if (data.status == 'success') {
+                        getAllCompanies();
+                        hideModal('update-company-admin');
+                        Swal.fire({
+                            title: 'Success',
+                            text: 'Successfully updated company.',
+                            icon: 'success',
+                            confirmButtonColor: '#10b981',
+                            confirmButtonText: 'OK'
                         });
-                        paginationCompanyAdminList('#page-button-admin-company', data.pageCount, data.currentPage);
-                        $("#numberFirstItem").text(
-                            data.companyTotal != 0 ? (page - 1) * $("#show").val() + 1 : 0
-                        );
-                        $("#numberLastItem").text(
-                            (page - 1) * $("#show").val() + data.companies.length
-                        );
-                        $("#totalCompanyCount").text(data.companyTotal);
-
-
-
                     }
-                });
-            };
-            
-            async function showEditCompanyModal(id) {
-                showModal('update-company-admin');
-                await getUserIdbyCompany(id);
-                let company = companies.find(company => company.id == id);
-                $("#company_name").val(company.name);
-                $("#company_email").val(company.email);
-                $("#max_account").val(company.max_account);
-                $("#visibility").prop('checked', company.visibility_id === 1 ? true : false);
-                $("#status").prop('checked', company.status_id === 1 ? true : false);
-                $("#button-for-target").attr('onclick', `editCompany(${id})`);
-                $("#owner").val(company.user ? company.user.id : "");
-            }
+                }
+            });
+        }
 
-            function editCompany(id) {
-                let name = $("#company_name").val();
-                let email = $("#company_email").val();
-                let max_account = $("#max_account").val();
-                let visibility = $("#visibility").is(":checked") ? 1 : 0;
-                let owner = $("#owner").val();
-                let status = $("#status").is(":checked") ? 1 : 0;
-
-                $.ajax({
-                    url: "{{ route('editCompany') }}",
-                    type: "POST",
-                    data: {
-                        id: id,
-                        name: name,
-                        email: email,
-                        max_account: max_account,
-                        visibility: visibility,
-                        owner:owner,
-                        status: status,
-                        _token: "{{ csrf_token() }}"
-                    },
-                    success: function(data) {
-                        if (data.status == 'success') {
-                            getAllCompanies();
-                            hideModal('update-company-admin');
-                            Swal.fire({
-                                title: 'Success',
-                                text: 'Successfully updated company.',
-                                icon: 'success',
-                                confirmButtonColor: '#10b981',
-                                confirmButtonText: 'OK'
-                            });
-                        }
-                    }
-                });
-            }
-
-            function deleteCompany(id) {
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: "You won't be able to revert this!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#ef4444',
-                    cancelButtonColor: '#26d43b',
-                    confirmButtonText: 'Yes, delete it!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        $.ajax({
-                            url: "{{ route('deleteCompany') }}",
-                            type: "POST",
-                            data: {
-                                id: id,
-                                _token: "{{ csrf_token() }}"
-                            },
-                            success: function(data) {
-                                if (data.status == 'success') {
-                                    getAllCompanies();
-                                    Swal.fire({
-                                        title: 'Success',
-                                        text: 'Success deleted company.',
-                                        icon: 'success',
-                                        confirmButtonColor: '#10b981',
-                                        confirmButtonText: 'OK'
-                                    });
-                                }
+        function deleteCompany(id) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#26d43b',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "{{ route('deleteCompany') }}",
+                        type: "POST",
+                        data: {
+                            id: id,
+                            _token: "{{ csrf_token() }}"
+                        },
+                        success: function(data) {
+                            if (data.status == 'success') {
+                                getAllCompanies();
+                                Swal.fire({
+                                    title: 'Success',
+                                    text: 'Success deleted company.',
+                                    icon: 'success',
+                                    confirmButtonColor: '#10b981',
+                                    confirmButtonText: 'OK'
+                                });
                             }
-                        });
-                    }
-                });
-            }
+                        }
+                    });
+                }
+            });
+        }
 
-            async function getUserIdbyCompany(id){
-                
-                await $.ajax({
-                    url: "{{ route('userGetIdCompanyUser') }}",
-                    type: "GET",
-                    data: {
-                        id: id
-                    },
-                    success: function(data) {
-                        console.log(data);
-                        $('#owner').empty();
-                        $('#owner').append(`<option value="" disabled>Select Owner</option>`);
-                        data.users.forEach(function(user){
-                            $('#owner').append(`<option value="${user.id}">${user.first_name} ${user.last_name}</option>`);
-                        });
-                        // let owner = data.user.first_name + " " + data.user.last_name;
-                        // let owner_email = data.user.email;
-                        // $("#owner").val(owner);
-                        // $("#owner_email").val(owner_email);
-                    }
-                });
-            }
-        </script>
-    @endsection
+        async function getUserIdbyCompany(id) {
+
+            await $.ajax({
+                url: "{{ route('userGetIdCompanyUser') }}",
+                type: "GET",
+                data: {
+                    id: id
+                },
+                success: function(data) {
+                    console.log(data);
+                    $('#owner').empty();
+                    $('#owner').append(`<option value="" disabled>Select Owner</option>`);
+                    data.users.forEach(function(user) {
+                        $('#owner').append(
+                            `<option value="${user.id}">${user.first_name} ${user.last_name}</option>`
+                        );
+                    });
+                    // let owner = data.user.first_name + " " + data.user.last_name;
+                    // let owner_email = data.user.email;
+                    // $("#owner").val(owner);
+                    // $("#owner_email").val(owner_email);
+                }
+            });
+        }
+    </script>
+@endsection

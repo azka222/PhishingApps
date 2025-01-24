@@ -258,4 +258,19 @@ class User extends Authenticatable implements MustVerifyEmailContract
         }
     }
 
+    public function isCompanyOwner($id)
+    {
+        $company = Company::where('id', $id)->first();
+        if ($company->user_id === $this->id) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function haveAccessApproval()
+    {
+        return $this->companyAdmin($this->company_id) && $this->isCompanyOwner($this->company_id);
+    }
+
 }

@@ -8,6 +8,7 @@ use App\Http\Controllers\GroupController;
 use App\Http\Controllers\TargetController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ViewController;
+use App\Http\Controllers\ApprovalController;
 use App\Models\User;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\Events\Verified;
@@ -145,6 +146,13 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
             Route::post('/deleteCompany', [AdminController::class, 'deleteCompany'])->name('deleteCompany');
             Route::get('/getCompanyUsers', [ViewController::class, 'adminCompanyUserByCompanyIdView'])->name('adminCompanyUserByCompanyIdView');
         });
+    });
+
+    Route::group(['prefix' => 'approval'], function(){
+        Route::get('/', [ViewController::class, 'approvalView'])->name('approvalView');
+        Route::get('/getApproval', [ApprovalController::class, 'getApproval'])->name('getApproval');
+        Route::post('/approve', [ApprovalController::class, 'approve'])->name('approve');
+        Route::post('/reject', [ApprovalController::class, 'reject'])->name('reject');
     });
 
 });

@@ -1,6 +1,6 @@
 @php
     $url = explode('/', Route::current()->uri)[0];
-    $home = $user = $landingPage = $attribute = $dashboard = $campaign = $admin = false;
+    $home = $user = $landingPage = $attribute = $dashboard = $approval = $campaign = $admin = false;
     switch ($url) {
         case 'dashboard':
             $dashboard = true;
@@ -16,6 +16,9 @@
             break;
         case 'landing-page':
             $attribute = true;
+            break;
+        case 'approval':
+            $approval = true;
             break;
         case 'email-templates':
             $attribute = true;
@@ -341,6 +344,43 @@
                     </ul>
                 </div>
                 @endIsAdmin()
+                @HaveAccessApproval()
+                <div class="flex justify-end">
+                    <button
+                        class="w-full px-3 py-1 text-xs font-medium text-left hover:text-blue-600 dark:hover:text-blue-500 rounded-xl
+                           {{ $approval ? 'dark:text-blue-500 text-blue-500  shadow-blue-500/50 lg:dark:bg-gray-800 dark:bg-gray-800' : 'border-gray-700 text-gray-900 dark:text-white ' }} 
+                           rounded-xl "
+                        type="button">
+                        <a href="{{ url('/approval') }}">Approval</a>
+                        <svg version="1.1" id="Icon_Set" xmlns="http://www.w3.org/2000/svg" x="0" y="0" class="inline w-8 h-8"
+                            viewBox="0 0 64 64" style="enable-background:new 0 0 64 64" xml:space="preserve">
+                            <style>
+                                .st1 {
+                                    fill: #263238
+                                }
+                            </style>
+                            <path class="st1"
+                                d="M4 32.5a.5.5 0 0 1-.5-.5C3.5 16.285 16.285 3.5 32 3.5a.5.5 0 0 1 0 1C16.836 4.5 4.5 16.836 4.5 32a.5.5 0 0 1-.5.5zM35 4.5h-1a.5.5 0 0 1 0-1h1a.5.5 0 0 1 0 1zM32 60.5a.5.5 0 0 1 0-1c15.163 0 27.5-12.336 27.5-27.5a.5.5 0 0 1 1 0c0 15.715-12.785 28.5-28.5 28.5zM30 60.5h-1a.5.5 0 0 1 0-1h1a.5.5 0 0 1 0 1z" />
+                            <path class="st1"
+                                d="M32 56.5C18.491 56.5 7.5 45.509 7.5 32S18.491 7.5 32 7.5c13.51 0 24.5 10.991 24.5 24.5S45.51 56.5 32 56.5zm0-48C19.042 8.5 8.5 19.042 8.5 32S19.042 55.5 32 55.5 55.5 44.958 55.5 32 44.958 8.5 32 8.5z" />
+                            <path d="M32 14c-9.941 0-18 8.059-18 18s8.059 18 18 18 18-8.059 18-18-8.059-18-18-18z"
+                                style="fill:#4db6ac" />
+                            <path class="st1"
+                                d="M32 50.5c-10.201 0-18.5-8.299-18.5-18.5S21.799 13.5 32 13.5 50.5 21.799 50.5 32 42.201 50.5 32 50.5zm0-36c-9.649 0-17.5 7.851-17.5 17.5S22.351 49.5 32 49.5 49.5 41.649 49.5 32 41.649 14.5 32 14.5zM53 6.5h-4a.5.5 0 0 1 0-1h4a.5.5 0 0 1 0 1z" />
+                            <path class="st1"
+                                d="M51 8.5a.5.5 0 0 1-.5-.5V4a.5.5 0 0 1 1 0v4a.5.5 0 0 1-.5.5zM60 13h-4a.5.5 0 0 1 0-1h4a.5.5 0 0 1 0 1z" />
+                            <path class="st1" d="M58 15a.5.5 0 0 1-.5-.5v-4a.5.5 0 0 1 1 0v4a.5.5 0 0 1-.5.5z" />
+                            <g>
+                                <path
+                                    d="M28.995 39.864c-.384 0-.768-.146-1.061-.439l-6.718-6.717a1.5 1.5 0 1 1 2.121-2.121l5.657 5.657 11.667-11.667a1.5 1.5 0 1 1 2.121 2.121L30.056 39.424c-.293.293-.677.44-1.061.44z"
+                                    style="fill:#fff" />
+                                <path class="st1"
+                                    d="M28.995 40.364a1.986 1.986 0 0 1-1.414-.586l-6.718-6.717a1.983 1.983 0 0 1-.586-1.414c0-.534.208-1.036.586-1.414.756-.756 2.072-.756 2.828 0l5.304 5.303 11.313-11.313c.756-.756 2.072-.756 2.828 0 .378.377.586.88.586 1.414s-.208 1.037-.586 1.414L30.409 39.778c-.378.378-.88.586-1.414.586zm-6.718-9.718c-.267 0-.518.104-.707.293s-.293.44-.293.707.104.518.293.707l6.718 6.717a1.023 1.023 0 0 0 1.414 0L42.43 26.343a.997.997 0 0 0 0-1.414 1 1 0 0 0-1.414 0L29.349 36.596a.5.5 0 0 1-.707 0l-5.657-5.657a.997.997 0 0 0-.708-.293z" />
+                            </g>
+                        </svg>
+                    </button>
+                </div>
+                @endHaveAccessApproval()
             </div>
 
 

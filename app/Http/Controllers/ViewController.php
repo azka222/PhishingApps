@@ -3,10 +3,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Module;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
-use App\Models\User;
 
 class ViewController extends Controller
 {
@@ -30,7 +30,7 @@ class ViewController extends Controller
     public function dashboardView()
     {
         if (Gate::allows('CanAccessDashboard')) {
-            return view('contents.dashboard');
+            return view('contents.page.dashboard');
         } else {
             return redirect()->route('userSettingView');
         }
@@ -52,7 +52,7 @@ class ViewController extends Controller
             ];
         });
 
-        return view('contents.user-setting', ['modules' => $formattedModules]);
+        return view('contents.page.user-setting', ['modules' => $formattedModules]);
     }
 
     public function forgotPasswordView()
@@ -75,7 +75,7 @@ class ViewController extends Controller
             abort(403);
         }
         $companies = $this->getCompanies();
-        return view('contents.target', ['companies' => $companies]);
+        return view('contents.page.target', ['companies' => $companies]);
     }
 
     public function groupView()
@@ -84,7 +84,7 @@ class ViewController extends Controller
             abort(403);
         }
         $companies = $this->getCompanies();
-        return view('contents.group', ['companies' => $companies]);
+        return view('contents.page.group', ['companies' => $companies]);
 
     }
 
@@ -93,7 +93,7 @@ class ViewController extends Controller
         if (! auth()->user()->haveAccess('Landing Page', 'read')) {
             abort(403);
         }
-        return view('contents.landing-page');
+        return view('contents.page.landing-page');
     }
 
     public function emailTemplatesView()
@@ -102,7 +102,7 @@ class ViewController extends Controller
             abort(403);
         }
         $companies = $this->getCompanies();
-        return view('contents.email-templates', ['companies' => $companies]);
+        return view('contents.page.email-templates', ['companies' => $companies]);
     }
 
     public function sendingProfileView()
@@ -111,7 +111,7 @@ class ViewController extends Controller
             abort(403);
         }
         $companies = $this->getCompanies();
-        return view('contents.sending-profiles', ['companies' => $companies]);
+        return view('contents.page.sending-profiles', ['companies' => $companies]);
     }
 
     public function campaignView()
@@ -120,7 +120,7 @@ class ViewController extends Controller
             abort(403);
         }
         $companies = $this->getCompanies();
-        return view('contents.campaign', ['companies' => $companies]);
+        return view('contents.page.campaign', ['companies' => $companies]);
     }
 
     public function campaignDetailsView($id)
@@ -132,7 +132,7 @@ class ViewController extends Controller
         if (! $check) {
             abort(404);
         }
-        return view('contents.campaign-details', ['id' => $id]);
+        return view('contents.page.campaign-details', ['id' => $id]);
     }
 
     public function adminUserView()
@@ -143,6 +143,13 @@ class ViewController extends Controller
         $companies = $this->getCompanies();
         if (Gate::allows('IsAdmin')) {
             return view('contents.admin.admin-user', ['companies' => $companies]);
+        }
+    }
+
+    public function approvalView()
+    {
+        if (Gate::allows('HaveAccessApproval')) {
+            return view('contents.page.approval');
         }
     }
 
@@ -157,14 +164,6 @@ class ViewController extends Controller
         }
     }
 
-    public static function getUser()
-    {
-        if (Gate::allows("IsAdmin")) {
-            return \App\Models\User::all();
-        }
-        return \App\Models\user::whereRaw(0);
-    }
-
     public function adminGetuserbycompaniesid()
     {
         if (! auth()->user()->is_admin) {
@@ -176,43 +175,5 @@ class ViewController extends Controller
             return view('contents.modal.admin.update-company-admin', ['companies' => $companies]);
         }
     }
-
-    // public function userByCompanyIdView($companyId)
-    // {
-    //     if (! auth()->user()->is_admin) {
-    //         abort(403);
-    //     }
-
-    //     $company = \App\Models\Company::find($companyId);
-    //     if (! $company) {
-    //         abort(404, 'Company not found.');
-    //     }
-        
-    //     $users = User::with('company')->where('company_id', $companyId)->get();
-    //     return view('contents.modal.admin-update-company-admin', ['users' => $users]);
-    // }
-
-    // public function adminCompanyUserByCompanyIdView()
-    // {
-    //     if (! auth()->user()->is_admin) {
-    //         abort(403);
-    //     }
-
-    //     // $company = \App\Models\Company::find($companyId);
-    //     // if (! $company) {
-    //     //     abort(404, 'Company not found.');
-    //     // }
-
-        
-    //     // $users = $company->users()->pluck('id');
-    //     // return view('contents.modal.admin-update-company-admin', ['users' => $users]);
-    //     $users = \App\Models\User::all();
-    //     Log::info('Users:', ['users' => $users]);
-
-    //     if (Gate::allows('IsAdmin')) {
-    //         return view('contents.modal.admin.update-company-admin', ['users' => $users]);
-    //     }
-    // }
-    
 
 }
