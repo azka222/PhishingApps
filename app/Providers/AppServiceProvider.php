@@ -25,10 +25,14 @@ class AppServiceProvider extends ServiceProvider
             return auth()->user()->is_admin;
         });
 
+        Blade::if('IsCompanyOwner', function ($id) {
+            return auth()->user()->isCompanyOwner($id);
+        });
+
         Blade::if('IsUser', function () {
             return ! auth()->user()->is_admin;
         });
-        
+
         Blade::if('IsCompanyAdmin', function ($id) {
             return auth()->user()->companyAdmin($id);
         });
@@ -113,6 +117,10 @@ class AppServiceProvider extends ServiceProvider
 
         Blade::if('CanDeleteCampaign', function () {
             return auth()->user()->canDeleteCampaign();
+        });
+
+        Blade::if('HaveAccessApproval', function () {
+            return auth()->user()->haveAccessApproval();
         });
 
         // Gate
@@ -201,6 +209,14 @@ class AppServiceProvider extends ServiceProvider
 
         Gate::define('CanReadCampaign', function ($user) {
             return $user->haveAccess('Campaign', 'read');
+        });
+
+        Gate::define('isCompanyOwner', function ($user, $id) {
+            return $user->isCompanyOwner($id);
+        });
+
+        Gate::define('HaveAccessApproval', function ($user) {
+            return $user->haveAccessApproval();
         });
 
     }

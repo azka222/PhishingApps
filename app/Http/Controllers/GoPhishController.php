@@ -2,9 +2,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\CompanyCampaign;
+use App\Models\Campaign;
 use App\Models\EmailTemplateCompany;
 use App\Models\Group;
+use Carbon\Carbon;
 use App\Models\SendingProfileCompany;
 use App\Models\TargetGroup;
 use DateTime;
@@ -850,7 +851,6 @@ class GophishController extends Controller
             } else {
                 $formattedEndDate = null;
             }
-            $newId = $this->getIdFromGophish('campaigns');
 
             $templateId = intval($request->template);
             $pageId     = intval($request->page);
@@ -865,44 +865,43 @@ class GophishController extends Controller
                 $group               = $this->getDetailsModuleGophish('groups', $groupId);
                 $groupName[]['name'] = $group['name'];
             }
-
-            $pageName     = ($page['name']);
+            $pageName     = $page['name'];
             $templateName = $template['name'];
             $profileName  = $profile['name'];
+            
 
             $jsonData = [
-                'id'           => intval($newId),
-                'name'         => $request->name . ' -+-' . $newId,
+                'name'         => $request->name,
                 'template'     => [
                     'name' => $templateName,
+                    
                 ],
                 'url'          => $request->url,
                 'page'         => [
                     'name' => $pageName,
+                  
                 ],
                 'smtp'         => [
                     'name' => $profileName,
+                  
                 ],
                 'launch_date'  => $formattedLaunchDate,
                 'send_by_date' => $formattedEndDate,
                 'groups'       => $groupName,
             ];
 
-            $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
-            ])->post("{$this->url}/campaigns/", $jsonData);
-            if ($response->successful() && $response != [] && $response->json() != []) {
-                $companyCampaign              = new CompanyCampaign();
-                $companyCampaign->company_id  = auth()->user()->company_id;
-                $companyCampaign->campaign_id = $newId;
-                $companyCampaign->status      = $request->status;
-                $companyCampaign->save();
-                return response()->json(['message' => 'Campaign created successfully']);
-            } else {
-                return response()->json([
-                    'message' => 'failed to create campaign',
-                ], 500);
-            }
+            $campaign             = new Campaign();
+            $campaign->data       = json_encode($jsonData);
+            $campaign->company_id = auth()->user()->company_id;
+            $campaign->user_id    = auth()->user()->id;
+            $campaign->updated_at = Carbon::now();
+            $campaign->status_id  = 1;
+            $campaign->save();
+
+           return response()->json([
+            'success' => true,
+            'message' => 'Campaign created successfully',
+           ]);
         } else {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
@@ -911,56 +910,88 @@ class GophishController extends Controller
 
     public function getCampaigns(Request $request)
     {
-        if (Gate::allows('CanReadCampaign')) {
-            $campaigns = auth()->user()->accessibleCampaign();
-            if (Gate::allows('IsAdmin')) {
-                if ($request->has('companyId') && $request->companyId != null) {
-                    $campaigns->where('company_id', $request->companyId);
-                }
-            }
-            $campaigns = $campaigns->get();
-            if ($request->has('status') && $request->status != null) {
-                $campaigns = $campaigns->where('status', $request->status);
-            }
 
-            $campaignsData = [];
-            foreach ($campaigns as $campaign) {
-                $response = Http::withHeaders([
-                    'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
-                ])->get("{$this->url}/campaigns/{$campaign->campaign_id}");
-                if ($response->successful()) {
-                    $data = $response->json();
-                    if (isset($data['name'])) {
-                        $data['name'] = explode('-+-', $data['name'])[0];
+        if (Gate::allows('CanReadCampaign')) {
+            if ($request->has('status') && ($request->status == 1 || $request->status == 3)) {
+                $campaigns = Campaign::where('status_id', $request->status);
+                if (Gate::allows('IsAdmin')) {
+                    if ($request->has('companyId') && $request->companyId != null) {
+                        $campaigns->where('company_id', $request->companyId);
                     }
-                    $campaignsData[] = $data;
+                } else {
+                    $campaigns->where('company_id', auth()->user()->company_id);
                 }
+                if ($request->has('search') && $request->search != null) {
+                    $searchTerm = $request->search;
+                    $campaigns->whereRaw("JSON_EXTRACT(data, '$.name') LIKE ?", ["%{$searchTerm}%"]);
+                }
+                if ($request->has('show') && $request->show != null) {
+                    $perPage = $request->show;
+                }
+                if ($request->has('page') && $request->page != null) {
+                    $currentPage = $request->page;
+                }
+                $campaigns = $campaigns->paginate($perPage);
+                return response()->json([
+                    'data'           => $campaigns->items(),
+                    'campaignTotal'  => $campaigns->total(),
+                    'currentPage'    => $campaigns->currentPage(),
+                    'firstPageTotal' => $campaigns->count(),
+                    'pageCount'      => $campaigns->lastPage(),
+                ]);
+
+            } else {
+
+                // $campaigns = auth()->user()->accessibleCampaign();
+                // if (Gate::allows('IsAdmin')) {
+                //     if ($request->has('companyId') && $request->companyId != null) {
+                //         $campaigns->where('company_id', $request->companyId);
+                //     }
+                // }
+                // $campaigns = $campaigns->get();
+                // if ($request->has('status') && $request->status != null) {
+                //     $campaigns = $campaigns->where('status', $request->status);
+                // }
+
+                // $campaignsData = [];
+                // foreach ($campaigns as $campaign) {
+                //     $response = Http::withHeaders([
+                //         'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
+                //     ])->get("{$this->url}/campaigns/{$campaign->campaign_id}");
+                //     if ($response->successful()) {
+                //         $data = $response->json();
+                //         if (isset($data['name'])) {
+                //             $data['name'] = explode('-+-', $data['name'])[0];
+                //         }
+                //         $campaignsData[] = $data;
+                //     }
+                // }
+                // $responseCollection = collect($campaignsData);
+                // if ($request->has('search') && $request->search != null) {
+                //     $responseCollection = $responseCollection->filter(function ($item) use ($request) {
+                //         return stripos($item['name'], $request->search) !== false;
+                //     });
+                // }
+                // $perPage       = $request->has('show') ? (int) $request->show : 10;
+                // $currentPage   = $request->has('page') ? (int) $request->page : 1;
+                // $pagedData     = $responseCollection->slice(($currentPage - 1) * $perPage, $perPage)->values();
+                // $paginatedData = new LengthAwarePaginator(
+                //     $pagedData,
+                //     $responseCollection->count(),
+                //     $perPage,
+                //     $currentPage,
+                //     ['path' => $request->url(), 'query' => $request->query()]
+                // );
+                // $totalCampaign  = $responseCollection->count();
+                // $firstPageTotal = $responseCollection->slice(0, $perPage)->count();
+                // return response()->json([
+                //     'data'           => $paginatedData->items(),
+                //     'campaignTotal'  => $totalCampaign,
+                //     'currentPage'    => $paginatedData->currentPage(),
+                //     'firstPageTotal' => $firstPageTotal,
+                //     'pageCount'      => $paginatedData->lastPage(),
+                // ]);
             }
-            $responseCollection = collect($campaignsData);
-            if ($request->has('search') && $request->search != null) {
-                $responseCollection = $responseCollection->filter(function ($item) use ($request) {
-                    return stripos($item['name'], $request->search) !== false;
-                });
-            }
-            $perPage       = $request->has('show') ? (int) $request->show : 10;
-            $currentPage   = $request->has('page') ? (int) $request->page : 1;
-            $pagedData     = $responseCollection->slice(($currentPage - 1) * $perPage, $perPage)->values();
-            $paginatedData = new LengthAwarePaginator(
-                $pagedData,
-                $responseCollection->count(),
-                $perPage,
-                $currentPage,
-                ['path' => $request->url(), 'query' => $request->query()]
-            );
-            $totalCampaign  = $responseCollection->count();
-            $firstPageTotal = $responseCollection->slice(0, $perPage)->count();
-            return response()->json([
-                'data'           => $paginatedData->items(),
-                'campaignTotal'  => $totalCampaign,
-                'currentPage'    => $paginatedData->currentPage(),
-                'firstPageTotal' => $firstPageTotal,
-                'pageCount'      => $paginatedData->lastPage(),
-            ]);
         } else {
             abort(403);
         }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ApprovalController;
 use App\Http\Controllers\AuthenticateController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\GophishController;
@@ -127,6 +128,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         Route::post('/createCampaign', [GophishController::class, 'createCampaign'])->name('createCampaign');
         Route::post('/deleteCampaign', [GophishController::class, 'deleteCampaign'])->name('deleteCampaign');
         Route::get('/getCampaignData', [GophishController::class, 'getCampaignData'])->name('getCampaignData');
+        Route::post('/sendNewApproval', [ApprovalController::class, 'sendNewApproval'])->name('sendNewApproval');
     });
 
     Route::group(['prefix' => 'admin'], function () {
@@ -145,6 +147,12 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
             Route::post('/deleteCompany', [AdminController::class, 'deleteCompany'])->name('deleteCompany');
             Route::get('/getCompanyUsers', [ViewController::class, 'adminCompanyUserByCompanyIdView'])->name('adminCompanyUserByCompanyIdView');
         });
+    });
+
+    Route::group(['prefix' => 'approval'], function () {
+        Route::get('/', [ViewController::class, 'approvalView'])->name('approvalView');
+        Route::get('/getApproval', [ApprovalController::class, 'getAllApproval'])->name('getApproval');
+        Route::post('/actionApproval', [ApprovalController::class, 'submitCampaignApproval'])->name('actionApproval');
     });
 
 });

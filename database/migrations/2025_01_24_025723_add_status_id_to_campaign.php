@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('roles', function (Blueprint $table) {
-            $table->boolean('company_admin')->default(false);
+        Schema::table('campaigns', function (Blueprint $table) {
+            $table->foreignId('status_id')->nullable()->default(null)->constrained('approval_statuses');
         });
     }
 
@@ -21,8 +21,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('roles', function (Blueprint $table) {
-            $table->dropColumn('company_admin');
-        });
+        
     }
 };
