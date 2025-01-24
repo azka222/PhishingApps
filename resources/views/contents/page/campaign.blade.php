@@ -29,8 +29,9 @@
                             class="mb-1 mt-4 block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-300">Status</label>
                         <select id="status" name="status" onchange="getCampaigns()"
                             class="bg-gray-100 border border-gray-300 text-gray-900 text-xs md:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                            <option value="1">Active</option>
-                            <option value="0">Inactive</option>
+                            <option value="1">Pending</option>
+                            <option value="2">Approved</option>
+                            <option value="3">Rejected</option>
                         </select>
                     </div>
                 </div>
@@ -72,9 +73,11 @@
                             <tr
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-300">
                                 <th scope="col" class="p-4">Campaign Name</th>
-                                <th scope="col" class="p-4">Status</th>
                                 <th scope="col" class="p-4">Launch Date</th>
+                                <th scope="col" class="p-4">Template</th>
+                                <th scope="col" class="p-4">Page</th>
                                 <th scope="col" class="p-4">From Address</th>
+                                <th scope="col" class="p-4">Group</th>
                                 <th scope="col" class="p-4">Action</th>
                             </tr>
                         </thead>
@@ -358,65 +361,60 @@
                             </tr>
                         `);
                     } else {
-                        campaigns.forEach(function(campaign) {
-                            console.log(campaign);
-                            let date = new Date(campaign.launch_date);
-                            let formattedStatus = '';
-                            let formattedDate =
-                                `${date.toLocaleDateString('id-ID', {
-                            day: '2-digit',
-                            month: 'long',
-                            year: 'numeric'
-                        })} ${String(date.getUTCHours() + 7).padStart(2, '0')}:${String(date.getUTCMinutes()).padStart(2, '0')}`;
+                        $("#list-campaign-tbody").empty();
 
-                            if (campaign.status === 'In progress') {
-                                formattedStatus = `<div class="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300 inline-block">
-                                                In Progress
-                                            </div>`
-                            } else if (campaign.status === 'Queued') {
-                                formattedStatus = `<div class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300 inline-block">
-                                                Scheduled
-                                            </div>`
-                            } else {
-                                formattedStatus = `<div class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300 inline-block">
-                                                Completed
-                                            </div>`
-                            }
+                        campaigns.forEach(campaign => {
+                            let tempCampaign = JSON.parse(campaign.data);
+                            console.log(tempCampaign);
+                            let launchDate = new Date(tempCampaign.launch_date).toLocaleString(
+                                'en-US', {
+                                    weekday: 'long',
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                });
+                            let addressName = tempCampaign.smtp['name'].split('-+-')[0];
+                            let pageName = tempCampaign.page['name'];
+                            let templateName = tempCampaign.template['name'].split('-+-')[0];
+                            let group = ` <td class="p-4 relative group">
+                                                ${(tempCampaign.groups.length)} Groups
+                                                <div class="absolute hidden group-hover:block text-black bg-white dark:bg-gray-800 dark:text-white text-sm rounded-lg p-2 shadow-lg w-max max-w-xs z-10 -top-10 left-1/2 transform -translate-x-1/2">
+                                                    <ul class="list-disc list-inside">
+                                                        ${tempCampaign.groups.map(group => group.name ? `<li>${(group.name).split('-+-')[0]}</li>` : '').join('')}
+                                                    </ul>
+                                                </div>
+                                            </td>`
+
+                            let button = campaign.status_id == 1 ? `<td class="p-4 gap-2">
+                                        <button onclick="sendNewApproval(${campaign.id})"
+                                            class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-orange-600 rounded-xl hover:bg-orange-700 dark:bg-orange-500 dark:hover:bg-orange-600">Resend</button>
+                                       
+                            </td>` : '';
+
                             $("#list-campaign-tbody").append(`
-                            <tr class="text-xs md:text-sm font-normal text-gray-900 dark:text-gray-400 bg-white dark:bg-gray-800">
-                                <td class="p-4">
-                                   ${campaign.name}
-                                </td>
-                                <td class="p-4">
-                                    ${formattedStatus}
-                                </td>
-                                <td class="p-4">
-                                    ${formattedDate}
-                                </td>
-                                <td class="p-4">
-                                    ${campaign.smtp.from_address}
-                                </td>
-                                    <td class="p-4">
-                                        <div class="flex items-center">
-                                            <button onclick="showDetailCampaign(${campaign.id})" class="px-4 me-2 py-2 text-xs md:text-sm font-medium text-white bg-green-600 rounded-xl hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600">Details</button>
-                                        @CanDeleteCampaign()
-                                            <button onclick="deleteCampaign(${campaign.id})" class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-red-600 rounded-xl hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600">Delete</button>
-                                        @endCanDeleteCampaign()
-                                    </div>
-                                </td>
-                            </tr>
-                        `);
+                                <tr class="text-xs md:text-sm font-light text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800">
+                            <td class="p-4 truncate max-w-xs" title="${tempCampaign.name}">${tempCampaign.name}</td>
+                            <td class="p-4 truncate max-w-xs" title="${launchDate}">${launchDate}</td>
+                            <td class="p-4 truncate max-w-xs" title="${templateName}">${templateName}</td>
+                            <td class="p-4 truncate max-w-xs" title="${pageName}">${pageName}</td>
+                            <td class="p-4 truncate max-w-xs" title="${addressName}">${addressName}</td>
+                                    ${group}
+                            ${button}
+                                `);
                         });
+
+                        $("#numberFirstItem").text(
+                            response.campaignTotal != 0 ? (page - 1) * $("#show").val() + 1 : 0
+                        );
+                        $("#numberLastItem").text(
+                            (page - 1) * $("#show").val() + response.data.length
+                        );
+                        $("#totalTemplatesCount").text(response.campaignTotal);
+                        paginationSendingProfile("#page-button-campaign-company", response.pageCount,
+                            response.currentPage);
                     }
-                    $("#numberFirstItem").text(
-                        response.campaignTotal != 0 ? (page - 1) * $("#show").val() + 1 : 0
-                    );
-                    $("#numberLastItem").text(
-                        (page - 1) * $("#show").val() + response.data.length
-                    );
-                    $("#totalTemplatesCount").text(response.campaignTotal);
-                    paginationSendingProfile("#page-button-campaign-company", response.pageCount,
-                        response.currentPage);
                 }
 
             });
@@ -472,6 +470,46 @@
             showModal('test-connection-modal');
             $("#test_name").val('');
             $("#test_email").val('');
+        }
+
+        function sendNewApproval(id) {
+            console.log(id);
+            Swal.fire({
+                title: 'Registering...',
+                text: 'Please wait while we process your registration.',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading()
+                }
+            });
+            $.ajax({
+                url: "{{ route('sendNewApproval') }}",
+                type: "POST",
+                data: {
+                    id: id,
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(response) {
+                    Swal.close();
+                    Swal.fire({
+                        title: 'Success',
+                        text: 'Approval request sent successfully.',
+                        icon: 'success',
+                        confirmButtonColor: '#10b981',
+                        confirmButtonText: 'OK'
+                    });
+                },
+                error: function(xhr, status, error) {
+                    Swal.close();
+                    Swal.fire({
+                        icon: "error",
+                        title: "Error",
+                        text: xhr.responseJSON.message,
+                        confirmButtonColor: '#10b981',
+                        confirmButtonText: 'Close'
+                    });
+                }
+            })
         }
     </script>
 @endSection

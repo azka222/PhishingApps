@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ApprovalController;
 use App\Http\Controllers\AuthenticateController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\GophishController;
@@ -8,7 +9,6 @@ use App\Http\Controllers\GroupController;
 use App\Http\Controllers\TargetController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ViewController;
-use App\Http\Controllers\ApprovalController;
 use App\Models\User;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\Events\Verified;
@@ -128,6 +128,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         Route::post('/createCampaign', [GophishController::class, 'createCampaign'])->name('createCampaign');
         Route::post('/deleteCampaign', [GophishController::class, 'deleteCampaign'])->name('deleteCampaign');
         Route::get('/getCampaignData', [GophishController::class, 'getCampaignData'])->name('getCampaignData');
+        Route::post('/sendNewApproval', [ApprovalController::class, 'sendNewApproval'])->name('sendNewApproval');
     });
 
     Route::group(['prefix' => 'admin'], function () {
@@ -148,11 +149,10 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         });
     });
 
-    Route::group(['prefix' => 'approval'], function(){
+    Route::group(['prefix' => 'approval'], function () {
         Route::get('/', [ViewController::class, 'approvalView'])->name('approvalView');
-        Route::get('/getApproval', [ApprovalController::class, 'getApproval'])->name('getApproval');
-        Route::post('/approve', [ApprovalController::class, 'approve'])->name('approve');
-        Route::post('/reject', [ApprovalController::class, 'reject'])->name('reject');
+        Route::get('/getApproval', [ApprovalController::class, 'getAllApproval'])->name('getApproval');
+        Route::post('/actionApproval', [ApprovalController::class, 'submitCampaignApproval'])->name('actionApproval');
     });
 
 });
