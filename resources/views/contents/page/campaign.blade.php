@@ -362,9 +362,14 @@
                         `);
                     } else {
                         $("#list-campaign-tbody").empty();
-
                         campaigns.forEach(campaign => {
-                            let tempCampaign = JSON.parse(campaign.data);
+                            let tempCampaign = '';
+                            if (campaign.status_id == 1 || campaign.status_id == 3) {
+                                tempCampaign = JSON.parse(campaign.data);
+
+                            } else if ($("#status").val() == 2) {
+                                tempCampaign = campaign;
+                            }
                             console.log(tempCampaign);
                             let launchDate = new Date(tempCampaign.launch_date).toLocaleString(
                                 'en-US', {
@@ -378,7 +383,9 @@
                             let addressName = tempCampaign.smtp['name'].split('-+-')[0];
                             let pageName = tempCampaign.page['name'];
                             let templateName = tempCampaign.template['name'].split('-+-')[0];
-                            let group = ` <td class="p-4 relative group">
+                            let group = '';
+                            if (!$("#status").val() == 2) {
+                                group = ` <td class="p-4 relative group">
                                                 ${(tempCampaign.groups.length)} Groups
                                                 <div class="absolute hidden group-hover:block text-black bg-white dark:bg-gray-800 dark:text-white text-sm rounded-lg p-2 shadow-lg w-max max-w-xs z-10 -top-10 left-1/2 transform -translate-x-1/2">
                                                     <ul class="list-disc list-inside">
@@ -386,12 +393,22 @@
                                                     </ul>
                                                 </div>
                                             </td>`
+                            }
 
                             let button = campaign.status_id == 1 ? `<td class="p-4 gap-2">
                                         <button onclick="sendNewApproval(${campaign.id})"
                                             class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-orange-600 rounded-xl hover:bg-orange-700 dark:bg-orange-500 dark:hover:bg-orange-600">Resend</button>
                                        
                             </td>` : '';
+
+                            if ($("#status").val() == 2) {
+                                button = `<td class="p-4 flex gap-2">
+                                        <button onclick="showDetailCampaign(${campaign.id})"
+                                            class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">Detail</button>
+                                        <button onclick="deleteCampaign(${campaign.id})"
+                                            class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-red-600 rounded-xl hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600">Delete</button>
+                                    </td>`;
+                            }
 
                             $("#list-campaign-tbody").append(`
                                 <tr class="text-xs md:text-sm font-light text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800">
