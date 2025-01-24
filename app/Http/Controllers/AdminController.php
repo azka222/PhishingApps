@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Company;
 use App\Models\User;
+use App\Models\Role;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -142,23 +143,23 @@ class AdminController extends Controller
                 'email'       => 'required|email',
                 'visibility'  => 'required',
                 'max_account' => 'required|integer',
-                'first_name'  => 'required',
-                'last_name'   => 'required',
-                'owner_email' => 'required|email',
+                'owner'       => 'required|exists:users,id',
                 'status'      => 'required|integer',
             ]);
 
-            $company                   = Company::with('user')->where('id', $request->id)->first();
-            $company->name             = $request->name;
-            $company->email            = $request->email;
-            $company->visibility_id    = $request->visibility == 1 ? 1 : 2;
-            $company->max_account      = $request->max_account;
-            $company->user->first_name = $request->first_name;
-            $company->user->last_name  = $request->last_name;
-            $company->user->email      = $request->owner_email;
-            $company->status_id        = $request->status == 1 ? 1 : 2;
-            $company->user->save();
+            $company = Company::with('user')->where('id', $request->id)->first();
+            $company->name = $request->name;
+            $company->email = $request->email;
+            $company->visibility_id = $request->visibility == 1 ? 1 : 2;    
+            $company->max_account = $request->max_account;
+            $company->user_id =$request->owner;
+            $company->status_id = $request->status == 1 ? 1 : 2;
             $company->save();
+
+            $role = User::where('id', $request->owner)->first();
+            $role->role_id = Role::where('company_id', $request->id)->where('company_admin', 1)->first()->id;
+            $role->save();
+
             return response()->json([
                 'message' => 'Company updated successfully',
                 'status'  => 'success',
@@ -170,7 +171,17 @@ class AdminController extends Controller
             ], 403);
         }
     }
-
+    
+    public function userGetIdCompanyUser(Request $request)
+    {
+        $users = User::where('company_id', $request->id)->get(); // Menyesuaikan query sesuai dengan tabel users
+        return response()->json([
+            'status' => 'success',
+            'users' => $users
+        ]);
+    }
+    
+    
     public function deleteCompany(Request $request)
     {
         if (Gate::allows('IsAdmin')) {
@@ -191,3 +202,4 @@ class AdminController extends Controller
         }
     }
 }
+

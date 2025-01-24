@@ -160,18 +160,18 @@
                     }
                 });
             };
-
-            function showEditCompanyModal(id) {
+            
+            async function showEditCompanyModal(id) {
                 showModal('update-company-admin');
+                await getUserIdbyCompany(id);
                 let company = companies.find(company => company.id == id);
                 $("#company_name").val(company.name);
                 $("#company_email").val(company.email);
                 $("#max_account").val(company.max_account);
-                $("#owner").val(company.user ? company.user.first_name + " " + company.user.last_name : "N/A");
-                $("#owner_email").val(company.user ? company.user.email : "N/A");
                 $("#visibility").prop('checked', company.visibility_id === 1 ? true : false);
                 $("#status").prop('checked', company.status_id === 1 ? true : false);
                 $("#button-for-target").attr('onclick', `editCompany(${id})`);
+                $("#owner").val(company.user ? company.user.id : "");
             }
 
             function editCompany(id) {
@@ -179,10 +179,7 @@
                 let email = $("#company_email").val();
                 let max_account = $("#max_account").val();
                 let visibility = $("#visibility").is(":checked") ? 1 : 0;
-                let owner = $("#owner").val().split(" ");
-                let first_name = owner[0];
-                let last_name = owner[1];
-                let owner_email = $("#owner_email").val();
+                let owner = $("#owner").val();
                 let status = $("#status").is(":checked") ? 1 : 0;
 
                 $.ajax({
@@ -194,9 +191,7 @@
                         email: email,
                         max_account: max_account,
                         visibility: visibility,
-                        first_name: first_name,
-                        last_name: last_name,
-                        owner_email: owner_email,
+                        owner:owner,
                         status: status,
                         _token: "{{ csrf_token() }}"
                     },
@@ -247,6 +242,29 @@
                                 }
                             }
                         });
+                    }
+                });
+            }
+
+            async function getUserIdbyCompany(id){
+                
+                await $.ajax({
+                    url: "{{ route('userGetIdCompanyUser') }}",
+                    type: "GET",
+                    data: {
+                        id: id
+                    },
+                    success: function(data) {
+                        console.log(data);
+                        $('#owner').empty();
+                        $('#owner').append(`<option value="" disabled>Select Owner</option>`);
+                        data.users.forEach(function(user){
+                            $('#owner').append(`<option value="${user.id}">${user.first_name} ${user.last_name}</option>`);
+                        });
+                        // let owner = data.user.first_name + " " + data.user.last_name;
+                        // let owner_email = data.user.email;
+                        // $("#owner").val(owner);
+                        // $("#owner_email").val(owner_email);
                     }
                 });
             }

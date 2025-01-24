@@ -45,13 +45,9 @@
                     </div>
                     <div class="col-span-2 md:col-span-1">
                         <label for="owner" class="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-200">Owner</label>
-                        <input type="text" id="owner" name="owner" placeholder="Enter owner name"
+                        <select id="owner" name="owner"
                             class="mt-1 block w-full px-3 py-2 border bg-gray-100 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-xs md:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
-                    </div>
-                    <div class="col-span-2 md:col-span-1">
-                        <label for="owner_email" class="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-200">Owner Email</label>
-                        <input type="email" id="owner_email" name="owner_email" placeholder="Enter owner email"
-                            class="mt-1 block w-full px-3 py-2 border bg-gray-100 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-xs md:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
+                        </select>
                     </div>
                     <div class="col-span-2">
                         <div class="flex items-center justify-between">
