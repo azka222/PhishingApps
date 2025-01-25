@@ -73,7 +73,7 @@ class AuthenticateController extends Controller
         if ($checkUser == 1) {
             $company          = Company::findOrFail($request->company);
             $company->user_id = $user->id;
-            $company->status  = 1;
+            $company->status_id  = 1;
             $company->save();
 
             $role                = new Role();
