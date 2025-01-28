@@ -145,8 +145,13 @@ class ApprovalController extends Controller
 
     public function approve(Request $request, $campaignId)
     {
-        $campaign            = Campaign::findOrFail($campaignId);
+
+        $campaign = Campaign::findOrFail($campaignId);
+        if (! $campaign || $campaign->token !== $request->token) {
+            return response()->json(['message' => 'Invalid token or campaign not found'], 403);
+        }
         $campaign->status_id = 2;
+        $campaign->token     = null;
         $campaign->save();
 
         $jsonData = json_decode($campaign->data);
@@ -175,7 +180,11 @@ class ApprovalController extends Controller
 
     public function reject(Request $request, $campaignId)
     {
-        $campaign            = Campaign::findOrFail($campaignId);
+        $campaign = Campaign::findOrFail($campaignId);
+        if ($campaign->token !== $request->token) {
+            return response()->json(['message' => 'Invalid token'], 403);
+        }
+        $campaign->token=null;
         $campaign->status_id = 3;
         $campaign->save();
         return view('contents.page.approval');

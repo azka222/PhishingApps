@@ -6,8 +6,8 @@
             <div class="min-h-screen flex items-center justify-center p-4">
                 <div class="w-full max-w-2xl bg-blueBlue shadow-lg rounded-3xl p-8">
                     <!-- Header -->
-                    <div class="text-center mb-6 text-white">
-                        <div class="text-3xl font-bold pb-8">Reset Password</div>
+                    <div class="mb-6 text-white">
+                        <div class="text-center text-3xl font-bold pb-8">Reset Password</div>
                         <!-- Select -->
                         <div class="mb-6">
                             <div class="md:col-span-2 col-span-2">
