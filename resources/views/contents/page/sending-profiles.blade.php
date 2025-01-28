@@ -592,15 +592,10 @@
                     if (xhr.status === 422) {
                         var errorMessage = JSON.parse(xhr.responseText) ? JSON.parse(xhr.responseText) : xhr
                             .responseText;
-                        var errors = errorMessage.errors ? errorMessage.errors : errorMessage;
-                        $('#error_message_field').show();
-                        $('#error_message').empty();
-                        $.each(errors, function(field, messages) {
-                            $.each(messages, function(index, message) {
-                                let data = `<li>${message}</li>`;
-                                $('#error_message').append(data);
-                            });
-                        });
+                        var errors = errorMessage.message ? errorMessage.message : errorMessage;
+                        $('#error_message_field_mail').show();
+                        $('#error_message_mail').empty();
+                        $('#error_message_mail').append(`<li>${errors}</li>`);
                     } else {
                         let errorMessage = JSON.parse(xhr.responseText);
                         Swal.fire({
@@ -618,8 +613,9 @@
 
         function showTestModal() {
             showModal('test-connection-modal');
+            $("#error_message_field_mail").hide();
             $("#test_name").val("");
-            $("#test_email").val("");
+            $("#test_email").val("");   
         }
     </script>
 @endsection

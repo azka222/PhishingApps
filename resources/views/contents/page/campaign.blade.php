@@ -260,15 +260,13 @@
                 },
                 error: function(xhr, status, error) {
                     clearTimeout(timeout);
+                    var errorMessage = JSON.parse(xhr.responseText) ? JSON.parse(xhr.responseText) : xhr
+                        .responseText;
                     Swal.close();
-                    let errorMessage = JSON.parse(xhr.responseText);
-                    Swal.fire({
-                        icon: "error",
-                        title: "Error",
-                        text: errorMessage.error,
-                        confirmButtonColor: '#10b981',
-                        confirmButtonText: 'Close'
-                    });
+                    var errors = errorMessage.message ? errorMessage.message : errorMessage;
+                    $('#error_message_field_mail').show();
+                    $('#error_message_mail').empty();
+                    $('#error_message_mail').append(`<li>${errors}</li>`);
                 }
             })
         }
@@ -324,6 +322,7 @@
                     getCampaigns();
                 },
                 error: function(xhr, status, error) {
+                    Swal.close();
                     preventDoubleClick('button-for-campaign', false)
                     if (xhr.status === 422) {
                         var errorMessage = JSON.parse(xhr.responseText) ? JSON.parse(xhr.responseText) : xhr
