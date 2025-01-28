@@ -71,6 +71,9 @@ class User extends Authenticatable implements MustVerifyEmailContract
 
     public function companyAdmin($id)
     {
+        if($this->adminCheck()) {
+            return true;
+        }
         $checkRole = Role::where('company_id', $id)->where('company_admin', 1)->first();
         if ($checkRole->id === $this->role_id) {
             return true;
@@ -260,6 +263,9 @@ class User extends Authenticatable implements MustVerifyEmailContract
 
     public function isCompanyOwner($id)
     {
+        if($this->adminCheck()) {
+            return true;
+        }
         $company = Company::where('id', $id)->first();
         if ($company->user_id === $this->id) {
             return true;

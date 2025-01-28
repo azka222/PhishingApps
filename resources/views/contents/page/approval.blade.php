@@ -185,6 +185,7 @@
 
         function showActionModal(id) {
             $("#campaign_id").val(id);
+            $("#company_id").val(approvals.find(approval => approval.id == id).company_id);
             showModal('action-approval-modal');
 
         }
@@ -193,6 +194,7 @@
             let status = $("input[name='default-radio']:checked").val();
             let message = $("#message").val();
             let id = $("#campaign_id").val();
+            let company_id = $("#company_id").val();
             $.ajax({
                 url: "{{ route('actionApproval') }}",
                 type: "POST",
@@ -200,6 +202,7 @@
                     status: status,
                     message: message,
                     id: id,
+                    company_id: company_id,
                     _token: "{{ csrf_token() }}"
                 },
                 success: function(response) {
