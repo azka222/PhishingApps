@@ -23,6 +23,7 @@
             <div class="p-4 md:p-5 space-y-4">
                 <div class="grid grid-cols-2 gap-4">
                     <input type="hidden" id="campaign_id" name="approval_id">
+                    <input type="hidden" id="company_id" name="company_id">
                     <div class="col-span-1 flex items-center gap-8">
                         <div class="flex items-center">
                             <input id="default-radio-1" type="radio" value="2" name="default-radio"

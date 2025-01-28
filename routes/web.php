@@ -153,6 +153,9 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         Route::get('/', [ViewController::class, 'approvalView'])->name('approvalView');
         Route::get('/getApproval', [ApprovalController::class, 'getAllApproval'])->name('getApproval');
         Route::post('/actionApproval', [ApprovalController::class, 'submitCampaignApproval'])->name('actionApproval');
+        Route::get('/{campaignId}/approve', [ApprovalController::class, 'approve'])->name('approval.approve');
+        Route::get('/{campaignId}/reject', [ApprovalController::class, 'reject'])->name('approval.reject');
+
     });
 
 });

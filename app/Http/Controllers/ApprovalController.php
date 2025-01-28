@@ -1,13 +1,17 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Mail\ApprovalMail;
 use App\Models\Campaign;
+use App\Models\Company;
 use App\Models\CompanyCampaign;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Json;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class ApprovalController extends Controller
 {
@@ -31,6 +35,8 @@ class ApprovalController extends Controller
         $campaign->status_id  = 1;
         $campaign->updated_at = Carbon::now();
         $campaign->save();
+
+        $this->sendApprovalEmail($campaign->id);
 
         return response()->json([
             'message' => 'Approval request sent successfully',
@@ -98,7 +104,7 @@ class ApprovalController extends Controller
 
                 if ($response->successful() && $response != [] && $response->json() != []) {
                     $companyCampaign              = new CompanyCampaign();
-                    $companyCampaign->company_id  = auth()->user()->company_id;
+                    $companyCampaign->company_id  = $request->company_id;
                     $companyCampaign->campaign_id = $newId;
                     $companyCampaign->status      = 1;
                     $companyCampaign->save();
@@ -121,6 +127,58 @@ class ApprovalController extends Controller
 
             }
         }
+    }
+
+    public function sendApprovalEmail($campaignId)
+    {
+        $campaign = Campaign::findOrFail($campaignId);
+        if (! $campaign->token) {
+            $campaign->token = Str::random(32);
+            $campaign->save();
+        }
+        $company      = Company::find($campaign->company_id);
+        $companyOwner = $company->user->email;
+        Mail::to($companyOwner)->send(new ApprovalMail($campaign));
+
+        return response()->json(['message' => 'Approval email sent successfully!']);
+    }
+
+    public function approve(Request $request, $campaignId)
+    {
+        $campaign            = Campaign::findOrFail($campaignId);
+        $campaign->status_id = 2;
+        $campaign->save();
+
+        $jsonData = json_decode($campaign->data);
+        $newId    = $this->getIdFromGophish('campaigns');
+        $jsonData->name .= " -+-$newId";
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
+        ])->post("{$this->url}/campaigns/", $jsonData);
+
+        if ($response->successful() && $response != [] && $response->json() != []) {
+            $companyCampaign              = new CompanyCampaign();
+            $companyCampaign->company_id  = Auth()->user()->company_id;
+            $companyCampaign->campaign_id = $newId;
+            $companyCampaign->status      = 1;
+            $companyCampaign->save();
+            $campaign->save();
+            return redirect()->route('campaignDetailsView', ['id' => $newId]);
+
+        } else {
+            return response()->json([
+                'message' => 'failed to create campaign',
+            ], 500);
+        }
+
+    }
+
+    public function reject(Request $request, $campaignId)
+    {
+        $campaign            = Campaign::findOrFail($campaignId);
+        $campaign->status_id = 3;
+        $campaign->save();
+        return view('contents.page.approval');
     }
 
 }
