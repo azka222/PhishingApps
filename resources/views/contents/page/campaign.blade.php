@@ -431,9 +431,11 @@
                                 button = `<td class="p-4 flex gap-2">
                                         <button onclick="showDetailCampaign(${campaign.id})"
                                             class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">Detail</button>
-                                        <button onclick="deleteCampaign(${campaign.id})"
+                                        @CanDeleteCampaign()
+                                            <button onclick="deleteCampaign(${campaign.id})"
                                             class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-red-600 rounded-xl hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600">Delete</button>
-                                    </td>`;
+                                        @endCanDeleteCampaign()
+                                            </td>`;
                             }
 
                             $("#list-campaign-tbody").append(`
@@ -448,16 +450,16 @@
                                 `);
                         });
 
-                        $("#numberFirstItem").text(
-                            response.campaignTotal != 0 ? (page - 1) * $("#show").val() + 1 : 0
-                        );
-                        $("#numberLastItem").text(
-                            (page - 1) * $("#show").val() + response.data.length
-                        );
-                        $("#totalTemplatesCount").text(response.campaignTotal);
-                        paginationCampaign("#page-button-campaign-company", response.pageCount,
-                            response.currentPage);
                     }
+                    $("#numberFirstItem").text(
+                        response.campaignTotal != 0 ? (page - 1) * $("#show").val() + 1 : 0
+                    );
+                    $("#numberLastItem").text(
+                        (page - 1) * $("#show").val() + response.data.length
+                    );
+                    $("#totalTemplatesCount").text(response.campaignTotal);
+                    paginationCampaign("#page-button-campaign-company", response.pageCount,
+                        response.currentPage);
                 }
 
             });
