@@ -294,6 +294,7 @@
             $("#group_description").val('');
             $("#strict_user_selected_department").prop('checked', false);
             $("#title-add-group-modal").text('Add Group');
+            $("#button-for-group").text('Create');
             $("#button-for-group").removeAttr('onclick').attr('onclick', 'createGroup()');
             $("#group_status").prop('disabled', true);
             $("#admin_company_input_div").show();
@@ -438,6 +439,7 @@
         }
 
         function createGroup() {
+            preventDoubleClick('button-for-group', true);
             let name = $("#group_name").val();
             let department = $("#group_department").val();
             let status = $("#group_status").val();
@@ -460,6 +462,7 @@
                     _token: "{{ csrf_token() }}"
                 },
                 success: function(response) {
+                    preventDoubleClick('button-for-group', false);
                     Swal.fire({
                         icon: 'success',
                         title: 'Success',
@@ -472,6 +475,7 @@
                     getGroups();
                 },
                 error: function(xhr) {
+                    preventDoubleClick('button-for-group', false);
                     var errorMessage = JSON.parse(xhr.responseText) ? JSON.parse(xhr.responseText) : xhr
                         .responseText;
                     var errors = errorMessage.message ? errorMessage.message : errorMessage;
@@ -483,6 +487,7 @@
         }
 
         function updateGroup(id) {
+            preventDoubleClick('button-for-group', true);
             let name = $("#group_name").val();
             let department = $("#group_department").val();
             let status = $("#group_status").val();
@@ -504,6 +509,7 @@
                     _token: "{{ csrf_token() }}"
                 },
                 success: function(response) {
+                    preventDoubleClick('button-for-group', false);
                     Swal.fire({
                         icon: 'success',
                         title: 'Success',
@@ -516,6 +522,7 @@
                     getGroups();
                 },
                 error: function(xhr) {
+                    preventDoubleClick('button-for-group', false);
                     var errorMessage = JSON.parse(xhr.responseText) ? JSON.parse(xhr.responseText) : xhr
                         .responseText;
                     var errors = errorMessage.message ? errorMessage.message : errorMessage;

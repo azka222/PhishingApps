@@ -130,7 +130,6 @@ class GroupController extends Controller
             $id                   = $this->getIdFromGophish('groups');
             $time                 = $this->getTimeGoPhish();
             $group                = new Group();
-            $group->gophish_id    = $id;
             $group->department_id = $request->department;
             $group->status        = $request->status;
             $group->description   = $request->description;
@@ -155,6 +154,8 @@ class GroupController extends Controller
                 'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
             ])->post("{$this->url}/groups/", $jsonData);
             if ($response->successful() && $response->body() != []) {
+                $idGophish         = $response->json()['id'];
+                $group->gophish_id = $idGophish;
                 $group->save();
                 $group->target()->sync($request->members);
                 return response()->json([

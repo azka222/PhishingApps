@@ -77,7 +77,7 @@
                                 <th scope="col" class="p-4">Template</th>
                                 <th scope="col" class="p-4">Page</th>
                                 <th scope="col" class="p-4">From Address</th>
-                                <th scope="col" class="p-4">Group</th>
+                                <th id="dynamicColumn" scope="col" class="p-4">Group</th>
                                 <th scope="col" class="p-4">Action</th>
                             </tr>
                         </thead>
@@ -111,6 +111,7 @@
         let campaigns = [];
 
         $(document).ready(function() {
+            $("#status").val(2);
             getCampaigns();
             getCampaignsResources();
         });
@@ -259,20 +260,19 @@
                 },
                 error: function(xhr, status, error) {
                     clearTimeout(timeout);
+                    var errorMessage = JSON.parse(xhr.responseText) ? JSON.parse(xhr.responseText) : xhr
+                        .responseText;
                     Swal.close();
-                    let errorMessage = JSON.parse(xhr.responseText);
-                    Swal.fire({
-                        icon: "error",
-                        title: "Error",
-                        text: errorMessage.error,
-                        confirmButtonColor: '#10b981',
-                        confirmButtonText: 'Close'
-                    });
+                    var errors = errorMessage.message ? errorMessage.message : errorMessage;
+                    $('#error_message_field_mail').show();
+                    $('#error_message_mail').empty();
+                    $('#error_message_mail').append(`<li>${errors}</li>`);
                 }
             })
         }
 
         function createCampaign() {
+            preventDoubleClick('button-for-campaign', true);
             let name = $("#campaign_name").val();
             let template = $("#campaign_template").val();
             let page = $("#campaign_page").val();
@@ -284,6 +284,14 @@
             let groups = [];
             $(".group-campaign").each(function() {
                 groups.push($(this).attr('value'));
+            });
+            Swal.fire({
+                title: 'Creating...',
+                text: 'Please wait while we create your campaign.',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading()
+                }
             });
             $.ajax({
                 url: "{{ route('createCampaign') }}",
@@ -301,6 +309,8 @@
                     _token: "{{ csrf_token() }}"
                 },
                 success: function(response) {
+                    Swal.close();
+                    preventDoubleClick('button-for-campaign', false)
                     Swal.fire({
                         title: 'Success',
                         text: 'Campaign created successfully.',
@@ -312,6 +322,8 @@
                     getCampaigns();
                 },
                 error: function(xhr, status, error) {
+                    Swal.close();
+                    preventDoubleClick('button-for-campaign', false)
                     if (xhr.status === 422) {
                         var errorMessage = JSON.parse(xhr.responseText) ? JSON.parse(xhr.responseText) : xhr
                             .responseText;
@@ -384,7 +396,8 @@
                             let pageName = tempCampaign.page['name'];
                             let templateName = tempCampaign.template['name'].split('-+-')[0];
                             let group = '';
-                            if (!$("#status").val() == 2) {
+                            if ($("#status").val() != 2) {
+                                $("#dynamicColumn").text('Group');
                                 group = ` <td class="p-4 relative group">
                                                 ${(tempCampaign.groups.length)} Groups
                                                 <div class="absolute hidden group-hover:block text-black bg-white dark:bg-gray-800 dark:text-white text-sm rounded-lg p-2 shadow-lg w-max max-w-xs z-10 -top-10 left-1/2 transform -translate-x-1/2">
@@ -393,7 +406,19 @@
                                                     </ul>
                                                 </div>
                                             </td>`
+                            } else {
+                                $("#dynamicColumn").text('Users');
+                                console.log(tempCampaign.results);
+                                group = ` <td class="p-4 relative group">
+                                                ${(tempCampaign.results.length)} Users
+                                                <div class="absolute hidden group-hover:block text-black bg-white dark:bg-gray-800 dark:text-white text-sm rounded-lg p-2 shadow-lg w-max max-w-xs z-10 -top-10 left-1/2 transform -translate-x-1/2">
+                                                    <ul class="list-disc list-inside">
+                                                        ${tempCampaign.results.map(group => group.email ? `<li>${group.email} - ${group.status}</li>` : '').join('')}
+                                                    </ul>
+                                                </div>
+                                            </td>`
                             }
+
 
                             let button = campaign.status_id == 1 ? `<td class="p-4 gap-2">
                                         <button onclick="sendNewApproval(${campaign.id})"
@@ -405,9 +430,11 @@
                                 button = `<td class="p-4 flex gap-2">
                                         <button onclick="showDetailCampaign(${campaign.id})"
                                             class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">Detail</button>
-                                        <button onclick="deleteCampaign(${campaign.id})"
+                                        @CanDeleteCampaign()
+                                            <button onclick="deleteCampaign(${campaign.id})"
                                             class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-red-600 rounded-xl hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600">Delete</button>
-                                    </td>`;
+                                        @endCanDeleteCampaign()
+                                            </td>`;
                             }
 
                             $("#list-campaign-tbody").append(`
@@ -417,21 +444,21 @@
                             <td class="p-4 truncate max-w-xs" title="${templateName}">${templateName}</td>
                             <td class="p-4 truncate max-w-xs" title="${pageName}">${pageName}</td>
                             <td class="p-4 truncate max-w-xs" title="${addressName}">${addressName}</td>
-                                    ${group}
+                            ${group}
                             ${button}
                                 `);
                         });
 
-                        $("#numberFirstItem").text(
-                            response.campaignTotal != 0 ? (page - 1) * $("#show").val() + 1 : 0
-                        );
-                        $("#numberLastItem").text(
-                            (page - 1) * $("#show").val() + response.data.length
-                        );
-                        $("#totalTemplatesCount").text(response.campaignTotal);
-                        paginationSendingProfile("#page-button-campaign-company", response.pageCount,
-                            response.currentPage);
                     }
+                    $("#numberFirstItem").text(
+                        response.campaignTotal != 0 ? (page - 1) * $("#show").val() + 1 : 0
+                    );
+                    $("#numberLastItem").text(
+                        (page - 1) * $("#show").val() + response.data.length
+                    );
+                    $("#totalTemplatesCount").text(response.campaignTotal);
+                    paginationCampaign("#page-button-campaign-company", response.pageCount,
+                        response.currentPage);
                 }
 
             });

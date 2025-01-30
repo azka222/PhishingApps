@@ -161,6 +161,7 @@
         }
 
         function addSendingProfile() {
+            preventDoubleClick('button-for-profile', true);
             let profile_name = $("#profile_name").val();
             let interface_type = $("#interface_type").val();
             let email_smtp = $("#email_smtp").val();
@@ -198,7 +199,7 @@
 
                 },
                 success: function(response) {
-
+                    preventDoubleClick('button-for-profile', false);
                     getSendingProfile();
                     hideModal('add-sending-profile-modal');
                     Swal.fire({
@@ -211,6 +212,7 @@
                     })
                 },
                 error: function(xhr) {
+                    preventDoubleClick('button-for-profile', false);
                     if (xhr.status === 422) {
                         var errorMessage = JSON.parse(xhr.responseText) ? JSON.parse(xhr.responseText) : xhr
                             .responseText;
@@ -382,6 +384,7 @@
         }
 
         function editSendingProfile(id) {
+            preventDoubleClick('button-for-profile', true);
             let name = $("#profile_name").val();
             let interface_type = $("#interface_type").val();
             let email = $("#email_smtp").val();
@@ -417,6 +420,7 @@
                     _token: "{{ csrf_token() }}"
                 },
                 success: function(response) {
+                    preventDoubleClick('button-for-profile', false);
                     getSendingProfile();
                     Swal.fire({
                         icon: 'success',
@@ -428,6 +432,7 @@
                     hideModal('add-sending-profile-modal');
                 },
                 error: function(xhr) {
+                    preventDoubleClick('button-for-profile', false);
                     if (xhr.status === 422) {
                         var errorMessage = JSON.parse(xhr.responseText) ? JSON.parse(xhr.responseText) : xhr
                             .responseText;
@@ -587,15 +592,10 @@
                     if (xhr.status === 422) {
                         var errorMessage = JSON.parse(xhr.responseText) ? JSON.parse(xhr.responseText) : xhr
                             .responseText;
-                        var errors = errorMessage.errors ? errorMessage.errors : errorMessage;
-                        $('#error_message_field').show();
-                        $('#error_message').empty();
-                        $.each(errors, function(field, messages) {
-                            $.each(messages, function(index, message) {
-                                let data = `<li>${message}</li>`;
-                                $('#error_message').append(data);
-                            });
-                        });
+                        var errors = errorMessage.message ? errorMessage.message : errorMessage;
+                        $('#error_message_field_mail').show();
+                        $('#error_message_mail').empty();
+                        $('#error_message_mail').append(`<li>${errors}</li>`);
                     } else {
                         let errorMessage = JSON.parse(xhr.responseText);
                         Swal.fire({
@@ -613,8 +613,9 @@
 
         function showTestModal() {
             showModal('test-connection-modal');
+            $("#error_message_field_mail").hide();
             $("#test_name").val("");
-            $("#test_email").val("");
+            $("#test_email").val("");   
         }
     </script>
 @endsection

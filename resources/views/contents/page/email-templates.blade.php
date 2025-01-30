@@ -128,6 +128,7 @@
             }
 
             function createEmailTemplates() {
+                preventDoubleClick('button-for-email-template', true);
                 let template_name = $("#template_name").val();
                 let email_subject = $("#email_subject").val();
                 let status = $("#email_status").val();
@@ -156,6 +157,7 @@
                     processData: false,
                     contentType: false,
                     success: function(response) {
+                        preventDoubleClick('button-for-email-template', false);
                         Swal.fire({
                             icon: "success",
                             title: "Success",
@@ -171,6 +173,7 @@
                         hideModal('add-email-templates-modal');
                     },
                     error: function(xhr) {
+                        preventDoubleClick('button-for-email-template', false);
                         if (xhr.status === 422) {
                             var errorMessage = JSON.parse(xhr.responseText) ? JSON.parse(xhr.responseText) : xhr
                                 .responseText;
@@ -370,6 +373,7 @@
             }
 
             function editEmailTemplates(ids) {
+                preventDoubleClick('button-for-email-template', true);
                 let old_email_attachment = null;
                 let json_email = null;
                 let id = ids;
@@ -421,13 +425,13 @@
                             confirmButtonColor: '#10b981',
                             confirmButtonText: 'Close'
                         })
-
-
+                        preventDoubleClick('button-for-email-template', false);
                         getEmailTemplates();
 
                         hideModal('add-email-templates-modal');
                     },
                     error: function(xhr) {
+                        preventDoubleClick('button-for-email-template', false);
                         if (xhr.status === 422) {
                             var errorMessage = JSON.parse(xhr.responseText) ? JSON.parse(xhr.responseText) : xhr
                                 .responseText;

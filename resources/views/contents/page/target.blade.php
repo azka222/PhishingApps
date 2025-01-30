@@ -334,6 +334,7 @@
         }
 
         function createTarget() {
+            preventDoubleClick('button-for-target', true);
             let firstName = $('#target_first_name').val();
             let lastName = $('#target_last_name').val();
             let email = $('#target_email').val();
@@ -354,6 +355,8 @@
                     company: company
                 },
                 success: function(response) {
+                    preventDoubleClick('button-for-target', false);
+                    $("#button-for-target").prop('disabled', false);
                     Swal.fire({
                         icon: "success",
                         title: "Success",
@@ -366,6 +369,7 @@
                     getTargets();
                 },
                 error: function(xhr) {
+                    preventDoubleClick('button-for-target', false);
                     var errorMessage = JSON.parse(xhr.responseText) ? JSON.parse(xhr.responseText) : xhr
                         .responseText;
                     var errors = errorMessage.message ? errorMessage.message : errorMessage;
@@ -379,6 +383,7 @@
         }
 
         function updateTarget(id) {
+            preventDoubleClick('button-for-target', true);
             let firstName = $('#target_first_name').val();
             let lastName = $('#target_last_name').val();
             let email = $('#target_email').val();
@@ -398,6 +403,8 @@
                     _token: "{{ csrf_token() }}"
                 },
                 success: function(response) {
+                    preventDoubleClick('button-for-target', false);
+                    $("#button-for-target").prop('disabled', false);
                     Swal.fire({
                         icon: "success",
                         title: "Success",
@@ -410,6 +417,7 @@
                     getTargets();
                 },
                 error: function(xhr) {
+                    preventDoubleClick('button-for-target', false);
                     var errorMessage = JSON.parse(xhr.responseText) ? JSON.parse(xhr.responseText) : xhr
                         .responseText;
                     var errors = errorMessage.message ? errorMessage.message : errorMessage;

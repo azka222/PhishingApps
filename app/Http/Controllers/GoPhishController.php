@@ -2,7 +2,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Mail\ApprovalMail;
 use App\Models\Campaign;
+use App\Models\Company;
 use App\Models\EmailTemplateCompany;
 use App\Models\Group;
 use App\Models\SendingProfileCompany;
@@ -16,6 +18,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
 class GophishController extends Controller
@@ -324,9 +327,10 @@ class GophishController extends Controller
                 'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
             ])->post("{$this->url}/templates/", $jsonData);
             if ($response->successful() && $response->body() != []) {
+                $idGophish                    = $response->json()['id'];
                 $companyEmailTemplate              = new EmailTemplateCompany();
                 $companyEmailTemplate->company_id  = auth()->user()->adminCheck() ? $request->company : auth()->user()->company_id;
-                $companyEmailTemplate->template_id = $newId;
+                $companyEmailTemplate->template_id = $idGophish;
                 $companyEmailTemplate->status      = $request->status;
                 $companyEmailTemplate->save();
                 return response()->json(['message' => 'Email template created successfully']);
@@ -574,9 +578,10 @@ class GophishController extends Controller
                 'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
             ])->post("{$this->url}/smtp/", $jsonData);
             if ($response->successful() && $response->body() != []) {
+                $idGophish                    = $response->json()['id'];
                 $companySendingProfile                     = new SendingProfileCompany();
                 $companySendingProfile->company_id         = auth()->user()->adminCheck() ? $request->company : auth()->user()->company_id;
-                $companySendingProfile->sending_profile_id = $newId;
+                $companySendingProfile->sending_profile_id = $idGophish;
                 $companySendingProfile->status             = 1;
                 $companySendingProfile->save();
                 return response()->json(['message' => 'Sending profile created successfully']);
@@ -798,7 +803,7 @@ class GophishController extends Controller
     {
         $emailTemplatesApp  = auth()->user()->accessibleEmailTemplate()->where('status', 1)->pluck('template_id');
         $sendingProfilesApp = auth()->user()->accessibleSendingProfile()->where('status', 1)->pluck('sending_profile_id');
-        $groupApp           = auth()->user()->accessibleGroup()->where('status', 1)->orwhere('status', '1')->pluck('gophish_id');
+        $groupApp           = auth()->user()->accessibleGroup()->where('status', 1)->pluck('gophish_id');
         $emailTemplates     = [];
         $sendingProfiles    = [];
         $groups             = [];
@@ -1002,6 +1007,8 @@ class GophishController extends Controller
             $campaign->status_id  = 1;
             $campaign->save();
 
+            $this->sendApprovalEmail($campaign->id);
+
             return response()->json([
                 'success' => true,
                 'message' => 'Campaign created successfully',
@@ -1045,7 +1052,6 @@ class GophishController extends Controller
                 ]);
 
             } else {
-
                 $campaigns = auth()->user()->accessibleCampaign();
                 if (Gate::allows('IsAdmin')) {
                     if ($request->has('companyId') && $request->companyId != null) {
@@ -1102,7 +1108,7 @@ class GophishController extends Controller
 
     public function deleteCampaign(Request $request)
     {
-        if (Gate::allows('IsCompanyAdmin')) {
+        if (Gate::allows('IsCompanyAdmin', auth()->user()->company_id)) {
             $campaignId = intval($request->id);
             $response   = Http::withHeaders([
                 'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
@@ -1154,6 +1160,21 @@ class GophishController extends Controller
         } else {
             abort(403);
         }
+    }
+
+    public function sendApprovalEmail($campaignId)
+    {
+        $campaign = Campaign::findOrFail($campaignId);
+        if (! $campaign->token) {
+            $campaign->token = Str::random(32);
+            $campaign->save();
+        }
+        $company      = Company::find($campaign->company_id);
+        $companyOwner = $company->user->email;
+
+        Mail::to($companyOwner)->send(new ApprovalMail($campaign));
+
+        return response()->json(['message' => 'Approval email sent successfully!']);
     }
 
 }

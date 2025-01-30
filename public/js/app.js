@@ -53,6 +53,10 @@ function hideModal(id) {
     $(".alert-danger").hide();
 }
 
+function preventDoubleClick(target, value) {
+    $("#" + target).prop("disabled", value);
+}
+
 function paginationTargetCompany(selector, numberOfPage, currentPage) {
     $(selector).empty();
     let currentPageButton = `<li>
