@@ -46,7 +46,6 @@ class AuthenticateController extends Controller
 
     public function register(Request $request)
     {
-        
 
         $request->validate([
             'first_name'            => 'required|string',
@@ -73,9 +72,8 @@ class AuthenticateController extends Controller
         if ($checkUser == 1) {
             $company          = Company::findOrFail($request->company);
             $company->user_id = $user->id;
-            $company->status  = 1;
+            $company->status_id  = 1;
             $company->save();
-
             $role                = new Role();
             $role->name          = 'Company Admin';
             $role->company_id    = $request->company;
@@ -83,7 +81,6 @@ class AuthenticateController extends Controller
             $role->save();
             $user->role_id = $role->id;
             $user->save();
-
             $moduleAbilities = ModuleAbility::all()->pluck('id');
             $role->moduleAbility()->syncWithoutDetaching($moduleAbilities);
 
@@ -93,7 +90,14 @@ class AuthenticateController extends Controller
             $userRole->company_admin = 0;
             $userRole->save();
         } else {
-            $userRole      = Role::where('company_id', $request->company)->where('company_admin', 0)->first();
+            $userRole = Role::where('company_id', $request->company)->where('company_admin', 0)->first();
+            if (! $userRole) {
+                $userRole                = new Role();
+                $userRole->name          = 'User';
+                $userRole->company_id    = $request->company;
+                $userRole->company_admin = 0;
+                $userRole->save();
+            }
             $user->role_id = $userRole->id;
             $user->save();
         }

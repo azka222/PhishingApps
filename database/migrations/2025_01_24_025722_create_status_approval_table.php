@@ -17,12 +17,6 @@ return new class extends Migration
             $table->string('name');
             $table->timestamps();
         });
-
-        Schema::table('approval_statuses', function (Blueprint $table) {
-            Artisan::call('db:seed', [
-                '--class' => 'ApprovalStatusSeeder',
-            ]);
-        });
     }
 
     /**
