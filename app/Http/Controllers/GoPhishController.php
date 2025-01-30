@@ -19,6 +19,8 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use App\Jobs\TestSendingProfileJob;
+use Illuminate\Support\Facades\Artisan;
 
 class GophishController extends Controller
 {
@@ -668,19 +670,14 @@ class GophishController extends Controller
             'mail.from.name'               => $request->input('email_smtp'),
         ]);
 
+    //    kalo pake job harus dibenerin, nanti dicari tau gimana caranya
+
         try {
-            Mail::raw('This is a test email to validate the SMTP configuration.', function ($message) use ($request) {
-                $message->to($request->target_email)
-                    ->subject('Hi ' . $request->target_name . ', Test Email from Gophish Configuration');
-                if ($request->input('http_headers')) {
-                    foreach ($request->input('http_headers') as $header => $value) {
-                        if (is_array($value)) {
-                            $value = implode(', ', $value);
-                        }
-                        $message->getHeaders()->addTextHeader($header, (string) $value);
-                    }
-                }
-            });
+            dispatch(new TestSendingProfileJob(
+                $request->target_email,
+                $request->target_name,
+                $request->input('http_headers', [])
+            ));
 
             return response()->json([
                 'message' => 'Test email sent successfully!',

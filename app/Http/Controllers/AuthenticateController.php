@@ -2,6 +2,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\ForgotPasswordJob;
+use App\Jobs\SendOTPJob;
 use App\Jobs\SendRegistrationEmailJob;
 use App\Jobs\SendVerificationEmailJob;
 use App\Mail\OtpEmail;
@@ -118,7 +120,7 @@ class AuthenticateController extends Controller
         $user->otp            = $otp;
         $user->otp_expired_at = Carbon::now()->addMinutes(1);
         $user->save();
-        Mail::to(auth()->user()->email)->send(new OtpEmail($otp));
+        SendOTPJob::dispatch(auth()->user()->email, $otp);
         return response()->json(['message' => 'OTP sent successfully!']);
     }
 
@@ -135,7 +137,7 @@ class AuthenticateController extends Controller
         $user->otp            = $otp;
         $user->otp_expired_at = Carbon::now()->addMinutes(5);
         $user->save();
-        Mail::to(auth()->user()->email)->send(new OtpEmail($otp));
+        SendOTPJob::dispatch(auth()->user()->email, $otp);
         return response()->json(['message' => 'OTP sent successfully!']);
     }
 
@@ -184,7 +186,7 @@ class AuthenticateController extends Controller
         $user->save();
 
         $resetUrl = url('/reset-password?token=' . $token);
-        Mail::to($user->email)->send(new ResetPasswordMail($resetUrl));
+        ForgotPasswordJob::dispatch($user->email, $resetUrl);
         return response()->json(['message' => 'Reset password link sent to your email']);
     }
 
