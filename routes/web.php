@@ -97,6 +97,9 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         Route::get('/getLandingPage', [GophishController::class, 'getLandingPage'])->name('getLandingPage');
         Route::get('/landingPagePreview/{id}', [GophishController::class, 'landingPagePreview'])->name('landingPagePreview');
         Route::get('/preview', [ViewController::class, 'landingPagePreview'])->name('content.landingPagePreview');
+        Route::post('/importSiteUrl', [GophishController::class, 'fetchWebsiteUrl'])->name('fetchWebsiteUrl');
+        Route::post('/createLandingPage', [GophishController::class, 'createLandingPage'])->name('createLandingPage');
+        Route::get('/testLandingPage/{html}', [GophishController::class, 'testLandingPage'])->name('testLandingPage');
 
     });
 

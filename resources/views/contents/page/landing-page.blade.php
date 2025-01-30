@@ -1,12 +1,26 @@
 @extends('layouts.master')
 @section('title', 'Fischsim - Landing Page')
-
 @section('content')
+    @include('contents.modal.landing-page.add-landing-page-modal')
+    @include('contents.modal.landing-page.import-site-modal')
     <div class=" p-4 w-full flex flex-col h-full min-h-screen  bg-gray-50 dark:bg-gray-800 dark:text-white text-gray-900">
         <div class="">
             <div class="flex p-4 items-center justify-between">
                 <h1 class="text-3xl font-semibold">Landing Page Templates</h1>
-
+                @CanCreateLandingPage()
+                <div>
+                    <button onclick="showAddLandingPageModal()"
+                        class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                            class="size-4 md:hidden">
+                            <path fill-rule="evenodd"
+                                d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25V9Z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        <span class="hidden md:inline">Create Page</span>
+                    </button>
+                </div>
+                @endCanCreateLandingPage()
             </div>
             <div class="flex flex-col gap-4 p-4">
                 <div class="max-w-full md:max-w-xs">
@@ -96,6 +110,7 @@
                 let search = $("#search").val();
                 let capture_credentials = $("#capture_credentials").val();
                 let capture_passwords = $("#capture_passwords").val();
+                let companyId = $("#companyCheckAdmin").val();
                 $.ajax({
                     url: "{{ route('getLandingPage') }}" + "?page=" + page,
                     type: "GET",
@@ -104,7 +119,8 @@
                         search: search,
                         page: page,
                         capture_credentials: capture_credentials,
-                        capture_passwords: capture_passwords
+                        capture_passwords: capture_passwords,
+                        companyId: companyId
                     },
                     success: function(response) {
                         console.log(response)
@@ -160,8 +176,187 @@
                 });
             }
 
+            function showAddLandingPageModal() {
+                showModal('add-landing-page-modal');
+                $("#admin_company_input_div").show();
+                // await fetchWebsiteUrl(); // Call the async function
+            }
+
+            function handleCheckboxAndUrl() {
+                $("#submitted-checkbox").change(function() {
+                    if (!$(this).is(":checked")) {
+                        $("#passwords-checkbox").prop("checked", false);
+                        $("#redirect_url").val('');
+                    }
+                });
+            }
+
+            $(document).ready(function() {
+                handleCheckboxAndUrl();
+            });
+
             function showLandingPage(id) {
                 window.open("{{ route('landingPagePreview', ['id' => '__ID__']) }}".replace('__ID__', id));
+            }
+
+            function showImportUrl(){
+                showModal('import-site-modal');
+            }
+
+
+
+            async function fetchWebsiteUrl() {
+                let url = $("#url_website").val(); // Get URL input value
+                if (url === "") {
+                    $("#error-http-header").show(); // Show error if URL is empty
+                }
+                if (url !== "") {
+                    $("#error-http-header").hide(); // Hide error
+                }
+
+                try {
+                    // Show loading indicator
+                    Swal.fire({
+                        title: "Loading...",
+                        text: "Fetching website HTML...",
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        },
+                    });
+
+                    // Perform the AJAX request
+                    const response = await $.ajax({
+                        url: "{{ route('fetchWebsiteUrl') }}",
+                        type: "POST",
+                        data: {
+                            _token: "{{ csrf_token() }}",
+                            url: url,
+                        },
+                    });
+
+                    // Handle success
+                    Swal.fire({
+                        icon: "success",
+                        title: "Success",
+                        text: response.message,
+                        confirmButtonColor: '#10b981',
+                        confirmButtonText: 'Close'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            hideModal('import-site-modal');
+                            if (response.html) {
+                                let response_html = response.html;
+                                $("#content").empty(); // Clear the editor content
+                                $("#content").text(response_html); // Set the editor content
+                            } else {
+                                console.log("HTML not found!");
+                            }
+                        }
+                    });
+                } catch (error) {
+                    // Handle errors
+                    let errorMessage = error.responseJSON?.message || "An error occurred!";
+                    Swal.fire({
+                        icon: "error",
+                        title: "Error",
+                        text: errorMessage,
+                        confirmButtonColor: '#10b981',
+                        confirmButtonText: 'Close',
+                    });
+                }
+            }
+
+            function showWarning(){
+                if ($("#submitted-checkbox").is(":checked")) {
+                    $(".hidden-capture").show();
+                } else {
+                    $(".hidden-capture").hide();
+                }
+            }
+
+            function createLandingPage() {
+                let name = $("#landing_name").val();
+                let submitted = $("#submitted-checkbox").is(":checked") ? 1 : 0;
+                let passwords = $("#passwords-checkbox").is(":checked") ? 1 : 0;
+                let redirect_url = $("#redirect_url").val();
+                let content = $("#content").val();
+                let company = $("#admin_company_input").val() ? $("#admin_company_input").val() : '';
+                // console.log(content);
+                let error_message = [];
+                if (name === "") {
+                    error_message.push("Name is required");
+                }
+                if (content === "") {
+                    error_message.push("Content is required");
+                }
+                console.log(submitted);
+                console.log(passwords);
+                if (error_message.length > 0) {
+                    $("#error_message_field").show();
+                    $("#error_message").empty();
+                    error_message.forEach(function(value) {
+                        $("#error_message").append(`<li>${value}</li>`);
+                    });
+                } else {
+                    $("#error_message_field").hide();
+                    $.ajax({
+                        url: "{{ route('createLandingPage') }}",
+                        type: "POST",
+                        data: {
+                            _token: "{{ csrf_token() }}",
+                            landing_name: name,
+                            html_content: content,
+                            capture_credentials: submitted,
+                            capture_passwords: passwords,
+                            redirect_url: redirect_url,
+                            company: company
+                        },
+                        success: function(response) {
+                            console.log(response);
+                            if (response.status === "success") {
+                                Swal.fire({
+                                    icon: "success",
+                                    title: "Success",
+                                    text: response.message,
+                                    confirmButtonColor: '#10b981',
+                                    confirmButtonText: 'Close',
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        hideModal('add-landing-page-modal')
+                                    }
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: "error",
+                                    title: "Error",
+                                    text: response.message,
+                                    confirmButtonColor: '#10b981',
+                                    confirmButtonText: 'Close',
+                                });
+                            }
+                        },
+                        error: function(error) {
+                            console.log(error);
+                            Swal.fire({
+                                icon: "error",
+                                title: "Error",
+                                text: "An error occurred!",
+                                confirmButtonColor: '#10b981',
+                                confirmButtonText: 'Close',
+                            });
+                        }
+                    });
+                }
+            }
+
+            function testLandingPage(){
+                let content = $("#content").val();
+                let error_message = [];
+                if (content === "") {
+                    error_message.push("Content is required");
+                }
+
             }
         </script>
     @endsection

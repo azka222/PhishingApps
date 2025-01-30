@@ -171,6 +171,8 @@ class User extends Authenticatable implements MustVerifyEmailContract
         return $this->canUpdateGroup() || $this->canDeleteGroup();
     }
 
+
+
     public function canUpdateGroup()
     {
         return $this->haveAccess('Group', 'update');
@@ -207,6 +209,35 @@ class User extends Authenticatable implements MustVerifyEmailContract
             return SendingProfileCompany::where('company_id', $this->company_id);
         } else if ($this->adminCheck()) {
             return SendingProfileCompany::query();
+        }
+    }
+
+    public function canCreateLandingPage()
+    {
+        return $this->haveAccess('Landing Page', 'create');
+    }
+
+    public function canUpdateLandingPage()
+    {
+        return $this->haveAccess('Landing Page', 'update');
+    }
+
+    public function canDeleteLandingPage()
+    {
+        return $this->haveAccess('Landing Page', 'delete');
+    }
+
+    public function canModifyLandingPage()
+    {
+        return $this->canUpdateLandingPage() || $this->canDeleteLandingPage();
+    }
+
+    public function accessibleLandingPage()
+    {
+        if ($this->haveAccess('Landing Page', 'read') && ! $this->adminCheck()) {
+            return LandingPageCompany::where('company_id', $this->company_id);
+        } else if ($this->adminCheck()) {
+            return LandingPageCompany::query();
         }
     }
 
