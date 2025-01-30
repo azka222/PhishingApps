@@ -115,7 +115,7 @@ class CompanyController extends Controller
 
     public function getCompanyUsers()
     {
-        if (Gate::allows('IsCompanyAdmin', auth()->user()->id)) {
+        if (Gate::allows('IsCompanyAdmin', auth()->user()->company_id)) {
             $users = User::with('role')->where('company_id', auth()->user()->company_id)->get();
             return response()->json([
                 'status' => 'success',
