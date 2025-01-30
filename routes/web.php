@@ -35,10 +35,9 @@ Route::group(['middleware' => 'guest'], function () {
         }
         $user->markEmailAsVerified();
         event(new Verified($user));
-
-        // Redirect ke halaman login atau dashboard
         return redirect()->route('login')->with('message', 'Email verified successfully.');
-    })->middleware(['signed', 'throttle:6,1'])->name('verification.verify');
+    })->middleware(['signed'])->name('verification.verify');
+
     Route::get('/login', [ViewController::class, 'loginView'])->name('loginView');
     Route::get('/register', [ViewController::class, 'registerView'])->name('registerView');
     Route::post('/login', [AuthenticateController::class, 'login'])->name('login');

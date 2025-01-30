@@ -2,6 +2,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\SendRegistrationEmailJob;
+use App\Jobs\SendVerificationEmailJob;
 use App\Mail\OtpEmail;
 use App\Mail\ResetPasswordMail;
 use App\Models\Company;
@@ -9,7 +11,6 @@ use App\Models\ModuleAbility;
 use App\Models\Role;
 use App\Models\User;
 use Carbon\Carbon;
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\ValidationException;
@@ -34,7 +35,7 @@ class AuthenticateController extends Controller
         $user = auth()->user();
         if (! $user->hasVerifiedEmail()) {
             auth()->logout();
-            $user->sendEmailVerificationNotification();
+            SendVerificationEmailJob::dispatch($user);
             return response()->json(['message' => 'Please verify your email address.'], 400);
         } else {
             return auth()->user()->canAccessDashboard()
@@ -103,7 +104,7 @@ class AuthenticateController extends Controller
             $user->save();
         }
 
-        event(new Registered($user));
+        SendRegistrationEmailJob::dispatch($user);
 
         return response()->json([
             'message' => 'User created successfully',
