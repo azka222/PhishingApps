@@ -103,11 +103,13 @@ class ApprovalController extends Controller
                 ])->post("{$this->url}/campaigns/", $jsonData);
 
                 if ($response->successful() && $response != [] && $response->json() != []) {
+                    $idGophish                    = $response->json()['id'];
                     $companyCampaign              = new CompanyCampaign();
                     $companyCampaign->company_id  = $request->company_id;
-                    $companyCampaign->campaign_id = $newId;
+                    $companyCampaign->campaign_id = $idGophish;
                     $companyCampaign->status      = 1;
                     $companyCampaign->save();
+                    $campaign->token = null;
                     $campaign->save();
                     return response()->json([
                         'message' => 'Campaign successfully approved',
@@ -120,6 +122,7 @@ class ApprovalController extends Controller
 
             } else if ($request->status == 3) {
                 $campaign->status_id = 3;
+                $campaign->token     = null;
                 $campaign->save();
                 return response()->json([
                     'message' => 'Campaign successfully rejected',
@@ -162,9 +165,10 @@ class ApprovalController extends Controller
         ])->post("{$this->url}/campaigns/", $jsonData);
 
         if ($response->successful() && $response != [] && $response->json() != []) {
+            $idGophish                    = $response->json()['id'];
             $companyCampaign              = new CompanyCampaign();
             $companyCampaign->company_id  = Auth()->user()->company_id;
-            $companyCampaign->campaign_id = $newId;
+            $companyCampaign->campaign_id = $idGophish;
             $companyCampaign->status      = 1;
             $companyCampaign->save();
             $campaign->save();
@@ -184,7 +188,7 @@ class ApprovalController extends Controller
         if ($campaign->token !== $request->token) {
             return response()->json(['message' => 'Invalid token'], 403);
         }
-        $campaign->token=null;
+        $campaign->token     = null;
         $campaign->status_id = 3;
         $campaign->save();
         return view('contents.page.approval');
