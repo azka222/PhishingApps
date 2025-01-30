@@ -22,16 +22,23 @@ Route::group(['middleware' => 'guest'], function () {
     Route::get('/email/verify', function () {
         return view('auth.verify-email');
     })->middleware('auth')->name('verification.notice');
-    Route::get('/email/verify/{id}/{hash}', function (Request $request) {
-        $user = User::find($request->route('id'));
-        if (! hash_equals((string) $request->route('hash'), sha1($user->getEmailForVerification()))) {
+    Route::get('/email/verify/{id}/{hash}', function (Request $request, $id, $hash) {
+        $user = User::find($id);
+        if (! $user) {
+            abort(404, 'User not found');
+        }
+        if ($user->hasVerifiedEmail()) {
+            return redirect()->route('login')->with('message', 'Email already verified.');
+        }
+        if (! hash_equals((string) $hash, sha1($user->getEmailForVerification()))) {
             throw new AuthorizationException();
         }
-        if ($user->markEmailAsVerified()) {
-            event(new Verified($user));
-        }
-        return redirect()->route('login');
-    })->middleware(['signed'])->name('verification.verify');
+        $user->markEmailAsVerified();
+        event(new Verified($user));
+
+        // Redirect ke halaman login atau dashboard
+        return redirect()->route('login')->with('message', 'Email verified successfully.');
+    })->middleware(['signed', 'throttle:6,1'])->name('verification.verify');
     Route::get('/login', [ViewController::class, 'loginView'])->name('loginView');
     Route::get('/register', [ViewController::class, 'registerView'])->name('registerView');
     Route::post('/login', [AuthenticateController::class, 'login'])->name('login');

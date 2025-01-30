@@ -145,15 +145,12 @@
                     console.log(xhr.responseText);
                     var errorMessage = JSON.parse(xhr.responseText) ? JSON.parse(xhr.responseText) : xhr
                         .responseText;
-                    var errors = errorMessage.errors ? errorMessage.errors : errorMessage;
+                    var errors = errorMessage.message;
                     $('#error_message_field_login').show();
                     $('#error_message_login').empty();
-                    $.each(errors, function(field, messages) {
-                        $.each(messages, function(index, message) {
-                            let data = `<li>${message}</li>`;
-                            $('#error_message_login').append(data);
-                        });
-                    });
+                    if (errors) {
+                        $('#error_message_login').append('<li>' + errors + '</li>');
+                    }
                 }
 
 

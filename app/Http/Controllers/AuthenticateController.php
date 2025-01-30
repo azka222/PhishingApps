@@ -33,14 +33,15 @@ class AuthenticateController extends Controller
 
         $user = auth()->user();
         if (! $user->hasVerifiedEmail()) {
-            event(new Registered($user));
-            throw ValidationException::withMessages([
-                'email' => ['Your email isn’t verified yet. Please check your inbox and verify your email to continue'],
-            ]);
+            auth()->logout();
+            $user->sendEmailVerificationNotification();
+            return response()->json(['message' => 'Please verify your email address.'], 400);
+        } else {
+            return auth()->user()->canAccessDashboard()
+            ? redirect()->route('dashboard')
+            : redirect()->route('userSettingView');
+
         }
-        return auth()->user()->canAccessDashboard()
-        ? redirect()->route('dashboard')
-        : redirect()->route('userSettingView');
 
     }
 
@@ -70,9 +71,9 @@ class AuthenticateController extends Controller
         $user->save();
         $checkUser = User::where('company_id', $request->company)->count();
         if ($checkUser == 1) {
-            $company          = Company::findOrFail($request->company);
-            $company->user_id = $user->id;
-            $company->status_id  = 1;
+            $company            = Company::findOrFail($request->company);
+            $company->user_id   = $user->id;
+            $company->status_id = 1;
             $company->save();
             $role                = new Role();
             $role->name          = 'Company Admin';
