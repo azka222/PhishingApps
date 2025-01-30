@@ -294,6 +294,7 @@
             $("#group_description").val('');
             $("#strict_user_selected_department").prop('checked', false);
             $("#title-add-group-modal").text('Add Group');
+            $("#button-for-group").text('Create');
             $("#button-for-group").removeAttr('onclick').attr('onclick', 'createGroup()');
             $("#group_status").prop('disabled', true);
             $("#admin_company_input_div").show();

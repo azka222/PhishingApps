@@ -163,7 +163,8 @@ class User extends Authenticatable implements MustVerifyEmailContract
     public function accessibleGroup()
     {
         if ($this->haveAccess('Group', 'read') && ! $this->adminCheck()) {
-            return Group::with('target.position', 'target.department')->where('company_id', $this->company_id);
+            return Group::with('target.position', 'target.department')->where('company_id', $this->company_id)->get();
+            
         } else if ($this->adminCheck()) {
             return Group::with('target.position', 'target.department');
         }
