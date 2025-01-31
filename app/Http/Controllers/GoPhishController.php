@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Session;
 
 class GophishController extends Controller
 {
@@ -104,6 +105,28 @@ class GophishController extends Controller
             'html' => 'required|string'
         ]);
         $html_content = $request->html;
+        $preview_id = uniqid();
+
+        Session::put("preview_{$preview_id}", $html_content, now()->addMinutes(3));
+        return response()->json([
+            'status' => 'success',
+            'preview_id' => $preview_id
+        ]);
+    }
+
+
+    public function showPreviewPage($id)
+    {
+        if (! auth()->user()->haveAccess('Landing Page', 'create')) {
+            abort(403);
+        }
+
+        $html_content = Session::get("preview_{$id}");
+
+        if (!$html_content) {
+            abort(404);
+        }
+
         return view('contents.page.preview-page', ['data' => ['html' => $html_content]]);
     }
 
@@ -188,6 +211,7 @@ class GophishController extends Controller
 
     public function fetchWebsiteUrl(Request $request)
     {
+        if (Gate::allows('CanCreateLandingPage')) {
             $request->validate([
                 'url' => 'required|url',
             ]);
@@ -212,6 +236,9 @@ class GophishController extends Controller
             } else if ($response->status() == 500) {
                 return response()->json(['error' => 'Failed to fetch website content'], 500);
             }
+        } else {
+            abort(403);
+        }
     }
 
     public function createLandingPage(Request $request){
@@ -262,7 +289,75 @@ class GophishController extends Controller
                 return response()->json(['error' => $response->json()], 500);
             }
         } else {
-            return response()->json(['error' => 'Unauthorized'], 403);
+            abort(403);
+        }
+    }
+
+    public function updateLandingPage (Request $request)
+    {
+        if (Gate::allows('CanUpdateLandingPage')) {
+            $request->validate([
+                'id'                  => 'required|integer',
+                'landing_name'         => 'required|string',
+                'html_content'         => 'required|string',
+                'capture_credentials'  => 'required|integer',
+                'capture_passwords'    => 'required|integer',
+                'redirect_url'         => 'nullable|string',
+            ]);
+
+            $formattedDate = $this->getTimeGoPhish();
+            $pageId = $request->id;
+            $capture_credentials = $request->capture_credentials == 1 ? true : false;
+            $capture_passwords = $request->capture_passwords == 1 ? true : false;
+            $jsonData = [
+                'id'                  => intval($request->id),
+                'name'                => $request->landing_name . ' -+-' . $request->id,
+                'html'                => $request->html_content,
+                'capture_credentials' => $capture_credentials,
+                'capture_passwords'   => $capture_passwords,
+                'modified_date'       => $formattedDate,
+                'redirect_url'        => $request->redirect_url
+            ];
+
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
+                'Content-Type'  => 'application/json',
+            ])->put("{$this->url}/pages/{$pageId}", $jsonData);
+            if ($response->successful() && $response->body() != []) {
+                $companyLandingPage = auth()->user()->accessibleLandingPage()->where('landing_page_id', $request->id)->first();
+                $companyLandingPage->status_credentials = $request->capture_credentials;
+                $companyLandingPage->status_passwords = $request->capture_passwords;
+                $companyLandingPage->save();
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Landing page updated successfully'
+                ]);
+            } else {
+                return response()->json(['error' => $response->json()], 500);
+            }
+            } else {
+                abort (403);
+            }
+        }
+
+    public function deleteLandingpage (Request $request){
+        if (Gate::allows('CanDeleteLandingPage')) {
+            $pageId = intval($request->id);
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
+            ])->delete("{$this->url}/pages/{$pageId}");
+            if ($response->successful() && $response->body() != []) {
+                $companyLandingPage = auth()->user()->accessibleLandingPage()->where('landing_page_id', $pageId)->first();
+                $companyLandingPage->delete();
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Landing page deleted successfully'
+                ]);
+            } else {
+                return response()->json(['error' => $response->json()], 500);
+            }
+        } else {
+            abort(403);
         }
     }
 

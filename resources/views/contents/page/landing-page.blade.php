@@ -64,7 +64,7 @@
                             placeholder="Search...">
                     </div>
                 </div>
-                <div class=" min-w-32 overflow-x-auto md:min-w-full">
+                <div class=" min-w-38 overflow-x-auto md:min-w-full">
                     <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 mt-4">
                         <thead class="bg-gray-300 dark:bg-gray-700">
                             <tr
@@ -101,6 +101,7 @@
         </div>
 
         <script>
+            let landingPages = [];
             $(document).ready(function() {
                 getLandingPage();
             });
@@ -123,12 +124,20 @@
                         companyId: companyId
                     },
                     success: function(response) {
-                        console.log(response)
+                        console.log(response);
                         $("#list-page-tbody").empty();
                         $("#pagination-page-button").empty();
-                        let landingPage = response.landingPage;
-                        Object.keys(landingPage).forEach(function(key) {
-                            let value = landingPage[key];
+                        landingPages = response.landingPage; // landingPage == data
+                        console.log(landingPages.length);
+                        if (landingPages.length == 0){
+                            let data = `<tr class="text-xs md:text-sm font-light text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800">
+                                <td class="p-4" colspan="4">No data available</td>
+                            </tr>`;
+                            $("#list-page-tbody").append(data);
+                        }
+
+                        Object.keys(landingPages).forEach(function(key) {
+                            let value = landingPages[key];
                             let credentials = '';
                             let password = '';
                             if (value.capture_credentials != 0) {
@@ -149,14 +158,21 @@
                                                 False
                                             </div>`;
                             }
-
                             $("#list-page-tbody").append(`
                             <tr class="text-xs md:text-sm font-light text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800">
                                 <td class="p-4">${value.name}</td>
                                 <td class="p-4">${credentials}</td>
                                 <td class="p-4">${password}</td>
-                                <td class="p-4">
-                                    <button onclick="showLandingPage(${value.id})" class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">Show Preview</button>
+                                <td class="p-4 flex gap-2">
+                                    <button onclick="showLandingPage(${value.id})" class="px-3 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">Show Preview</button>
+                                    @CanModifyLandingPage()
+                                        @CanUpdateLandingPage()
+                                            <button onclick="showModalEditLandingPage(${value.id})" class="px-3 py-2 text-xs md:text-sm font-medium text-white bg-yellow-600 rounded-xl hover:bg-yellow-700 dark:bg-yellow-500 dark:hover:bg-yellow-600">Edit</button>
+                                        @endCanUpdateLandingPage()
+                                        @CanDeleteLandingPage()
+                                            <button onclick="deleteLandingPage(${value.id})" class="px-3 py-2 text-xs md:text-sm font-medium text-white bg-red-600 rounded-xl hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600">Delete</button>
+                                        @endCanDeleteLandingPage()
+                                    @endCanModifyLandingPage()
                                 </td>
                             </tr>
                         `);
@@ -352,11 +368,136 @@
 
             function testLandingPage(){
                 let content = $("#content").val();
-                let error_message = [];
-                if (content === "") {
-                    error_message.push("Content is required");
-                }
+                // console.log(content);
+                $.ajax({
+                    url: "{{ route('testLandingPage') }}",
+                    type: "POST",
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        html: content
+                    },
+                    success: function(response) {
+                        console.log(response.preview_id);
+                        id = response.preview_id;
+                        if (response.status === "success") {
+                            window.open("{{ route('showPagePreview', ['id' => '__ID__']) }}".replace('__ID__', id));
+                        } else {
+                            Swal.fire({
+                                icon: "error",
+                                title: "Error",
+                                text: response.message,
+                                confirmButtonColor: '#10b981',
+                                confirmButtonText: 'Close',
+                            });
+                        }
+                    },
+                });
+            }
+            function showModalEditLandingPage(id){
+                let LandingPage = landingPages.find(x => x.id === id);
+                $("#landing_name").val(LandingPage.name);
+                $("#content").val(LandingPage.html);
+                $("#submitted-checkbox").prop("checked", LandingPage.capture_credentials == 1 ? true : false);
+                $("#passwords-checkbox").prop("checked", LandingPage.capture_passwords == 1 ? true : false);
+                $("#redirect_url").val(LandingPage.redirect_url);
+                $("#title-add-landing-page-modal").text('Edit Landing Page');
+                $("#button-for-pages").text('Update');
+                $("#button-for-pages").removeAttr('onclick').attr('onclick',
+                    `editLandingPage(${id})`);
+                showModal('add-landing-page-modal');
+                showWarning();
+            }
 
+            function editLandingPage(id){
+                preventDoubleClick('button-for-pages', true);
+                let name = $("#landing_name").val();
+                let submitted = $("#submitted-checkbox").is(":checked") ? 1 : 0;
+                let password = $("#passwords-checkbox").is(":checked") ? 1 : 0;
+                let content = $("#content").val();
+                let url = $("#redirect_url").val();
+                $.ajax({
+                    url: "{{ route('updateLandingPage') }}",
+                    type: "POST",
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        id: id,
+                        landing_name: name,
+                        html_content: content,
+                        capture_credentials: submitted,
+                        capture_passwords: password,
+                        redirect_url: url
+                    },
+                    success: function(response) {
+                        console.log(response);
+                        if (response.status === "success") {
+                            Swal.fire({
+                                icon: "success",
+                                title: "Success",
+                                text: response.message,
+                                confirmButtonColor: '#10b981',
+                                confirmButtonText: 'Close',
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    preventDoubleClick('button-for-pages', false);
+                                    getLandingPage();
+                                    hideModal('add-landing-page-modal')
+                                }
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: "error",
+                                title: "Error",
+                                text: response.message,
+                                confirmButtonColor: '#10b981',
+                                confirmButtonText: 'Close',
+                            });
+                        }
+                    },
+                    error: function(error) {
+                        console.log(error);
+                        Swal.fire({
+                            icon: "error",
+                            title: "Error",
+                            text: "An error occurred!",
+                            confirmButtonColor: '#10b981',
+                            confirmButtonText: 'Close',
+                        });
+                    }
+                });
+
+            }
+
+            function deleteLandingPage(id){
+                Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#10b981',
+                cancelButtonColor: '#d97706',
+                confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: "{{ route('deleteLandingPage') }}",
+                            type: "POST",
+                            data: {
+                                id,
+                                _token: "{{ csrf_token() }}"
+                            },
+                            success: function(response) {
+                                getSendingProfile();
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Success',
+                                    text: 'Landing Page has been deleted!',
+                                    confirmButtonColor: '#10b981',
+                                    confirmButtonText: 'Close'
+                                });
+                            }
+                        });
+                    }
+                })
             }
         </script>
     @endsection

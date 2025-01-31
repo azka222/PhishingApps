@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('company_id')->nullable()->constrained('companies')->onDelete('cascade');
             $table->integer('landing_page_id');
-            $table->integer('status')->default(1);
+            $table->integer('status_credentials');
+            $table->integer('status_passwords');
             $table->timestamps();
         });
     }
