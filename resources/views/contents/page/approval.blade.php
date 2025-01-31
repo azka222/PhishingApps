@@ -2,6 +2,7 @@
 @section('title', 'Fischsim - Approval')
 @section('content')
     @include('contents.modal.approval.approval-action-modal')
+    @include('contents.modal.notes.notes-modal')
     <div class="bg-white dark:bg-gray-800 min-h-screen  p-4 w-full dark:text-white text-gray-900">
         <div class="">
             <div class="flex p-4 items-center justify-between">
@@ -79,7 +80,7 @@
     <script>
         let approvals = [];
         $(document).ready(function() {
-            $("#status_filter").val(0);
+            $("#status_filter").val(1);
             getAllApproval();
         });
 
@@ -98,7 +99,6 @@
                 },
                 success: function(response) {
                     approvals = response.approvals;
-                    console.log(approvals);
                     $("#list-approval-tbody").empty();
                     if (approvals.length == 0) {
                         $("#list-approval-tbody").append(`
@@ -140,8 +140,17 @@
                                                 class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-orange-600 rounded-xl hover:bg-orange-700 dark:bg-orange-500 dark:hover:bg-orange-600">Action</button>
                                            
                                         </td>`;
-                            } else {
-                                button = ''
+                            } else if (approval.status_id == 3) {
+                                button = `<td class="p-4">
+                                    <button onclick="showNotes(${approval.id})"
+                                            class=" text-xs md:text-sm font-medium text-white bg-transparent-600 rounded-xl hover:bg-transparent-700 dark:bg-transparent-500 dark:hover:bg-transparent-600">
+                                           <div class="relative group">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 text-gray-400 dark:text-white">
+                                                        <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 0 1 .67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 1 1-.671-1.34l.041-.022ZM12 9a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z" clip-rule="evenodd" />
+                                                    </svg>
+                                                    <span class="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 hidden group-hover:block bg-gray-800 text-white text-xs px-2 py-1 rounded-md">Notes</span>
+                                                </div>
+                                        </button></td>`;
                             }
 
                             let status = '';
@@ -159,7 +168,7 @@
                                             </div>`;
                             }
 
-                            console.log(status);
+
 
 
                             $("#list-approval-tbody").append(`
@@ -174,6 +183,15 @@
                                             ${button}
                                     `);
                         });
+                        $("#numberFirstItem").text(
+                            response.approvals != 0 ? (page - 1) * $("#show").val() + 1 : 0
+                        );
+                        $("#numberLastItem").text(
+                            (page - 1) * $("#show").val() + response.approvals.length
+                        );
+                        $("#totalCompanyCount").text(response.totalApproval);
+                        paginationApproval("#page-button-approval", response.pageCount, response.currentPage);
+
                     }
                 },
                 error: function(response) {
@@ -235,6 +253,19 @@
                     }
                 }
             })
+        }
+
+
+        function showNotes(id) {
+            $("#campaign_notes").val('');
+            let notes = approvals.find(approval => approval.id == id).notes;
+            if (notes) {
+                $("#campaign_notes").val(notes);
+            }
+            else{
+                $("#campaign_notes").val('Campaign has been rejected');
+            }
+            showModal('notes-modal');
         }
     </script>
 @endSection

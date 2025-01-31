@@ -95,7 +95,7 @@ class GophishController extends Controller
         $response = Http::withHeaders([
             'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
         ])->get("{$this->url}/pages/{$id}");
-        return view('contents.preview-page', ['data' => $response->json()]);
+        return view('contents.page.preview-page', ['data' => $response->json()]);
     }
 
     public function getLandingPage(Request $request)
