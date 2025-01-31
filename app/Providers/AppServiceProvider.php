@@ -98,6 +98,22 @@ class AppServiceProvider extends ServiceProvider
             return auth()->user()->canDeleteSendingProfile();
         });
 
+        Blade::if('CanCreateLandingPage', function () {
+            return auth()->user()->canCreateLandingPage();
+        });
+
+        Blade::if('CanModifyLandingPage', function () {
+            return auth()->user()->canModifyLandingPage();
+        });
+
+        Blade::if('CanUpdateLandingPage', function () {
+            return auth()->user()->canUpdateLandingPage();
+        });
+
+        Blade::if('CanDeleteLandingPage', function () {
+            return auth()->user()->canDeleteLandingPage();
+        });
+
         Blade::if('CanCreateEmailTemplate', function () {
             return auth()->user()->canCreateEmailTemplate();
         });
@@ -181,6 +197,22 @@ class AppServiceProvider extends ServiceProvider
 
         Gate::define('CanReadSendingProfile', function ($user) {
             return $user->haveAccess('Sending Profile', 'read');
+        });
+
+        Gate::define('CanCreateLandingPage', function ($user) {
+            return $user->canCreateLandingPage();
+        });
+
+        Gate::define('CanReadLandingPage', function ($user) {
+            return $user->haveAccess('Landing Page', 'read');
+        });
+
+        Gate::define('CanUpdateLandingPage', function ($user) {
+            return $user->canUpdateLandingPage();
+        });
+
+        Gate::define('CanDeleteLandingPage', function ($user) {
+            return $user->canDeleteLandingPage();
         });
 
         Gate::define('CanReadEmailTemplate', function ($user) {

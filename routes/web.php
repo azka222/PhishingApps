@@ -103,7 +103,12 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         Route::get('/getLandingPage', [GophishController::class, 'getLandingPage'])->name('getLandingPage');
         Route::get('/landingPagePreview/{id}', [GophishController::class, 'landingPagePreview'])->name('landingPagePreview');
         Route::get('/preview', [ViewController::class, 'landingPagePreview'])->name('content.landingPagePreview');
-
+        Route::post('/importSiteUrl', [GophishController::class, 'fetchWebsiteUrl'])->name('fetchWebsiteUrl');
+        Route::post('/createLandingPage', [GophishController::class, 'createLandingPage'])->name('createLandingPage');
+        Route::post('/testLandingPage', [GophishController::class, 'testLandingPage'])->name('testLandingPage');
+        Route::get('/preview-page/{id}', [GophishController::class, 'showPreviewPage'])->name('showPagePreview');
+        Route::post('/updateLandingPage', [GophishController::class, 'updateLandingPage'])->name('updateLandingPage');
+        Route::post('/deleteLandingPage', [GophishController::class, 'deleteLandingPage'])->name('deleteLandingPage');
     });
 
     Route::group(['prefix' => 'email-templates'], function () {
