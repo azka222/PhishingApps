@@ -265,6 +265,7 @@
             else{
                 $("#campaign_notes").val('Campaign has been rejected');
             }
+            $("#campaign_notes").attr('disabled', true);
             showModal('notes-modal');
         }
     </script>

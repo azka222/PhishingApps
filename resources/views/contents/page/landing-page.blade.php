@@ -129,7 +129,7 @@
                         $("#pagination-page-button").empty();
                         landingPages = response.landingPage; // landingPage == data
                         console.log(landingPages.length);
-                        if (landingPages.length == 0){
+                        if (landingPages.length == 0) {
                             let data = `<tr class="text-xs md:text-sm font-light text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800">
                                 <td class="p-4" colspan="4">No data available</td>
                             </tr>`;
@@ -160,17 +160,17 @@
                             }
                             $("#list-page-tbody").append(`
                             <tr class="text-xs md:text-sm font-light text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800">
-                                <td class="p-4">${value.name}</td>
+                                <td class="p-4 whitespace-nowrap">${value.name}</td>
                                 <td class="p-4">${credentials}</td>
                                 <td class="p-4">${password}</td>
                                 <td class="p-4 flex gap-2">
-                                    <button onclick="showLandingPage(${value.id})" class="px-3 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">Show Preview</button>
+                                    <button onclick="showLandingPage(${value.id})" class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-green-600 rounded-xl hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600">Preview</button>
                                     @CanModifyLandingPage()
                                         @CanUpdateLandingPage()
-                                            <button onclick="showModalEditLandingPage(${value.id})" class="px-3 py-2 text-xs md:text-sm font-medium text-white bg-yellow-600 rounded-xl hover:bg-yellow-700 dark:bg-yellow-500 dark:hover:bg-yellow-600">Edit</button>
+                                            <button onclick="showModalEditLandingPage(${value.id})" class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">Edit</button>
                                         @endCanUpdateLandingPage()
                                         @CanDeleteLandingPage()
-                                            <button onclick="deleteLandingPage(${value.id})" class="px-3 py-2 text-xs md:text-sm font-medium text-white bg-red-600 rounded-xl hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600">Delete</button>
+                                            <button onclick="deleteLandingPage(${value.id})" class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-red-600 rounded-xl hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600">Delete</button>
                                         @endCanDeleteLandingPage()
                                     @endCanModifyLandingPage()
                                 </td>
@@ -215,7 +215,7 @@
                 window.open("{{ route('landingPagePreview', ['id' => '__ID__']) }}".replace('__ID__', id));
             }
 
-            function showImportUrl(){
+            function showImportUrl() {
                 showModal('import-site-modal');
             }
 
@@ -283,7 +283,7 @@
                 }
             }
 
-            function showWarning(){
+            function showWarning() {
                 if ($("#submitted-checkbox").is(":checked")) {
                     $(".hidden-capture").show();
                 } else {
@@ -342,6 +342,8 @@
                                         hideModal('add-landing-page-modal')
                                     }
                                 });
+                                getLandingPage();
+
                             } else {
                                 Swal.fire({
                                     icon: "error",
@@ -366,7 +368,7 @@
                 }
             }
 
-            function testLandingPage(){
+            function testLandingPage() {
                 let content = $("#content").val();
                 // console.log(content);
                 $.ajax({
@@ -393,7 +395,8 @@
                     },
                 });
             }
-            function showModalEditLandingPage(id){
+
+            function showModalEditLandingPage(id) {
                 let LandingPage = landingPages.find(x => x.id === id);
                 $("#landing_name").val(LandingPage.name);
                 $("#content").val(LandingPage.html);
@@ -408,7 +411,7 @@
                 showWarning();
             }
 
-            function editLandingPage(id){
+            function editLandingPage(id) {
                 preventDoubleClick('button-for-pages', true);
                 let name = $("#landing_name").val();
                 let submitted = $("#submitted-checkbox").is(":checked") ? 1 : 0;
@@ -439,10 +442,10 @@
                             }).then((result) => {
                                 if (result.isConfirmed) {
                                     preventDoubleClick('button-for-pages', false);
-                                    getLandingPage();
                                     hideModal('add-landing-page-modal')
                                 }
                             });
+                            getLandingPage();
                         } else {
                             Swal.fire({
                                 icon: "error",
@@ -467,15 +470,15 @@
 
             }
 
-            function deleteLandingPage(id){
+            function deleteLandingPage(id) {
                 Swal.fire({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#10b981',
-                cancelButtonColor: '#d97706',
-                confirmButtonText: 'Yes, delete it!'
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#10b981',
+                    cancelButtonColor: '#d97706',
+                    confirmButtonText: 'Yes, delete it!'
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
@@ -486,7 +489,7 @@
                                 _token: "{{ csrf_token() }}"
                             },
                             success: function(response) {
-                                getSendingProfile();
+                                getLandingPage();
                                 Swal.fire({
                                     icon: 'success',
                                     title: 'Success',
