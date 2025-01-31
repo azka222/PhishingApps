@@ -67,8 +67,8 @@ class ApprovalController extends Controller
             }
 
             $campaigns      = $campaigns->orderBy('updated_at', 'desc')->orderBy('status_id', 'asc');
-            $campaigns      = $campaigns->paginate($request->has('perPage') ? $request->perPage : 10);
             $totalCampaigns = $campaigns->count();
+            $campaigns      = $campaigns->paginate($request->has('show') ? $request->show : 10);
             $firstPageTotal = count($campaigns->items());
             return response()->json([
                 'approvals'      => $campaigns->items(),
