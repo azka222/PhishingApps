@@ -544,14 +544,16 @@
                     });
                 },
                 error: function(xhr, status, error) {
+
                     Swal.close();
                     Swal.fire({
                         icon: "error",
                         title: "Error",
-                        text: xhr.responseJSON.message,
+                        text: JSON.parse(xhr.responseText).message, 
                         confirmButtonColor: '#10b981',
                         confirmButtonText: 'Close'
                     });
+
                 }
             })
         }

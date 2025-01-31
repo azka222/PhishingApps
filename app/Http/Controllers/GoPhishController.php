@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\RequestApprovalCampaignJob;
 use App\Mail\ApprovalMail;
 use App\Models\Campaign;
 use App\Models\Company;
@@ -19,8 +20,6 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
-use App\Jobs\TestSendingProfileJob;
-use Illuminate\Support\Facades\Artisan;
 
 class GophishController extends Controller
 {
@@ -174,7 +173,7 @@ class GophishController extends Controller
                 'template_name'    => 'required|string',
                 'email_subject'    => 'required|string',
                 'status'           => 'required|boolean',
-                'email_body'       => 'required|string',
+                'email_body'       => 'required',
                 'email_attachment' => 'required|file|max:1000',
                 'sender_name'      => 'required|string',
                 'sender_email'     => 'required|email',
@@ -224,7 +223,7 @@ class GophishController extends Controller
                 'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
             ])->post("{$this->url}/templates/", $jsonData);
             if ($response->successful() && $response->body() != []) {
-                $idGophish                    = $response->json()['id'];
+                $idGophish                         = $response->json()['id'];
                 $companyEmailTemplate              = new EmailTemplateCompany();
                 $companyEmailTemplate->company_id  = auth()->user()->adminCheck() ? $request->company : auth()->user()->company_id;
                 $companyEmailTemplate->template_id = $idGophish;
@@ -308,7 +307,7 @@ class GophishController extends Controller
             $request->validate([
                 'template_name'        => 'required|string',
                 'email_subject'        => 'required|string',
-                'email_body'           => 'required|string',
+                'email_body'           => 'required',
                 'status'               => 'required|boolean',
                 'old_email_attachment' => [
                     'nullable',
@@ -475,7 +474,7 @@ class GophishController extends Controller
                 'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
             ])->post("{$this->url}/smtp/", $jsonData);
             if ($response->successful() && $response->body() != []) {
-                $idGophish                    = $response->json()['id'];
+                $idGophish                                 = $response->json()['id'];
                 $companySendingProfile                     = new SendingProfileCompany();
                 $companySendingProfile->company_id         = auth()->user()->adminCheck() ? $request->company : auth()->user()->company_id;
                 $companySendingProfile->sending_profile_id = $idGophish;
@@ -667,21 +666,23 @@ class GophishController extends Controller
             'mail.mailers.smtp.password'   => $request->input('password'),
             'mail.mailers.smtp.encryption' => $request->input('ignore_certificate') ? null : 'ssl',
             'mail.from.address'            => $request->input('email_smtp'),
-            'mail.from.name'               => $request->input('email_smtp'),
+            'mail.from.name'               => $request->input('username'),
         ]);
 
-    //    kalo pake job harus dibenerin, nanti dicari tau gimana caranya
-
         try {
-            dispatch(new TestSendingProfileJob(
-                $request->target_email,
-                $request->target_name,
-                $request->input('http_headers', [])
-            ));
-
-            return response()->json([
-                'message' => 'Test email sent successfully!',
-            ], 200);
+            Mail::raw('This is a test email to validate the SMTP configuration.', function ($message) use ($request) {
+                $message->to($request->input('target_email'))
+                    ->subject('Hi ' . $request->input('target_name') . ', this is a test email from Gophish');
+                if ($request->input('http_headers')) {
+                    foreach ($request->input('http_headers') as $header => $value) {
+                        if (is_array($value)) {
+                            $value = implode(', ', $value);
+                        }
+                        $message->getHeaders()->addTextHeader($header, $value);
+                    }
+                }
+            });
+            return response()->json(['message' => 'Test email sent successfully']);
         } catch (\Exception $e) {
             return response()->json([
                 'error' => 'Test email failed to send: ' . $e->getMessage(),
@@ -899,7 +900,9 @@ class GophishController extends Controller
             $campaign->status_id  = 1;
             $campaign->save();
 
-            $this->sendApprovalEmail($campaign->id);
+            $company      = Company::find($campaign->company_id);
+            $companyOwner = $company->user->email;
+            RequestApprovalCampaignJob::dispatch($companyOwner, $campaign->id);
 
             return response()->json([
                 'success' => true,
@@ -950,7 +953,7 @@ class GophishController extends Controller
                         $campaigns->where('company_id', $request->companyId);
                     }
                 }
-                $campaigns = $campaigns->get();
+                $campaigns     = $campaigns->get();
                 $campaignsData = [];
                 foreach ($campaigns as $campaign) {
                     $response = Http::withHeaders([
@@ -962,7 +965,7 @@ class GophishController extends Controller
                             $data['name'] = explode('-+-', $data['name'])[0];
                         }
                         $campaignsData[] = $data;
-                    } 
+                    }
                 }
                 $responseCollection = collect($campaignsData);
                 if ($request->has('search') && $request->search != null) {
