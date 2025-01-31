@@ -172,9 +172,9 @@ class AdminController extends Controller
         }
     }
     
-    public function userGetIdCompanyUser(Request $request)
+    public function getUsersByCompanyId($company_id)
     {
-        $users = User::where('company_id', $request->id)->get(); // Menyesuaikan query sesuai dengan tabel users
+        $users = User::where('company_id', $company_id)->get(); // Menyesuaikan query sesuai dengan tabel users
         return response()->json([
             'status' => 'success',
             'users' => $users

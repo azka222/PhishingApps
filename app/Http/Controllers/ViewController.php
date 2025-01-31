@@ -96,6 +96,7 @@ class ViewController extends Controller
         return view('contents.page.landing-page');
     }
 
+
     public function emailTemplatesView()
     {
         if (! auth()->user()->haveAccess('Email Template', 'read')) {

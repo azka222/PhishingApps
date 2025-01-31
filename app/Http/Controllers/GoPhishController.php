@@ -10,6 +10,7 @@ use App\Models\EmailTemplateCompany;
 use App\Models\Group;
 use App\Models\SendingProfileCompany;
 use App\Models\TargetGroup;
+use App\Models\LandingPageCompany;
 use Carbon\Carbon;
 use DateTime;
 use DateTimeZone;
@@ -20,6 +21,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Session;
 
 class GophishController extends Controller
 {
@@ -98,68 +100,266 @@ class GophishController extends Controller
         return view('contents.page.preview-page', ['data' => $response->json()]);
     }
 
+    public function testLandingPage(Request $request)
+    {
+        $request->validate([
+            'html' => 'required|string'
+        ]);
+        $html_content = $request->html;
+        $preview_id = uniqid();
+
+        Session::put("preview_{$preview_id}", $html_content, now()->addMinutes(3));
+        return response()->json([
+            'status' => 'success',
+            'preview_id' => $preview_id
+        ]);
+    }
+
+
+    public function showPreviewPage($id)
+    {
+        if (! auth()->user()->haveAccess('Landing Page', 'create')) {
+            abort(403);
+        }
+
+        $html_content = Session::get("preview_{$id}");
+
+        if (!$html_content) {
+            abort(404);
+        }
+
+        return view('contents.page.preview-page', ['data' => ['html' => $html_content]]);
+    }
+
     public function getLandingPage(Request $request)
     {
         $apiKey = env('GOPHISH_API_KEY');
+        $landingPages = auth()->user()->accessibleLandingPage();
+        if (Gate::allows('CanReadLandingPage')) {
+            if ($request->has('capture_credentials') && $request->capture_credentials == 2) {
+            }
+            else if ($request->has('capture_credentials') && $request->capture_credentials == 1) {
+                $landingPages = auth()->user()->accessibleLandingPage()->where('status_credentials', 1);
+            }
+            else if ($request->has('capture_credentials') && $request->capture_credentials == 0) {
+                $landingPages = auth()->user()->accessibleLandingPage()->where('status_credentials', 0);
+            }
 
-        $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $apiKey,
-        ])->get('http://127.0.0.1:3333/api/pages');
+            if ($request->has('capture_passwords') && $request->capture_passwords == 2) {
+            }
+            else if ($request->has('capture_passwords') && $request->capture_passwords == 1) {
+                $landingPages = auth()->user()->accessibleLandingPage()->where('status_passwords', 1);
+            }
+            else if ($request->has('capture_passwords') && $request->capture_passwords == 0) {
+                $landingPages = auth()->user()->accessibleLandingPage()->where('status_passwords', 0);
+            }
+            if (Gate::allows('IsAdmin')) {
+                if ($request->has('companyId') && $request->companyId != null) {
+                    $landingPages = LandingPageCompany::where('company_id', $request);
+                }
+            }
 
-        if (! $response->successful()) {
-            return response()->json(['error' => 'Failed to fetch landing pages'], 500);
+            $landingPages = $landingPages->pluck('landing_page_id');
+
+            $responses = [];
+
+            foreach ($landingPages as $value) {
+                $response = Http::withHeaders([
+                    'Authorization' => 'Bearer ' . $apiKey,
+                ])->get("{$this->url}/pages/{$value}");
+
+                if ($response->successful()) {
+                    $data = $response->json();
+                    if (isset($data['name'])) {
+                        $data['name'] = explode('-+-', $data['name'])[0];
+                    }
+                    $responses[] = $data;
+                }
+            }
+
+            $responseCollection = collect($responses);
+
+            if ($request->has('search') && $request->search != null) {
+                $responseCollection = $responseCollection->filter(function ($item) use ($request) {
+                    return stripos($item['name'], $request->search) !== false;
+                });
+            }
+
+            $perPage       = $request->has('show') ? (int) $request->show : 10;
+            $currentPage   = $request->has('page') ? (int) $request->page : 1;
+            $pagedData     = $responseCollection->slice(($currentPage - 1) * $perPage, $perPage)->values();
+            $paginatedData = new LengthAwarePaginator(
+                $pagedData,
+                $responseCollection->count(),
+                $perPage,
+                $currentPage,
+                ['path' => $request->url(), 'query' => $request->query()]
+            );
+            $totalGroup     = $responseCollection->count();
+            $firstPageTotal = $responseCollection->slice(0, $perPage)->count();
+            return response()->json([
+                'landingPage'    => $paginatedData->items(),
+                'targetTotal'    => $totalGroup,
+                'currentPage'    => $paginatedData->currentPage(),
+                'firstPageTotal' => $firstPageTotal,
+                'pageCount'      => $paginatedData->lastPage(),
+            ]);
+        } else {
+            abort(403);
         }
 
-        $landingPages = $response->json();
+    }
 
-        if ($request->has('search') && $request->search != null) {
-            $landingPages = array_filter($landingPages, function ($landingPage) use ($request) {
-                return stripos($landingPage['name'], $request->search) !== false;
-            });
+    public function fetchWebsiteUrl(Request $request)
+    {
+        if (Gate::allows('CanCreateLandingPage')) {
+            $request->validate([
+                'url' => 'required|url',
+            ]);
+
+            if (auth()->user()->adminCheck()) {
+                $request->validate([
+                    'company' => 'required|integer|exists:companies,id',
+                ]);
+            }
+
+            $url = $request->url;
+            $jsonData = [
+                'include_resources' => false,
+                'url' => $url,
+            ];
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
+            ])->post("{$this->url}/import/site", $jsonData);
+
+            if ($response->successful() && $response->body() != []) {
+                return response()->json(['html' => $response->json()['html']]);
+            } else if ($response->status() == 500) {
+                return response()->json(['error' => 'Failed to fetch website content'], 500);
+            }
+        } else {
+            abort(403);
+        }
+    }
+
+    public function createLandingPage(Request $request){
+        if (Gate::allows('CanCreateLandingPage')) {
+            $request->validate([
+                'landing_name'         => 'required|string',
+                'html_content'         => 'required|string',
+                'capture_credentials'  => 'required|integer',
+                'capture_passwords'    => 'required|integer',
+                'redirect_url'         => 'nullable|string',
+            ]);
+
+            if (auth()->user()->adminCheck()) {
+                $request->validate([
+                    'company' => 'required|integer|exists:companies,id',
+                ]);
+            }
+            $capture_credentials = $request->capture_credentials == 1 ? true : false;
+            $capture_passwords = $request->capture_passwords == 1 ? true : false;
+            $newId = $this->getIdFromGophish('pages');
+            $formattedDate = $this->getTimeGoPhish();
+            $jsonData = [
+                'id'                  => $newId,
+                'name'                => $request->landing_name . ' -+-' . $newId,
+                'html'                => $request->html_content,
+                'capture_credentials' => $capture_credentials,
+                'capture_passwords'   => $capture_passwords,
+                'modified_date'       => $formattedDate,
+                'redirect_url'        => $request->redirect_url
+
+            ];
+            $json_string = json_encode($jsonData);
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
+            ])->post("{$this->url}/pages/", $jsonData);
+            if ($response->successful() && $response->body() != []) {
+                $companyLandingPage = new LandingPageCompany();
+                $companyLandingPage->company_id = auth()->user()->adminCheck() ? $request->company : auth()->user()->company_id;
+                $companyLandingPage->landing_page_id = $newId;
+                $companyLandingPage->status_credentials = $request->capture_credentials;
+                $companyLandingPage->status_passwords = $request->capture_passwords;
+                $companyLandingPage->save();
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Landing page created successfully'
+                ]);
+            } else {
+                return response()->json(['error' => $response->json()], 500);
+            }
+        } else {
+            abort(403);
+        }
+    }
+
+    public function updateLandingPage (Request $request)
+    {
+        if (Gate::allows('CanUpdateLandingPage')) {
+            $request->validate([
+                'id'                  => 'required|integer',
+                'landing_name'         => 'required|string',
+                'html_content'         => 'required|string',
+                'capture_credentials'  => 'required|integer',
+                'capture_passwords'    => 'required|integer',
+                'redirect_url'         => 'nullable|string',
+            ]);
+
+            $formattedDate = $this->getTimeGoPhish();
+            $pageId = $request->id;
+            $capture_credentials = $request->capture_credentials == 1 ? true : false;
+            $capture_passwords = $request->capture_passwords == 1 ? true : false;
+            $jsonData = [
+                'id'                  => intval($request->id),
+                'name'                => $request->landing_name . ' -+-' . $request->id,
+                'html'                => $request->html_content,
+                'capture_credentials' => $capture_credentials,
+                'capture_passwords'   => $capture_passwords,
+                'modified_date'       => $formattedDate,
+                'redirect_url'        => $request->redirect_url
+            ];
+
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
+                'Content-Type'  => 'application/json',
+            ])->put("{$this->url}/pages/{$pageId}", $jsonData);
+            if ($response->successful() && $response->body() != []) {
+                $companyLandingPage = auth()->user()->accessibleLandingPage()->where('landing_page_id', $request->id)->first();
+                $companyLandingPage->status_credentials = $request->capture_credentials;
+                $companyLandingPage->status_passwords = $request->capture_passwords;
+                $companyLandingPage->save();
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Landing page updated successfully'
+                ]);
+            } else {
+                return response()->json(['error' => $response->json()], 500);
+            }
+            } else {
+                abort (403);
+            }
         }
 
-        if ($request->has('capture_credentials') && $request->capture_credentials == 2) {
-        } else if ($request->has('capture_credentials') && $request->capture_credentials == 1) {
-            $landingPages = array_filter($landingPages, function ($landingPage) {
-                return $landingPage['capture_credentials'] == true;
-            });
-        } else if ($request->has('capture_credentials') && $request->capture_credentials == 0) {
-            $landingPages = array_filter($landingPages, function ($landingPage) {
-                return $landingPage['capture_credentials'] == false;
-            });
+    public function deleteLandingpage (Request $request){
+        if (Gate::allows('CanDeleteLandingPage')) {
+            $pageId = intval($request->id);
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
+            ])->delete("{$this->url}/pages/{$pageId}");
+            if ($response->successful() && $response->body() != []) {
+                $companyLandingPage = auth()->user()->accessibleLandingPage()->where('landing_page_id', $pageId)->first();
+                $companyLandingPage->delete();
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Landing page deleted successfully'
+                ]);
+            } else {
+                return response()->json(['error' => $response->json()], 500);
+            }
+        } else {
+            abort(403);
         }
-
-        if ($request->has('capture_passwords') && $request->capture_passwords == 2) {
-        } else if ($request->has('capture_passwords') && $request->capture_passwords == 1) {
-            $landingPages = array_filter($landingPages, function ($landingPage) {
-                return $landingPage['capture_passwords'] == true;
-            });
-        } else if ($request->has('capture_passwords') && $request->capture_passwords == 0) {
-            $landingPages = array_filter($landingPages, function ($landingPage) {
-                return $landingPage['capture_passwords'] == false;
-            });
-        }
-
-        $landingPages  = collect($landingPages);
-        $perPage       = $request->has('show') ? (int) $request->show : 10;
-        $currentPage   = $request->has('page') ? (int) $request->page : 1;
-        $pagedData     = $landingPages->slice(($currentPage - 1) * $perPage, $perPage)->values();
-        $paginatedData = new LengthAwarePaginator(
-            $pagedData,
-            $landingPages->count(),
-            $perPage,
-            $currentPage,
-            ['path' => $request->url(), 'query' => $request->query()]
-        );
-        $totalGroup     = $landingPages->count();
-        $firstPageTotal = $landingPages->slice(0, $perPage)->count();
-        return response()->json([
-            'landingPage'    => $paginatedData->items(),
-            'targetTotal'    => $totalGroup,
-            'currentPage'    => $paginatedData->currentPage(),
-            'firstPageTotal' => $firstPageTotal,
-            'pageCount'      => $paginatedData->lastPage(),
-        ]);
     }
 
     // ================================== End Landing Pages ==================================
@@ -956,6 +1156,7 @@ class GophishController extends Controller
                 $campaigns     = $campaigns->get();
                 $campaignsData = [];
                 foreach ($campaigns as $campaign) {
+
                     $response = Http::withHeaders([
                         'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
                     ])->get("{$this->url}/campaigns/{$campaign->campaign_id}");
