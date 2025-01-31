@@ -61,7 +61,6 @@ class AuthenticateController extends Controller
             'password_confirmation' => 'required|same:password',
             'gender'                => 'required|string',
         ]);
-
         $user             = new User();
         $user->first_name = $request->first_name;
         $user->last_name  = $request->last_name;

@@ -217,6 +217,7 @@
         </fieldset>
     </div>
     <script>
+        let selectedCompany = null;
         $(document).ready(function() {
             $('.js-example-basic-single').select2({
 
@@ -226,6 +227,11 @@
                 $(this).val(phone.replace(/[^0-9]/g, ''));
             });
             companyView();
+        });
+
+        $("#selectCompany").on("change", function() {
+            selectedCompany = $(this).val();
+            
         });
 
         function createCompanyView() {
@@ -356,19 +362,19 @@
             });
             var first_name = $('#first_name').val();
             var last_name = $('#last_name').val();
-            var company = $('#selectCompany').val();
             var email = $('#email_user').val();
             var password = $('#new_password').val();
             var password_confirmation = $('#password_confirmation').val();
             var phone = $('#phone').val();
             var gender = $('#gender').val();
+            
             $.ajax({
                 url: "{{ route('register') }}",
                 type: 'POST',
                 data: {
                     first_name: first_name,
                     last_name: last_name,
-                    company: company,
+                    company: selectedCompany,
                     email: email,
                     password: password,
                     password_confirmation: password_confirmation,
