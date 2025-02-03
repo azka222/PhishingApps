@@ -96,69 +96,68 @@
                     </ul>
                 </nav>
             </div>
-
-            < </div>
         </div>
+    </div>
 
-        <script>
-            let landingPages = [];
-            $(document).ready(function() {
-                getLandingPage();
-            });
+    <script>
+        let landingPages = [];
+        $(document).ready(function() {
+            getLandingPage();
+        });
 
-            function getLandingPage(page = 1) {
-                let show = $("#show").val();
-                let search = $("#search").val();
-                let capture_credentials = $("#capture_credentials").val();
-                let capture_passwords = $("#capture_passwords").val();
-                let companyId = $("#companyCheckAdmin").val();
-                $.ajax({
-                    url: "{{ route('getLandingPage') }}" + "?page=" + page,
-                    type: "GET",
-                    data: {
-                        show: show,
-                        search: search,
-                        page: page,
-                        capture_credentials: capture_credentials,
-                        capture_passwords: capture_passwords,
-                        companyId: companyId
-                    },
-                    success: function(response) {
-                        console.log(response);
-                        $("#list-page-tbody").empty();
-                        $("#pagination-page-button").empty();
-                        landingPages = response.landingPage; // landingPage == data
-                        console.log(landingPages.length);
-                        if (landingPages.length == 0) {
-                            let data = `<tr class="text-xs md:text-sm font-light text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800">
+        function getLandingPage(page = 1) {
+            let show = $("#show").val();
+            let search = $("#search").val();
+            let capture_credentials = $("#capture_credentials").val();
+            let capture_passwords = $("#capture_passwords").val();
+            let companyId = $("#companyCheckAdmin").val();
+            $.ajax({
+                url: "{{ route('getLandingPage') }}" + "?page=" + page,
+                type: "GET",
+                data: {
+                    show: show,
+                    search: search,
+                    page: page,
+                    capture_credentials: capture_credentials,
+                    capture_passwords: capture_passwords,
+                    companyId: companyId
+                },
+                success: function(response) {
+                    console.log(response);
+                    $("#list-page-tbody").empty();
+                    $("#pagination-page-button").empty();
+                    landingPages = response.landingPage; // landingPage == data
+                    console.log(landingPages.length);
+                    if (landingPages.length == 0) {
+                        let data = `<tr class="text-xs md:text-sm font-light text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800">
                                 <td class="p-4" colspan="4">No data available</td>
                             </tr>`;
-                            $("#list-page-tbody").append(data);
-                        }
+                        $("#list-page-tbody").append(data);
+                    }
 
-                        Object.keys(landingPages).forEach(function(key) {
-                            let value = landingPages[key];
-                            let credentials = '';
-                            let password = '';
-                            if (value.capture_credentials != 0) {
-                                credentials = `<div class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300 inline-block">
+                    Object.keys(landingPages).forEach(function(key) {
+                        let value = landingPages[key];
+                        let credentials = '';
+                        let password = '';
+                        if (value.capture_credentials != 0) {
+                            credentials = `<div class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300 inline-block">
                                                 True
                                             </div>`;
-                            } else {
-                                credentials = `<div class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300 inline-block">
+                        } else {
+                            credentials = `<div class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300 inline-block">
                                                 False
                                             </div>`;
-                            }
-                            if (value.capture_passwords != 0) {
-                                password = `<div class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300 inline-block">
+                        }
+                        if (value.capture_passwords != 0) {
+                            password = `<div class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300 inline-block">
                                                 True
                                             </div>`;
-                            } else {
-                                password = `<div class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300 inline-block">
+                        } else {
+                            password = `<div class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300 inline-block">
                                                 False
                                             </div>`;
-                            }
-                            $("#list-page-tbody").append(`
+                        }
+                        $("#list-page-tbody").append(`
                             <tr class="text-xs md:text-sm font-light text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800">
                                 <td class="p-4 whitespace-nowrap">${value.name}</td>
                                 <td class="p-4">${credentials}</td>
@@ -178,257 +177,155 @@
                         `);
 
 
-                        });
-                        paginationLandingPage("#pagination-page-button", response.pageCount, response.currentPage);
-                        $("#numberFirstItem").text(
-                            response.targetTotal != 0 ? (page - 1) * $("#show").val() + 1 : 0
-                        );
-                        $("#numberLastItem").text(
-                            (page - 1) * $("#show").val() + response.landingPage.length
-                        );
-                        $("#totalTemplatesCount").text(response.targetTotal);
+                    });
+                    paginationLandingPage("#pagination-page-button", response.pageCount, response.currentPage);
+                    $("#numberFirstItem").text(
+                        response.targetTotal != 0 ? (page - 1) * $("#show").val() + 1 : 0
+                    );
+                    $("#numberLastItem").text(
+                        (page - 1) * $("#show").val() + response.landingPage.length
+                    );
+                    $("#totalTemplatesCount").text(response.targetTotal);
 
-                    }
-                });
-            }
-
-            function showAddLandingPageModal() {
-                showModal('add-landing-page-modal');
-                $("#admin_company_input_div").show();
-                // await fetchWebsiteUrl(); // Call the async function
-            }
-
-            function handleCheckboxAndUrl() {
-                $("#submitted-checkbox").change(function() {
-                    if (!$(this).is(":checked")) {
-                        $("#passwords-checkbox").prop("checked", false);
-                        $("#redirect_url").val('');
-                    }
-                });
-            }
-
-            $(document).ready(function() {
-                handleCheckboxAndUrl();
+                }
             });
+        }
 
-            function showLandingPage(id) {
-                window.open("{{ route('landingPagePreview', ['id' => '__ID__']) }}".replace('__ID__', id));
+        function showAddLandingPageModal() {
+            showModal('add-landing-page-modal');
+            $("#admin_company_input_div").show();
+            // await fetchWebsiteUrl(); // Call the async function
+        }
+
+        function handleCheckboxAndUrl() {
+            $("#submitted-checkbox").change(function() {
+                if (!$(this).is(":checked")) {
+                    $("#passwords-checkbox").prop("checked", false);
+                    $("#redirect_url").val('');
+                }
+            });
+        }
+
+        $(document).ready(function() {
+            handleCheckboxAndUrl();
+        });
+
+        function showLandingPage(id) {
+            window.open("{{ route('landingPagePreview', ['id' => '__ID__']) }}".replace('__ID__', id));
+        }
+
+        function showImportUrl() {
+            showModal('import-site-modal');
+        }
+
+
+
+        async function fetchWebsiteUrl() {
+            let url = $("#url_website").val(); // Get URL input value
+            if (url === "") {
+                $("#error-http-header").show(); // Show error if URL is empty
+            }
+            if (url !== "") {
+                $("#error-http-header").hide(); // Hide error
             }
 
-            function showImportUrl() {
-                showModal('import-site-modal');
-            }
-
-
-
-            async function fetchWebsiteUrl() {
-                let url = $("#url_website").val(); // Get URL input value
-                if (url === "") {
-                    $("#error-http-header").show(); // Show error if URL is empty
-                }
-                if (url !== "") {
-                    $("#error-http-header").hide(); // Hide error
-                }
-
-                try {
-                    // Show loading indicator
-                    Swal.fire({
-                        title: "Loading...",
-                        text: "Fetching website HTML...",
-                        allowOutsideClick: false,
-                        didOpen: () => {
-                            Swal.showLoading();
-                        },
-                    });
-
-                    // Perform the AJAX request
-                    const response = await $.ajax({
-                        url: "{{ route('fetchWebsiteUrl') }}",
-                        type: "POST",
-                        data: {
-                            _token: "{{ csrf_token() }}",
-                            url: url,
-                        },
-                    });
-
-                    // Handle success
-                    Swal.fire({
-                        icon: "success",
-                        title: "Success",
-                        text: response.message,
-                        confirmButtonColor: '#10b981',
-                        confirmButtonText: 'Close'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            hideModal('import-site-modal');
-                            if (response.html) {
-                                let response_html = response.html;
-                                $("#content").empty(); // Clear the editor content
-                                $("#content").text(response_html); // Set the editor content
-                            } else {
-                                console.log("HTML not found!");
-                            }
-                        }
-                    });
-                } catch (error) {
-                    // Handle errors
-                    let errorMessage = error.responseJSON?.message || "An error occurred!";
-                    Swal.fire({
-                        icon: "error",
-                        title: "Error",
-                        text: errorMessage,
-                        confirmButtonColor: '#10b981',
-                        confirmButtonText: 'Close',
-                    });
-                }
-            }
-
-            function showWarning() {
-                if ($("#submitted-checkbox").is(":checked")) {
-                    $(".hidden-capture").show();
-                } else {
-                    $(".hidden-capture").hide();
-                }
-            }
-
-            function createLandingPage() {
-                let name = $("#landing_name").val();
-                let submitted = $("#submitted-checkbox").is(":checked") ? 1 : 0;
-                let passwords = $("#passwords-checkbox").is(":checked") ? 1 : 0;
-                let redirect_url = $("#redirect_url").val();
-                let content = $("#content").val();
-                let company = $("#admin_company_input").val() ? $("#admin_company_input").val() : '';
-                // console.log(content);
-                let error_message = [];
-                if (name === "") {
-                    error_message.push("Name is required");
-                }
-                if (content === "") {
-                    error_message.push("Content is required");
-                }
-                console.log(submitted);
-                console.log(passwords);
-                if (error_message.length > 0) {
-                    $("#error_message_field").show();
-                    $("#error_message").empty();
-                    error_message.forEach(function(value) {
-                        $("#error_message").append(`<li>${value}</li>`);
-                    });
-                } else {
-                    $("#error_message_field").hide();
-                    $.ajax({
-                        url: "{{ route('createLandingPage') }}",
-                        type: "POST",
-                        data: {
-                            _token: "{{ csrf_token() }}",
-                            landing_name: name,
-                            html_content: content,
-                            capture_credentials: submitted,
-                            capture_passwords: passwords,
-                            redirect_url: redirect_url,
-                            company: company
-                        },
-                        success: function(response) {
-                            console.log(response);
-                            if (response.status === "success") {
-                                Swal.fire({
-                                    icon: "success",
-                                    title: "Success",
-                                    text: response.message,
-                                    confirmButtonColor: '#10b981',
-                                    confirmButtonText: 'Close',
-                                }).then((result) => {
-                                    if (result.isConfirmed) {
-                                        hideModal('add-landing-page-modal')
-                                    }
-                                });
-                                getLandingPage();
-
-                            } else {
-                                Swal.fire({
-                                    icon: "error",
-                                    title: "Error",
-                                    text: response.message,
-                                    confirmButtonColor: '#10b981',
-                                    confirmButtonText: 'Close',
-                                });
-                            }
-                        },
-                        error: function(error) {
-                            console.log(error);
-                            Swal.fire({
-                                icon: "error",
-                                title: "Error",
-                                text: "An error occurred!",
-                                confirmButtonColor: '#10b981',
-                                confirmButtonText: 'Close',
-                            });
-                        }
-                    });
-                }
-            }
-
-            function testLandingPage() {
-                let content = $("#content").val();
-                // console.log(content);
-                $.ajax({
-                    url: "{{ route('testLandingPage') }}",
-                    type: "POST",
-                    data: {
-                        _token: "{{ csrf_token() }}",
-                        html: content
-                    },
-                    success: function(response) {
-                        console.log(response.preview_id);
-                        id = response.preview_id;
-                        if (response.status === "success") {
-                            window.open("{{ route('showPagePreview', ['id' => '__ID__']) }}".replace('__ID__', id));
-                        } else {
-                            Swal.fire({
-                                icon: "error",
-                                title: "Error",
-                                text: response.message,
-                                confirmButtonColor: '#10b981',
-                                confirmButtonText: 'Close',
-                            });
-                        }
+            try {
+                // Show loading indicator
+                Swal.fire({
+                    title: "Loading...",
+                    text: "Fetching website HTML...",
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
                     },
                 });
-            }
 
-            function showModalEditLandingPage(id) {
-                let LandingPage = landingPages.find(x => x.id === id);
-                $("#landing_name").val(LandingPage.name);
-                $("#content").val(LandingPage.html);
-                $("#submitted-checkbox").prop("checked", LandingPage.capture_credentials == 1 ? true : false);
-                $("#passwords-checkbox").prop("checked", LandingPage.capture_passwords == 1 ? true : false);
-                $("#redirect_url").val(LandingPage.redirect_url);
-                $("#title-add-landing-page-modal").text('Edit Landing Page');
-                $("#button-for-pages").text('Update');
-                $("#button-for-pages").removeAttr('onclick').attr('onclick',
-                    `editLandingPage(${id})`);
-                showModal('add-landing-page-modal');
-                showWarning();
-            }
-
-            function editLandingPage(id) {
-                preventDoubleClick('button-for-pages', true);
-                let name = $("#landing_name").val();
-                let submitted = $("#submitted-checkbox").is(":checked") ? 1 : 0;
-                let password = $("#passwords-checkbox").is(":checked") ? 1 : 0;
-                let content = $("#content").val();
-                let url = $("#redirect_url").val();
-                $.ajax({
-                    url: "{{ route('updateLandingPage') }}",
+                // Perform the AJAX request
+                const response = await $.ajax({
+                    url: "{{ route('fetchWebsiteUrl') }}",
                     type: "POST",
                     data: {
                         _token: "{{ csrf_token() }}",
-                        id: id,
+                        url: url,
+                    },
+                });
+
+                // Handle success
+                Swal.fire({
+                    icon: "success",
+                    title: "Success",
+                    text: response.message,
+                    confirmButtonColor: '#10b981',
+                    confirmButtonText: 'Close'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        hideModal('import-site-modal');
+                        if (response.html) {
+                            let response_html = response.html;
+                            $("#content").empty(); // Clear the editor content
+                            $("#content").text(response_html); // Set the editor content
+                        } else {
+                            console.log("HTML not found!");
+                        }
+                    }
+                });
+            } catch (error) {
+                // Handle errors
+                let errorMessage = error.responseJSON?.message || "An error occurred!";
+                Swal.fire({
+                    icon: "error",
+                    title: "Error",
+                    text: errorMessage,
+                    confirmButtonColor: '#10b981',
+                    confirmButtonText: 'Close',
+                });
+            }
+        }
+
+        function showWarning() {
+            if ($("#submitted-checkbox").is(":checked")) {
+                $(".hidden-capture").show();
+            } else {
+                $(".hidden-capture").hide();
+            }
+        }
+
+        function createLandingPage() {
+            let name = $("#landing_name").val();
+            let submitted = $("#submitted-checkbox").is(":checked") ? 1 : 0;
+            let passwords = $("#passwords-checkbox").is(":checked") ? 1 : 0;
+            let redirect_url = $("#redirect_url").val();
+            let content = $("#content").val();
+            let company = $("#admin_company_input").val() ? $("#admin_company_input").val() : '';
+            // console.log(content);
+            let error_message = [];
+            if (name === "") {
+                error_message.push("Name is required");
+            }
+            if (content === "") {
+                error_message.push("Content is required");
+            }
+            console.log(submitted);
+            console.log(passwords);
+            if (error_message.length > 0) {
+                $("#error_message_field").show();
+                $("#error_message").empty();
+                error_message.forEach(function(value) {
+                    $("#error_message").append(`<li>${value}</li>`);
+                });
+            } else {
+                $("#error_message_field").hide();
+                $.ajax({
+                    url: "{{ route('createLandingPage') }}",
+                    type: "POST",
+                    data: {
+                        _token: "{{ csrf_token() }}",
                         landing_name: name,
                         html_content: content,
                         capture_credentials: submitted,
-                        capture_passwords: password,
-                        redirect_url: url
+                        capture_passwords: passwords,
+                        redirect_url: redirect_url,
+                        company: company
                     },
                     success: function(response) {
                         console.log(response);
@@ -441,11 +338,11 @@
                                 confirmButtonText: 'Close',
                             }).then((result) => {
                                 if (result.isConfirmed) {
-                                    preventDoubleClick('button-for-pages', false);
                                     hideModal('add-landing-page-modal')
                                 }
                             });
                             getLandingPage();
+
                         } else {
                             Swal.fire({
                                 icon: "error",
@@ -467,40 +364,142 @@
                         });
                     }
                 });
-
             }
+        }
 
-            function deleteLandingPage(id) {
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: "You won't be able to revert this!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#10b981',
-                    cancelButtonColor: '#d97706',
-                    confirmButtonText: 'Yes, delete it!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        $.ajax({
-                            url: "{{ route('deleteLandingPage') }}",
-                            type: "POST",
-                            data: {
-                                id,
-                                _token: "{{ csrf_token() }}"
-                            },
-                            success: function(response) {
-                                getLandingPage();
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'Success',
-                                    text: 'Landing Page has been deleted!',
-                                    confirmButtonColor: '#10b981',
-                                    confirmButtonText: 'Close'
-                                });
-                            }
+        function testLandingPage() {
+            let content = $("#content").val();
+            // console.log(content);
+            $.ajax({
+                url: "{{ route('testLandingPage') }}",
+                type: "POST",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    html: content
+                },
+                success: function(response) {
+                    console.log(response.preview_id);
+                    id = response.preview_id;
+                    if (response.status === "success") {
+                        window.open("{{ route('showPagePreview', ['id' => '__ID__']) }}".replace('__ID__', id));
+                    } else {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Error",
+                            text: response.message,
+                            confirmButtonColor: '#10b981',
+                            confirmButtonText: 'Close',
                         });
                     }
-                })
-            }
-        </script>
-    @endsection
+                },
+            });
+        }
+
+        function showModalEditLandingPage(id) {
+            let LandingPage = landingPages.find(x => x.id === id);
+            $("#landing_name").val(LandingPage.name);
+            $("#content").val(LandingPage.html);
+            $("#submitted-checkbox").prop("checked", LandingPage.capture_credentials == 1 ? true : false);
+            $("#passwords-checkbox").prop("checked", LandingPage.capture_passwords == 1 ? true : false);
+            $("#redirect_url").val(LandingPage.redirect_url);
+            $("#title-add-landing-page-modal").text('Edit Landing Page');
+            $("#button-for-pages").text('Update');
+            $("#button-for-pages").removeAttr('onclick').attr('onclick',
+                `editLandingPage(${id})`);
+            showModal('add-landing-page-modal');
+            showWarning();
+        }
+
+        function editLandingPage(id) {
+            preventDoubleClick('button-for-pages', true);
+            let name = $("#landing_name").val();
+            let submitted = $("#submitted-checkbox").is(":checked") ? 1 : 0;
+            let password = $("#passwords-checkbox").is(":checked") ? 1 : 0;
+            let content = $("#content").val();
+            let url = $("#redirect_url").val();
+            $.ajax({
+                url: "{{ route('updateLandingPage') }}",
+                type: "POST",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    id: id,
+                    landing_name: name,
+                    html_content: content,
+                    capture_credentials: submitted,
+                    capture_passwords: password,
+                    redirect_url: url
+                },
+                success: function(response) {
+                    console.log(response);
+                    if (response.status === "success") {
+                        Swal.fire({
+                            icon: "success",
+                            title: "Success",
+                            text: response.message,
+                            confirmButtonColor: '#10b981',
+                            confirmButtonText: 'Close',
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                preventDoubleClick('button-for-pages', false);
+                                hideModal('add-landing-page-modal')
+                            }
+                        });
+                        getLandingPage();
+                    } else {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Error",
+                            text: response.message,
+                            confirmButtonColor: '#10b981',
+                            confirmButtonText: 'Close',
+                        });
+                    }
+                },
+                error: function(error) {
+                    console.log(error);
+                    Swal.fire({
+                        icon: "error",
+                        title: "Error",
+                        text: "An error occurred!",
+                        confirmButtonColor: '#10b981',
+                        confirmButtonText: 'Close',
+                    });
+                }
+            });
+
+        }
+
+        function deleteLandingPage(id) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#10b981',
+                cancelButtonColor: '#d97706',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "{{ route('deleteLandingPage') }}",
+                        type: "POST",
+                        data: {
+                            id,
+                            _token: "{{ csrf_token() }}"
+                        },
+                        success: function(response) {
+                            getLandingPage();
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success',
+                                text: 'Landing Page has been deleted!',
+                                confirmButtonColor: '#10b981',
+                                confirmButtonText: 'Close'
+                            });
+                        }
+                    });
+                }
+            })
+        }
+    </script>
+@endsection

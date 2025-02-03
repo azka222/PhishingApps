@@ -164,7 +164,9 @@
                         dataEmailReported.totalEmail);
 
                     $('#list-campaign-tbody').empty();
-                    response.paginated_results.forEach(function(result) {
+                    let targetUsers = response.paginated_results;
+                    
+                    Object.values(targetUsers).forEach(function(result) {
                         let status = result.status;
                         let reported = result.reported;
                         let statusColor = '';
@@ -216,9 +218,9 @@
                         (page - 1) * 5 + 1
                     );
                     $("#numberLastItem").text(
-                        (page - 1) * 5 + response.paginated_results.length
+                        (page - 1) * 5 + Object.values(targetUsers).length
                     );
-                    $("#totalTemplatesCount").text(response.pagination.total_results);
+                    $("#totalTemplatesCount").text(Object.values(targetUsers).length);
                     let timelineData = getTimelineData(response);
                     getTimelineCampaignChart(timelineData)
                 }
