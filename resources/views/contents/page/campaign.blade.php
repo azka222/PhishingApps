@@ -414,7 +414,7 @@
                                     minute: '2-digit'
                                 });
                             let addressName = tempCampaign.smtp['name'].split('-+-')[0];
-                            let pageName = tempCampaign.page['name'];
+                            let pageName = tempCampaign.page['name'].split('-+-')[0];
                             let templateName = tempCampaign.template['name'].split('-+-')[0];
                             let group = '';
                             if ($("#status").val() != 2) {

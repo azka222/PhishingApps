@@ -1233,10 +1233,10 @@ class GophishController extends Controller
             $perPage                  = 5;
 
             if (isset($data['results']) && is_array($data['results'])) {
-                $totalResults              = count($data['results']);
-                $totalPages                = ceil($totalResults / $perPage);
                 $offset                    = ($page - 1) * $perPage;
                 $data['paginated_results'] = array_slice($data['results'], $offset, $perPage);
+                $totalResults              = count($data['paginated_results']);
+                $totalPages                = ceil($totalResults / $perPage);
                 if ($request->has('search') && $request->search != null) {
                     $data['paginated_results'] = array_filter($data['paginated_results'], function ($result) use ($request) {
                         return stripos($result['email'], $request->search) !== false;
