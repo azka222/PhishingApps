@@ -250,25 +250,21 @@
         async function getUserIdbyCompany(id) {
 
             await $.ajax({
-                url: "{{ route('userGetIdCompanyUser') }}",
-                type: "GET",
-                data: {
-                    id: id
-                },
-                success: function(data) {
-                    console.log(data);
-                    $('#owner').empty();
-                    $('#owner').append(`<option value="" disabled>Select Owner</option>`);
-                    data.users.forEach(function(user) {
-                        $('#owner').append(
-                            `<option value="${user.id}">${user.first_name} ${user.last_name}</option>`
-                        );
-                    });
-                    // let owner = data.user.first_name + " " + data.user.last_name;
-                    // let owner_email = data.user.email;
-                    // $("#owner").val(owner);
-                    // $("#owner_email").val(owner_email);
-                }
+            url: "{{ route('getUsersByCompanyId', '') }}/" + id,
+            type: "GET",
+            data: {
+                id: id
+            },
+            success: function(data) {
+                console.log(data);
+                $('#owner').empty();
+                $('#owner').append(`<option value="" disabled>Select Owner</option>`);
+                data.users.forEach(function(user) {
+                $('#owner').append(
+                    `<option value="${user.id}">${user.first_name} ${user.last_name}</option>`
+                );
+                });
+            }
             });
         }
     </script>

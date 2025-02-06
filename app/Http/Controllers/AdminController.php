@@ -150,7 +150,7 @@ class AdminController extends Controller
             $company = Company::with('user')->where('id', $request->id)->first();
             $company->name = $request->name;
             $company->email = $request->email;
-            $company->visibility_id = $request->visibility == 1 ? 1 : 2;    
+            $company->visibility_id = $request->visibility == 1 ? 1 : 2;
             $company->max_account = $request->max_account;
             $company->user_id =$request->owner;
             $company->status_id = $request->status == 1 ? 1 : 2;
@@ -171,17 +171,17 @@ class AdminController extends Controller
             ], 403);
         }
     }
-    
-    public function getUsersByCompanyId($company_id)
+
+    public function getUsersByCompanyId($id)
     {
-        $users = User::where('company_id', $company_id)->get(); // Menyesuaikan query sesuai dengan tabel users
+        $users = User::where('company_id', $id)->get(); // Menyesuaikan query sesuai dengan tabel users
         return response()->json([
             'status' => 'success',
             'users' => $users
         ]);
     }
-    
-    
+
+
     public function deleteCompany(Request $request)
     {
         if (Gate::allows('IsAdmin')) {

@@ -141,7 +141,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
             Route::get('/', [ViewController::class, 'adminUserView'])->name('adminUserView');
             Route::get('/getAllUser', [AdminController::class, 'getAllUser'])->name('getAllUser');
             Route::post('/editUser', [AdminController::class, 'editUser'])->name('editUser');
-            Route::get('/getUserbyCompany', [AdminController::class, 'userGetIdCompanyUser'])->name('userGetIdCompanyUser');
+            Route::get('/getUserbyCompany/{id}', [AdminController::class, 'getUsersByCompanyId'])->name('getUsersByCompanyId');
 
         });
         Route::group(['prefix' => 'company'], function () {
