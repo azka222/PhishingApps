@@ -1,7 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Mail\ApprovalMail;
+use App\Jobs\RequestApprovalCampaignJob;
 use App\Models\Campaign;
 use App\Models\Company;
 use App\Models\CompanyCampaign;
@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Casts\Json;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
 class ApprovalController extends Controller
@@ -31,8 +30,12 @@ class ApprovalController extends Controller
             'id' => 'required|exists:campaigns',
         ]);
 
-        $campaign             = Campaign::find($request->id);
-        $campaign->status_id  = 1;
+        $campaign = Campaign::find($request->id);
+        if ($campaign->status_id != 1) {
+            return response()->json([
+                'message' => 'Campaign already approved or rejected',
+            ], 403);
+        }
         $campaign->updated_at = Carbon::now();
         $campaign->save();
 
@@ -64,8 +67,8 @@ class ApprovalController extends Controller
             }
 
             $campaigns      = $campaigns->orderBy('updated_at', 'desc')->orderBy('status_id', 'asc');
-            $campaigns      = $campaigns->paginate($request->has('perPage') ? $request->perPage : 10);
             $totalCampaigns = $campaigns->count();
+            $campaigns      = $campaigns->paginate($request->has('show') ? $request->show : 10);
             $firstPageTotal = count($campaigns->items());
             return response()->json([
                 'approvals'      => $campaigns->items(),
@@ -141,7 +144,7 @@ class ApprovalController extends Controller
         }
         $company      = Company::find($campaign->company_id);
         $companyOwner = $company->user->email;
-        Mail::to($companyOwner)->send(new ApprovalMail($campaign));
+        RequestApprovalCampaignJob::dispatch($companyOwner, $campaign->id);
 
         return response()->json(['message' => 'Approval email sent successfully!']);
     }

@@ -71,7 +71,7 @@ class User extends Authenticatable implements MustVerifyEmailContract
 
     public function companyAdmin($id)
     {
-        if($this->adminCheck()) {
+        if ($this->adminCheck()) {
             return true;
         }
         $checkRole = Role::where('company_id', $id)->where('company_admin', 1)->first();
@@ -164,7 +164,7 @@ class User extends Authenticatable implements MustVerifyEmailContract
     {
         if ($this->haveAccess('Group', 'read') && ! $this->adminCheck()) {
             return Group::with('target.position', 'target.department')->where('company_id', $this->company_id)->get();
-            
+
         } else if ($this->adminCheck()) {
             return Group::with('target.position', 'target.department');
         }
@@ -295,7 +295,7 @@ class User extends Authenticatable implements MustVerifyEmailContract
 
     public function isCompanyOwner($id)
     {
-        if($this->adminCheck()) {
+        if ($this->adminCheck()) {
             return true;
         }
         $company = Company::where('id', $id)->first();

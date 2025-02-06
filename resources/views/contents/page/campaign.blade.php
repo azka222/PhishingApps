@@ -3,6 +3,7 @@
 @section('content')
     @include('contents.modal.campaign.add-campaign-modal')
     @include('contents.modal.sending-profile.test-connection')
+    @include('contents.modal.notes.notes-modal')
     <div class="min-h-screen  bg-gray-50 dark:bg-gray-800 dark:text-white text-gray-900">
         <div class="p-4 flex flex-col">
             <div class="flex p-4 items-center justify-between">
@@ -173,6 +174,27 @@
 
         function addGroupToCampaign(id) {
             let tempGroup = groups.find(group => group.id == id);
+            $("#group-list").append(`
+                        <div class="group-campaign flex items-center justify-between mb-4 shadow-md p-3 rounded-xl"
+                            value="${tempGroup.id}" id="group_member_${tempGroup.id}">
+                            <div class="flex flex-col gap-1">
+                                <p class="text-xs font-semibold text-gray-800 dark:text-gray-200">${tempGroup.name}</p>
+                            </div>
+                            <div>
+                                <button type="button" data-value="${tempGroup.id}" onclick="removeGroup(${tempGroup.id})"
+                                    class="remove-user focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-xs px-5 py-2.5 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Remove</button>
+
+                            </div>
+                        </div>
+                `);
+            setGroupSelection();
+        }
+
+        function copyGroupToCampaign(name) {
+            let tempGroup = groups.find(group => group.name.trim() == name.trim());
+            if (!tempGroup) {
+                return;
+            }
             $("#group-list").append(`
                         <div class="group-campaign flex items-center justify-between mb-4 shadow-md p-3 rounded-xl"
                             value="${tempGroup.id}" id="group_member_${tempGroup.id}">
@@ -382,7 +404,6 @@
                             } else if ($("#status").val() == 2) {
                                 tempCampaign = campaign;
                             }
-                            console.log(tempCampaign);
                             let launchDate = new Date(tempCampaign.launch_date).toLocaleString(
                                 'en-US', {
                                     weekday: 'long',
@@ -393,7 +414,7 @@
                                     minute: '2-digit'
                                 });
                             let addressName = tempCampaign.smtp['name'].split('-+-')[0];
-                            let pageName = tempCampaign.page['name'];
+                            let pageName = tempCampaign.page['name'].split('-+-')[0];
                             let templateName = tempCampaign.template['name'].split('-+-')[0];
                             let group = '';
                             if ($("#status").val() != 2) {
@@ -408,7 +429,6 @@
                                             </td>`
                             } else {
                                 $("#dynamicColumn").text('Users');
-                                console.log(tempCampaign.results);
                                 group = ` <td class="p-4 relative group">
                                                 ${(tempCampaign.results.length)} Users
                                                 <div class="absolute hidden group-hover:block text-black bg-white dark:bg-gray-800 dark:text-white text-sm rounded-lg p-2 shadow-lg w-max max-w-xs z-10 -top-10 left-1/2 transform -translate-x-1/2">
@@ -419,22 +439,41 @@
                                             </td>`
                             }
 
+                            let button = '';
 
-                            let button = campaign.status_id == 1 ? `<td class="p-4 gap-2">
-                                        <button onclick="sendNewApproval(${campaign.id})"
-                                            class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-orange-600 rounded-xl hover:bg-orange-700 dark:bg-orange-500 dark:hover:bg-orange-600">Resend</button>
-                                       
-                            </td>` : '';
+
 
                             if ($("#status").val() == 2) {
                                 button = `<td class="p-4 flex gap-2">
                                         <button onclick="showDetailCampaign(${campaign.id})"
-                                            class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">Detail</button>
+                                            class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-green-600 rounded-xl hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600">Detail</button>
                                         @CanDeleteCampaign()
                                             <button onclick="deleteCampaign(${campaign.id})"
                                             class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-red-600 rounded-xl hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600">Delete</button>
                                         @endCanDeleteCampaign()
                                             </td>`;
+                            } else if ($("#status").val() == 3) {
+                                button = `<td class="flex p-4 gap-4 items-center">
+                                     <button onclick="showNotes(${campaign.id})"
+                                            class=" text-xs md:text-sm font-medium text-white bg-transparent-600 rounded-xl hover:bg-transparent-700 dark:bg-transparent-500 dark:hover:bg-transparent-600">
+                                           <div class="relative group">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 text-gray-400 dark:text-white">
+                                                        <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 0 1 .67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 1 1-.671-1.34l.041-.022ZM12 9a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z" clip-rule="evenodd" />
+                                                    </svg>
+                                                    <span class="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 hidden group-hover:block bg-gray-800 text-white text-xs px-2 py-1 rounded-md">Notes</span>
+                                                </div>
+                                        </button>
+                                        <button onclick="copyCampaign(${campaign.id})"
+                                            class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-cyan-600 rounded-xl hover:bg-cyan-700 dark:bg-cyan-500 dark:hover:bg-cyan-600">Copy</button>
+                                       
+                                       
+                            </td>`
+                            } else {
+                                button = `<td class="p-4 gap-2">
+                                        <button onclick="sendNewApproval(${campaign.id})"
+                                            class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-orange-600 rounded-xl hover:bg-orange-700 dark:bg-orange-500 dark:hover:bg-orange-600">Resend</button>
+                                       
+                            </td>`
                             }
 
                             $("#list-campaign-tbody").append(`
@@ -544,16 +583,73 @@
                     });
                 },
                 error: function(xhr, status, error) {
+
                     Swal.close();
                     Swal.fire({
                         icon: "error",
                         title: "Error",
-                        text: xhr.responseJSON.message,
+                        text: JSON.parse(xhr.responseText).message,
                         confirmButtonColor: '#10b981',
                         confirmButtonText: 'Close'
                     });
+
                 }
             })
+        }
+
+        function copyCampaign(id) {
+            let tempCampaign = campaigns.find(campaign => campaign.id == id);
+            let data = JSON.parse(tempCampaign.data);
+            console.log(data);
+            showModal('add-campaign-modal');
+            $("#campaign_name").val(data.name + ' (Edited Version)');
+            let tempTemplate = data.template.name;
+            let tempLandingPage = data.page.name
+            let launchDate = new Date(data.launch_date);
+            launchDate.setHours(launchDate.getHours() + 7);
+            let formattedDate = launchDate.toISOString().slice(0, 16);
+            $("#campaign_launch_date").val(formattedDate);
+
+            if (data.end_date) {
+                let endDate = new Date(data.end_date);
+                endDate.setHours(endDate.getHours() + 7);
+                let formattedEndDate = endDate.toISOString().slice(0, 16);
+                $("#campaign_end_date").val(formattedEndDate);
+            }
+
+            $("#campaign_template option").each(function() {
+                if ($(this).text() == tempTemplate.split('-+-')[0]) {
+                    $(this).prop('selected', true);
+                }
+            });
+
+            $("#campaign_page option").each(function() {
+                if ($(this).text() == tempLandingPage.split('-+-')[0]) {
+                    $(this).prop('selected', true);
+                }
+            });
+
+            $("#campaign_url").val(data.url);
+            $("#campaign_profile option").each(function() {
+                if ($(this).text() == data.smtp.name.split('-+-')[0]) {
+                    $(this).prop('selected', true);
+                }
+            });
+
+            data.groups.forEach(group => {
+                copyGroupToCampaign(group.name.split('-+-')[0]);
+            });
+
+        }
+
+        function showNotes(id){
+            showModal('notes-modal');
+            let notes = campaigns.find(campaign => campaign.id == id).notes;
+            if(!notes){
+                notes = 'Campaign has been rejected';
+            }
+            $("#campaign_notes").val(notes);
+            $("#campaign_notes").prop('disabled', true);
         }
     </script>
 @endSection

@@ -2,6 +2,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\ForgotPasswordJob;
+use App\Jobs\SendOTPJob;
+use App\Jobs\SendRegistrationEmailJob;
+use App\Jobs\SendVerificationEmailJob;
 use App\Mail\OtpEmail;
 use App\Mail\ResetPasswordMail;
 use App\Models\Company;
@@ -9,7 +13,6 @@ use App\Models\ModuleAbility;
 use App\Models\Role;
 use App\Models\User;
 use Carbon\Carbon;
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\ValidationException;
@@ -33,20 +36,20 @@ class AuthenticateController extends Controller
 
         $user = auth()->user();
         if (! $user->hasVerifiedEmail()) {
-            event(new Registered($user));
-            throw ValidationException::withMessages([
-                'email' => ['Your email isn’t verified yet. Please check your inbox and verify your email to continue'],
-            ]);
+            auth()->logout();
+            SendVerificationEmailJob::dispatch($user);
+            return response()->json(['message' => 'Please verify your email address.'], 400);
+        } else {
+            return auth()->user()->canAccessDashboard()
+            ? redirect()->route('dashboard')
+            : redirect()->route('userSettingView');
+
         }
-        return auth()->user()->canAccessDashboard()
-        ? redirect()->route('dashboard')
-        : redirect()->route('userSettingView');
 
     }
 
     public function register(Request $request)
     {
-        
 
         $request->validate([
             'first_name'            => 'required|string',
@@ -58,7 +61,6 @@ class AuthenticateController extends Controller
             'password_confirmation' => 'required|same:password',
             'gender'                => 'required|string',
         ]);
-
         $user             = new User();
         $user->first_name = $request->first_name;
         $user->last_name  = $request->last_name;
@@ -71,11 +73,10 @@ class AuthenticateController extends Controller
         $user->save();
         $checkUser = User::where('company_id', $request->company)->count();
         if ($checkUser == 1) {
-            $company          = Company::findOrFail($request->company);
-            $company->user_id = $user->id;
-            $company->status_id  = 1;
+            $company            = Company::findOrFail($request->company);
+            $company->user_id   = $user->id;
+            $company->status_id = 1;
             $company->save();
-
             $role                = new Role();
             $role->name          = 'Company Admin';
             $role->company_id    = $request->company;
@@ -83,7 +84,6 @@ class AuthenticateController extends Controller
             $role->save();
             $user->role_id = $role->id;
             $user->save();
-
             $moduleAbilities = ModuleAbility::all()->pluck('id');
             $role->moduleAbility()->syncWithoutDetaching($moduleAbilities);
 
@@ -93,12 +93,19 @@ class AuthenticateController extends Controller
             $userRole->company_admin = 0;
             $userRole->save();
         } else {
-            $userRole      = Role::where('company_id', $request->company)->where('company_admin', 0)->first();
+            $userRole = Role::where('company_id', $request->company)->where('company_admin', 0)->first();
+            if (! $userRole) {
+                $userRole                = new Role();
+                $userRole->name          = 'User';
+                $userRole->company_id    = $request->company;
+                $userRole->company_admin = 0;
+                $userRole->save();
+            }
             $user->role_id = $userRole->id;
             $user->save();
         }
 
-        event(new Registered($user));
+        SendRegistrationEmailJob::dispatch($user);
 
         return response()->json([
             'message' => 'User created successfully',
@@ -112,7 +119,7 @@ class AuthenticateController extends Controller
         $user->otp            = $otp;
         $user->otp_expired_at = Carbon::now()->addMinutes(1);
         $user->save();
-        Mail::to(auth()->user()->email)->send(new OtpEmail($otp));
+        SendOTPJob::dispatch(auth()->user()->email, $otp);
         return response()->json(['message' => 'OTP sent successfully!']);
     }
 
@@ -129,7 +136,7 @@ class AuthenticateController extends Controller
         $user->otp            = $otp;
         $user->otp_expired_at = Carbon::now()->addMinutes(5);
         $user->save();
-        Mail::to(auth()->user()->email)->send(new OtpEmail($otp));
+        SendOTPJob::dispatch(auth()->user()->email, $otp);
         return response()->json(['message' => 'OTP sent successfully!']);
     }
 
@@ -178,7 +185,7 @@ class AuthenticateController extends Controller
         $user->save();
 
         $resetUrl = url('/reset-password?token=' . $token);
-        Mail::to($user->email)->send(new ResetPasswordMail($resetUrl));
+        ForgotPasswordJob::dispatch($user->email, $resetUrl);
         return response()->json(['message' => 'Reset password link sent to your email']);
     }
 

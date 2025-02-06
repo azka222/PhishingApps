@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\RequestApprovalCampaignJob;
 use App\Mail\ApprovalMail;
 use App\Models\Campaign;
 use App\Models\Company;
@@ -372,7 +373,7 @@ class GophishController extends Controller
                 'template_name'    => 'required|string',
                 'email_subject'    => 'required|string',
                 'status'           => 'required|boolean',
-                'email_body'       => 'required|string',
+                'email_body'       => 'required',
                 'email_attachment' => 'required|file|max:1000',
                 'sender_name'      => 'required|string',
                 'sender_email'     => 'required|email',
@@ -422,7 +423,7 @@ class GophishController extends Controller
                 'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
             ])->post("{$this->url}/templates/", $jsonData);
             if ($response->successful() && $response->body() != []) {
-                $idGophish                    = $response->json()['id'];
+                $idGophish                         = $response->json()['id'];
                 $companyEmailTemplate              = new EmailTemplateCompany();
                 $companyEmailTemplate->company_id  = auth()->user()->adminCheck() ? $request->company : auth()->user()->company_id;
                 $companyEmailTemplate->template_id = $idGophish;
@@ -506,7 +507,7 @@ class GophishController extends Controller
             $request->validate([
                 'template_name'        => 'required|string',
                 'email_subject'        => 'required|string',
-                'email_body'           => 'required|string',
+                'email_body'           => 'required',
                 'status'               => 'required|boolean',
                 'old_email_attachment' => [
                     'nullable',
@@ -673,7 +674,7 @@ class GophishController extends Controller
                 'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
             ])->post("{$this->url}/smtp/", $jsonData);
             if ($response->successful() && $response->body() != []) {
-                $idGophish                    = $response->json()['id'];
+                $idGophish                                 = $response->json()['id'];
                 $companySendingProfile                     = new SendingProfileCompany();
                 $companySendingProfile->company_id         = auth()->user()->adminCheck() ? $request->company : auth()->user()->company_id;
                 $companySendingProfile->sending_profile_id = $idGophish;
@@ -865,26 +866,23 @@ class GophishController extends Controller
             'mail.mailers.smtp.password'   => $request->input('password'),
             'mail.mailers.smtp.encryption' => $request->input('ignore_certificate') ? null : 'ssl',
             'mail.from.address'            => $request->input('email_smtp'),
-            'mail.from.name'               => $request->input('email_smtp'),
+            'mail.from.name'               => $request->input('username'),
         ]);
 
         try {
             Mail::raw('This is a test email to validate the SMTP configuration.', function ($message) use ($request) {
-                $message->to($request->target_email)
-                    ->subject('Hi ' . $request->target_name . ', Test Email from Gophish Configuration');
+                $message->to($request->input('target_email'))
+                    ->subject('Hi ' . $request->input('target_name') . ', this is a test email from Gophish');
                 if ($request->input('http_headers')) {
                     foreach ($request->input('http_headers') as $header => $value) {
                         if (is_array($value)) {
                             $value = implode(', ', $value);
                         }
-                        $message->getHeaders()->addTextHeader($header, (string) $value);
+                        $message->getHeaders()->addTextHeader($header, $value);
                     }
                 }
             });
-
-            return response()->json([
-                'message' => 'Test email sent successfully!',
-            ], 200);
+            return response()->json(['message' => 'Test email sent successfully']);
         } catch (\Exception $e) {
             return response()->json([
                 'error' => 'Test email failed to send: ' . $e->getMessage(),
@@ -1102,7 +1100,9 @@ class GophishController extends Controller
             $campaign->status_id  = 1;
             $campaign->save();
 
-            $this->sendApprovalEmail($campaign->id);
+            $company      = Company::find($campaign->company_id);
+            $companyOwner = $company->user->email;
+            RequestApprovalCampaignJob::dispatch($companyOwner, $campaign->id);
 
             return response()->json([
                 'success' => true,
@@ -1153,8 +1153,7 @@ class GophishController extends Controller
                         $campaigns->where('company_id', $request->companyId);
                     }
                 }
-                $campaigns = $campaigns->get();
-
+                $campaigns     = $campaigns->get();
                 $campaignsData = [];
                 foreach ($campaigns as $campaign) {
 
@@ -1234,10 +1233,10 @@ class GophishController extends Controller
             $perPage                  = 5;
 
             if (isset($data['results']) && is_array($data['results'])) {
-                $totalResults              = count($data['results']);
-                $totalPages                = ceil($totalResults / $perPage);
                 $offset                    = ($page - 1) * $perPage;
                 $data['paginated_results'] = array_slice($data['results'], $offset, $perPage);
+                $totalResults              = count($data['paginated_results']);
+                $totalPages                = ceil($totalResults / $perPage);
                 if ($request->has('search') && $request->search != null) {
                     $data['paginated_results'] = array_filter($data['paginated_results'], function ($result) use ($request) {
                         return stripos($result['email'], $request->search) !== false;
