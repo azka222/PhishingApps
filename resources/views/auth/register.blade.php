@@ -181,6 +181,20 @@
                                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                                         placeholder="Enter your company address" required></textarea>
                                 </div>
+                                {{-- <div class="md:col-span-2">
+                                    <label for="custom-domain" class="block mb-2 mt-2 text-sm font-medium text-gray-90">Custom Domain Email</label>
+                                    <select id="custom-domain" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-48 p-2.5 mt-2" required>
+                                        <option value="" disabled selected>Select an option</option>
+                                        <option value="1">Yes</option>
+                                        <option value="0">No</option>
+                                    </select>
+                                </div>
+                                <p class="mt-2 text-sm ">
+                                    <ul class="list-disc list-inside text-gray-600">
+                                        <li>If you would like to use a custom domain email, you can choose "Yes".</li>
+                                        <li>When registering a new account, you need to have the same domain as your company email.</li>
+                                    </ul>
+                                </p> --}}
 
                                 <div class="col-span-2 pt-4" id="error_message_field_company_create" hidden>
                                     <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
@@ -231,7 +245,7 @@
 
         $("#selectCompany").on("change", function() {
             selectedCompany = $(this).val();
-            
+
         });
 
         function createCompanyView() {
@@ -248,6 +262,7 @@
                     name: $('#company_name').val(),
                     email: $('#company_email').val(),
                     address: $('#company_address').val(),
+                    custom_domain: $('#custom-domain').val(),
                     "_token": "{{ csrf_token() }}"
                 },
                 success: function(response) {
@@ -264,6 +279,7 @@
                     })
                 },
                 error: function(xhr, status, error) {
+                    console.log(xhr.responseText);
                     var errorMessage = JSON.parse(xhr.responseText);
                     var errors = errorMessage.errors;
                     $('#error_message_field_company_create').show();
@@ -367,7 +383,7 @@
             var password_confirmation = $('#password_confirmation').val();
             var phone = $('#phone').val();
             var gender = $('#gender').val();
-            
+
             $.ajax({
                 url: "{{ route('register') }}",
                 type: 'POST',

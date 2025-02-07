@@ -70,7 +70,25 @@ class AuthenticateController extends Controller
         $user->phone      = $request->phone;
         $user->gender     = $request->gender;
         $user->is_admin   = 0;
+
+        // $company = Company::findOrFail($request->company);
+        // $customDomain = $company->custom_domain;
+        // if ($customDomain == 1) {
+        //     $companyEmail = $company->email;
+        //     $companyDomain = explode('@', $companyEmail)[1];
+        //     $userDomain = explode('@', $request->email)[1];
+
+        //     if ($companyDomain !== $userDomain) {
+        //     return response()->json([
+        //         'message' => 'Email domain must match company domain.',
+        //         'errors' => [
+        //         'email' => ['Email domain must match company domain.']
+        //         ]
+        //     ], 400);
+        //     }
+        // }
         $user->save();
+
         $checkUser = User::where('company_id', $request->company)->count();
         if ($checkUser == 1) {
             $company            = Company::findOrFail($request->company);

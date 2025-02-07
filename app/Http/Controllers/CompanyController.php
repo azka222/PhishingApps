@@ -50,12 +50,14 @@ class CompanyController extends Controller
             'name'    => 'required|string',
             'email'   => 'required|email',
             'address' => 'required|string',
+            // 'custom_domain' => 'required|integer',
         ]);
 
         $company                = new Company();
         $company->name          = $request->name;
         $company->address       = $request->address;
         $company->email         = $request->email;
+        // $company->custom_domain = $request->custom_domain;
         $company->max_account   = 1;
         $company->status_id     = 2;
         $company->visibility_id = 1;
