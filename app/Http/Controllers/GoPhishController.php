@@ -1271,4 +1271,9 @@ class GophishController extends Controller
         return response()->json(['message' => 'Approval email sent successfully!']);
     }
 
+    public function downloadEmailAttachment(){
+        $path = storage_path('attachment/email-attachment.pdf');
+        return response()->download($path, 'email-attachment.pdf');
+    }
+
 }
