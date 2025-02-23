@@ -118,6 +118,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         Route::post('/updateEmailTemplate', [GophishController::class, 'updateEmailTemplate'])->name('updateEmailTemplate');
         Route::post('/deleteEmailTemplate', [GophishController::class, 'deleteEmailTemplate'])->name('deleteEmailTemplate');
         Route::post('/activateEmailTemplate', [GophishController::class, 'activateEmailTemplate'])->name('activateEmailTemplate');
+        Route::get('/downloadEmailAttachment', [GophishController::class, 'downloadEmailAttachment'])->name('downloadEmailAttachment');
     });
 
     Route::group(['prefix' => 'sending-profile'], function () {

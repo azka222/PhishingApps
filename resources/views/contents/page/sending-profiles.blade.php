@@ -519,7 +519,8 @@
             })
         }
 
-        function testMail() {
+        async function testMail() {
+            preventDoubleClick('button-for-test-profile', true);
             Swal.fire({
                 title: 'Testing...',
                 text: 'Please wait while we test your input.',
@@ -546,7 +547,11 @@
                     header_value
                 });
             });
-            let timeout = setTimeout(() => {
+            let isTimedOut = false;
+
+            let timeout = await setTimeout(() => {
+                isTimedOut = true;
+                return;
                 Swal.close();
                 Swal.fire({
                     icon: "error",
@@ -555,67 +560,75 @@
                     confirmButtonColor: '#10b981',
                     confirmButtonText: 'Close'
                 });
+               
             }, 10000);
-            $.ajax({
-                url: "{{ route('testSendingProfile') }}",
-                type: "POST",
-                data: {
-                    _token: "{{ csrf_token() }}",
-                    profile_name,
-                    interface_type,
-                    email_smtp,
-                    host,
-                    ignore_certificate,
-                    username,
-                    password,
-                    http_headers,
-                    target_email,
-                    target_name
-
-                },
-                success: function(response) {
-                    clearTimeout(timeout);
-                    Swal.close();
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Success',
-                        text: 'Success! The test email has been sent successfully!',
-                        confirmButtonColor: '#10b981',
-                        confirmButtonText: 'Close'
-
-                    });
-                    hideModal('test-connection-modal');
-                },
-                error: function(xhr) {
-                    clearTimeout(timeout);
-                    Swal.close();
-                    if (xhr.status === 422) {
-                        var errorMessage = JSON.parse(xhr.responseText) ? JSON.parse(xhr.responseText) : xhr
-                            .responseText;
-                        var errors = errorMessage.message ? errorMessage.message : errorMessage;
-                        $('#error_message_field_mail').show();
-                        $('#error_message_mail').empty();
-                        $('#error_message_mail').append(`<li>${errors}</li>`);
-                    } else {
-                        let errorMessage = JSON.parse(xhr.responseText);
+            if (!isTimedOut) {
+                await $.ajax({
+                    url: "{{ route('testSendingProfile') }}",
+                    type: "POST",
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        profile_name,
+                        interface_type,
+                        email_smtp,
+                        host,
+                        ignore_certificate,
+                        username,
+                        password,
+                        http_headers,
+                        target_email,
+                        target_name
+                    },
+                    success: function(response) {
+                        preventDoubleClick('button-for-test-profile', false);
+                        clearTimeout(timeout);
+                        Swal.close();
                         Swal.fire({
-                            icon: "error",
-                            title: "Error",
-                            text: errorMessage.error,
+                            icon: 'success',
+                            title: 'Success',
+                            text: 'Success! The test email has been sent successfully!',
                             confirmButtonColor: '#10b981',
                             confirmButtonText: 'Close'
                         });
-                        console.log(errorMessage)
-                    }
-                }
-            })
+                        hideModal('test-connection-modal');
+                    },
+                    error: function(xhr) {
+                        if (!isTimedOut) {
+                            clearTimeout(timeout);
+                            Swal.close();
+                            if (xhr.status === 422) {
+                                var errorMessage = JSON.parse(xhr.responseText) ? JSON.parse(xhr
+                                        .responseText) :
+                                    xhr.responseText;
+                                var errors = errorMessage.message ? errorMessage.message : errorMessage;
+                                $('#error_message_field_mail').show();
+                                $('#error_message_mail').empty();
+                                $('#error_message_mail').append(`<li>${errors}</li>`);
+                            } else {
+                                let errorMessage = JSON.parse(xhr.responseText);
+                                Swal.fire({
+                                    icon: "error",
+                                    title: "Error",
+                                    text: errorMessage.error,
+                                    confirmButtonColor: '#10b981',
+                                    confirmButtonText: 'Close'
+                                });
+                                console.log(errorMessage);
+                            }
+                        }
+                    },
+                    timeout: 10000;
+                });
+            }
+
+
         }
 
         function showTestModal() {
             showModal('test-connection-modal');
             $("#error_message_field_mail").hide();
             $("#test_name").val("");
-            $("#test_email").val("");   
+            $("#test_email").val("");
         }
     </script>
 @endsection
