@@ -27,7 +27,7 @@ class GroupController extends Controller
     {
         $response = Http::withHeaders([
             'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
-        ])->get($this->url . $module);
+        ])->get("{$this->url}/{$module}");
         $existingIds = collect($response->json())->pluck('id');
         $newId       = $existingIds->max() + 1;
         return $newId;
