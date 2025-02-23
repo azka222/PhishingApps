@@ -77,7 +77,7 @@ class GophishController extends Controller
     {
         $response = Http::withHeaders([
             'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
-        ])->get('http://127.0.0.1:3333/api/' . $module);
+        ])->get("{$this->url}/{$module}");
         $existingIds = collect($response->json())->pluck('id');
         $newId       = $existingIds->max() + 1;
         return $newId;
