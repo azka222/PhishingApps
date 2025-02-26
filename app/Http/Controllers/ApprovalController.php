@@ -19,7 +19,7 @@ class ApprovalController extends Controller
     {
         $response = Http::withHeaders([
             'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
-        ])->get('http://127.0.0.1:3333/api/' . $module);
+        ])->get("{$this->url}/$module/");
         $existingIds = collect($response->json())->pluck('id');
         $newId       = $existingIds->max() + 1;
         return $newId;
@@ -99,13 +99,16 @@ class ApprovalController extends Controller
             if ($request->status == 2) {
                 $jsonData = json_decode($campaign->data);
                 $newId    = $this->getIdFromGophish('campaigns');
-                $jsonData->name .= " -+-$newId";
-
+                $jsonData->name .= " -+- $newId";
+                if($jsonData->send_by_date == null){
+                    $jsonData->send_by_date =$jsonData->launch_date;
+                }
+    
                 $response = Http::withHeaders([
                     'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
                 ])->post("{$this->url}/campaigns/", $jsonData);
-
                 if ($response->successful() && $response != [] && $response->json() != []) {
+                  
                     $idGophish                    = $response->json()['id'];
                     $companyCampaign              = new CompanyCampaign();
                     $companyCampaign->company_id  = $request->company_id;

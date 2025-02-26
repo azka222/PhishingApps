@@ -111,10 +111,10 @@
         let groups = [];
         let campaigns = [];
 
-        $(document).ready(function() {
+         $(document).ready(function() {
             $("#status").val(2);
-            getCampaigns();
-            getCampaignsResources();
+             getCampaigns();
+             getCampaignsResources();
         });
 
         function showAddCampaignModal() {
@@ -122,8 +122,8 @@
             $("#error_message_field").hide();
         }
 
-        function getCampaignsResources() {
-            $.ajax({
+        async function getCampaignsResources() {
+           await $.ajax({
                 url: "{{ route('getCampaignResources') }}",
                 type: "GET",
                 success: function(response) {
@@ -191,6 +191,7 @@
         }
 
         function copyGroupToCampaign(name) {
+            $("#group-list").empty();
             let tempGroup = groups.find(group => group.name.trim() == name.trim());
             if (!tempGroup) {
                 return;
@@ -367,12 +368,12 @@
 
         }
 
-        function getCampaigns(page = 1) {
+        async function getCampaigns(page = 1) {
             let show = $("#show").val();
             let search = $("#search").val();
             let status = $("#status").val();
             let company = $("#companyCheckAdmin").val();
-            $.ajax({
+           await $.ajax({
                 url: "{{ route('getCampaigns') }}?page=" + page,
                 type: "GET",
                 data: {
