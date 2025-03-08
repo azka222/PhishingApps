@@ -100,13 +100,10 @@ class ApprovalController extends Controller
                 $jsonData = json_decode($campaign->data);
                 $newId    = $this->getIdFromGophish('campaigns');
                 $jsonData->name .= " -+- $newId";
-                if($jsonData->send_by_date == null){
-                    $jsonData->send_by_date =$jsonData->launch_date;
-                }
-    
                 $response = Http::withHeaders([
                     'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
                 ])->post("{$this->url}/campaigns/", $jsonData);
+                    
                 if ($response->successful() && $response != [] && $response->json() != []) {
                   
                     $idGophish                    = $response->json()['id'];

@@ -113,8 +113,8 @@
 
          $(document).ready(function() {
             $("#status").val(2);
-             getCampaigns();
-             getCampaignsResources();
+              getCampaigns();
+              getCampaignsResources();
         });
 
         function showAddCampaignModal() {
