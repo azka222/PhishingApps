@@ -111,19 +111,20 @@
         let groups = [];
         let campaigns = [];
 
-         $(document).ready(function() {
+        $(document).ready(function() {
             $("#status").val(2);
-              getCampaigns();
-              getCampaignsResources();
+            getCampaigns();
+
         });
 
-        function showAddCampaignModal() {
+        async function showAddCampaignModal() {
             showModal('add-campaign-modal');
+            await getCampaignsResources();
             $("#error_message_field").hide();
         }
 
         async function getCampaignsResources() {
-           await $.ajax({
+            await $.ajax({
                 url: "{{ route('getCampaignResources') }}",
                 type: "GET",
                 success: function(response) {
@@ -373,7 +374,7 @@
             let search = $("#search").val();
             let status = $("#status").val();
             let company = $("#companyCheckAdmin").val();
-           await $.ajax({
+            await $.ajax({
                 url: "{{ route('getCampaigns') }}?page=" + page,
                 type: "GET",
                 data: {
@@ -643,10 +644,10 @@
 
         }
 
-        function showNotes(id){
+        function showNotes(id) {
             showModal('notes-modal');
             let notes = campaigns.find(campaign => campaign.id == id).notes;
-            if(!notes){
+            if (!notes) {
                 notes = 'Campaign has been rejected';
             }
             $("#campaign_notes").val(notes);
