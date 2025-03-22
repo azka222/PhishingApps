@@ -599,6 +599,7 @@
             })
         }
 
+        
          function copyCampaign(id) {
             let tempCampaign = campaigns.find(campaign => campaign.id == id);
             let data = JSON.parse(tempCampaign.data);
