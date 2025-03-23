@@ -100,6 +100,7 @@
                                 <th scope="col" class="p-4">Position</th>
                                 <th scope="col" class="p-4">Department</th>
                                 <th scope="col" class="p-4">Email</th>
+                                <th scope="col" class="p-4">Account</th>
                                 @CanModifyTarget()
                                 <th scope="col" class="p-4">Action</th>
                                 @endCanModifyTarget()
@@ -244,6 +245,11 @@
                     let department = `<div class="${color} text-xs font-medium me-2 px-2.5 py-0.5 rounded inline-block">
                                                 ${target.department.name}
                                             </div>`;
+                    let createdAccount = target.createdAccount ? `<div class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300 inline-block">
+                                                True
+                                            </div>` : `<div class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300 inline-block">
+                                                False
+                                            </div>`;
                     $("#list-targets-tbody").append(`
                     <tr class="text-xs md:text-sm font-light text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800">
                         <td class="p-4">${target.first_name}</td>
@@ -251,6 +257,7 @@
                         <td class="p-4">${target.position.name}</td>
                         <td class="p-4">${department}</td>
                         <td class="p-4">${target.email}</td>
+                        <td class="p-4">${createdAccount}</td>
                         @CanModifyTarget()
                         <td class="p-4 flex gap-2">
                             @CanUpdateTarget()
