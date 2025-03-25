@@ -37,7 +37,8 @@ Route::group(['middleware' => 'guest'], function () {
         event(new Verified($user));
         return redirect()->route('login')->with('message', 'Email verified successfully.');
     })->middleware(['signed'])->name('verification.verify');
-
+    Route::post('/loginEmployee', [AuthenticateController::class, 'loginEmployee'])->name('loginEmployee');
+    Route::post('/sendEmployeeOTP', [AuthenticateController::class, 'sendEmployeeOTP'])->name('sendEmployeeOTP');
     Route::get('/login', [ViewController::class, 'loginView'])->name('loginView');
     Route::get('/register', [ViewController::class, 'registerView'])->name('registerView');
     Route::post('/login', [AuthenticateController::class, 'login'])->name('login');

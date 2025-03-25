@@ -108,6 +108,18 @@
                                     placeholder="Enter your email" required />
 
                             </div>
+                            <div class="pt-8">
+                                <div id="error_message_field_login_employee" hidden>
+                                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg shadow-md relative"
+                                        role="alert">
+                                        <strong class="font-bold">Whoops!</strong>
+                                        <span class="block sm:inline">There were some problems with your input.</span>
+                                        <ul id="error_message_login_employee"class="mt-3 list-disc list-inside text-sm">
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="mt-4">
                                 <button onclick="sendEmployeeOTP()"
                                     class="w-full text-xs md:text-sm bg-greyishBlue text-white py-3 rounded-lg hover:bg-blue-500 transition duration-300 ease-in-out">Generate
@@ -214,7 +226,76 @@
         }
 
         function sendEmployeeOTP() {
-            showModal('otp-modal');
+            $.ajax({
+                url: "{{ route('sendEmployeeOTP') }}",
+                type: 'POST',
+                data: {
+                    email: $('#employee_email').val(),
+                    "_token": "{{ csrf_token() }}"
+                },
+                success: function(response) {
+                    $("#error_message_field_login_employee").hide();
+                    $("#error_message_field_login_employee").empty();
+                    Swal.fire({
+                        title: 'OTP Sent',
+                        text: 'Please check your email for the OTP.',
+                        icon: 'success',
+                        confirmButtonText: 'Ok',
+                        confirmButtonColor: '#10b981',
+
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            showModal('otp-modal');
+                        }
+                    });
+
+                },
+                error: function(xhr, status, error) {
+                    console.log(xhr.responseText);
+                    var errorMessage = JSON.parse(xhr.responseText) ? JSON.parse(xhr.responseText) : xhr
+                        .responseText;
+                    var errors = errorMessage.message;
+                    $('#error_message_field_login_employee').show();
+                    $('#error_message_login_employee').empty();
+                    if (errors) {
+                        $('#error_message_login_employee').append('<li>' + errors + '</li>');
+                    }
+                }
+            })
+        }
+
+        function loginEmployee(){
+            let email = $("#employee_email").val();
+            let otp = $("#otp-1").val() + $("#otp-2").val() + $("#otp-3").val() + $("#otp-4").val() + $("#otp-5").val() +
+            $("#otp-6").val();
+            $.ajax({
+                url: "{{ route('loginEmployee') }}",
+                type: 'POST',
+                data: {
+                    email: email,
+                    otp: otp,
+                    "_token": "{{ csrf_token() }}"
+                },
+                success: function(response) {
+                    console.log('MASUK ANJING TAI MEMEK')
+                },
+                error: function(xhr, status, error) {
+                    console.log(xhr.responseText);
+                    var errorMessage = JSON.parse(xhr.responseText) ? JSON.parse(xhr.responseText) : xhr
+                        .responseText;
+                    var errors = errorMessage.message;
+                    
+                    if (errors) {
+                        Swal.fire({
+                            title: 'Error',
+                            text: errors,
+                            icon: 'error',
+                            confirmButtonText: 'Ok',
+                            confirmButtonColor: '#10b981',
+                        })
+                    }
+                }
+            })
         }
     </script>
 

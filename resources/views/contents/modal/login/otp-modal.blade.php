@@ -5,17 +5,17 @@
         <p class="text-sm text-gray-400 mb-6 text-center">Please enter the 6-digit code sent to your email.</p>
         <div class="flex justify-center space-x-2">
             <input type="text" maxlength="1" id="otp-1"
-                class="otp-input w-10 h-12 text-center border border-gray-600 bg-white text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                class="otp-input w-10 h-12 text-center border border-gray-600 bg-white text-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
             <input type="text" maxlength="1" id="otp-2"
-                class="otp-input w-10 h-12 text-center border border-gray-600 bg-white text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                class="otp-input w-10 h-12 text-center border border-gray-600 bg-white text-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
             <input type="text" maxlength="1" id="otp-3"
-                class="otp-input w-10 h-12 text-center border border-gray-600 bg-white text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                class="otp-input w-10 h-12 text-center border border-gray-600 bg-white text-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
             <input type="text" maxlength="1" id="otp-4"
-                class="otp-input w-10 h-12 text-center border border-gray-600 bg-white text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                class="otp-input w-10 h-12 text-center border border-gray-600 bg-white text-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
             <input type="text" maxlength="1" id="otp-5"
-                class="otp-input w-10 h-12 text-center border border-gray-600 bg-white text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                class="otp-input w-10 h-12 text-center border border-gray-600 bg-white text-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
             <input type="text" maxlength="1" id="otp-6"
-                class="otp-input w-10 h-12 text-center border border-gray-600 bg-white text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                class="otp-input w-10 h-12 text-center border border-gray-600 bg-white text-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
         </div>
         <p class="text-sm text-gray-400 mt-4 text-center">Didn't receive the code? <a onclick="resendOTP()"
                 class="text-blue-500">Resend</a></p>
