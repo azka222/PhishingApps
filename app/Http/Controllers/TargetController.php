@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\FileHelper;
 use App\Http\Controllers\Controller;
+use App\Models\EmployeeAccount;
 use App\Models\Target;
 use App\Models\TargetDepartment;
 use App\Models\TargetPosition;
@@ -64,11 +65,12 @@ class TargetController extends Controller
     {
         if (Gate::allows('CanCreateTarget')) {
             $request->validate([
-                'first_name' => 'required|string|max:50',
-                'last_name'  => 'required|string|max:50',
-                'department' => 'required|integer|exists:target_departments,id',
-                'email'      => 'required|email|unique:targets,email',
-                'position'   => 'required|integer|exists:target_positions,id',
+                'first_name'    => 'required|string|max:50',
+                'last_name'     => 'required|string|max:50',
+                'department'    => 'required|integer|exists:target_departments,id',
+                'email'         => 'required|email|unique:targets,email',
+                'position'      => 'required|integer|exists:target_positions,id',
+                'createAccount' => 'required|',
             ]);
 
             if (auth()->user()->adminCheck()) {
@@ -84,6 +86,14 @@ class TargetController extends Controller
             $target->email         = $request->email;
             $target->position_id   = $request->position;
             $target->company_id    = auth()->user()->adminCheck() ? $request->company : auth()->user()->company_id;
+            $target->save();
+
+            if ($request->createAccount) {
+                $account            = new EmployeeAccount();
+                $account->target_id = $target->id;
+                $account->save();
+                $target->account = true;
+            }
             $target->save();
 
             return response()->json([

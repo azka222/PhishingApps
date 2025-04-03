@@ -92,7 +92,7 @@
                                 <div class="flex flex-row justify-between">
                                     <div class="flex flex-row items-center justify-start ps-2 md:ps-4 gap-8 ">
                                         <div class="h-full flex items-center hidden md:flex">
-                                            <img src="{{ asset('image/user.png') }}" class="w-20 h-20 rounded-full">
+                                            <img src="{{ Avatar::create($name)->toBase64() }}" class="w-20 h-20 rounded-full">
                                         </div>
                                         <div class="h-full flex gap-4 items-center">
                                             <div>

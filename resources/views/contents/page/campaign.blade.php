@@ -114,16 +114,17 @@
         $(document).ready(function() {
             $("#status").val(2);
             getCampaigns();
-            getCampaignsResources();
+
         });
 
-        function showAddCampaignModal() {
+        async function showAddCampaignModal() {
             showModal('add-campaign-modal');
+            await getCampaignsResources();
             $("#error_message_field").hide();
         }
 
-        function getCampaignsResources() {
-            $.ajax({
+        async function getCampaignsResources() {
+            await $.ajax({
                 url: "{{ route('getCampaignResources') }}",
                 type: "GET",
                 success: function(response) {
@@ -189,25 +190,26 @@
                 `);
             setGroupSelection();
         }
-
-        function copyGroupToCampaign(name) {
+        async function copyGroupToCampaign(name) {
+            $("#group-list").empty();
             let tempGroup = groups.find(group => group.name.trim() == name.trim());
             if (!tempGroup) {
-                return;
+            return;
             }
             $("#group-list").append(`
-                        <div class="group-campaign flex items-center justify-between mb-4 shadow-md p-3 rounded-xl"
-                            value="${tempGroup.id}" id="group_member_${tempGroup.id}">
-                            <div class="flex flex-col gap-1">
-                                <p class="text-xs font-semibold text-gray-800 dark:text-gray-200">${tempGroup.name}</p>
-                            </div>
-                            <div>
-                                <button type="button" data-value="${tempGroup.id}" onclick="removeGroup(${tempGroup.id})"
-                                    class="remove-user focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-xs px-5 py-2.5 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Remove</button>
+                <div class="group-campaign flex items-center justify-between mb-4 shadow-md p-3 rounded-xl"
+                    value="${tempGroup.id}" id="group_member_${tempGroup.id}">
+                    <div class="flex flex-col gap-1">
+                    <p class="text-xs font-semibold text-gray-800 dark:text-gray-200">${tempGroup.name}</p>
+                    </div>
+                    <div>
+                    <button type="button" data-value="${tempGroup.id}" onclick="removeGroup(${tempGroup.id})"
+                        class="remove-user focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-xs px-5 py-2.5 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Remove</button>
 
-                            </div>
-                        </div>
-                `);
+                    </div>
+                </div>
+            `);
+            
             setGroupSelection();
         }
 
@@ -367,12 +369,12 @@
 
         }
 
-        function getCampaigns(page = 1) {
+        async function getCampaigns(page = 1) {
             let show = $("#show").val();
             let search = $("#search").val();
             let status = $("#status").val();
             let company = $("#companyCheckAdmin").val();
-            $.ajax({
+            await $.ajax({
                 url: "{{ route('getCampaigns') }}?page=" + page,
                 type: "GET",
                 data: {
@@ -597,7 +599,8 @@
             })
         }
 
-        function copyCampaign(id) {
+        
+         function copyCampaign(id) {
             let tempCampaign = campaigns.find(campaign => campaign.id == id);
             let data = JSON.parse(tempCampaign.data);
             console.log(data);
@@ -637,15 +640,15 @@
             });
 
             data.groups.forEach(group => {
-                copyGroupToCampaign(group.name.split('-+-')[0]);
+                 copyGroupToCampaign(group.name.split('-+-')[0]);
             });
 
         }
 
-        function showNotes(id){
+        function showNotes(id) {
             showModal('notes-modal');
             let notes = campaigns.find(campaign => campaign.id == id).notes;
-            if(!notes){
+            if (!notes) {
                 notes = 'Campaign has been rejected';
             }
             $("#campaign_notes").val(notes);

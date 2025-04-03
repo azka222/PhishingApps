@@ -6,15 +6,14 @@ use App\Jobs\ForgotPasswordJob;
 use App\Jobs\SendOTPJob;
 use App\Jobs\SendRegistrationEmailJob;
 use App\Jobs\SendVerificationEmailJob;
-use App\Mail\OtpEmail;
-use App\Mail\ResetPasswordMail;
 use App\Models\Company;
+use App\Models\EmployeeAccount;
 use App\Models\ModuleAbility;
 use App\Models\Role;
+use App\Models\Target;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\ValidationException;
 
 class AuthenticateController extends Controller
@@ -250,6 +249,58 @@ class AuthenticateController extends Controller
         $user->otp_expired_at = null;
         $user->save();
         return response()->json(['message' => 'Password has been reset successfully.']);
+    }
+
+    public function sendEmployeeOTP(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+        ]);
+
+        $user = Target::where('email', $request->email)->where('account', 1)->first();
+        if (! $user) {
+            return response()->json(['message' => 'User not found'], 400);
+        }
+        $id      = $user->id;
+        $account = EmployeeAccount::where('target_id', $id)->first();
+        if (! $account) {
+            return response()->json(['message' => 'User not found'], 400);
+        }
+        $otp                     = rand(100000, max: 999999);
+        $account->otp            = $otp;
+        $account->otp_expired_at = Carbon::now()->addMinutes(5);
+        $account->save();
+        SendOTPJob::dispatch($user->email, $otp);
+        return response()->json(['message' => 'OTP sent successfully!']);
+    }
+
+    public function loginEmployee(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'otp'   => 'required|string', 
+        ]);
+
+        $user = Target::where('email', $request->email)->where('account', 1)->first();
+        if (! $user) {
+            throw ValidationException::withMessages([
+                'email' => ['Cannot find user with provided credentials'],
+            ]);
+        }
+        $account = EmployeeAccount::where('target_id', $user->id)->first();
+        if (! $account) {
+            throw ValidationException::withMessages([
+                'email' => ['Cannot find user with provided credentials'],
+            ]);
+        }
+        if ($account->otp_expired_at < Carbon::now()) {
+            return response()->json(['message' => 'OTP is expired'], 400);
+        }
+        if ($account->otp != $request->otp) {
+            return response()->json(['message' => 'Invalid OTP'], 400);
+        }
+        
+        return response()->json(['message' => 'Login successful'], 200);
     }
 
 }

@@ -77,7 +77,7 @@ class GophishController extends Controller
     {
         $response = Http::withHeaders([
             'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
-        ])->get('http://127.0.0.1:3333/api/' . $module);
+        ])->get("{$this->url}/{$module}");
         $existingIds = collect($response->json())->pluck('id');
         $newId       = $existingIds->max() + 1;
         return $newId;
@@ -1035,7 +1035,7 @@ class GophishController extends Controller
                 'template'   => 'required|integer|exists:email_template_companies,template_id',
                 'page'       => 'required|integer',
                 'launchDate' => 'required|date',
-                'end_date'   => 'nullable|date',
+                'endDate'   => 'nullable|date',
                 'url'        => 'required|url',
                 'status'     => 'required|in:1,0',
                 'profile'    => 'required|integer|exists:sending_profile_companies,sending_profile_id',
@@ -1046,7 +1046,7 @@ class GophishController extends Controller
             $launchDate->modify('-7 hours');
             $launchDate->setTimezone(new DateTimeZone('Asia/Jakarta'));
             $formattedLaunchDate = $launchDate->format('Y-m-d\TH:i:s.uP');
-            $end_date            = $request->end_date && $request->end_date != null ? new DateTime($request->end_date) : null;
+            $end_date            = $request->endDate && $request->endDate != null ? new DateTime($request->endDate) : null;
             if ($end_date) {
                 $end_date->modify('-7 hours');
                 $end_date->setTimezone(new DateTimeZone('Asia/Jakarta'));
@@ -1091,7 +1091,12 @@ class GophishController extends Controller
                 'send_by_date' => $formattedEndDate,
                 'groups'       => $groupName,
             ];
-
+         
+            if($formattedEndDate == null){
+                $jsonData['send_by_date'] = $formattedLaunchDate;
+                $jsonData['completed_date'] = $formattedLaunchDate;
+            }
+            
             $campaign             = new Campaign();
             $campaign->data       = json_encode($jsonData);
             $campaign->company_id = auth()->user()->company_id;
@@ -1269,6 +1274,11 @@ class GophishController extends Controller
         Mail::to($companyOwner)->send(new ApprovalMail($campaign));
 
         return response()->json(['message' => 'Approval email sent successfully!']);
+    }
+
+    public function downloadEmailAttachment(){
+        $path = storage_path('attachment/email-attachment.pdf');
+        return response()->download($path, 'email-attachment.pdf');
     }
 
 }

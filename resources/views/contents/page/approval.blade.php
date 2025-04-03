@@ -121,7 +121,7 @@
                                     minute: '2-digit'
                                 });
                             let addressName = tempApproval.smtp['name'].split('-+-')[0];
-                            let pageName = tempApproval.page['name'];
+                            let pageName = tempApproval.page['name'].split('-+-')[0];
                             let templateName = tempApproval.template['name'].split('-+-')[0];
                             let group = `
                                         <td class="relative group p-4 ">
@@ -204,6 +204,8 @@
         function showActionModal(id) {
             $("#campaign_id").val(id);
             $("#company_id").val(approvals.find(approval => approval.id == id).company_id);
+            $("input[name='default-radio']").prop('checked', false);
+            $("#message").val('');
             showModal('action-approval-modal');
 
         }
@@ -261,8 +263,7 @@
             let notes = approvals.find(approval => approval.id == id).notes;
             if (notes) {
                 $("#campaign_notes").val(notes);
-            }
-            else{
+            } else {
                 $("#campaign_notes").val('Campaign has been rejected');
             }
             $("#campaign_notes").attr('disabled', true);

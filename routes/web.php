@@ -37,7 +37,8 @@ Route::group(['middleware' => 'guest'], function () {
         event(new Verified($user));
         return redirect()->route('login')->with('message', 'Email verified successfully.');
     })->middleware(['signed'])->name('verification.verify');
-
+    Route::post('/loginEmployee', [AuthenticateController::class, 'loginEmployee'])->name('loginEmployee');
+    Route::post('/sendEmployeeOTP', [AuthenticateController::class, 'sendEmployeeOTP'])->name('sendEmployeeOTP');
     Route::get('/login', [ViewController::class, 'loginView'])->name('loginView');
     Route::get('/register', [ViewController::class, 'registerView'])->name('registerView');
     Route::post('/login', [AuthenticateController::class, 'login'])->name('login');
@@ -118,6 +119,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         Route::post('/updateEmailTemplate', [GophishController::class, 'updateEmailTemplate'])->name('updateEmailTemplate');
         Route::post('/deleteEmailTemplate', [GophishController::class, 'deleteEmailTemplate'])->name('deleteEmailTemplate');
         Route::post('/activateEmailTemplate', [GophishController::class, 'activateEmailTemplate'])->name('activateEmailTemplate');
+        Route::get('/downloadEmailAttachment', [GophishController::class, 'downloadEmailAttachment'])->name('downloadEmailAttachment');
     });
 
     Route::group(['prefix' => 'sending-profile'], function () {

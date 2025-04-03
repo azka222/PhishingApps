@@ -540,5 +540,14 @@
                 let emailTemplate = emailTemplates.find(x => x.id === id);
                 console.log(emailTemplate);
             }
+
+            function downloadAttachment(){
+                $.ajax({
+                    url: "{{ route('downloadEmailAttachment') }}",
+                    type: 'GET',
+                    success: function(response) {
+                    }
+                });
+            }
         </script>
     @endsection

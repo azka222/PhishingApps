@@ -100,6 +100,7 @@
                                 <th scope="col" class="p-4">Position</th>
                                 <th scope="col" class="p-4">Department</th>
                                 <th scope="col" class="p-4">Email</th>
+                                <th scope="col" class="p-4">Account</th>
                                 @CanModifyTarget()
                                 <th scope="col" class="p-4">Action</th>
                                 @endCanModifyTarget()
@@ -244,6 +245,11 @@
                     let department = `<div class="${color} text-xs font-medium me-2 px-2.5 py-0.5 rounded inline-block">
                                                 ${target.department.name}
                                             </div>`;
+                    let createdAccount = target.account ? `<div class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300 inline-block">
+                                                True
+                                            </div>` : `<div class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300 inline-block">
+                                                False
+                                            </div>`;
                     $("#list-targets-tbody").append(`
                     <tr class="text-xs md:text-sm font-light text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800">
                         <td class="p-4">${target.first_name}</td>
@@ -251,10 +257,11 @@
                         <td class="p-4">${target.position.name}</td>
                         <td class="p-4">${department}</td>
                         <td class="p-4">${target.email}</td>
+                        <td class="p-4">${createdAccount}</td>
                         @CanModifyTarget()
                         <td class="p-4 flex gap-2">
                             @CanUpdateTarget()
-                            <button onclick="showUpdateTargetModal(${target.id}, '${target.first_name}', '${target.last_name}','${target.email}', '${target.position.id}', '${target.department.id}')"
+                            <button onclick="showUpdateTargetModal(${target.id}, '${target.first_name}', '${target.last_name}','${target.email}', '${target.position.id}', '${target.department.id}', '${target.account}')"
                                 class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">Update</button>
                             @endCanUpdateTarget()
                             @CanDeleteTarget()
@@ -318,12 +325,13 @@
             showModal('add-target-modal');
         }
 
-        function showUpdateTargetModal(id, firstName, lastName, email, position, department) {
+        function showUpdateTargetModal(id, firstName, lastName, email, position, department, account) {
             $("#target_first_name").val(firstName);
             $("#target_last_name").val(lastName);
             $("#target_email").val(email);
             $("#target_department").val(department);
             $("#target_position").val(position);
+            $("#create_account").prop('checked', account == 1 ? true : false);  
             $("#title-add-target-modal").text('Update Target');
             $("#button-for-target").removeAttr('onclick').attr('onclick', `updateTarget(${id})`);
             $("#button-for-target").text('Update');
@@ -341,6 +349,7 @@
             let position = $('#target_position').val();
             let department = $('#target_department').val();
             let company = $('#admin_company_input').val() == '' ? '' : $('#admin_company_input').val();
+            let createAccount = $('#create_account').is(':checked') ? 1 : 0;
 
             $.ajax({
                 url: "{{ route('createTarget') }}",
@@ -352,7 +361,8 @@
                     position: position,
                     department: department,
                     _token: "{{ csrf_token() }}",
-                    company: company
+                    company: company,
+                    createAccount: createAccount
                 },
                 success: function(response) {
                     preventDoubleClick('button-for-target', false);
@@ -389,6 +399,7 @@
             let email = $('#target_email').val();
             let position = $('#target_position').val();
             let department = $('#target_department').val();
+            let account = $('#create_account').is(':checked') ? 1 : 0;
 
             $.ajax({
                 url: "{{ route('updateTarget') }}",
@@ -400,6 +411,7 @@
                     email: email,
                     position: position,
                     department: department,
+                    account: account,
                     _token: "{{ csrf_token() }}"
                 },
                 success: function(response) {
