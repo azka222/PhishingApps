@@ -147,6 +147,7 @@
                     $('#email-template-name').text(response.template.name);
                     $('#campaign-total-target').text(response.results ? response.results.length : 'Not Set');
                     $('#campaign-status').text(response.status);
+
                     let dataEmailSent = calculateEmailSent(response.results);
                     getEmailSentChart(dataEmailSent.emailSent, dataEmailSent.emailNotSent, dataEmailSent
                         .totalEmail);
@@ -165,7 +166,7 @@
 
                     $('#list-campaign-tbody').empty();
                     let targetUsers = response.paginated_results;
-                    
+
                     Object.values(targetUsers).forEach(function(result) {
                         let status = result.status;
                         let reported = result.reported;
@@ -206,7 +207,7 @@
                                 <span class="px-2 inline-flex text-xs leading-5 dark:text-white font-semibold rounded-full ${reportedColor}">
                                     ${reportedText}
                                 </span>
-                            </td> 
+                            </td>
                         </tr>`;
                         $('#list-campaign-tbody').append(html);
                     });
@@ -270,6 +271,9 @@
                 if (result.status != "Scheduled") {
                     tempSent++;
                 }
+                if(result.status == "Error" || campaign.status == "Queued"){
+                    tempSent = 0;
+                }
             });
             tempNotSent = tempTotal - tempSent;
             return {
@@ -286,6 +290,9 @@
             results.forEach(function(result) {
                 if (result.status != "Scheduled" && result.status != "Email Sent") {
                     tempOpened++;
+                }
+                if(result.status == "Error" || campaign.status == "Queued"){
+                    tempOpened = 0;
                 }
             });
             tempNotOpen = tempTotal - tempOpened;
