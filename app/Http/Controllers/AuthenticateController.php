@@ -284,5 +284,5 @@ class AuthenticateController extends Controller
         
         return response()->json(['message' => 'Login successful'], 200);
     }
-
+    
 }
