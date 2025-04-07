@@ -96,7 +96,6 @@ class ViewController extends Controller
         return view('contents.page.landing-page');
     }
 
-
     public function emailTemplatesView()
     {
         if (! auth()->user()->haveAccess('Email Template', 'read')) {
@@ -174,6 +173,20 @@ class ViewController extends Controller
         Log::info('Companies:', ['companies' => $companies]);
         if (Gate::allows('IsAdmin')) {
             return view('contents.modal.admin.update-company-admin', ['companies' => $companies]);
+        }
+    }
+
+    public function employeeDashboardView()
+    {
+        if (auth()->user()->employee) {
+            return view('contents.page.course.employee-dashboard');
+        }
+    }
+
+    public function courseListsView()
+    {
+        if (auth()->user()->employee) {
+            return view('contents.page.course.course-list');
         }
     }
 

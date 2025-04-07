@@ -3,10 +3,13 @@ namespace App\Http\Controllers;
 
 use App\Helpers\FileHelper;
 use App\Http\Controllers\Controller;
-use App\Models\EmployeeAccount;
 use App\Models\Target;
 use App\Models\TargetDepartment;
 use App\Models\TargetPosition;
+use App\Models\User;
+use App\Jobs\SendAccountCredentials;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
@@ -87,12 +90,32 @@ class TargetController extends Controller
             $target->position_id   = $request->position;
             $target->company_id    = auth()->user()->adminCheck() ? $request->company : auth()->user()->company_id;
             $target->save();
+            
 
             if ($request->createAccount) {
-                $account            = new EmployeeAccount();
-                $account->target_id = $target->id;
-                $account->save();
-                $target->account = true;
+                $existingUser = User::where('email', $request->email)->first();
+
+                if (! $existingUser) {
+                    $password = Str::random(12);
+                    // $user = User::create([
+                    //     'first_name' => $request->first_name,
+                    //     'last_name'  => $request->last_name,
+                    //     'email'    => $request->email,
+                    //     'password' => Hash::make($password),
+                    //     'employee' => true, 
+                    // ]);
+                    $user = new User();
+                    $user->first_name = $request->first_name;
+                    $user->last_name  = $request->last_name;
+                    $user->email      = $request->email;
+                    $user->password   = Hash::make($password);
+                    $user->phone = '081234567890';
+                    $user->gender = 'aaa';
+                    $user->employee   = 1;
+                    $user->company_id = auth()->user()->adminCheck() ? $request->company : auth()->user()->company_id;
+                    $user->save();
+                    SendAccountCredentials::dispatch( $user->email, $password, $user->first_name);
+                }
             }
             $target->save();
 
