@@ -139,6 +139,14 @@ class AppServiceProvider extends ServiceProvider
             return auth()->user()->haveAccessApproval();
         });
 
+        Blade::if('CanAccessEmployeeDashboard', function () {
+            return auth()->user()->employee;
+        });
+
+        Blade::if('CanAccessCourse', function () {
+            return auth()->user()->employee;
+        });
+
         // Gate
         Gate::define('IsAdmin', function ($user) {
             return $user->is_admin;
@@ -250,6 +258,9 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('HaveAccessApproval', function ($user) {
             return $user->haveAccessApproval();
         });
+
+
+        
 
     }
 }

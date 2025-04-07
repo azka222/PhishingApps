@@ -25,6 +25,12 @@ class ViewServiceProvider extends ServiceProvider
             $view->with('name', $name);
         });
 
+        view()->composer('layouts.employee-header', function ($view) {
+            $user = auth()->user();
+            $name = $user->first_name . ' ' . $user->last_name;
+            $view->with('name', $name);
+        });
+
         view()->composer('contents.page.user-setting', function($view){
             $user = auth()->user();
             $name = $user->first_name . ' ' . $user->last_name;

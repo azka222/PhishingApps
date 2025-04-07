@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('employee_accounts', function (Blueprint $table) {
-            $table->string('otp')->nullable();
-            $table->dateTime('otp_expired_at')->nullable();
+        Schema::table('users', function (Blueprint $table) {
+            $table->boolean('employee')->nullable()->default(false);
+            $table->boolean('reset_password')->nullable()->default(false);
         });
     }
 
@@ -22,9 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('employee_accounts', function (Blueprint $table) {
-            $table->dropColumn('otp');
-            $table->dropColumn('otp_expired_at');
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('employee');
         });
     }
 };

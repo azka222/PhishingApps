@@ -93,11 +93,22 @@ class User extends Authenticatable implements MustVerifyEmailContract
         return Ability::where('name', $ability)->first();
     }
 
+    public function employeeCheck()
+    {
+        if ($this->employee) {
+            return true;
+        }
+        return false;
+    }
+
     // Access
     public function haveAccess($module, $ability)
     {
         if ($this->adminCheck()) {
             return true;
+        }
+        if ($this->employeeCheck()) {
+            return redirect()->route('employeeDashboardView');
         }
         $role              = $this->role;
         $module            = $this->getModule($module);
@@ -174,8 +185,6 @@ class User extends Authenticatable implements MustVerifyEmailContract
     {
         return $this->canUpdateGroup() || $this->canDeleteGroup();
     }
-
-
 
     public function canUpdateGroup()
     {

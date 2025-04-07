@@ -97,15 +97,65 @@
                             </div>
                         </div>
                         <div class="hidden p-4 rounded-lg " id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
-
                             <div class="">
                                 <label for="employee_email"
                                     class="block mb-2 text-xs md:text-sm sm:text-base font-medium">Your
                                     email</label>
-
                                 <input type="email" id="employee_email"
-                                    class="w-full p-3 border rounded-lg text-gray-900 focus:ring-2 text-xs md:text-sm focus:ring-blue-500 focus:outline-none"
+                                    class="w-full px-3 pt-3 border rounded-lg text-gray-900 focus:ring-2 text-xs md:text-sm focus:ring-blue-500 focus:outline-none"
                                     placeholder="Enter your email" required />
+                            </div>
+                            <div class="have_not_change_password" hidden>
+                                <div class="relative">
+                                    <label for="Password" class="block my-2 text-xs md:text-sm sm:text-base font-medium">
+                                        Your old password
+                                    </label>
+                                    <div class="relative">
+                                        <input type="password" id="old_password"
+                                            class="password_for_login w-full p-3 pr-10 border rounded-lg text-gray-900 text-xs md:text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                                            placeholder="Enter your password" required />
+                                        <!-- SVG Icon -->
+
+                                        </button>
+                                    </div>
+                                    <label for="Password" class="block my-2 text-xs md:text-sm sm:text-base font-medium">
+                                        Your new password
+                                    </label>
+                                    <div class="relative mt-2">
+                                        <input type="password" id="new_password_employee"
+                                            class="password_for_login w-full p-3 pr-10 border rounded-lg text-gray-900 text-xs md:text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                                            placeholder="Enter your password" required />
+                                        <!-- SVG Icon -->
+
+                                        </button>
+                                    </div>
+                                    <label for="Password" class="block my-2 text-xs md:text-sm sm:text-base font-medium">
+                                        Confirm password
+                                    </label>
+                                    <div class="relative mt-2">
+                                        <input type="password" id="confirm_password_employee"
+                                            class="password_for_login w-full p-3 pr-10 border rounded-lg text-gray-900 text-xs md:text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                                            placeholder="Enter your password" required />
+                                        <!-- SVG Icon -->
+
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="have_change_password" hidden>
+                                <div class="relative">
+                                    <label for="Password" class="block my-2 text-xs md:text-sm sm:text-base font-medium">
+                                        Your password
+                                    </label>
+                                    <div class="relative">
+                                        <input type="password" id="employee_password"
+                                            class="password_for_login w-full p-3 pr-10 border rounded-lg text-gray-900 text-xs md:text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                                            placeholder="Enter your password" required />
+                                        <!-- SVG Icon -->
+
+                                        </button>
+                                    </div>
+                                </div>
 
                             </div>
                             <div class="pt-8">
@@ -118,12 +168,35 @@
                                         </ul>
                                     </div>
                                 </div>
+                                <div id="success_message_field_login_employee" hidden>
+                                    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg shadow-md relative"
+                                        role="alert">
+                                        <strong class="font-bold">Found!</strong>
+                                        <span class="block sm:inline">We found your account!</span>
+                                        <ul id="success_message_login_employee"class="mt-3 list-disc list-inside text-sm">
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div id="warning_message_field_login_employee" hidden>
+                                    <div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded-lg shadow-md relative"
+                                        role="alert">
+                                        <strong class="font-bold">warning!</strong>
+                                        <span class="block sm:inline">Give your attention to this one!</span>
+                                        <ul id="warning_message_login_employee"class="mt-3 list-disc list-inside text-sm">
+                                        </ul>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="mt-4">
-                                <button onclick="sendEmployeeOTP()"
-                                    class="w-full text-xs md:text-sm bg-greyishBlue text-white py-3 rounded-lg hover:bg-blue-500 transition duration-300 ease-in-out">Generate
-                                    OTP</button>
+                                <button onclick="checkAccountEmployee()" id="check_account_employee"
+                                    class="w-full text-xs md:text-sm bg-greyishBlue text-white py-3 rounded-lg hover:bg-blue-500 transition duration-300 ease-in-out">Check
+                                    Account
+                                </button>
+                                <button onclick="loginEmployeeAccount()" id="login_employee" hidden
+                                    class="w-full text-xs md:text-sm bg-greyishBlue text-white py-3 rounded-lg hover:bg-blue-500 transition duration-300 ease-in-out">Login
+
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -141,7 +214,7 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            const passwordInput = document.getElementById("login_password");
+            const passwordInput = document.querySelector("input[type='password']");
             const showPasswordBtn = document.querySelector(".show-password");
 
             showPasswordBtn.addEventListener("mousedown", () => {
@@ -154,6 +227,7 @@
                 passwordInput.type = "password";
             });
         });
+        let employeeLogin = '';
         $(document).ready(function() {
             const otpInputs = $(".otp-input");
             otpInputs.on("input", function() {
@@ -225,29 +299,63 @@
             });
         }
 
-        function sendEmployeeOTP() {
+
+        function checkAccountEmployee() {
+            let email = $("#employee_email").val();
             $.ajax({
-                url: "{{ route('sendEmployeeOTP') }}",
+                url: "{{ route('checkAccountEmployee') }}",
                 type: 'POST',
                 data: {
-                    email: $('#employee_email').val(),
+                    email: email,
                     "_token": "{{ csrf_token() }}"
                 },
                 success: function(response) {
+                    $("#check_account_employee").hide();
+                    $("#login_employee").show();
                     $("#error_message_field_login_employee").hide();
                     $("#error_message_field_login_employee").empty();
-                    Swal.fire({
-                        title: 'OTP Sent',
-                        text: 'Please check your email for the OTP.',
-                        icon: 'success',
-                        confirmButtonText: 'Ok',
-                        confirmButtonColor: '#10b981',
+                    $("#success_message_field_login_employee").hide();
+                    $("#success_message_field_login_employee").empty();
 
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            showModal('otp-modal');
-                        }
-                    });
+
+                    $(".have_not_change_password").hide();
+                    $(".have_change_password").hide();
+                    $("#warning_message_field_login_employee").hide();
+                    $("#warning_message_field_login_employee").empty();
+                    if (response.status == 'reset_password') {
+                        employeeLogin = 'reset_password';
+                        Swal.fire({
+                            title: 'Warning!',
+                            text: 'Please reset your password before proceeding.',
+                            icon: 'warning',
+                            confirmButtonText: 'Ok',
+                            confirmButtonColor: '#f59e0b',
+                            allowOutsideClick: false,
+                            allowEscapeKey: false
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                $(".have_not_change_password").show();
+                                $(".have_change_password").hide();
+                            }
+                        });
+                    } else if (response.status == 'login') {
+                        employeeLogin = 'login';
+                        Swal.fire({
+                            title: 'Success!',
+                            text: 'Yey! We found your account.',
+                            icon: 'success',
+                            confirmButtonText: 'Ok',
+                            confirmButtonColor: '#10b981',
+                            allowOutsideClick: false,
+                            allowEscapeKey: false
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                $(".have_not_change_password").hide();
+                                $(".have_change_password").show();
+                            }
+                        });
+
+                    }
 
                 },
                 error: function(xhr, status, error) {
@@ -264,38 +372,60 @@
             })
         }
 
-        function loginEmployee(){
-            let email = $("#employee_email").val();
-            let otp = $("#otp-1").val() + $("#otp-2").val() + $("#otp-3").val() + $("#otp-4").val() + $("#otp-5").val() +
-            $("#otp-6").val();
+        function loginEmployeeAccount() {
+            Swal.fire({
+                title: 'Logging in...',
+                text: 'Please wait while we process your login.',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading()
+                }
+            });
+            if (employeeLogin == 'reset_password') {
+                var password = $('#old_password').val();
+                var new_password = $('#new_password_employee').val();
+                var confirm_password = $('#confirm_password_employee').val();
+                var data = {
+                    email: $('#employee_email').val(),
+                    password: password,
+                    new_password: new_password,
+                    confirm_password: confirm_password
+                }
+            } else {
+                var password = $('#employee_password').val();
+                var data = {
+                    email: $('#employee_email').val(),
+                    password: password
+                }
+            }
             $.ajax({
-                url: "{{ route('loginEmployee') }}",
+                url: "{{ route('loginEmployeeAccount') }}",
                 type: 'POST',
                 data: {
-                    email: email,
-                    otp: otp,
+                    data,
+                    employeeLogin,
                     "_token": "{{ csrf_token() }}"
                 },
                 success: function(response) {
-                    console.log('MASUK ANJING TAI MEMEK')
+                    Swal.close();
+                    window.location.href = "{{ route('employeeDashboardView') }}";
                 },
                 error: function(xhr, status, error) {
-                    console.log(xhr.responseText);
-                    var errorMessage = JSON.parse(xhr.responseText) ? JSON.parse(xhr.responseText) : xhr
+                    Swal.close();
+                    let errorMessage = JSON.parse(xhr.responseText) ? JSON.parse(xhr.responseText) : xhr
                         .responseText;
-                    var errors = errorMessage.message;
-                    
-                    if (errors) {
-                        Swal.fire({
-                            title: 'Error',
-                            text: errors,
-                            icon: 'error',
-                            confirmButtonText: 'Ok',
-                            confirmButtonColor: '#10b981',
-                        })
-                    }
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: errorMessage.message,
+                        confirmButtonText: 'Ok',
+                        confirmButtonColor: '#ef4444',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false
+                    })
                 }
-            })
+            });
+
         }
     </script>
 

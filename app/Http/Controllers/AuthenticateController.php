@@ -11,6 +11,7 @@ use App\Models\EmployeeAccount;
 use App\Models\ModuleAbility;
 use App\Models\Role;
 use App\Models\Target;
+use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -260,7 +261,7 @@ class AuthenticateController extends Controller
     {
         $request->validate([
             'email' => 'required|email',
-            'otp'   => 'required|string', 
+            'otp'   => 'required|string',
         ]);
 
         $user = Target::where('email', $request->email)->where('account', 1)->first();
@@ -281,8 +282,78 @@ class AuthenticateController extends Controller
         if ($account->otp != $request->otp) {
             return response()->json(['message' => 'Invalid OTP'], 400);
         }
-        
+
         return response()->json(['message' => 'Login successful'], 200);
     }
-    
+
+    public function checkAccountEmployee(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|exists:users,email',
+        ]);
+
+        $user = User::where('email', $request->email)->where('employee', 1)->first();
+        if (! $user) {
+            return response()->json(['message' => 'User not found'], 400);
+        }
+        $checkPassword = User::where('email', $request->email)->where('reset_password', 0)->first();
+        if ($checkPassword) {
+            return response()->json([
+                'message' => 'User found, please reset your password',
+                'status'  => 'reset_password',
+            ], 200);
+        } else {
+            return response()->json([
+                'message' => 'User found, please login',
+                'status'  => 'login',
+            ], 200);
+        }
+    }
+
+    public function loginEmployeeAccount(Request $request)
+    {
+        if ($request->employeeLogin == 'reset_password') {
+            $email           = $request->data['email'];
+            $oldPassword     = $request->data['password'];
+            $newPassword     = $request->data['new_password'];
+            $confirmPassword = $request->data['confirm_password'];
+            if ($newPassword != $confirmPassword) {
+                return response()->json(['message' => 'New password and confirm password do not match'], 400);
+            }
+            if ($email == null || $oldPassword == null || $newPassword == null || $confirmPassword == null) {
+                return response()->json(['message' => 'Please fill all the fields'], 400);
+            }
+
+            $user = User::where('email', $email)->first();
+            if (! $user) {
+                return response()->json(['message' => 'User not found'], 400);
+            }
+            if (! password_verify($oldPassword, $user->password)) {
+                return response()->json(['message' => 'Old password is incorrect'], 400);
+            }
+            $user->password       = bcrypt($newPassword);
+            $user->reset_password = 1;
+            $user->save();
+        }
+        if ($request->employeeLogin == 'login') {
+            $email       = $request->data['email'];
+            $password    = $request->data['password'];
+            if ($email == null || $password == null) {
+                return response()->json(['message' => 'Please fill all the fields'], 400);
+            }
+            $user = User::where('email', $email)->first();
+            if (! $user) {
+                return response()->json(['message' => 'User not found'], 400);
+            }
+            if (! password_verify($password, $user->password)) {
+                return response()->json(['message' => 'Password is incorrect'], 400);
+            }
+        }
+        $user->email_verified_at = Carbon::now();
+        $user->save();
+        Auth::login($user);
+
+        return redirect()->route('employeeDashboardView');
+    }
+
 }
