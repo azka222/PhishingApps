@@ -159,6 +159,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
                 Route::get('/getAllUser', [AdminController::class, 'getAllUser'])->name('getAllUser');
                 Route::post('/editUser', [AdminController::class, 'editUser'])->name('editUser');
                 Route::get('/getUserbyCompany/{id}', [AdminController::class, 'getUsersByCompanyId'])->name('getUsersByCompanyId');
+                Route::get('/course', [ViewController::class, 'AdminCourseView'])->name('adminCourseView');
 
             });
             Route::group(['prefix' => 'company'], function () {

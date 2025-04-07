@@ -190,4 +190,11 @@ class ViewController extends Controller
         }
     }
 
+    public function AdminCourseView()
+    {
+        if (auth()->user()->is_admin) {
+            return view('contents.admin.admin-course');
+        }
+    }
+
 }

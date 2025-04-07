@@ -3,16 +3,16 @@ namespace App\Http\Controllers;
 
 use App\Helpers\FileHelper;
 use App\Http\Controllers\Controller;
+use App\Jobs\SendAccountCredentials;
 use App\Models\Target;
 use App\Models\TargetDepartment;
 use App\Models\TargetPosition;
 use App\Models\User;
-use App\Jobs\SendAccountCredentials;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class TargetController extends Controller
 {
@@ -90,34 +90,32 @@ class TargetController extends Controller
             $target->position_id   = $request->position;
             $target->company_id    = auth()->user()->adminCheck() ? $request->company : auth()->user()->company_id;
             $target->save();
-            
 
             if ($request->createAccount) {
                 $existingUser = User::where('email', $request->email)->first();
 
                 if (! $existingUser) {
-                    $password = Str::random(12);
-                    // $user = User::create([
-                    //     'first_name' => $request->first_name,
-                    //     'last_name'  => $request->last_name,
-                    //     'email'    => $request->email,
-                    //     'password' => Hash::make($password),
-                    //     'employee' => true, 
-                    // ]);
-                    $user = new User();
+                    $password         = Str::random(12);
+                    $user             = new User();
                     $user->first_name = $request->first_name;
                     $user->last_name  = $request->last_name;
                     $user->email      = $request->email;
                     $user->password   = Hash::make($password);
-                    $user->phone = '081234567890';
-                    $user->gender = 'aaa';
+                    $user->phone      = '081234567890';
+                    $user->gender     = 'aaa';
                     $user->employee   = 1;
                     $user->company_id = auth()->user()->adminCheck() ? $request->company : auth()->user()->company_id;
                     $user->save();
-                    SendAccountCredentials::dispatch( $user->email, $password, $user->first_name);
-                }
+                    SendAccountCredentials::dispatch($user->email, $password, $user->first_name);
+                    $target->has_account = true;
+                    $target->save();
+                } else {
+                    return response()->json([
+                        'message' => 'Email already exists',
+                        'success' => false,
+                    ], 422);
+                } 
             }
-            $target->save();
 
             return response()->json([
                 'message' => 'Target created successfully',
@@ -136,12 +134,13 @@ class TargetController extends Controller
     {
         if (Gate::allows('CanUpdateTarget')) {
             $request->validate([
-                'id'         => 'required|integer|exists:targets,id',
-                'first_name' => 'required|string|max:50',
-                'last_name'  => 'required|string|max:50',
-                'department' => 'required|integer|exists:target_departments,id',
-                'email'      => 'required|email',
-                'position'   => 'required|integer|exists:target_positions,id',
+                'id'            => 'required|integer|exists:targets,id',
+                'first_name'    => 'required|string|max:50',
+                'last_name'     => 'required|string|max:50',
+                'department'    => 'required|integer|exists:target_departments,id',
+                'email'         => 'required|email',
+                'position'      => 'required|integer|exists:target_positions,id',
+                'createAccount' => 'required|',
             ]);
 
             $target   = auth()->user()->accessibleTarget()->where('id', $request->id)->first();
@@ -158,6 +157,30 @@ class TargetController extends Controller
             $target->email         = $request->email;
             $target->position_id   = $request->position;
             $target->save();
+            if ($request->createAccount == 1) {
+                $existingUser = User::where('email', $request->email)->first();
+                if (! $existingUser) {
+                    $password         = Str::random(12);
+                    $user             = new User();
+                    $user->first_name = $request->first_name;
+                    $user->last_name  = $request->last_name;
+                    $user->email      = $request->email;
+                    $user->password   = Hash::make($password);
+                    $user->phone      = '081234567890';
+                    $user->gender     = 'aaa';
+                    $user->employee   = 1;
+                    $user->company_id = auth()->user()->adminCheck() ? $request->company : auth()->user()->company_id;
+                    $user->save();
+                    SendAccountCredentials::dispatch($user->email, $password, $user->first_name);
+                    $target->has_account = true;
+                    $target->save();
+                } else {
+                    return response()->json([
+                        'message' => 'Email already exists',
+                        'success' => false,
+                    ], 422);
+                }
+            }
             if (
                 $original['first_name'] !== $target->first_name ||
                 $original['last_name'] !== $target->last_name ||

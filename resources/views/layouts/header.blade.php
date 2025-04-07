@@ -1,6 +1,6 @@
 @php
     $url = explode('/', Route::current()->uri)[0];
-    $home = $user = $landingPage = $attribute = $dashboard = $approval = $campaign = $admin = false;
+    $home = $user = $landingPage = $attribute = $dashboard = $approval = $campaign = $admin = $course = false;
     switch ($url) {
         case 'dashboard':
             $dashboard = true;
@@ -32,6 +32,9 @@
         case 'admin':
             $admin = true;
             break;
+        case 'course':
+            $course = true;
+            break;
         default:
             $home = true;
             break;
@@ -51,7 +54,8 @@
                 <button id="dropdownAvatarNameButton" data-dropdown-toggle="dropdownAvatarName"
                     class="flex items-center text-sm font-medium text-gray-900 rounded-full hover:text-blue-600 dark:hover:text-blue-500 md:me-0 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:text-white"
                     type="button">
-                    <img class="md:h-12 h-9 rounded-full" src="{{ Avatar::create($name)->toBase64()}}" alt="user photo">
+                    <img class="md:h-12 h-9 rounded-full" src="{{ Avatar::create($name)->toBase64() }}"
+                        alt="user photo">
                 </button>
                 <!-- Dropdown menu -->
                 <div id="dropdownAvatarName"
@@ -322,28 +326,6 @@
                     </button>
                 </div>
                 @endCanAccess()
-                @IsAdmin()
-                <div>
-                    <button id="dropdownHoverButton3" data-dropdown-toggle="hoverAdminGroup"
-                        data-dropdown-trigger="click"
-                        class="w-full px-3 py-2 text-xs font-medium text-left hover:text-blue-600 dark:hover:text-blue-500 rounded-xl {{ $admin ? 'dark:text-blue-500 text-blue-500  shadow-blue-500/50 lg:dark:bg-gray-800 dark:bg-gray-800' : 'border-gray-700 text-gray-900 dark:text-white ' }} rounded-xl "
-                        type="button">Admin
-                    </button>
-                </div>
-                <div id="hoverAdminGroup"
-                    class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
-                    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownHoverButton3">
-                        <li>
-                            <a href="{{ route('adminUserView') }}"
-                                class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">User</a>
-                        </li>
-                        <li>
-                            <a href="{{ route('adminCompanyView') }}"
-                                class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Company</a>
-                        </li>
-                    </ul>
-                </div>
-                @endIsAdmin()
                 @HaveAccessApproval()
                 <div class="flex justify-end">
                     <button
@@ -352,8 +334,9 @@
                            rounded-xl "
                         type="button">
                         <a href="{{ url('/approval') }}">Approval</a>
-                        <svg version="1.1" id="Icon_Set" xmlns="http://www.w3.org/2000/svg" x="0" y="0" class="inline w-8 h-8"
-                            viewBox="0 0 64 64" style="enable-background:new 0 0 64 64" xml:space="preserve">
+                        <svg version="1.1" id="Icon_Set" xmlns="http://www.w3.org/2000/svg" x="0" y="0"
+                            class="inline w-8 h-8" viewBox="0 0 64 64" style="enable-background:new 0 0 64 64"
+                            xml:space="preserve">
                             <style>
                                 .st1 {
                                     fill: #263238
@@ -381,6 +364,33 @@
                     </button>
                 </div>
                 @endHaveAccessApproval()
+                @IsAdmin()
+                <div>
+                    <button id="dropdownHoverButton3" data-dropdown-toggle="hoverAdminGroup"
+                        data-dropdown-trigger="click"
+                        class="w-full px-3 py-2 text-xs font-medium text-left hover:text-blue-600 dark:hover:text-blue-500 rounded-xl {{ $admin ? 'dark:text-blue-500 text-blue-500  shadow-blue-500/50 lg:dark:bg-gray-800 dark:bg-gray-800' : 'border-gray-700 text-gray-900 dark:text-white ' }} rounded-xl "
+                        type="button">Admin
+                    </button>
+                </div>
+                <div id="hoverAdminGroup"
+                    class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+                    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownHoverButton3">
+                        <li>
+                            <a href="{{ route('adminUserView') }}"
+                                class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">User</a>
+                        </li>
+                        <li>
+                            <a href="{{ route('adminCompanyView') }}"
+                                class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Company</a>
+                        </li>
+                        <li>
+                            <a href="{{ route('adminCourseView') }}"
+                                class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Course</a>
+                        </li>
+                    </ul>
+                </div>
+                @endIsAdmin()
+
             </div>
 
 
