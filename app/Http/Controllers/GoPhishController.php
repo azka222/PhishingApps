@@ -1091,12 +1091,12 @@ class GophishController extends Controller
                 'send_by_date' => $formattedEndDate,
                 'groups'       => $groupName,
             ];
-         
+
             if($formattedEndDate == null){
                 $jsonData['send_by_date'] = $formattedLaunchDate;
                 $jsonData['completed_date'] = $formattedLaunchDate;
             }
-            
+
             $campaign             = new Campaign();
             $campaign->data       = json_encode($jsonData);
             $campaign->company_id = auth()->user()->company_id;

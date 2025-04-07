@@ -209,7 +209,7 @@
                     </div>
                 </div>
             `);
-            
+
             setGroupSelection();
         }
 
@@ -387,6 +387,7 @@
                 success: function(response) {
                     campaigns = [];
                     campaigns = response.data;
+                    console.log(response);
                     $("#list-campaign-tbody").empty();
                     if (campaigns.length == 0) {
                         $("#list-campaign-tbody").append(`
@@ -467,14 +468,14 @@
                                         </button>
                                         <button onclick="copyCampaign(${campaign.id})"
                                             class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-cyan-600 rounded-xl hover:bg-cyan-700 dark:bg-cyan-500 dark:hover:bg-cyan-600">Copy</button>
-                                       
-                                       
+
+
                             </td>`
                             } else {
                                 button = `<td class="p-4 gap-2">
                                         <button onclick="sendNewApproval(${campaign.id})"
                                             class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-orange-600 rounded-xl hover:bg-orange-700 dark:bg-orange-500 dark:hover:bg-orange-600">Resend</button>
-                                       
+
                             </td>`
                             }
 
@@ -498,8 +499,7 @@
                         (page - 1) * $("#show").val() + response.data.length
                     );
                     $("#totalTemplatesCount").text(response.campaignTotal);
-                    paginationCampaign("#page-button-campaign-company", response.pageCount,
-                        response.currentPage);
+                    paginationCampaign("#page-button-campaign-company", response.pageCount, response.currentPage);
                 }
 
             });
@@ -599,7 +599,7 @@
             })
         }
 
-        
+
          function copyCampaign(id) {
             let tempCampaign = campaigns.find(campaign => campaign.id == id);
             let data = JSON.parse(tempCampaign.data);
