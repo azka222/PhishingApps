@@ -197,4 +197,10 @@ class ViewController extends Controller
         }
     }
 
+    public function createCourseView(){
+        if(auth()->user()->is_admin) {
+            return view('contents.admin.create-course');
+        }
+    }
+
 }
