@@ -5,6 +5,7 @@ use App\Http\Controllers\ApprovalController;
 use App\Http\Controllers\AuthenticateController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\GophishController;
+use App\Http\Controllers\CourseController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\TargetController;
 use App\Http\Controllers\UserController;
@@ -161,6 +162,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
                 Route::get('/getUserbyCompany/{id}', [AdminController::class, 'getUsersByCompanyId'])->name('getUsersByCompanyId');
                 Route::get('/course', [ViewController::class, 'AdminCourseView'])->name('adminCourseView');
                 Route::get('/create-course', [ViewController::class, 'createCourseView'])->name('createCourseView');
+                Route::post('/createCourse', [CourseController::class, 'createCourse'])->name('createCourse');
 
             });
             Route::group(['prefix' => 'company'], function () {

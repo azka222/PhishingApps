@@ -1,6 +1,7 @@
 @extends('layouts.master')
 @section('title', 'Fischsim - Create Course')
 @section('content')
+    <input type="hidden" id="options" value="{{ json_encode($options) }}">
     <div class=" p-4 w-full flex flex-col h-full min-h-screen  bg-gray-50 dark:bg-gray-800 dark:text-white text-gray-900">
         <div class="flex p-4 items-center justify-between">
             <h1 class="text-3xl font-semibold">Create Course</h1>
@@ -70,6 +71,11 @@
             });
         }
 
+        function getOptions(index) {
+            let selectedOption = $('#options-'+index).val();
+            console.log(selectedOption)
+        }
+
         function deleteContentQuiz() {
             $(event.target).closest('.content-quiz').remove();
         }
@@ -118,18 +124,31 @@
             return maxIndex + 1;
         }
 
-        function enableEmailField(index){
-            if($('#checkbox-quiz-'+index).is(':checked')){
-                $("#email-content-box-"+index).show();  
+        function enableEmailField(index) {
+            if ($('#checkbox-quiz-' + index).is(':checked')) {
+                $("#email-content-box-" + index).show();
+            } else {
+                $("#email-content-box-" + index).hide();
             }
-            else{
-                $("#email-content-box-"+index).hide();  
-            }
+        }
+
+        function checkDataOrder() {
+            let order = 0;
+
+            $(".content-material, .content-quiz").each(function() {
+                let currentOrder = parseInt($(this).data("order"));
+                if (currentOrder > order) {
+                    order = currentOrder;
+                }
+            });
+
+            return order + 1;
         }
 
         function addMaterialContent() {
             let index = checkIndex('material');
-            let content = `<div id="content-material-${index}" class="content-material w-1/2 h-auto m-8" data-index="${index}">
+            let order = checkDataOrder();
+            let content = `<div id="content-material-${index}" class="content-material w-1/2 h-auto m-8" data-index="${index}" data-order="${order}">
                     <div class="flex justify-end">
                         <button onclick="deleteContentMaterial()"
                             class="px-4 py-2 text-xs md:text-sm font-medium mb-4 text-white bg-red-600 rounded-xl hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600 flex items-center">
@@ -170,6 +189,7 @@
                                 class="bg-gray-50 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                                 placeholder="Enter material here..." required></textarea>
                         </div>
+                        
                     </div>
                 </div>`;
 
@@ -178,7 +198,8 @@
 
         function addQuizContent() {
             let index = checkIndex('quiz')
-            let content = `<div id="content-quiz-${index}" class="content-quiz w-1/2 h-auto   m-8" data-index="${index}">
+            let order = checkDataOrder();
+            let content = `<div id="content-quiz-${index}" class="content-quiz w-1/2 h-auto   m-8" data-index="${index}" data-order="${order}">
                     <div class="flex justify-end">
                         <button onclick="deleteContentQuiz()"
                             class="px-4 py-2 text-xs md:text-sm font-medium mb-4 text-white bg-red-600 rounded-xl hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600 flex items-center">
@@ -230,42 +251,93 @@
                                 class="bg-gray-50 border border-gray-300 dark:border-gray-600 dark:text-white dark:bg-gray-700 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                                 placeholder="Enter quiz here..." required></textarea>
                         </div>
+                        <div>
+                            <label for="options" class="block mb-2 text-sm sm:text-base font-medium">Options
+                            </label>
+                         <select id="options-${index}" onchange="getOptions(${index})"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            <option selected disabled>Choose an option</option>
+                            @foreach ($options as $optionGroup)
+                                <optgroup label="{{ $optionGroup['group'] }}">
+                                    @foreach ($optionGroup['options'] as $option)
+                                        <option value="{{ $option['id'] }}">{{ $option['name'] }}</option>
+                                    @endforeach
+                                </optgroup>
+                            @endforeach
+                        </select>
                     </div>
                 </div>`
 
             $(".content").append(content)
         }
 
-        function saveCourse(){
+        function saveCourse() {
             let courseName = $('#large-input').val();
             let courseDescription = $('#quiz-description').val();
             let contents = [];
-            $(".content-material").each(function() {
+            let order = 1;
+            $(".content-material, .content-quiz").sort(function(a, b) {
+                return $(a).data("order") - $(b).data("order");
+            }).each(function() {
                 let index = $(this).data("index");
-                let attachment = document.getElementById('uploadMaterialContent-' + index)?.files[0] ?? null;
+                let type = $(this).hasClass("content-material") ? "material" : "quiz";
+                let attachmentId = type === "material" ? 'uploadMaterialContent-' + index : 'uploadQuizContent-' +
+                    index;
+                let attachment = document.getElementById(attachmentId)?.files[0] ?? null;
                 let content = {
-                    type: 'material',
-                    name: $('#course-name-' + index).val(),
+                    type: type,
+                    name: $('#' + (type === 'material' ? 'course-name-' : 'quiz-name-') + index).val(),
                     attachment: attachment,
-                    title: $('#course-title-' + index).val(),
-                    content: $('#material-overview-' + index).val(),
+                    title: $('#' + (type === 'material' ? 'course-title-' : 'quiz-title-') + index).val(),
+                    content: $('#' + (type === 'material' ? 'material-overview-' : 'quiz-overview-') + index)
+                        .val(),
+                    order: order,
+                };
+                if (type === 'quiz') {
+                    content.emailContent = $('#quiz-email-content-' + index).val();
+                    content.option = $('#options-' + index).val();
                 }
+
                 contents.push(content);
+                order++;
             });
-            $(".content-quiz").each(function() {
-                let index = $(this).data("index");
-                let attachment = document.getElementById('uploadQuizContent-' + index)?.files[0] ?? null;
-                let content = {
-                    type: 'quiz',
-                    name: $('#quiz-name-' + index).val(),
-                    attachment: attachment,
-                    title: $('#quiz-title-' + index).val(),
-                    content: $('#quiz-overview-' +index).val(),
-                    emailContent: $('#quiz-email-content-' + index).val()
+            let formData = new FormData();
+            formData.append('courseName', courseName);
+            formData.append('courseDescription', courseDescription);
+
+            contents.forEach((item, idx) => {
+                formData.append(`contents[${idx}][type]`, item.type);
+                formData.append(`contents[${idx}][name]`, item.name);
+                formData.append(`contents[${idx}][title]`, item.title);
+                formData.append(`contents[${idx}][content]`, item.content);
+                formData.append(`contents[${idx}][order]`, item.order);
+
+                if (item.attachment) {
+                    formData.append(`contents[${idx}][attachment]`, item.attachment);
                 }
-                contents.push(content);
+
+                if (item.type === 'quiz' && item.emailContent) {
+                    formData.append(`contents[${idx}][emailContent]`, item.emailContent);
+                }
+                if(item.type === 'quiz' && item.option) {
+                    formData.append(`contents[${idx}][option]`, item.option);
+                }
             });
-            console.log(courseName, courseDescription, contents);
+            formData.append('_token', '{{ csrf_token() }}');
+            $.ajax({
+                url: '{{ route('createCourse') }}',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    // alert('Course created successfully!');
+                    window.location.href = '/admin/course';
+                },
+                error: function(xhr, status, error) {
+                    // alert('Error creating course: ' + xhr.responseText);
+                }
+            });
         }
     </script>
 @endsection
