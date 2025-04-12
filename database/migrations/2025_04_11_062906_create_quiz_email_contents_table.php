@@ -11,9 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('targets', function (Blueprint $table) {
-            $table->boolean('has_account')->nullable()->default(false);
-            
+        Schema::create('quiz_email_contents', function (Blueprint $table) {
+            $table->id();
+            $table->longText('content');;
+            $table->timestamps();
         });
     }
 
@@ -22,8 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('targets', function (Blueprint $table) {
-            $table->dropColumn('has_account');
-        });
+        Schema::dropIfExists('quiz_email_contents');
     }
 };

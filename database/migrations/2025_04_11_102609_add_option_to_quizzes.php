@@ -11,11 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('course_email_templates', function (Blueprint $table) {
-            $table->id();
-            $table->longText('content')->nullable();
-
-            $table->timestamps();
+        Schema::table('quizzes', function (Blueprint $table) {
+            $table->string('option')->nullable();
+            $table->string('group');
         });
     }
 
@@ -24,6 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('course_email_templates');
+        Schema::table('quizzes', function (Blueprint $table) {
+            //
+        });
     }
 };

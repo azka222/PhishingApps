@@ -6,8 +6,27 @@ use Illuminate\Database\Eloquent\Model;
 
 class Course extends Model
 {
-    public function questions()
+    protected $table = 'courses';
+
+    protected $fillable = [
+        'name',
+        'description',
+        'created_at',
+        'updated_at',
+    ];
+ 
+
+    public function courseQuizMaterial()
     {
-        return $this->belongsToMany(Question::class, 'courses_questions', 'course_id', 'question_id');
+        return $this->hasMany(CourseQuizMaterial::class);
+    }
+
+    public function quiz()
+    {
+        return $this->hasMany(Quiz::class);
+    }
+    public function material()
+    {
+        return $this->hasMany(Material::class);
     }
 }

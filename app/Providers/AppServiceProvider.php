@@ -4,7 +4,7 @@ namespace App\Providers;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
-
+use Illuminate\Database\Eloquent\Relations\Relation;
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -20,6 +20,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        {
+            Relation::morphMap([
+                'quiz'     => \App\Models\Quiz::class,
+                'material' => \App\Models\Material::class,
+
+            ]);
+
+        }
         // Blade
         Blade::if('IsAdmin', function () {
             return auth()->user()->is_admin;
@@ -258,9 +266,6 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('HaveAccessApproval', function ($user) {
             return $user->haveAccessApproval();
         });
-
-
-        
 
     }
 }

@@ -15,9 +15,27 @@ class OptionSeeder extends Seeder
     {
         Option::create([
             'name' => 'Legit',
+            'group' => '1',
         ]);
         Option::create([
             'name' => 'Fake',
+            'group' => '1',
+        ]);
+        Option::create([
+            'name' => 'Yes',
+            'group' => '2',
+        ]);
+        Option::create([
+            'name' => 'No',
+            'group' => '2',
+        ]);
+        Option::create([
+            'name' => 'True',
+            'group' => '3',
+        ]);
+        Option::create([
+            'name' => 'False',
+            'group' => '3',
         ]);
     }
 }

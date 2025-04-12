@@ -11,10 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('question_email_templates', function (Blueprint $table) {
-            $table->id();
-            $table->longText('content')->nullable();
-            $table->timestamps();
+        Schema::table('quiz_attachments', function (Blueprint $table) {
+            $table->string('name')->change();
         });
     }
 
@@ -23,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('question_email_templates');
+        Schema::table('quiz_attachments', function (Blueprint $table) {
+            //
+        });
     }
 };

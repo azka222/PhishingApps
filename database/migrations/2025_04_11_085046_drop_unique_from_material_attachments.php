@@ -11,12 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('course_questions', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('course_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('question_id')->constrained('questions')->cascadeOnDelete();
-            $table->timestamps();
+      
+        
+        Schema::table('material_attachments', function (Blueprint $table) {
+            $table->string('name')->change(); // Tidak perlu unique(false)
         });
+       
+        
+      
     }
 
     /**
@@ -24,6 +26,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('course_questions');
+        Schema::table('material_attachments', function (Blueprint $table) {
+            //
+        });
     }
 };
