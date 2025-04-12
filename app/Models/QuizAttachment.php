@@ -12,8 +12,5 @@ class QuizAttachment extends Model
         'name',
         'path',
     ];
-    public function quiz()
-    {
-        return $this->belongsTo(Quiz::class);
-    }
+
 }

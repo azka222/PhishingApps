@@ -197,9 +197,17 @@ class ViewController extends Controller
         }
     }
 
-    public function createCourseView(){
-        if(auth()->user()->is_admin) {
+    public function createCourseView()
+    {
+        if (auth()->user()->is_admin) {
             return view('contents.admin.create-course');
+        }
+    }
+
+    public function editCourseView($id)
+    {
+        if (auth()->user()->is_admin) {
+            return view('contents.admin.edit-course', ['id' => $id]);
         }
     }
 

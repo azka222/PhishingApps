@@ -2,9 +2,10 @@
 @section('title', 'Fischsim - Create Course')
 @section('content')
     <input type="hidden" id="options" value="{{ json_encode($options) }}">
+    <input type="hidden" id="courseId" value="{{ $id }}">
     <div class=" p-4 w-full flex flex-col h-full min-h-screen  bg-gray-50 dark:bg-gray-800 dark:text-white text-gray-900">
         <div class="flex p-4 items-center justify-between">
-            <h1 class="text-3xl font-semibold">Create Course</h1>
+            <h1 class="text-3xl font-semibold">Edit Course</h1>
             <div>
                 <button onclick="saveCourse()"
                     class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 flex items-center">
@@ -48,7 +49,11 @@
     </div>
 
     <script>
+        $(document).ready(function() {
+            getCourseDetails();
+        });
         function uploadContent(idButton, idTarget) {
+            console.log(idButton, idTarget)
             $('#' + idButton).on('change', function(e) {
                 const file = e.target.files[0];
                 if (!file) return;
@@ -155,6 +160,7 @@
                             <span class="hidden md:inline">Delete</span>
                     </div>
                     </button>
+                    <input type="hidden" id="materialId-${index}" value="">
                     <div class=" border-2 dark:border-gray-500 border-gray-800 rounded-xl p-8">
                         <div class="flex  items-center justify-between mb-4">
                             <h1 class="text-3xl font-semibold">Material Content</h1>
@@ -206,6 +212,7 @@
                             <span class="hidden md:inline">Delete</span>
                     </div>
                     </button>
+                    <input type="hidden" id="quizId-${index}" value="">
                     <div class=" border-2 dark:border-gray-500 border-gray-800 rounded-xl p-8">
                         <div class="flex  items-center justify-between mb-4">
                             <h1 class="text-3xl font-semibold">Quiz Content</h1>
@@ -292,6 +299,7 @@
                     content: $('#' + (type === 'material' ? 'material-overview-' : 'quiz-overview-') + index)
                         .val(),
                     order: order,
+                    id: $('#' + (type === 'material' ? 'materialId-' : 'quizId-') + index).val(),
                 };
                 if (type === 'quiz') {
                     content.emailContent = $('#quiz-email-content-' + index).val();
@@ -304,38 +312,74 @@
             let formData = new FormData();
             formData.append('courseName', courseName);
             formData.append('courseDescription', courseDescription);
-
-            contents.forEach((item, idx) => {
-                formData.append(`contents[${idx}][type]`, item.type);
-                formData.append(`contents[${idx}][name]`, item.name);
-                formData.append(`contents[${idx}][title]`, item.title);
-                formData.append(`contents[${idx}][content]`, item.content);
-                formData.append(`contents[${idx}][order]`, item.order);
-
-                if (item.attachment) {
-                    formData.append(`contents[${idx}][attachment]`, item.attachment);
-                }
-
-                if (item.type === 'quiz' && item.emailContent) {
-                    formData.append(`contents[${idx}][emailContent]`, item.emailContent);
-                }
-                if(item.type === 'quiz' && item.option) {
-                    formData.append(`contents[${idx}][option]`, item.option);
-                }
-            });
-            formData.append('_token', '{{ csrf_token() }}');
+            formData.append('contents', JSON.stringify(contents));
+            formData.append('courseId', $('#courseId').val());
+            formData.append('_token', "{{ csrf_token() }}");
             $.ajax({
-                url: '{{ route('createCourse') }}',
-                type: 'POST',
+                url: "{{ route('updateCourse') }}",
+                type: "POST",
                 data: formData,
-                processData: false,
                 contentType: false,
+                processData: false,
                 success: function(response) {
-                    // alert('Course created successfully!');
+                   
                     window.location.href = "{{ route('adminCourseView') }}";
                 },
                 error: function(xhr, status, error) {
-                    // alert('Error creating course: ' + xhr.responseText);
+                    
+                }
+            });
+        }
+    
+        function getCourseDetails(){
+            let id = $("#courseId").val();
+            $.ajax({
+                url: "{{ route('getCourseDetails') }}",
+                type: "GET",
+                data: {
+                    id: id,
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(response) {
+                    console.log(response)
+                    $('#large-input').val(response.course.name);
+                    $('#quiz-description').val(response.course.description);
+                    let contents = response.course.courseQuizMaterial;
+                    let index1 = 1
+                    let index2 = 1
+                    contents.forEach((content) => {
+                        if (content.model_type === 'material') {
+                            let material = content.model;
+                            addMaterialContent();
+                            $('#course-name-' + index1).val(material.name);
+                            $('#materialId-' + index1).val(material.id);
+                            $('#course-title-' + index1).val(material.title);
+                            $('#material-overview-' + index1).val(material.content);
+                            $('#image-material-' + index1).html('<img src="' + material.attachment_url + '" class="w-full h-auto rounded-xl shadow">');
+                            index1++;
+                         
+                        } else if (content.model_type === 'quiz') {
+                            addQuizContent();
+                            let quiz = content.model;
+                            $('#quiz-name-' + index2).val(quiz.name);
+                            $('#quiz-title-' + index2).val(quiz.title);
+                            $('#quiz-overview-' + index2).val(quiz.content);
+                            $('#image-quiz-' + index2).html('<img src="' + quiz.attachment_url + '" class="w-full h-auto rounded-xl shadow">');
+                            $('#quiz-email-content-' + index2).val(quiz.email_content);
+                            $('#checkbox-quiz-' + index2).prop('checked', quiz.email_content !== null);
+                            $('#email-content-box-' + index2).toggle(quiz.email_content !== null);
+                            $('#quiz-email-content-' + index2).val(quiz.email_content.content);
+                            $('#options-' + index2).val(quiz.option_id);
+                            $('#quizId-' + index2).val(quiz.id);
+                            $('#options-' + index2).change();
+                            index2++;
+                            
+                        }
+
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error(error);
                 }
             });
         }

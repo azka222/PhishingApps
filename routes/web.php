@@ -163,6 +163,11 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
                 Route::get('/course', [ViewController::class, 'AdminCourseView'])->name('adminCourseView');
                 Route::get('/create-course', [ViewController::class, 'createCourseView'])->name('createCourseView');
                 Route::post('/createCourse', [CourseController::class, 'createCourse'])->name('createCourse');
+                Route::get('/getCourse', [CourseController::class, 'getCourse'])->name('getCourse');
+                Route::post('/deleteCourse', [CourseController::class, 'deleteCourse'])->name('deleteCourse');
+                Route::get('/editCourse/{id}', [ViewController::class, 'editCourseView'])->name('editCourseView');
+                Route::get('/getCourseDetails', [CourseController::class, 'getCourseDetails'])->name('getCourseDetails');
+                Route::post('/updateCourse', [CourseController::class, 'updateCourse'])->name('updateCourse');
 
             });
             Route::group(['prefix' => 'company'], function () {

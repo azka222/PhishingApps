@@ -12,9 +12,4 @@ class MaterialAttachment extends Model
         'name',
         'path',
     ];
-
-    public function material()
-    {
-        return $this->belongsTo(Material::class);
-    }
 }

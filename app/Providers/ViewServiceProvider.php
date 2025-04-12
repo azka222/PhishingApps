@@ -58,5 +58,23 @@ class ViewServiceProvider extends ServiceProvider
             
             $view->with('options', $options);
         });
+
+        view()->composer('contents.admin.edit-course', function($view){
+            $options = \App\Models\Option::all()->groupBy('group');
+            $options = $options->map(function ($group, $groupName) {
+                return [
+                    'group' => $groupName,
+                    'options' => $group->map(function ($item) {
+                        return [
+                            'id' => $item->id,
+                            'name' => $item->name
+                        ];
+                    })->toArray()
+                ];
+            })->values()->toArray();
+         
+                
+                $view->with('options', $options);
+            });
     }
 }

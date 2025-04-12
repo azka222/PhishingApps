@@ -14,11 +14,18 @@ class Course extends Model
         'created_at',
         'updated_at',
     ];
-    public function quizzes()
+ 
+
+    public function courseQuizMaterial()
+    {
+        return $this->hasMany(CourseQuizMaterial::class);
+    }
+
+    public function quiz()
     {
         return $this->hasMany(Quiz::class);
     }
-    public function materials()
+    public function material()
     {
         return $this->hasMany(Material::class);
     }
