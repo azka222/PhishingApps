@@ -4,8 +4,8 @@
     <div class=" p-4 w-full flex flex-col h-full min-h-screen  bg-gray-50 dark:bg-gray-800 dark:text-white text-gray-900">
         <div class="">
             <div class="flex p-4 items-center justify-between">
-                <h1 class="text-3xl font-semibold">Course Lists</h1>                
-                
+                <h1 class="text-3xl font-semibold">Course Lists</h1>
+
             </div>
             <div class="flex flex-col gap-4 p-4">
                 <div class="max-w-full md:max-w-xs">
@@ -40,22 +40,128 @@
                     </div>
                 </div>
                 <div class=" min-w-38 overflow-x-auto md:min-w-full">
-                    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 mt-4">
-                        <thead class="bg-gray-300 dark:bg-gray-700">
-                            <tr
-                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-300">
-                                <th scope="col" class="p-4">Name</th>
-                                <th scope="col" class="p-4">Content</th>
-                                <th scope="col" class="p-4">Questions</th>
-                                <th scope="col" class="p-4">Status</th>
-                                <th scope="col" class="p-4">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="list-page-tbody"
-                            class="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
+                    <div class="grid grid-cols-3 gap-4">
+                        <div class="col-span-1">
+                            <div class="bg-white dark:bg-gray-700 shadow-md rounded-xl p-4">
+                                <h2 class="text-lg font-semibold">Course Name</h2>
+                                <div class="py-4">
+                                    <img src="{{ asset('storage/course/thumbnail/thumbnail.jpg') }}" alt="Thumbnail"
+                                        class=" w-full h-32 object-cover rounded-md">
+                                </div>
+                               
+                                <p class="text-sm text-gray-400">Total Material: 10</p>
+                                <p class="text-sm text-gray-400">Total Quiz: 5</p>
+                                <div class="flex justify-end pt-4 gap-2">
+                                    <button
+                                    class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-green-600 rounded-xl hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 flex items-center">Description</button>
 
-                        </tbody>
-                    </table>
+                                    <button
+                                        class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 flex items-center">View</button>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-span-1">
+                            <div class="bg-white dark:bg-gray-700 shadow-md rounded-xl p-4">
+                                <h2 class="text-lg font-semibold">Course Name</h2>
+                                <div class="py-4">
+                                    <img src="{{ asset('storage/course/thumbnail/thumbnail.jpg') }}" alt="Thumbnail"
+                                        class=" w-full h-32 object-cover rounded-md">
+                                </div>
+                               
+                                <p class="text-sm text-gray-400">Total Material: 10</p>
+                                <p class="text-sm text-gray-400">Total Quiz: 5</p>
+                                <div class="flex justify-end pt-4 gap-2">
+                                    <button
+                                    class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-green-600 rounded-xl hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 flex items-center">Description</button>
+
+                                    <button
+                                        class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 flex items-center">View</button>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-span-1">
+                            <div class="bg-white dark:bg-gray-700 shadow-md rounded-xl p-4">
+                                <h2 class="text-lg font-semibold">Course Name</h2>
+                                <div class="py-4">
+                                    <img src="{{ asset('storage/course/thumbnail/thumbnail.jpg') }}" alt="Thumbnail"
+                                        class=" w-full h-32 object-cover rounded-md">
+                                </div>
+                               
+                                <p class="text-sm text-gray-400">Total Material: 10</p>
+                                <p class="text-sm text-gray-400">Total Quiz: 5</p>
+                                <div class="flex justify-end pt-4 gap-2">
+                                    <button
+                                    class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-green-600 rounded-xl hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 flex items-center">Description</button>
+
+                                    <button
+                                        class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 flex items-center">View</button>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-span-1">
+                            <div class="bg-white dark:bg-gray-700 shadow-md rounded-xl p-4">
+                                <h2 class="text-lg font-semibold">Course Name</h2>
+                                <div class="py-4">
+                                    <img src="{{ asset('storage/course/thumbnail/thumbnail.jpg') }}" alt="Thumbnail"
+                                        class=" w-full h-32 object-cover rounded-md">
+                                </div>
+                               
+                                <p class="text-sm text-gray-400">Total Material: 10</p>
+                                <p class="text-sm text-gray-400">Total Quiz: 5</p>
+                                <div class="flex justify-end pt-4 gap-2">
+                                    <button
+                                    class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-green-600 rounded-xl hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 flex items-center">Description</button>
+
+                                    <button
+                                        class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 flex items-center">View</button>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-span-1">
+                            <div class="bg-white dark:bg-gray-700 shadow-md rounded-xl p-4">
+                                <h2 class="text-lg font-semibold">Course Name</h2>
+                                <div class="py-4">
+                                    <img src="{{ asset('storage/course/thumbnail/thumbnail.jpg') }}" alt="Thumbnail"
+                                        class=" w-full h-32 object-cover rounded-md">
+                                </div>
+                               
+                                <p class="text-sm text-gray-400">Total Material: 10</p>
+                                <p class="text-sm text-gray-400">Total Quiz: 5</p>
+                                <div class="flex justify-end pt-4 gap-2">
+                                    <button
+                                    class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-green-600 rounded-xl hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 flex items-center">Description</button>
+
+                                    <button
+                                        class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 flex items-center">View</button>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-span-1">
+                            <div class="bg-white dark:bg-gray-700 shadow-md rounded-xl p-4">
+                                <h2 class="text-lg font-semibold">Course Name</h2>
+                                <div class="py-4">
+                                    <img src="{{ asset('storage/course/thumbnail/thumbnail.jpg') }}" alt="Thumbnail"
+                                        class=" w-full h-32 object-cover rounded-md">
+                                </div>
+                               
+                                <p class="text-sm text-gray-400">Total Material: 10</p>
+                                <p class="text-sm text-gray-400">Total Quiz: 5</p>
+                                <div class="flex justify-end pt-4 gap-2">
+                                    <button
+                                    class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-green-600 rounded-xl hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 flex items-center">Description</button>
+
+                                    <button
+                                        class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 flex items-center">View</button>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <nav class="flex items-center flex-column flex-col md:flex-row justify-between p-4"
