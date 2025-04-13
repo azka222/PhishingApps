@@ -131,8 +131,10 @@
 
         function enableEmailField(index) {
             if ($('#checkbox-quiz-' + index).is(':checked')) {
+                $("#quiz-email-content-" + index).val('');
                 $("#email-content-box-" + index).show();
             } else {
+                $("#quiz-email-content-" + index).val('');
                 $("#email-content-box-" + index).hide();
             }
         }
@@ -263,7 +265,7 @@
                             </label>
                          <select id="options-${index}" onchange="getOptions(${index})"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                            <option selected disabled>Choose an option</option>
+                            <option selected disabled value="0">Choose an option</option>
                             @foreach ($options as $optionGroup)
                                 <optgroup label="{{ $optionGroup['group'] }}">
                                     @foreach ($optionGroup['options'] as $option)
@@ -291,6 +293,7 @@
                 let attachmentId = type === "material" ? 'uploadMaterialContent-' + index : 'uploadQuizContent-' +
                     index;
                 let attachment = document.getElementById(attachmentId)?.files[0] ?? null;
+                console.log(attachment)
                 let content = {
                     type: type,
                     name: $('#' + (type === 'material' ? 'course-name-' : 'quiz-name-') + index).val(),
@@ -312,8 +315,25 @@
             let formData = new FormData();
             formData.append('courseName', courseName);
             formData.append('courseDescription', courseDescription);
-            formData.append('contents', JSON.stringify(contents));
             formData.append('courseId', $('#courseId').val());
+            contents.forEach((item,idx)=> {
+                formData.append(`contents[${idx}][type]`, item.type);
+                formData.append(`contents[${idx}][name]`, item.name);
+                formData.append(`contents[${idx}][title]`, item.title);
+                formData.append(`contents[${idx}][content]`, item.content);
+                formData.append(`contents[${idx}][order]`, item.order);
+                formData.append(`contents[${idx}][id]`, item.id);
+                if(item.attachment != null){
+                    formData.append(`contents[${idx}][attachment]`, item.attachment);
+                }
+                if(item.type === 'quiz' && item.emailContent){
+                    formData.append(`contents[${idx}][emailContent]`, item.emailContent);
+                }
+                if(item.type === 'quiz' && item.option != null){
+                    formData.append(`contents[${idx}][option]`, item.option);
+                }
+            });
+           
             formData.append('_token', "{{ csrf_token() }}");
             $.ajax({
                 url: "{{ route('updateCourse') }}",
@@ -323,10 +343,32 @@
                 processData: false,
                 success: function(response) {
                    
-                    window.location.href = "{{ route('adminCourseView') }}";
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: response.message,
+                        showConfirmButton: true,
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'OK',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = "{{ route('adminCourseView') }}";
+                        }
+                    })
                 },
                 error: function(xhr, status, error) {
-                    
+        
+                    let errorMessage = JSON.parse(xhr.responseText);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: errorMessage.message,
+                        showConfirmButton: true,
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'OK'
+                    })
                 }
             });
         }
@@ -355,7 +397,9 @@
                             $('#materialId-' + index1).val(material.id);
                             $('#course-title-' + index1).val(material.title);
                             $('#material-overview-' + index1).val(material.content);
-                            $('#image-material-' + index1).html('<img src="' + material.attachment_url + '" class="w-full h-auto rounded-xl shadow">');
+                            if(material.material_attachment_id != null){
+                                $('#image-material-' + index1).html('<img src="' + material.attachment_url + '" class="w-full h-auto rounded-xl shadow">');
+                            }
                             index1++;
                          
                         } else if (content.model_type === 'quiz') {
@@ -364,13 +408,15 @@
                             $('#quiz-name-' + index2).val(quiz.name);
                             $('#quiz-title-' + index2).val(quiz.title);
                             $('#quiz-overview-' + index2).val(quiz.content);
-                            $('#image-quiz-' + index2).html('<img src="' + quiz.attachment_url + '" class="w-full h-auto rounded-xl shadow">');
                             $('#quiz-email-content-' + index2).val(quiz.email_content);
                             $('#checkbox-quiz-' + index2).prop('checked', quiz.email_content !== null);
                             $('#email-content-box-' + index2).toggle(quiz.email_content !== null);
-                            $('#quiz-email-content-' + index2).val(quiz.email_content.content);
+                            $('#quiz-email-content-' + index2).val(quiz.quiz_email_content_id != null? quiz.email_content.content : '');
                             $('#options-' + index2).val(quiz.option_id);
                             $('#quizId-' + index2).val(quiz.id);
+                            if(quiz.quiz_attachment_id != null){
+                                $('#image-quiz-' + index2).html('<img src="' + quiz.attachment_url + '" class="w-full h-auto rounded-xl shadow">');
+                            }
                             $('#options-' + index2).change();
                             index2++;
                             
