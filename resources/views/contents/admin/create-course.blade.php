@@ -126,8 +126,10 @@
 
         function enableEmailField(index) {
             if ($('#checkbox-quiz-' + index).is(':checked')) {
+                $("#quiz-email-content-" + index).val('');
                 $("#email-content-box-" + index).show();
             } else {
+                $("#quiz-email-content-" + index).val('');
                 $("#email-content-box-" + index).hide();
             }
         }
@@ -256,7 +258,7 @@
                             </label>
                          <select id="options-${index}" onchange="getOptions(${index})"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                            <option selected disabled>Choose an option</option>
+                            <option selected disabled value="0">Choose an option</option>
                             @foreach ($options as $optionGroup)
                                 <optgroup label="{{ $optionGroup['group'] }}">
                                     @foreach ($optionGroup['options'] as $option)
@@ -332,10 +334,34 @@
                 contentType: false,
                 success: function(response) {
                     // alert('Course created successfully!');
-                    window.location.href = "{{ route('adminCourseView') }}";
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: response.message,
+                        showConfirmButton: true,
+                        showCancelButton: false,
+                        allowOutsideClick: false,   
+                        allowEscapeKey: false,                 
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = "{{ route('adminCourseView') }}";
+                        }
+                    });
+                 
                 },
                 error: function(xhr, status, error) {
                     // alert('Error creating course: ' + xhr.responseText);
+                    let errorMessage = JSON.parse(xhr.responseText);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: errorMessage.message,
+                        showConfirmButton: true,
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'OK'
+                    });
                 }
             });
         }

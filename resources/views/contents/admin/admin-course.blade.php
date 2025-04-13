@@ -130,7 +130,7 @@
                     );
                     $("#totalCourseCount").text(response.courseTotal);
                     paginationAdminCourse("#page-button-admin-course", response.pageCount, response
-                    .currentPage);
+                        .currentPage);
 
                 },
                 error: function(xhr, status, error) {
@@ -178,7 +178,8 @@
         }
 
         function editCoursePage(id) {
-            window.location.href = "/admin/user/editCourse/" + id;
+            let url = "{{ route('editCourseView', ['id' => '__ID__']) }}";
+            window.location.href = url.replace('__ID__', id);
         }
     </script>
 

@@ -68,7 +68,7 @@ class CourseController extends Controller
                         'message' => "Quiz content is required on content number {$value['order']}.",
                     ], 400);
                 }
-                if ($value['option'] == null) {
+                if ($value['option'] == null || $value['option'] == 0) {
                     return response()->json([
                         'status'  => 'error',
                         'message' => "Quiz option is required on content number {$value['order']}.",
@@ -211,12 +211,17 @@ class CourseController extends Controller
         foreach ($course->courseQuizMaterial as $cqm) {
             if ($cqm->model_type === 'material') {
                 $cqm->model->load('attachment');
-                $cqm->model->attachment_url = asset('storage/' . $cqm->model->attachment->path);
+                if($cqm->model->material_attachment_id != null){
+                    $cqm->model->attachment_url = asset('storage/' . $cqm->model->attachment->path);
+                }
             }
 
             if ($cqm->model_type === 'quiz') {
                 $cqm->model->load(['attachment', 'emailContent', 'option']);
-                $cqm->model->attachment_url = asset('storage/' . $cqm->model->attachment->path);
+                
+                if($cqm->model->quiz_attachment_id != null){
+                    $cqm->model->attachment_url = asset('storage/' . $cqm->model->attachment->path);
+                }
             }
         }
         $course->courseQuizMaterial = $course->courseQuizMaterial->sortBy('order')->values();
@@ -239,19 +244,66 @@ class CourseController extends Controller
     public function updateCourse(Request $request){
         $request->validate([
             'courseId' => 'required|exists:courses,id',
+            'courseName' => 'required|unique:courses,name,'.$request->courseId,
+            'courseDescription' => 'required',
         ]);
         $course = Course::find($request->courseId);
         if ($course) {
             $course->name        = $request->input('courseName');
             $course->description = $request->input('courseDescription');
-            // $course->save();
+            $course->save();
         }
-
-        $contents = json_decode($request->contents, true);
+        $contents = $request->contents;
         $quizzes  = array_filter($contents, fn($value) => $value['type'] === 'quiz');
         $materials = array_filter($contents, fn($value) => $value['type'] === 'material'); 
         $quizIds = [];
         $materialIds = [];
+        foreach($quizzes as $quiz){
+            if($quiz['name'] == null){
+                return response()->json([
+                    'status'  => 'error',
+                    'message' => "Quiz name is required on content number {$quiz['order']}.",
+                ], 400);
+            }
+            if($quiz['title'] == null){
+                return response()->json([
+                    'status'  => 'error',
+                    'message' => "Quiz title is required on content number {$quiz['order']}.",
+                ], 400);
+            }
+            if($quiz['content'] == null){
+                return response()->json([
+                    'status' => 'error',
+                    'message' => "Quiz content is required on content number {$quiz['order']}.",
+                ], 400);
+            }
+            if(!isset($quiz['option']) || $quiz['option'] == null || $quiz['option'] == 0){
+                return response()->json([
+                    'status'  => 'error',
+                    'message' => "Quiz option is required on content number {$quiz['order']}.",
+                ], 400);
+            }
+        }
+        foreach($materials as $material){
+            if($material['name'] == null){
+                return response()->json([
+                    'status'  => 'error',
+                    'message' => "Material name is required on content number {$material['order']}.",
+                ], 400);
+            }
+            if($material['title'] == null){
+                return response()->json([
+                    'status'  => 'error',
+                    'message' => "Material title is required on content number {$material['order']}.",
+                ], 400);
+            }
+            if($material['content'] == null){
+                return response()->json([
+                    'status'  => 'error',
+                    'message' => "Material content is required on content number {$material['order']}.",
+                ], 400);
+            }
+        }
         foreach($quizzes as $quiz){
             if(isset($quiz['id'])){
                 $quizIds[] = $quiz['id'];
@@ -266,11 +318,11 @@ class CourseController extends Controller
         foreach($courseQuizMaterials as $courseQuizMaterial){
             if($courseQuizMaterial->model_type == 'quiz'){
                 if(!in_array($courseQuizMaterial->model_id, $quizIds)){
-                    // $courseQuizMaterial->delete();
+                    $courseQuizMaterial->delete();
                 }
             }else if($courseQuizMaterial->model_type == 'material'){
                 if(!in_array($courseQuizMaterial->model_id, $materialIds)){
-                    // $courseQuizMaterial->delete();
+                    $courseQuizMaterial->delete();
                 }
             }
         }
@@ -281,16 +333,15 @@ class CourseController extends Controller
                     $quizModel->name    = $quiz['name'];
                     $quizModel->title   = $quiz['title'];
                     $quizModel->content = $quiz['content'];
-                    if (isset($quiz['attachment'])) {
+                    if (isset($quiz['attachment']) && !empty($quiz['attachment'])) {
                         $path                    = $quiz['attachment']->store('course/quiz', 'public');
                         $quizModel->attachment->path   = $path;
                         $quizModel->attachment->name   = $quiz['attachment']->getClientOriginalName();
                         $quizModel->attachment->save();
                         $quizModel->quiz_attachment_id = $quizModel->attachment->id;
                     }
-                    if (isset($quiz['emailContent'])) {
-                        $quizModel->emailContent->delete();
-                        $quizModel->emailContent          = new QuizEmailContent();
+                    if (isset($quiz['emailContent']) && $quiz['emailContent'] != null && $quiz['emailContent'] != '') {
+                     
                         $quizModel->emailContent->content = $quiz['emailContent'];
                         $quizModel->emailContent->save();
                         $quizModel->quiz_email_content_id = $quizModel->emailContent->id;
@@ -301,8 +352,96 @@ class CourseController extends Controller
                         $quizModel->group       = $group->group;
                     }
                     $quizModel->save();
+                   
+                    $courseQuiz = CourseQuizMaterial::where('course_id', $course->id)->where('model_id', $quizModel->id)->where('model_type', 'quiz')->first();
+                    $courseQuiz->order = $quiz['order'];
+                    $courseQuiz->save();
                 }
+              
+            }
+            else{
+                 
+                $newQuiz          = new Quiz();
+                $newQuiz->name    = $quiz['name'];
+                $newQuiz->title   = $quiz['title'];
+                $newQuiz->content = $quiz['content'];
+                if (isset($quiz['attachment']) && !empty($quiz['attachment'])) {
+                    $newQuizAttachment       = new QuizAttachment();
+                    $path                    = $quiz['attachment']->store('course/quiz', 'public');
+                    $newQuizAttachment->name = $quiz['attachment']->getClientOriginalName();
+                    $newQuizAttachment->path = $path;
+                    $newQuizAttachment->save();
+                    $newQuiz->quiz_attachment_id = $newQuizAttachment->id;
+                }
+                if (isset($quiz['emailContent']) && $quiz['emailContent'] != null && $quiz['emailContent'] != '') {
+                    $newQuizEmailContent          = new QuizEmailContent();
+                    $newQuizEmailContent->content = $quiz['emailContent'];
+                    $newQuizEmailContent->save();
+                    $newQuiz->quiz_email_content_id = $newQuizEmailContent->id;
+                }
+                if (isset($quiz['option'])) {
+                    $newQuiz->option_id    = $quiz['option'];
+                    $group                = Option::where('id', $quiz['option'])->first();
+                    $newQuiz->group       = $group->group;
+                }
+                $newQuiz->save();
+                $courseQuiz             = new CourseQuizMaterial();
+                $courseQuiz->course_id  = $course->id;
+                $courseQuiz->model_id   = $newQuiz->id;
+                $courseQuiz->model_type = 'quiz';
+                $courseQuiz->order      = $quiz['order'];
+                $courseQuiz->save();
             }
         }
+        foreach($materials as $material){
+            if(isset($material['id'])){
+                $materialModel = Material::find($material['id']);
+                if($materialModel){
+                    $materialModel->name    = $material['name'];
+                    $materialModel->title   = $material['title'];
+                    $materialModel->content = $material['content'];
+                    if (isset($material['attachment']) && !empty($material['attachment'])) {
+                        $path                        = $material['attachment']->store('course/material', 'public');
+                        $materialModel->attachment->path   = $path;
+                        $materialModel->attachment->name   = $material['attachment']->getClientOriginalName();
+                        $materialModel->attachment->save();
+                        $materialModel->material_attachment_id = $materialModel->attachment->id;
+                    }
+                    $materialModel->save();
+                    $courseQuiz = CourseQuizMaterial::where('course_id', $course->id)->where('model_type', 'material')->where('model_id', $materialModel->id)->first();    
+                    $courseQuiz->order = $material['order'];
+                    $courseQuiz->save();
+                }
+          
+            }
+            else{
+                $newMaterial          = new Material();
+                $newMaterial->name    = $material['name'];
+                $newMaterial->title   = $material['title'];
+                $newMaterial->content = $material['content'];
+                if (isset($material['attachment']) && !empty($material['attachment'])) {
+                    $newMaterialAttachment       = new MaterialAttachment();
+                    $path                        = $material['attachment']->store('course/material', 'public');
+                    $newMaterialAttachment->name = $material['attachment']->getClientOriginalName();
+                    $newMaterialAttachment->path = $path;
+                    $newMaterialAttachment->save();
+                    $newMaterial->material_attachment_id = $newMaterialAttachment->id;
+                }
+                $newMaterial->save();
+                $courseQuiz             = new CourseQuizMaterial();
+                $courseQuiz->course_id  = $course->id;
+                $courseQuiz->model_id   = $newMaterial->id;
+                $courseQuiz->model_type = 'material';
+                $courseQuiz->order      = $material['order'];
+                $courseQuiz->save();
+            }
+        }
+        return response()->json([
+            'status'  => 'success',
+            'message' => 'Course updated successfully',
+            'course'  => $course,
+        ], 200);
+                      
+
     }
 }
