@@ -6,10 +6,20 @@
     <div class=" p-4 w-full flex flex-col h-full min-h-screen  bg-gray-50 dark:bg-gray-800 dark:text-white text-gray-900">
         <div class="flex p-4 items-center justify-between">
             <h1 class="text-3xl font-semibold">Edit Course</h1>
-            <div>
+            <div class="flex flex-row items-center gap-2">
+                <button onclick="uploadThumbnail()">
+                    <div>
+                        <label for="uploadThumbnail"
+                            class="cursor-pointer px-4 py-2 text-xs md:text-sm font-medium text-white bg-green-600 rounded-xl hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 flex items-center">
+                            <span class="hidden md:inline">Upload Thumbnail</span>
+                        </label>
+                        <input type="file" id="uploadThumbnail" class="hidden" accept="image/*">
+                    </div>
+                </button>
                 <button onclick="saveCourse()"
                     class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4 md:hidden">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                        class="size-4 md:hidden">
                         <path fill-rule="evenodd"
                             d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25V9Z"
                             clip-rule="evenodd" />
@@ -24,6 +34,10 @@
                     Name</label>
                 <input type="text" placeholder="Enter course name here..." id="large-input"
                     class="block w-1/2 p-4 mt-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                <div class="w-1/2 mt-8">
+                    <div id="image-course" class="mb-6 min-w-full max-w-full rounded-full">
+                    </div>
+                </div>
                 <label for="quiz-description" class="block mb-2 mt-6 text-sm sm:text-base font-medium">Description
                 </label>
                 <textarea id="quiz-description" rows="6"
@@ -52,6 +66,30 @@
         $(document).ready(function() {
             getCourseDetails();
         });
+
+        function uploadThumbnail() {
+            $('#uploadThumbnail').on('change', function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                if (!file.type.startsWith('image/')) {
+                    alert('File harus berupa gambar!');
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = $('<img>', {
+                        src: e.target.result,
+                        alt: 'Preview',
+                        class: 'w-full h-auto rounded-xl shadow'
+                    });
+
+                    $('#image-course').html(img);
+                };
+
+                reader.readAsDataURL(file);
+            });
+        }
+
         function uploadContent(idButton, idTarget) {
             console.log(idButton, idTarget)
             $('#' + idButton).on('change', function(e) {
@@ -77,7 +115,7 @@
         }
 
         function getOptions(index) {
-            let selectedOption = $('#options-'+index).val();
+            let selectedOption = $('#options-' + index).val();
             console.log(selectedOption)
         }
 
@@ -283,6 +321,7 @@
         function saveCourse() {
             let courseName = $('#large-input').val();
             let courseDescription = $('#quiz-description').val();
+            let courseThumbnail = document.getElementById('uploadThumbnail').files[0];
             let contents = [];
             let order = 1;
             $(".content-material, .content-quiz").sort(function(a, b) {
@@ -315,25 +354,28 @@
             let formData = new FormData();
             formData.append('courseName', courseName);
             formData.append('courseDescription', courseDescription);
+            if(courseThumbnail != undefined || courseThumbnail != null){
+                formData.append('courseThumbnail', courseThumbnail);
+            }
             formData.append('courseId', $('#courseId').val());
-            contents.forEach((item,idx)=> {
+            contents.forEach((item, idx) => {
                 formData.append(`contents[${idx}][type]`, item.type);
                 formData.append(`contents[${idx}][name]`, item.name);
                 formData.append(`contents[${idx}][title]`, item.title);
                 formData.append(`contents[${idx}][content]`, item.content);
                 formData.append(`contents[${idx}][order]`, item.order);
                 formData.append(`contents[${idx}][id]`, item.id);
-                if(item.attachment != null){
+                if (item.attachment != null) {
                     formData.append(`contents[${idx}][attachment]`, item.attachment);
                 }
-                if(item.type === 'quiz' && item.emailContent){
+                if (item.type === 'quiz' && item.emailContent) {
                     formData.append(`contents[${idx}][emailContent]`, item.emailContent);
                 }
-                if(item.type === 'quiz' && item.option != null){
+                if (item.type === 'quiz' && item.option != null) {
                     formData.append(`contents[${idx}][option]`, item.option);
                 }
             });
-           
+
             formData.append('_token', "{{ csrf_token() }}");
             $.ajax({
                 url: "{{ route('updateCourse') }}",
@@ -342,7 +384,7 @@
                 contentType: false,
                 processData: false,
                 success: function(response) {
-                   
+
                     Swal.fire({
                         icon: 'success',
                         title: 'Success',
@@ -359,7 +401,7 @@
                     })
                 },
                 error: function(xhr, status, error) {
-        
+
                     let errorMessage = JSON.parse(xhr.responseText);
                     Swal.fire({
                         icon: 'error',
@@ -372,8 +414,8 @@
                 }
             });
         }
-    
-        function getCourseDetails(){
+
+        function getCourseDetails() {
             let id = $("#courseId").val();
             $.ajax({
                 url: "{{ route('getCourseDetails') }}",
@@ -386,6 +428,8 @@
                     console.log(response)
                     $('#large-input').val(response.course.name);
                     $('#quiz-description').val(response.course.description);
+                    $('#image-course').html('<img src="' + response.course.thumbnail_url +
+                    '" class="w-full h-auto rounded-xl shadow">');
                     let contents = response.course.courseQuizMaterial;
                     let index1 = 1
                     let index2 = 1
@@ -397,11 +441,12 @@
                             $('#materialId-' + index1).val(material.id);
                             $('#course-title-' + index1).val(material.title);
                             $('#material-overview-' + index1).val(material.content);
-                            if(material.material_attachment_id != null){
-                                $('#image-material-' + index1).html('<img src="' + material.attachment_url + '" class="w-full h-auto rounded-xl shadow">');
+                            if (material.material_attachment_id != null) {
+                                $('#image-material-' + index1).html('<img src="' + material
+                                    .attachment_url + '" class="w-full h-auto rounded-xl shadow">');
                             }
                             index1++;
-                         
+
                         } else if (content.model_type === 'quiz') {
                             addQuizContent();
                             let quiz = content.model;
@@ -411,15 +456,17 @@
                             $('#quiz-email-content-' + index2).val(quiz.email_content);
                             $('#checkbox-quiz-' + index2).prop('checked', quiz.email_content !== null);
                             $('#email-content-box-' + index2).toggle(quiz.email_content !== null);
-                            $('#quiz-email-content-' + index2).val(quiz.quiz_email_content_id != null? quiz.email_content.content : '');
+                            $('#quiz-email-content-' + index2).val(quiz.quiz_email_content_id != null ?
+                                quiz.email_content.content : '');
                             $('#options-' + index2).val(quiz.option_id);
                             $('#quizId-' + index2).val(quiz.id);
-                            if(quiz.quiz_attachment_id != null){
-                                $('#image-quiz-' + index2).html('<img src="' + quiz.attachment_url + '" class="w-full h-auto rounded-xl shadow">');
+                            if (quiz.quiz_attachment_id != null) {
+                                $('#image-quiz-' + index2).html('<img src="' + quiz.attachment_url +
+                                    '" class="w-full h-auto rounded-xl shadow">');
                             }
                             $('#options-' + index2).change();
                             index2++;
-                            
+
                         }
 
                     });
