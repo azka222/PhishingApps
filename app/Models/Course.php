@@ -29,4 +29,8 @@ class Course extends Model
     {
         return $this->hasMany(Material::class);
     }
+
+    public function thumbnail(){
+        return $this->belongsTo(CourseThumbnail::class, 'course_thumbnail_id', 'id');   
+    }
 }

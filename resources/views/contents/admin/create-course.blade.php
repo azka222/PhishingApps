@@ -5,7 +5,16 @@
     <div class=" p-4 w-full flex flex-col h-full min-h-screen  bg-gray-50 dark:bg-gray-800 dark:text-white text-gray-900">
         <div class="flex p-4 items-center justify-between">
             <h1 class="text-3xl font-semibold">Create Course</h1>
-            <div>
+            <div class="flex flex-row items-center gap-2">
+                <button onclick="uploadThumbnail()">
+                    <div>
+                        <label for="uploadThumbnail"
+                            class="cursor-pointer px-4 py-2 text-xs md:text-sm font-medium text-white bg-green-600 rounded-xl hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 flex items-center">
+                            <span class="hidden md:inline">Upload Thumbnail</span>
+                        </label>
+                        <input type="file" id="uploadThumbnail" class="hidden" accept="image/*">
+                    </div>
+                </button>
                 <button onclick="saveCourse()"
                     class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 flex items-center">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4 md:hidden">
@@ -15,6 +24,7 @@
                     </svg>
                     <span class="hidden md:inline">Save</span>
                 </button>
+                
             </div>
         </div>
         <div>
@@ -22,7 +32,11 @@
                 <label for="large-input" class="block mb-2 text-xl font-medium text-gray-900 dark:text-white">Course
                     Name</label>
                 <input type="text" placeholder="Enter course name here..." id="large-input"
-                    class="block w-1/2 p-4 mt-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    class="block w-1/2 p-4 my-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                <div class="w-1/2 mt-8">
+                    <div id="image-course" class="mb-6 min-w-full max-w-full rounded-full">
+                    </div>
+                </div>
                 <label for="quiz-description" class="block mb-2 mt-6 text-sm sm:text-base font-medium">Description
                 </label>
                 <textarea id="quiz-description" rows="6"
@@ -48,6 +62,29 @@
     </div>
 
     <script>
+        function uploadThumbnail() {
+            $('#uploadThumbnail').on('change', function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                if (!file.type.startsWith('image/')) {
+                    alert('File harus berupa gambar!');
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = $('<img>', {
+                        src: e.target.result,
+                        alt: 'Preview',
+                        class: 'w-full h-auto rounded-xl shadow'
+                    });
+
+                    $('#image-course').html(img);
+                };
+
+                reader.readAsDataURL(file);
+            });
+        }
+
         function uploadContent(idButton, idTarget) {
             $('#' + idButton).on('change', function(e) {
                 const file = e.target.files[0];
@@ -72,7 +109,7 @@
         }
 
         function getOptions(index) {
-            let selectedOption = $('#options-'+index).val();
+            let selectedOption = $('#options-' + index).val();
             console.log(selectedOption)
         }
 
@@ -275,6 +312,7 @@
 
         function saveCourse() {
             let courseName = $('#large-input').val();
+            let courseThumbnail = document.getElementById('uploadThumbnail').files[0];
             let courseDescription = $('#quiz-description').val();
             let contents = [];
             let order = 1;
@@ -306,6 +344,9 @@
             let formData = new FormData();
             formData.append('courseName', courseName);
             formData.append('courseDescription', courseDescription);
+            if(courseThumbnail != undefined){
+                formData.append('courseThumbnail', courseThumbnail);
+            }
 
             contents.forEach((item, idx) => {
                 formData.append(`contents[${idx}][type]`, item.type);
@@ -321,7 +362,7 @@
                 if (item.type === 'quiz' && item.emailContent) {
                     formData.append(`contents[${idx}][emailContent]`, item.emailContent);
                 }
-                if(item.type === 'quiz' && item.option) {
+                if (item.type === 'quiz' && item.option) {
                     formData.append(`contents[${idx}][option]`, item.option);
                 }
             });
@@ -340,8 +381,8 @@
                         text: response.message,
                         showConfirmButton: true,
                         showCancelButton: false,
-                        allowOutsideClick: false,   
-                        allowEscapeKey: false,                 
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
                         confirmButtonColor: '#3085d6',
                         confirmButtonText: 'OK'
                     }).then((result) => {
@@ -349,7 +390,7 @@
                             window.location.href = "{{ route('adminCourseView') }}";
                         }
                     });
-                 
+
                 },
                 error: function(xhr, status, error) {
                     // alert('Error creating course: ' + xhr.responseText);
