@@ -61,6 +61,8 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         Route::get('/employeeLogout', [AuthenticateController::class, 'logout'])->name('employeeLogout');
         Route::get('/lists', [ViewController::class, 'courseListsView'])->name('courseLists');
         Route::get('/getCourse', [CourseController::class, 'getCourse'])->name('getCourseEmployee');
+        Route::get('/start-course/{id}', [ViewController::class, 'startCourseView'])->name('startCourseView');
+        Route::get('/getCourseDetails', [CourseController::class, 'getCourseDetails'])->name('getCourseDetailsEmployee');
         
 
     });
