@@ -255,6 +255,7 @@ class CourseController extends Controller
             return response()->json([
                 'status' => 'success',
                 'course' => $course,
+                'option' => Option::all()
             ], 200);
         } else {
             return response()->json([

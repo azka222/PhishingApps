@@ -6,9 +6,9 @@
         <div class="flex flex-col r mt-8 w-1/2 dark:bg-gray-700 bg-gray-200 p-8 rounded-xl">
             <h1 class="text-3xl font-semibold" id="course-name">Nama Course Nanti Disini</h1>
             <div class="py-4" id="course-thumbnail">
-                
+
             </div>
-            <div  class="mt-8   rounded-xl min-h-64">
+            <div class="mt-8   rounded-xl min-h-64">
                 <h2>
                     Description :
                 </h2>
@@ -51,8 +51,61 @@
         </div>
     </div>
     <div id="course"
-        class="p-4 w-full flex flex-col h-full min-h-screen items-center justify-center  bg-gray-50 dark:bg-gray-800 dark:text-white text-gray-900"">
+        class="p-4 w-full flex flex-col h-full min-h-screen items-center justify-center  bg-gray-50 dark:bg-gray-800 dark:text-white text-gray-900">
+        <div class="grid grid-cols-4 gap-4 min-h-screen w-full">
+            <div class="col-span-1 ">
+                <div class="grid grid-cols-4 gap-4">
+                    <button>
+                        <div class="col-span-1 bg-gray-700 p-4 rounded-lg dark:hover:bg-green-600">
+                            Quiz 1
+                        </div>
+                    </button>
+                    <button>
+                        <div class="col-span-1 bg-gray-700 p-4 rounded-lg dark:hover:bg-green-600">
+                            Quiz 1
+                        </div>
+                    </button>
+                    <button>
+                        <div class="col-span-1 bg-gray-700 p-4 rounded-lg dark:hover:bg-green-600">
+                            Quiz 1
+                        </div>
+                    </button>
+                    <button>
+                        <div class="col-span-1 bg-gray-700 p-4 rounded-lg dark:hover:bg-green-600">
+                            Quiz 1
+                        </div>
+                    </button>
+                    <button>
+                        <div class="col-span-1 bg-gray-700 p-4 rounded-lg dark:hover:bg-green-600">
+                            Quiz 1
+                        </div>
+                    </button>
+                    <button>
+                        <div class="col-span-1 bg-gray-700 p-4 rounded-lg dark:hover:bg-green-600">
+                            Quiz 1
+                        </div>
+                    </button>
+                    <button>
+                        <div class="col-span-1 bg-gray-700 p-4 rounded-lg dark:hover:bg-green-600">
+                            Quiz 1
+                        </div>
+                    </button>
+                    <button>
+                        <div class="col-span-1 bg-gray-700 p-4 rounded-lg dark:hover:bg-green-600">
+                            Quiz 1
+                        </div>
+                    </button>
+                </div>
+            </div>
+            <div class="col-span-2" id="content-section">
 
+            </div>
+
+            <div class="col-span-1 ">
+
+            </div>
+
+        </div>
     </div>
 
     <script>
@@ -80,8 +133,37 @@
         function startQuiz() {
             $("#term-condition").hide();
             $("#course").show();
+            firstRender();
 
         }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function firstRender() {
+            $(".need-to-hide").hide();
+            $("#content-1").show();
+        }
+
+        function nextRender(order) {
+            $(".need-to-hide").hide();
+            order += 1;
+            $("#content-" + order).show();
+        }
+
+        function previousRender(order) {
+            $(".need-to-hide").hide();
+            order -= 1;
+            $("#content-" + order).show();
+        }
+
+
+
 
         function getCourse() {
             $.ajax({
@@ -95,8 +177,123 @@
                     console.log(response);
                     $("#course-thumbnail").append(`<img src="${response.course.thumbnail_url}" alt="Thumbnail"
                         class=" w-full h-32 object-cover rounded-md">`)
-                        $("#course-name").text(response.course.name)
-                        $("#course-description").text(response.course.description)
+                    $("#course-name").text(response.course.name)
+                    $("#course-description").text(response.course.description)
+                    let courses = response.course.course_quiz_material;
+                    let lastOrder = Math.max(...courses.map(course => course.order));
+                    courses.forEach(function(course, index) {
+                        let firsOrder = 1;
+                        let order = course.order;
+                        let button = '';
+                        if (order == firsOrder) {
+                             button = ` <button id="" onclick="nextRender(${order})"
+                                            class="px-4 py-2 text-md md:text-sm font-medium text-white rounded-xl 
+                                        bg-green-600 dark:bg-green-500 
+                                        hover:bg-green-700 dark:hover:bg-green-600 
+                                        disabled:bg-gray-400 hover:cursor-not-allowed 
+                                        disabled:text-gray-200 transition-colors duration-200">
+                                            <span class="hidden md:inline">Next</span>
+                                        </button>`;
+                        } else if (order == lastOrder) {
+                             button = `<button id="" onclick="previousRender(${order})"
+                                            class="px-4 py-2 text-md md:text-sm font-medium text-white rounded-xl 
+                                    bg-blue-600 dark:bg-blue-500 
+                                    hover:bg-blue-700 dark:hover:bg-blue-600 
+                                    disabled:bg-gray-400 hover:cursor-not-allowed 
+                                    disabled:text-gray-200 transition-colors duration-200">
+                                            <span class="hidden md:inline">Previous</span>
+                                        </button>`;
+                        } else {
+                             button = ` <button id="" onclick="nextRender(${order})"
+                                            class="px-4 py-2 text-md md:text-sm font-medium text-white rounded-xl 
+                                        bg-green-600 dark:bg-green-500 
+                                        hover:bg-green-700 dark:hover:bg-green-600 
+                                        disabled:bg-gray-400 hover:cursor-not-allowed 
+                                        disabled:text-gray-200 transition-colors duration-200">
+                                            <span class="hidden md:inline">Next</span>
+                                        </button>
+                                        <button id="" onclick="previousRender(${order})"
+                                            class="px-4 py-2 text-md md:text-sm font-medium text-white rounded-xl 
+                                    bg-blue-600 dark:bg-blue-500 
+                                    hover:bg-blue-700 dark:hover:bg-blue-600 
+                                    disabled:bg-gray-400 hover:cursor-not-allowed 
+                                    disabled:text-gray-200 transition-colors duration-200">
+                                            <span class="hidden md:inline">Previous</span>
+                                        </button>`;
+                        }
+                      
+
+                        if (course.model_type === 'material') {
+                            let material = `<div id="content-${order}"
+                                    class="need-to-hide w-full p-8 dark:bg-gray-700 border-2 dark:border-gray-500 border-gray-800 rounded-xl">
+                                    <div class="flex  items-center justify-center mb-4">
+                                        <h1 class="text-3xl font-semibold">${course.model.title}</h1>
+                                    </div>
+                                    <div id="image-quiz" class="mb-6  rounded-full">
+                                        <img src="http://localhost/PhishingApps/public/storage/course/thumbnail/4dWOd6wHwabihsqIt7YKAmcrUowOs1rcBEX6p5x0.jpg"
+                                            class="w-full h-auto rounded-xl shadow">
+                                    </div>
+                                    <div id="desc-box" class="mt-8">
+                                        <h2>
+                                           ${course.model.content}
+                                        </h2>
+                                    </div>
+                                    
+                                    <div class="flex items-center justify-end mt-8 gap-2">
+                                        ${button}
+                                      
+                                    </div>
+                                </div>`;
+                            $("#content-section").append(material);
+                        } else if (course.model_type === 'quiz') {
+                            let quizImage = course.model.attachment != null ? `<img src=${course.model.attachment_url}
+                            class="w-full h-auto rounded-xl shadow">` : '';
+                            let options = response.option.filter(opt => opt.group == course.model.option
+                                .group);
+                            options = shuffleArray(options);
+                            let quiz = ` <div id="content-${order}"
+                                            class="need-to-hide w-full p-8 dark:bg-gray-700   border-2 dark:border-gray-500 border-gray-800 rounded-xl">
+                                            <div class="flex  items-center justify-center mb-4">
+                                                <h1 class="text-3xl font-semibold" id="">${course.model.title}</h1>
+                                            </div>
+                                            <div id="image-quiz-${order}" class="mb-6  rounded-full">
+                                                ${quizImage}
+                                            </div>
+                                            <div id="desc-box" class="mt-8">
+                                                <h2 id="quiz-material-${order}">
+                                                    ${course.model.content}
+                                                </h2>
+                                            </div>
+                                            <div id="option-section-${order}" class="flex flex-row items-center justify-center gap-4 mt-8">
+                                            
+                                            </div>
+                                            <div class="flex items-center justify-end mt-8 gap-2">
+                                               ${button}
+                                            </div>
+                                        </div>`;
+                            $("#content-section").append(quiz)
+                            options.forEach(function(option, index) {
+                                let correct = false;
+                                if (course.model.option_id == option.id) {
+                                    correct = true
+                                }
+                                let optionQuiz = `<div class="border-2 dark:border-gray-500 p-4 rounded-xl min-w-[20rem]">
+                                                    <div class="flex items-center">
+                                                        <input id="option-${index}-${order}" type="radio" value="${option.id}" name="default-radio" data-correct="${correct}"
+                                                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600  focus:ring-2 ">
+                                                        <label for="option-${index}-${order}"
+                                                            class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">${option.name}</label>
+                                                    </div>
+                                                </div>`;
+                                $("#option-section-" + order).append(optionQuiz);
+                            });
+
+
+                        }
+
+
+                    });
+
                 },
             })
         }
