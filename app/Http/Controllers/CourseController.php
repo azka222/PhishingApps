@@ -10,6 +10,8 @@ use App\Models\Option;
 use App\Models\Quiz;
 use App\Models\QuizAttachment;
 use App\Models\QuizEmailContent;
+use App\Models\Target;
+use App\Models\TargetCourseScore;
 use Illuminate\Http\Request;
 
 class CourseController extends Controller
@@ -172,8 +174,7 @@ class CourseController extends Controller
         $courses = Course::with(['courseQuizMaterial' => function ($query) {
             $query->with('quiz', 'material');
         }, 'thumbnail']);
-    
-      
+
         if ($request->has('search')) {
             $courses = $courses->where('name', 'like', '%' . $request->input('search') . '%');
         }
@@ -184,9 +185,8 @@ class CourseController extends Controller
         foreach ($courses as $course) {
             if (isset($course->thumbnail)) {
                 $course->thumbnail_url = asset('storage/' . $course->thumbnail->path);
-            }
-            else{
-                $course->thumbnail_url  = asset('storage/app/public/thumbnail/thumbnail.jpg');
+            } else {
+                $course->thumbnail_url = asset('storage/app/public/thumbnail/thumbnail.jpg');
             }
         }
         $totalCourse = $courses->count();
@@ -227,11 +227,10 @@ class CourseController extends Controller
             'id' => 'required|exists:courses,id',
         ]);
         $course = Course::with('courseQuizMaterial.model', 'thumbnail')->find($request->id);
-        if(isset($course->thumbnail)){
+        if (isset($course->thumbnail)) {
             $course->thumbnail_url = asset('storage/' . $course->thumbnail->path);
-        }
-        else{
-            $course->thumbnail_url  = asset('storage/app/public/thumbnail/thumbnail.jpg');
+        } else {
+            $course->thumbnail_url = asset('storage/app/public/thumbnail/thumbnail.jpg');
         }
         foreach ($course->courseQuizMaterial as $cqm) {
             if ($cqm->model_type === 'material') {
@@ -255,7 +254,7 @@ class CourseController extends Controller
             return response()->json([
                 'status' => 'success',
                 'course' => $course,
-                'option' => Option::all()
+                'option' => Option::all(),
             ], 200);
         } else {
             return response()->json([
@@ -270,25 +269,24 @@ class CourseController extends Controller
         $request->validate([
             'courseId'          => 'required|exists:courses,id',
             'courseName'        => 'required|unique:courses,name,' . $request->courseId,
-            'courseDescription' => 'required'
+            'courseDescription' => 'required',
         ]);
-       
+
         $course = Course::find($request->courseId);
         if ($course) {
             $course->name        = $request->input('courseName');
             $course->description = $request->input('courseDescription');
-            if(isset($request->courseThumbnail)){
+            if (isset($request->courseThumbnail)) {
                 $thumbnail = $request->courseThumbnail;
-                if($thumbnail != 'undefined' || $thumbnail != null){
-                    $courseThumbnail = new CourseThumbnail();
+                if ($thumbnail != 'undefined' || $thumbnail != null) {
+                    $courseThumbnail       = new CourseThumbnail();
                     $courseThumbnail->path = $thumbnail->store('course/thumbnail', 'public');
                     $courseThumbnail->name = $thumbnail->getClientOriginalName();
                     $courseThumbnail->save();
                     $course->course_thumbnail_id = $courseThumbnail->id;
                 }
             }
-            
-          
+
             $course->save();
         }
         $contents    = $request->contents;
@@ -479,4 +477,43 @@ class CourseController extends Controller
         ], 200);
 
     }
+
+    public function submitCourse(Request $request)
+    {
+        $request->validate([
+            'id'             => 'required|exists:courses,id',
+            'total_correct'  => 'required|numeric',
+            'total_wrong'    => 'required|numeric',
+            'total_question' => 'required|numeric',
+        ]);
+
+        $true     = $request->total_correct;
+        $false    = $request->total_wrong;
+        $question = $request->total_question;
+
+        $score = ($question > 0) ? ($true / $question * 100) : 0;
+
+        $target = Target::where('email', auth()->user()->email)->first();
+      
+
+        if (! $target) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Target not found for the user.',
+            ], 404);
+        }
+
+        $newData            = new TargetCourseScore();
+        $newData->user_id   = auth()->user()->id;
+        $newData->target_id = $target->id;
+        $newData->course_id = $request->id;
+        $newData->score     = $score;
+        $newData->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Score submitted successfully.',
+        ]);
+    }
+
 }

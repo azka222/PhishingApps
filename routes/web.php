@@ -63,6 +63,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         Route::get('/getCourse', [CourseController::class, 'getCourse'])->name('getCourseEmployee');
         Route::get('/start-course/{id}', [ViewController::class, 'startCourseView'])->name('startCourseView');
         Route::get('/getCourseDetails', [CourseController::class, 'getCourseDetails'])->name('getCourseDetailsEmployee');
+        Route::post('/submitCourse', [CourseController::class, 'submitCourse'])->name('submitQuizEmployee');
         
 
     });

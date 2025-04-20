@@ -52,49 +52,11 @@
     </div>
     <div id="course"
         class="p-4 w-full flex flex-col h-full min-h-screen items-center justify-center  bg-gray-50 dark:bg-gray-800 dark:text-white text-gray-900">
-        <div class="grid grid-cols-4 gap-4 min-h-screen w-full">
-            <div class="col-span-1 ">
-                <div class="grid grid-cols-4 gap-4">
-                    <button>
-                        <div class="col-span-1 bg-gray-700 p-4 rounded-lg dark:hover:bg-green-600">
-                            Quiz 1
-                        </div>
-                    </button>
-                    <button>
-                        <div class="col-span-1 bg-gray-700 p-4 rounded-lg dark:hover:bg-green-600">
-                            Quiz 1
-                        </div>
-                    </button>
-                    <button>
-                        <div class="col-span-1 bg-gray-700 p-4 rounded-lg dark:hover:bg-green-600">
-                            Quiz 1
-                        </div>
-                    </button>
-                    <button>
-                        <div class="col-span-1 bg-gray-700 p-4 rounded-lg dark:hover:bg-green-600">
-                            Quiz 1
-                        </div>
-                    </button>
-                    <button>
-                        <div class="col-span-1 bg-gray-700 p-4 rounded-lg dark:hover:bg-green-600">
-                            Quiz 1
-                        </div>
-                    </button>
-                    <button>
-                        <div class="col-span-1 bg-gray-700 p-4 rounded-lg dark:hover:bg-green-600">
-                            Quiz 1
-                        </div>
-                    </button>
-                    <button>
-                        <div class="col-span-1 bg-gray-700 p-4 rounded-lg dark:hover:bg-green-600">
-                            Quiz 1
-                        </div>
-                    </button>
-                    <button>
-                        <div class="col-span-1 bg-gray-700 p-4 rounded-lg dark:hover:bg-green-600">
-                            Quiz 1
-                        </div>
-                    </button>
+        <div class="grid md:grid-cols-4 gap-4 min-h-screen w-full grid-cols-1">
+            <div class="col-span-1">
+                <div id="number-section" class="grid md:grid-cols-4 grid-cols-2 gap-4">
+
+
                 </div>
             </div>
             <div class="col-span-2" id="content-section">
@@ -102,13 +64,24 @@
             </div>
 
             <div class="col-span-1 ">
+                <div class="flex items-center justify-end">
+                    <button id="submitButton" onclick="checkAllQuizAnswered()"
+                        class="px-4 py-2 text-md md:text-sm font-medium text-white rounded-xl 
+                           bg-green-600 dark:bg-green-500 
+                           hover:bg-green-700 dark:hover:bg-green-600 
+                           disabled:bg-gray-400 hover:cursor-not-allowed 
+                           disabled:text-gray-200 transition-colors duration-200">
+                        <span class="hidden md:inline">Submit</span>
+                    </button>
 
+                </div>
             </div>
 
         </div>
     </div>
 
     <script>
+        let totalQuestions = [];
         $(document).ready(function() {
             $("#course").hide();
             getCourse();
@@ -130,6 +103,68 @@
             }
         }
 
+        function checkAllQuizAnswered() {
+            let allAnswered = true;
+            let notAnswered = [];
+            totalQuestions.forEach(function(order) {
+                let selectedOption = $(`#option-section-${order} input[type="radio"]:checked`);
+                if (selectedOption.length === 0) {
+                    notAnswered.push(order);
+                    allAnswered = false;
+                }
+            });
+            if (!allAnswered) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: `You have not answered the following Quizzes: ${notAnswered.join(', ')}`,
+                    confirmButtonText: 'OK',
+                    customClass: {
+                        confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2'
+                    }
+                });
+            }
+            if (allAnswered) {
+                let totalCorrect = 0;
+                let totalWrong = 0;
+                totalQuestions.forEach(function(order) {
+                    let selectedOption = $(`#option-section-${order} input[type="radio"]:checked`);
+                    let correctAnswer = selectedOption.data("correct");
+                    if (correctAnswer) {
+                        totalCorrect += 1;
+                    } else {
+                        totalWrong += 1;
+                    }
+                });
+                $.ajax({
+                    url: "{{ route('submitQuizEmployee') }}",
+                    type: "POST",
+                    data: {
+                        id: $("#course-id").val(),
+                        total_correct: totalCorrect,
+                        total_wrong: totalWrong,
+                        total_question: totalQuestions.length,
+                        _token: "{{ csrf_token() }}"
+                    },
+                    success: function(response) {
+                        console.log(response);
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: `You have completed the quiz!`,
+                            confirmButtonText: 'OK',
+                            allowOutsideClick:false,
+                            customClass: {
+                                confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2'
+                            }
+                        }).then(() => {
+                            window.location.href = "{{ route('courseLists') }}";
+                        });
+                    },
+                })
+            }
+        }
+
         function startQuiz() {
             $("#term-condition").hide();
             $("#course").show();
@@ -148,22 +183,31 @@
         function firstRender() {
             $(".need-to-hide").hide();
             $("#content-1").show();
+            goToNumber(1);
         }
 
         function nextRender(order) {
             $(".need-to-hide").hide();
             order += 1;
             $("#content-" + order).show();
+            goToNumber(order);
         }
 
         function previousRender(order) {
             $(".need-to-hide").hide();
             order -= 1;
             $("#content-" + order).show();
+            goToNumber(order);
         }
 
-
-
+        function goToNumber(order) {
+            $(".need-to-hide").hide();
+            $("#content-" + order).show();
+            let buttonNumber = document.getElementById("button-number-" + order);
+            $(".number-section").removeClass("bg-green-600").addClass("bg-gray-700");
+            buttonNumber.classList.add("bg-green-600");
+            buttonNumber.classList.remove("bg-gray-700");
+        }
 
         function getCourse() {
             $.ajax({
@@ -175,18 +219,20 @@
                 },
                 success: function(response) {
                     console.log(response);
+                    $("#content-section").empty();
+                    $("#number-section").empty();
                     $("#course-thumbnail").append(`<img src="${response.course.thumbnail_url}" alt="Thumbnail"
                         class=" w-full h-32 object-cover rounded-md">`)
                     $("#course-name").text(response.course.name)
                     $("#course-description").text(response.course.description)
-                    let courses = response.course.course_quiz_material;
+                    let courses = response.course.courseQuizMaterial;
                     let lastOrder = Math.max(...courses.map(course => course.order));
                     courses.forEach(function(course, index) {
                         let firsOrder = 1;
                         let order = course.order;
                         let button = '';
                         if (order == firsOrder) {
-                             button = ` <button id="" onclick="nextRender(${order})"
+                            button = ` <button id="" onclick="nextRender(${order})"
                                             class="px-4 py-2 text-md md:text-sm font-medium text-white rounded-xl 
                                         bg-green-600 dark:bg-green-500 
                                         hover:bg-green-700 dark:hover:bg-green-600 
@@ -195,7 +241,7 @@
                                             <span class="hidden md:inline">Next</span>
                                         </button>`;
                         } else if (order == lastOrder) {
-                             button = `<button id="" onclick="previousRender(${order})"
+                            button = `<button id="" onclick="previousRender(${order})"
                                             class="px-4 py-2 text-md md:text-sm font-medium text-white rounded-xl 
                                     bg-blue-600 dark:bg-blue-500 
                                     hover:bg-blue-700 dark:hover:bg-blue-600 
@@ -204,14 +250,7 @@
                                             <span class="hidden md:inline">Previous</span>
                                         </button>`;
                         } else {
-                             button = ` <button id="" onclick="nextRender(${order})"
-                                            class="px-4 py-2 text-md md:text-sm font-medium text-white rounded-xl 
-                                        bg-green-600 dark:bg-green-500 
-                                        hover:bg-green-700 dark:hover:bg-green-600 
-                                        disabled:bg-gray-400 hover:cursor-not-allowed 
-                                        disabled:text-gray-200 transition-colors duration-200">
-                                            <span class="hidden md:inline">Next</span>
-                                        </button>
+                            button = `
                                         <button id="" onclick="previousRender(${order})"
                                             class="px-4 py-2 text-md md:text-sm font-medium text-white rounded-xl 
                                     bg-blue-600 dark:bg-blue-500 
@@ -219,19 +258,28 @@
                                     disabled:bg-gray-400 hover:cursor-not-allowed 
                                     disabled:text-gray-200 transition-colors duration-200">
                                             <span class="hidden md:inline">Previous</span>
+                                        </button>
+                                         <button id="" onclick="nextRender(${order})"
+                                            class="px-4 py-2 text-md md:text-sm font-medium text-white rounded-xl 
+                                        bg-green-600 dark:bg-green-500 
+                                        hover:bg-green-700 dark:hover:bg-green-600 
+                                        disabled:bg-gray-400 hover:cursor-not-allowed 
+                                        disabled:text-gray-200 transition-colors duration-200">
+                                            <span class="hidden md:inline">Next</span>
                                         </button>`;
                         }
-                      
+
 
                         if (course.model_type === 'material') {
+                            let materialImage = course.model.attachment != null ? `<img src=${course.model.attachment_url}
+                            class="w-full h-auto rounded-xl shadow">` : '';
                             let material = `<div id="content-${order}"
                                     class="need-to-hide w-full p-8 dark:bg-gray-700 border-2 dark:border-gray-500 border-gray-800 rounded-xl">
                                     <div class="flex  items-center justify-center mb-4">
                                         <h1 class="text-3xl font-semibold">${course.model.title}</h1>
                                     </div>
                                     <div id="image-quiz" class="mb-6  rounded-full">
-                                        <img src="http://localhost/PhishingApps/public/storage/course/thumbnail/4dWOd6wHwabihsqIt7YKAmcrUowOs1rcBEX6p5x0.jpg"
-                                            class="w-full h-auto rounded-xl shadow">
+                                        ${materialImage}
                                     </div>
                                     <div id="desc-box" class="mt-8">
                                         <h2>
@@ -244,8 +292,16 @@
                                       
                                     </div>
                                 </div>`;
+
+                            let buttonNumber = `<button onclick="goToNumber(${order})">
+                                    <div id="button-number-${order}" class="number-section col-span-1 bg-gray-700 p-4 rounded-lg dark:hover:bg-green-600">
+                                        Material ${order}
+                                    </div>
+                                </button>`
                             $("#content-section").append(material);
+                            $("#number-section").append(buttonNumber)
                         } else if (course.model_type === 'quiz') {
+                            totalQuestions.push(order);
                             let quizImage = course.model.attachment != null ? `<img src=${course.model.attachment_url}
                             class="w-full h-auto rounded-xl shadow">` : '';
                             let options = response.option.filter(opt => opt.group == course.model.option
@@ -271,7 +327,14 @@
                                                ${button}
                                             </div>
                                         </div>`;
+
+                            let buttonNumber = `<button onclick="goToNumber(${order})">
+                                    <div id="button-number-${order}" class="number-section col-span-1 bg-gray-700 p-4 rounded-lg dark:hover:bg-green-600">
+                                        Quiz ${order}
+                                    </div>
+                                </button>`
                             $("#content-section").append(quiz)
+                            $("#number-section").append(buttonNumber);
                             options.forEach(function(option, index) {
                                 let correct = false;
                                 if (course.model.option_id == option.id) {
@@ -279,7 +342,7 @@
                                 }
                                 let optionQuiz = `<div class="border-2 dark:border-gray-500 p-4 rounded-xl min-w-[20rem]">
                                                     <div class="flex items-center">
-                                                        <input id="option-${index}-${order}" type="radio" value="${option.id}" name="default-radio" data-correct="${correct}"
+                                                        <input id="option-${index}-${order}" type="radio" value="${option.id}" name="default-radio-${order}" data-correct="${correct}"
                                                             class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600  focus:ring-2 ">
                                                         <label for="option-${index}-${order}"
                                                             class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">${option.name}</label>
