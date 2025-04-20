@@ -1,7 +1,7 @@
 @extends('layouts.employee-master')
 @section('content')
 @include('contents.modal.course.course-desc')
-    <div class=" p-4 w-full flex flex-col h-full min-h-screen  bg-gray-50 dark:bg-gray-800 dark:text-white text-gray-900">
+    <div class="p-4 w-full flex flex-col h-full min-h-screen  bg-gray-50 dark:bg-gray-800 dark:text-white text-gray-900">
         <div class="">
             <div class="flex p-4 items-center justify-between">
                 <h1 class="text-3xl font-semibold">Course Lists</h1>
@@ -115,7 +115,7 @@
                                     <button onclick="showDescription('${course.name}', '${course.description}')"
                                         class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 flex items-center">Description</button>
 
-                                    <button
+                                    <button onclick="startCourse(${course.id})"
                                         class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-green-600 rounded-xl hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 flex items-center">Start</button>
 
                                 </div>
@@ -140,6 +140,11 @@
                     console.error(error);
                 }
             });
+        }
+
+        function startCourse(id) {
+            let url = "{{ route('startCourseView', ['id' => '__ID__']) }}";
+            window.location.href = url.replace('__ID__', id);
         }
     </script>
 @endsection
