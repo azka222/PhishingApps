@@ -55,7 +55,7 @@
                             <div id="donut-link-clicked"></div>
                         </div>
                         <div class="col-span-4 lg:col-span-1 md:col-span-2  flex flex-col items-center justify-center">
-                            <p class="text-xs md:text-sm font-semibold mb-4">Emails Reported</p>
+                            <p class="text-xs md:text-sm font-semibold mb-4">Submitted Data</p>
                             <div id="donut-email-reported"></div>
                         </div>
                     </div>
@@ -160,9 +160,9 @@
                     getLinkClickedChart(dataLinkClicked.linkClicked, dataLinkClicked.linkNotClicked,
                         dataLinkClicked.totalEmail);
 
-                    let dataEmailReported = calculateEmailReported(response.results);
-                    getEmailReportedChart(dataEmailReported.emailReported, dataEmailReported.emailNotReported,
-                        dataEmailReported.totalEmail);
+                    let dataSubmittedData = calculateSubmittedData(response.results);
+                    getSubmittedData(dataSubmittedData.linkSubmitted, dataSubmittedData.linkNotSubmitted,
+                        dataSubmittedData.totalEmail);
 
                     $('#list-campaign-tbody').empty();
                     let targetUsers = response.paginated_results;
@@ -271,7 +271,7 @@
                 if (result.status != "Scheduled") {
                     tempSent++;
                 }
-                if(result.status == "Error" || campaign.status == "Queued"){
+                if(result.status == "Error" || result.status == "Queued" || result.status == "Email Bounced"){
                     tempSent = 0;
                 }
             });
@@ -291,7 +291,7 @@
                 if (result.status != "Scheduled" && result.status != "Email Sent") {
                     tempOpened++;
                 }
-                if(result.status == "Error" || campaign.status == "Queued"){
+                if(result.status == "Error" || result.status == "Queued" || result.status == "Email Bounced"){
                     tempOpened = 0;
                 }
             });
@@ -316,6 +316,23 @@
             return {
                 linkClicked: tempClicked,
                 linkNotClicked: tempNotClicked,
+                totalEmail: tempTotal
+            }
+        }
+
+        function calculateSubmittedData(results) {
+            let tempTotal = results.length;
+            let tempSubmitted = 0;
+            let tempNotSubmitted = 0;
+            results.forEach(function(result) {
+                if (result.status === "Submitted Data") {
+                    tempClicked++;
+                }
+            });
+            tempNotSubmitted = tempTotal - tempSubmitted;
+            return {
+                linkSubmitted: tempSubmitted,
+                linkNotSubmitted: tempNotSubmitted,
                 totalEmail: tempTotal
             }
         }
@@ -447,15 +464,15 @@
             chart.render();
         }
 
-        function getEmailReportedChart(emailReported = 0, emailNotReported = 0, totalEmail = 0) {
+        function getSubmittedData(linkSubmitted = 0, linkNotSubmitted = 0, totalEmail = 0) {
             var options = {
                 chart: {
                     type: 'donut',
                     height: 250,
                     width: 250,
                 },
-                series: [emailReported, emailNotReported],
-                labels: ['Reported', 'Not Reported'],
+                series: [linkSubmitted, linkNotSubmitted],
+                labels: ['Submitted', 'Not Submitted'],
                 plotOptions: {
                     pie: {
                         donut: {
@@ -466,13 +483,7 @@
                                     label: 'Total',
                                     formatter: function(w) {
                                         return totalEmail;
-                                    },
-
-                                },
-                                style: {
-                                    fontSize: '6px',
-                                    fontWeight: 'bold',
-                                    color: '#333'
+                                    }
                                 }
                             }
                         }
