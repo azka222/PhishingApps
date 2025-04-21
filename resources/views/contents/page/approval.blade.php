@@ -232,7 +232,10 @@
                         title: "Success",
                         text: response.message,
                         confirmButtonColor: '#10b981',
-                        confirmButtonText: 'Close'
+                        confirmButtonText: 'Close',
+                        customClass: {
+                            confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700',
+                        },
                     });
                     getAllApproval();
                 },
@@ -250,7 +253,11 @@
                             title: "Error",
                             text: xhr.responseJSON.message,
                             confirmButtonColor: '#10b981',
-                            confirmButtonText: 'Close'
+                            confirmButtonText: 'Close',
+                            customClass: {
+                                confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700',
+                       
+                            },
                         });
                     }
                 }

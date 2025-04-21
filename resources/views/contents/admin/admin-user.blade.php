@@ -191,7 +191,11 @@
                                 text: 'Success updated user.',
                                 icon: 'success',
                                 confirmButtonColor: '#10b981',
-                                confirmButtonText: 'OK'
+                                confirmButtonText: 'OK',
+                                customClass: {
+                                    confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700'
+
+                                },
                             });
                         }
                     },
@@ -221,7 +225,11 @@
                     showCancelButton: true,
                     confirmButtonColor: '#d97706',
                     cancelButtonColor: '#e3342f',
-                    confirmButtonText: 'Yes, delete it!'
+                    confirmButtonText: 'Yes, delete it!',
+                    customClass: {
+                        confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700',
+                        cancelButton: 'bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 ml-2'
+                    },
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
@@ -239,7 +247,11 @@
                                         text: 'Success deleted user.',
                                         icon: 'success',
                                         confirmButtonColor: '#10b981',
-                                        confirmButtonText: 'OK'
+                                        confirmButtonText: 'OK',
+                                        customClass: {
+                                            confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700',
+
+                                        },
                                     });
                                 }
                             }
