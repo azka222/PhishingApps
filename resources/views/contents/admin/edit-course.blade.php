@@ -354,7 +354,7 @@
             let formData = new FormData();
             formData.append('courseName', courseName);
             formData.append('courseDescription', courseDescription);
-            if(courseThumbnail != undefined || courseThumbnail != null){
+            if (courseThumbnail != undefined || courseThumbnail != null) {
                 formData.append('courseThumbnail', courseThumbnail);
             }
             formData.append('courseId', $('#courseId').val());
@@ -394,6 +394,10 @@
                         confirmButtonText: 'OK',
                         allowOutsideClick: false,
                         allowEscapeKey: false,
+                        customClass: {
+                            confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700',
+
+                        }
                     }).then((result) => {
                         if (result.isConfirmed) {
                             window.location.href = "{{ route('adminCourseView') }}";
@@ -409,7 +413,11 @@
                         text: errorMessage.message,
                         showConfirmButton: true,
                         confirmButtonColor: '#3085d6',
-                        confirmButtonText: 'OK'
+                        confirmButtonText: 'OK',
+                        customClass: {
+                            confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700',
+
+                        }
                     })
                 }
             });
@@ -429,7 +437,7 @@
                     $('#large-input').val(response.course.name);
                     $('#quiz-description').val(response.course.description);
                     $('#image-course').html('<img src="' + response.course.thumbnail_url +
-                    '" class="w-full h-auto rounded-xl shadow">');
+                        '" class="w-full h-auto rounded-xl shadow">');
                     let contents = response.course.courseQuizMaterial;
                     let index1 = 1
                     let index2 = 1

@@ -194,7 +194,7 @@
             $("#group-list").empty();
             let tempGroup = groups.find(group => group.name.trim() == name.trim());
             if (!tempGroup) {
-            return;
+                return;
             }
             $("#group-list").append(`
                 <div class="group-campaign flex items-center justify-between mb-4 shadow-md p-3 rounded-xl"
@@ -258,7 +258,12 @@
                     title: "Response Took Too Long",
                     text: "The connection is taking longer than expected. Please check your email profile.",
                     confirmButtonColor: '#10b981',
-                    confirmButtonText: 'Close'
+                    confirmButtonText: 'Close',
+                    allowOutsideClick: false,
+                    customClass: {
+                        confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700',
+                    }
+                   
                 });
             }, 10000);
 
@@ -499,7 +504,8 @@
                         (page - 1) * $("#show").val() + response.data.length
                     );
                     $("#totalTemplatesCount").text(response.campaignTotal);
-                    paginationCampaign("#page-button-campaign-company", response.pageCount, response.currentPage);
+                    paginationCampaign("#page-button-campaign-company", response.pageCount, response
+                        .currentPage);
                 }
 
             });
@@ -600,7 +606,7 @@
         }
 
 
-         function copyCampaign(id) {
+        function copyCampaign(id) {
             let tempCampaign = campaigns.find(campaign => campaign.id == id);
             let data = JSON.parse(tempCampaign.data);
             console.log(data);
@@ -640,7 +646,7 @@
             });
 
             data.groups.forEach(group => {
-                 copyGroupToCampaign(group.name.split('-+-')[0]);
+                copyGroupToCampaign(group.name.split('-+-')[0]);
             });
 
         }

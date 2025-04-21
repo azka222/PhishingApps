@@ -145,9 +145,13 @@
                 text: "You won't be able to revert this!",
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'Cancel',
+                customClass: {
+                    confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700',
+                    cancelButton: 'bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 ml-2'
+                },
+                buttonsStyling: false
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
@@ -165,7 +169,11 @@
                                 text: 'Your course has been deleted.',
                                 showConfirmButton: true,
                                 confirmButtonColor: '#3085d6',
-                                confirmButtonText: 'OK'
+                                confirmButtonText: 'OK',
+                                customClass: {
+                                    confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700',
+                                    
+                                },
 
                             })
                         },

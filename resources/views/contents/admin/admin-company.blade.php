@@ -205,7 +205,11 @@
                             text: 'Successfully updated company.',
                             icon: 'success',
                             confirmButtonColor: '#10b981',
-                            confirmButtonText: 'OK'
+                            confirmButtonText: 'OK',
+                            customClass: {
+                                confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700',
+
+                            }
                         });
                     }
                 }
@@ -220,7 +224,11 @@
                 showCancelButton: true,
                 confirmButtonColor: '#ef4444',
                 cancelButtonColor: '#26d43b',
-                confirmButtonText: 'Yes, delete it!'
+                confirmButtonText: 'Yes, delete it!',
+                customClass: {
+                    confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700',
+                    cancelButton: 'bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 ml-2'
+                }
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
@@ -250,21 +258,21 @@
         async function getUserIdbyCompany(id) {
 
             await $.ajax({
-            url: "{{ route('getUsersByCompanyId', '') }}/" + id,
-            type: "GET",
-            data: {
-                id: id
-            },
-            success: function(data) {
-                console.log(data);
-                $('#owner').empty();
-                $('#owner').append(`<option value="" disabled>Select Owner</option>`);
-                data.users.forEach(function(user) {
-                $('#owner').append(
-                    `<option value="${user.id}">${user.first_name} ${user.last_name}</option>`
-                );
-                });
-            }
+                url: "{{ route('getUsersByCompanyId', '') }}/" + id,
+                type: "GET",
+                data: {
+                    id: id
+                },
+                success: function(data) {
+                    console.log(data);
+                    $('#owner').empty();
+                    $('#owner').append(`<option value="" disabled>Select Owner</option>`);
+                    data.users.forEach(function(user) {
+                        $('#owner').append(
+                            `<option value="${user.id}">${user.first_name} ${user.last_name}</option>`
+                        );
+                    });
+                }
             });
         }
     </script>
