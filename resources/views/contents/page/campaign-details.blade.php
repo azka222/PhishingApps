@@ -308,7 +308,7 @@
             let tempClicked = 0;
             let tempNotClicked = 0;
             results.forEach(function(result) {
-                if (result.status === "Clicked Link") {
+                if (result.status === "Clicked Link" || result.status === "Submitted Data") {
                     tempClicked++;
                 }
             });

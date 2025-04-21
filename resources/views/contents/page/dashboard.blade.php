@@ -322,7 +322,7 @@
             campaigns.forEach(function(campaign) {
                 campaign.results.forEach(function(result) {
                     tempTotal++;
-                    if (campaign.status === "Clicked Link") {
+                    if (campaign.status === "Clicked Link" || campaign.status === "Submitted Data") {
                         tempClicked++;
                     }
                 });
