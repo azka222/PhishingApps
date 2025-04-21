@@ -106,7 +106,7 @@
                                 <h2 class="text-lg font-semibold">${course.name}</h2>
                                 <div class="py-4">
                                     <img src="${course.thumbnail_url}" alt="Thumbnail"
-                                        class=" w-full h-32 object-cover rounded-md">
+                                        class=" w-full  object-cover rounded-md">
                                 </div>
 
                                 <p class="text-sm text-gray-400">Total Material: ${totalMaterial}</p>

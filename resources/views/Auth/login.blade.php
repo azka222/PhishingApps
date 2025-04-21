@@ -331,7 +331,10 @@
                             confirmButtonText: 'Ok',
                             confirmButtonColor: '#f59e0b',
                             allowOutsideClick: false,
-                            allowEscapeKey: false
+                            allowEscapeKey: false,
+                            customClass: {
+                                confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2'
+                            }
                         }).then((result) => {
                             if (result.isConfirmed) {
                                 $(".have_not_change_password").show();
@@ -347,7 +350,10 @@
                             confirmButtonText: 'Ok',
                             confirmButtonColor: '#10b981',
                             allowOutsideClick: false,
-                            allowEscapeKey: false
+                            allowEscapeKey: false,
+                            customClass: {
+                                confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2'
+                            }
                         }).then((result) => {
                             if (result.isConfirmed) {
                                 $(".have_not_change_password").hide();
@@ -421,7 +427,10 @@
                         confirmButtonText: 'Ok',
                         confirmButtonColor: '#ef4444',
                         allowOutsideClick: false,
-                        allowEscapeKey: false
+                        allowEscapeKey: false,
+                        customClass: {
+                            confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2'
+                        }
                     })
                 }
             });

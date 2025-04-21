@@ -271,7 +271,11 @@
                         text: 'Company created successfully.',
                         icon: 'success',
                         confirmButtonColor: '#22c55e',
-                        confirmButtonText: 'Ok'
+                        confirmButtonText: 'Ok',
+                        customClass: {
+                            confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700',
+
+                        }
                     }).then((result) => {
                         if (result.isConfirmed) {
                             companyView();
@@ -405,7 +409,11 @@
                         text: 'Check your mailbox to verify email.',
                         icon: 'success',
                         confirmButtonColor: '#22c55e',
-                        confirmButtonText: 'Login'
+                        confirmButtonText: 'Login',
+                        customClass: {
+                            confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700',
+
+                        }
                     }).then((result) => {
                         if (result.isConfirmed) {
                             loginView();
