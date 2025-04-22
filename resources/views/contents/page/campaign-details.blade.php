@@ -326,7 +326,7 @@
             let tempNotSubmitted = 0;
             results.forEach(function(result) {
                 if (result.status === "Submitted Data") {
-                    tempClicked++;
+                    tempSubmitted++;
                 }
             });
             tempNotSubmitted = tempTotal - tempSubmitted;

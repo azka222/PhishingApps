@@ -298,12 +298,13 @@
             let tempNotOpen = 0;
             campaigns.forEach(function(campaign) {
                 campaign.results.forEach(function(result) {
+                    console.log(result.status);
                     tempTotal++;
-                    if (campaign.status != "Scheduled" && campaign.status != "Email Sent") {
+                    if (result.status != "Scheduled" && result.status != "Email Sent") {
                         tempOpened++;
                     }
-                    if(campaign.results[0].status == "Error" || campaign.status == "Queued"){
-                        tempOpened = 0;
+                    if(result.status == "Error" || result.status == "Queued"){
+                        tempOpened--;
                     }
                 });
             });
@@ -322,7 +323,7 @@
             campaigns.forEach(function(campaign) {
                 campaign.results.forEach(function(result) {
                     tempTotal++;
-                    if (campaign.status === "Clicked Link" || campaign.status === "Submitted Data") {
+                    if (result.status === "Clicked Link" || result.status === "Submitted Data") {
                         tempClicked++;
                     }
                 });
@@ -342,8 +343,8 @@
             campaigns.forEach(function(campaign) {
                 campaign.results.forEach(function(result) {
                     tempTotal++;
-                    if (campaign.status === "Submitted Data") {
-                        tempClicked++;
+                    if (result.status === "Submitted Data") {
+                        tempSubmitted++;
                     }
                 });
             });
