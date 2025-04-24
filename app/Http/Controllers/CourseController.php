@@ -494,7 +494,6 @@ class CourseController extends Controller
         $score = ($question > 0) ? ($true / $question * 100) : 0;
 
         $target = Target::where('email', auth()->user()->email)->first();
-      
 
         if (! $target) {
             return response()->json([
@@ -502,7 +501,15 @@ class CourseController extends Controller
                 'message' => 'Target not found for the user.',
             ], 404);
         }
-
+        $oldData = TargetCourseScore::where('user_id', auth()->user()->id)->where('course_id', $request->id)->first();
+        if ($oldData) {
+            $oldData->score = $score;
+            $oldData->save();
+            return response()->json([
+                'success' => true,
+                'message' => 'Score updated successfully.',
+            ]);
+        }
         $newData            = new TargetCourseScore();
         $newData->user_id   = auth()->user()->id;
         $newData->target_id = $target->id;
@@ -513,6 +520,74 @@ class CourseController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Score submitted successfully.',
+        ]);
+    }
+
+    public function getCourseEmployee(Request $request)
+    {
+        $coursesQuery = Course::with([
+            'courseQuizMaterial' => function ($query) {
+                $query->with('quiz', 'material');
+            },
+            'thumbnail',
+        ]);
+
+        if ($request->has('search')) {
+            $coursesQuery = $coursesQuery->where('name', 'like', '%' . $request->input('search') . '%');
+        }
+
+        $courses = $request->has('show')
+        ? $coursesQuery->paginate($request->input('show'))
+        : $coursesQuery->get();
+
+     
+
+        foreach ($courses as $course) {
+            if (isset($course->thumbnail)) {
+                $course->thumbnail_url = asset('storage/' . $course->thumbnail->path);
+            } else {
+                $course->thumbnail_url = asset('storage/app/public/thumbnail/thumbnail.jpg');
+            }
+        }
+
+        $userScores = TargetCourseScore::where('user_id', auth()->user()->id)->get();
+
+        $courses = $courses->map(function ($course) use ($userScores) {
+            $userScore = $userScores->firstWhere('course_id', $course->id);
+            if ($userScore) {
+                $course->is_enrolled = true;
+                $course->score       = $userScore->score;
+                $course->can_retake  = $userScore->score < 60;
+            } else {
+                $course->is_enrolled = false;
+                $course->score       = null;
+                $course->can_retake  = false;
+            }
+            return $course;
+        });
+
+        if ($request->has('courseStatus')) {
+            $status  = $request->courseStatus;
+            $courses = $courses->filter(function ($course) use ($status) {
+                if ($status === 'completed') {
+                    return $course->is_enrolled && $course->score >= 60;
+                } elseif ($status === 'incomplete') {
+                    return ! $course->is_enrolled;
+                } elseif ($status === 'retake') {
+                    return $course->is_enrolled && $course->score < 60;
+                }
+                return true;
+            })->values();
+        }
+
+        $isPaginated = $courses instanceof \Illuminate\Pagination\LengthAwarePaginator;
+
+        return response()->json([
+            'courses'        => $isPaginated ? $courses->items() : $courses,
+            'courseTotal'    => $isPaginated ? $courses->total() : count($courses),
+            'currentPage'    => $isPaginated ? $courses->currentPage() : 1,
+            'firstPageTotal' => $isPaginated ? count($courses->items()) : count($courses),
+            'pageCount'      => $isPaginated ? $courses->lastPage() : 1,
         ]);
     }
 

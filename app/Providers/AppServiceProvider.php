@@ -267,5 +267,9 @@ class AppServiceProvider extends ServiceProvider
             return $user->haveAccessApproval();
         });
 
+        Gate::define('CanStartCourse', function($user, $id){
+            return $user->canStartCourse($id);
+        });
+
     }
 }
