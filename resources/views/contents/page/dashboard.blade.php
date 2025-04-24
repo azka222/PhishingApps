@@ -62,8 +62,8 @@
                         <div id="donut-link-clicked"></div>
                     </div>
                     <div class="col-span-4 lg:col-span-1 md:col-span-2  flex flex-col items-center justify-center">
-                        <p class="text-xs md:text-sm font-semibold mb-4">Emails Reported</p>
-                        <div id="donut-email-reported"></div>
+                        <p class="text-xs md:text-sm font-semibold mb-4">Submitted Data</p>
+                        <div id="donut-submitted-data"></div>
                     </div>
                 </div>
             </div>
@@ -105,7 +105,7 @@
         </div>
         <nav class="flex items-center flex-column flex-col md:flex-row justify-between p-4"
             aria-label="Table navigation">
-            <span
+            {{-- <span
                 class="mb-4 md:mb-0 text-xs md:text-sm font-normal text-gray-500 dark:text-gray-400 block w-full md:inline md:w-auto">Showing
                 <span class="font-semibold text-gray-900 dark:text-white"> <span id="numberFirstItem">0</span> -
                     <span id="numberLastItem">0</span></span> of
@@ -113,7 +113,7 @@
             </span>
             <ul id="page-button-dashboard"
                 class="inline-flex space-x-2 rtl:space-x-reverse text-xs md:text-sm h-8">
-            </ul>
+            </ul> --}}
         </nav>
     </div>
 </div>
@@ -127,7 +127,7 @@
         let companyId = $('#companyCheckAdmin').val();
         let search = $('#search').val();
         let status = 2;
-        let show = 5;
+        let show = 100;
         $.ajax({
             url: "{{ route('getCampaigns') }}?page=" + page,
                 type: "GET",
@@ -152,8 +152,11 @@
                     `);
                 } else {
                     $("#list-campaign-tbody").empty();
-                    console.log(campaigns);
-                    campaigns.forEach(campaign => {
+                    // console.log(campaigns.length);
+                    const total = campaigns.length;
+                    const start = Math.max(total - 5, 0);
+                    const end = total;
+                    campaigns.slice(start, end).reverse().forEach((campaign, index) => {
                         let date = new Date(campaign.created_date);
                         let formattedDate =
                             `${date.toLocaleDateString('id-ID', {
@@ -180,7 +183,6 @@
 
                             </tr>
                         `);
-
                     });
 
                     let dataEmailSent = calculateEmailSent(campaigns);
@@ -192,8 +194,8 @@
                     let dataLinkClicked = calculateLinkClicked(campaigns);
                     getLinkClickedChart(dataLinkClicked.linkClicked, dataLinkClicked.linkNotClicked, dataLinkClicked.totalEmail);
 
-                    let dataEmailReported = calculateEmailReported(campaigns);
-                    getEmailReportedChart(dataEmailReported.emailReported, dataEmailReported.emailNotReported, dataEmailReported.totalEmail);
+                    let dataSubmittedData = calculateSubmittedData(campaigns);
+                    getSubmittedData(dataSubmittedData.linkSubmitted, dataSubmittedData.linkNotSubmitted,dataSubmittedData.totalEmail);
 
                     let combinedTimeline = [];
                     campaigns.forEach(campaign => {
@@ -204,14 +206,14 @@
                     getTimelineCampaignChart(combinedTimeline);
 
                 }
-                $("#numberFirstItem").text(
-                    response.campaignTotal != 0 ? (page - 1) * show + 1 : 0
-                );
-                $("#numberLastItem").text(
-                    (page - 1) * show + response.data.length
-                );
-                $("#totalTemplatesCount").text(response.campaignTotal);
-                paginationDashboard("#page-button-dashboard", response.pageCount, response.currentPage);
+                // $("#numberFirstItem").text(
+                //     response.campaignTotal != 0 ? (page - 1) * show + 1 : 0
+                // );
+                // $("#numberLastItem").text(
+                //     (page - 1) * show + response.data.length
+                // );
+                // $("#totalTemplatesCount").text(response.campaignTotal);
+                // paginationDashboard("#page-button-dashboard", response.pageCount, response.currentPage);
             }
         });
     }
@@ -268,16 +270,19 @@
 
 
         function calculateEmailSent(campaigns) {
-            let tempTotal = campaigns.length;
+            let tempTotal = 0;
             let tempSent = 0;
             let tempNotSent = 0;
             campaigns.forEach(function(campaign) {
-                if (campaign.status != "Scheduled") {
-                    tempSent++;
-                }
-                if(campaign.results[0].status == "Error" || campaign.status == "Queued"){
-                    tempSent = 0;
-                }
+                campaign.results.forEach(function(result) {
+                    tempTotal++;
+                    if (result.status != "Scheduled") {
+                        tempSent++;
+                    }
+                    if(result.status == "Error" || campaign.status == "Queued"){
+                        tempSent--;
+                    }
+                });
             });
             tempNotSent = tempTotal - tempSent;
             return {
@@ -288,16 +293,20 @@
         }
 
         function calculateEmailOpened(campaigns) {
-            let tempTotal = campaigns.length;
+            let tempTotal = 0;
             let tempOpened = 0;
             let tempNotOpen = 0;
             campaigns.forEach(function(campaign) {
-                if (campaign.status != "Scheduled" && campaign.status != "Email Sent") {
-                    tempOpened++;
-                }
-                if(campaign.results[0].status == "Error" || campaign.status == "Queued"){
-                    tempOpened = 0;
-                }
+                campaign.results.forEach(function(result) {
+                    console.log(result.status);
+                    tempTotal++;
+                    if (result.status != "Scheduled" && result.status != "Email Sent") {
+                        tempOpened++;
+                    }
+                    if(result.status == "Error" || result.status == "Queued"){
+                        tempOpened--;
+                    }
+                });
             });
             tempNotOpen = tempTotal - tempOpened;
             return {
@@ -308,18 +317,41 @@
         }
 
         function calculateLinkClicked(campaigns) {
-            let tempTotal = campaigns.length;
+            let tempTotal = 0;
             let tempClicked = 0;
             let tempNotClicked = 0;
             campaigns.forEach(function(campaign) {
-                if (campaign.status === "Clicked Link") {
-                    tempClicked++;
-                }
+                campaign.results.forEach(function(result) {
+                    tempTotal++;
+                    if (result.status === "Clicked Link" || result.status === "Submitted Data") {
+                        tempClicked++;
+                    }
+                });
             });
             tempNotClicked = tempTotal - tempClicked;
             return {
                 linkClicked: tempClicked,
                 linkNotClicked: tempNotClicked,
+                totalEmail: tempTotal
+            }
+        }
+
+        function calculateSubmittedData(campaigns) {
+            let tempTotal = 0;
+            let tempSubmitted = 0;
+            let tempNotSubmitted = 0;
+            campaigns.forEach(function(campaign) {
+                campaign.results.forEach(function(result) {
+                    tempTotal++;
+                    if (result.status === "Submitted Data") {
+                        tempSubmitted++;
+                    }
+                });
+            });
+            tempNotSubmitted = tempTotal - tempSubmitted;
+            return {
+                linkSubmitted: tempSubmitted,
+                linkNotSubmitted: tempNotSubmitted,
                 totalEmail: tempTotal
             }
         }
@@ -449,15 +481,15 @@
             chart.render();
         }
 
-        function getEmailReportedChart(emailReported = 0, emailNotReported = 0, totalEmail = 0) {
+        function getSubmittedData(linkSubmitted = 0, linkNotSubmitted = 0, totalEmail = 0) {
             var options = {
                 chart: {
                     type: 'donut',
                     height: 250,
                     width: 250,
                 },
-                series: [emailReported, emailNotReported],
-                labels: ['Reported', 'Not Reported'],
+                series: [linkSubmitted, linkNotSubmitted],
+                labels: ['Submitted', 'Not Submitted'],
                 plotOptions: {
                     pie: {
                         donut: {
@@ -468,13 +500,7 @@
                                     label: 'Total',
                                     formatter: function(w) {
                                         return totalEmail;
-                                    },
-
-                                },
-                                style: {
-                                    fontSize: '6px',
-                                    fontWeight: 'bold',
-                                    color: '#333'
+                                    }
                                 }
                             }
                         }
@@ -487,7 +513,7 @@
                 }
 
             }
-            var chart = new ApexCharts(document.querySelector("#donut-email-reported"), options);
+            var chart = new ApexCharts(document.querySelector("#donut-submitted-data"), options);
             chart.render();
         }
 
@@ -521,7 +547,7 @@
                 }
             });
             campaignTimeLine.sort((a, b) => new Date(a.time) - new Date(b.time));
-            console.log(timelineData);
+            // console.log(timelineData);
             return timelineData;
         }
 
