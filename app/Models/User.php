@@ -320,4 +320,16 @@ class User extends Authenticatable implements MustVerifyEmailContract
         return $this->companyAdmin($this->company_id) && $this->isCompanyOwner($this->company_id);
     }
 
+    public function canStartCourse($id){
+        $course1 = TargetCourseScore::where('user_id', $this->id)->where('course_id', $id)->where('score', '<=', 60)->first();
+        $course2 = TargetCourseScore::where('user_id', $this->id)->where('course_id', $id)->where('score', '>', 60)->first();
+        if ($course1) {
+            return true;
+        } else if($course2){ 
+            return false;
+        }
+        return true;
+
+    }
+
 }

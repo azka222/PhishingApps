@@ -213,7 +213,11 @@ class ViewController extends Controller
 
     public function startCourseView($id){
         if (auth()->user()->employee) {
-            return view('contents.page.course.course-details', ['id' => $id]);
+            if(Gate::allows('CanStartCourse', $id)){
+                return view('contents.page.course.course-details', ['id' => $id]);
+            }else{
+                abort(403);
+            }
         }
     }
 

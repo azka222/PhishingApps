@@ -1,6 +1,6 @@
 @extends('layouts.employee-master')
 @section('content')
-@include('contents.modal.course.course-desc')
+    @include('contents.modal.course.course-desc')
     <div class="p-4 w-full flex flex-col h-full min-h-screen  bg-gray-50 dark:bg-gray-800 dark:text-white text-gray-900">
         <div class="">
             <div class="flex p-4 items-center justify-between">
@@ -9,22 +9,23 @@
             </div>
             <div class="flex flex-col gap-4 p-4">
                 <div class="max-w-full md:max-w-xs">
-                    {{-- <div>
+                    <div>
                         <label for="course_status" class="mb-1 block text-xs md:text-sm font-medium">Status</label>
-                        <select id="course_status" name="course_status" onchange="()"
+                        <select id="course_status" name="course_status" onchange="getCourse()"
                             class="bg-gray-100 border border-gray-300 text-gray-900 text-xs md:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                            <option value="0">All</option>
-                            <option value="1">Completed</option>
-                            <option value="2">On Going</option>
-                            <option value="3">No Progress</option>
+                            <option value="all">All</option>
+                            <option value="completed">Completed</option>
+                            <option value="incomplete">No Progress</option>
+                            <option value="retake">Retake</option>
 
                         </select>
-                    </div> --}}
+                    </div>
 
                 </div>
                 <div class="flex md:flex-row flex-col justify-between items-start md:items-center mt-8">
-                    <div class="flex md:flex-row flex-col items-start md:items-center mb-4 md:mb-0">
-                        <label for="show" class="mr-2 text-xs md:text-sm font-medium mb-2 md:mb-0">Show</label>
+                    <div class="flex md:fs-center mb-4 md:mb-0">
+                        <label for="show"
+                            class="mr-2 text-xs md:text-lex-row flex-col items-start md:itemsm font-medium mb-2 md:mb-0">Show</label>
                         <select id="show" name="show" onchange="getCourse()"
                             class="bg-gray-100 border border-gray-300 text-gray-900 text-xs md:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                             <option value="5">5</option>
@@ -41,7 +42,7 @@
                 </div>
                 <div class=" min-w-38 overflow-x-auto md:min-w-full">
                     <div id="course-list" class="grid grid-cols-3 gap-4">
-                        
+
 
                     </div>
                 </div>
@@ -68,27 +69,31 @@
             getCourse()
         })
 
-        function showDescription(name, desc){
-           showModal('course-desc');
-           $("#title-course-desc").text(name)
-           $("#course-desc-details").text(desc)
+        function showDescription(name, desc) {
+            showModal('course-desc');
+            $("#title-course-desc").text(name)
+            $("#course-desc-details").text(desc)
         }
 
         function getCourse(page = 1) {
             let show = $('#show').val();
             let search = $('#search').val();
+            let courseStatus = $('#course_status').val();
             $.ajax({
                 url: "{{ route('getCourseEmployee') }}",
                 type: "GET",
                 data: {
                     page: page,
                     show: show,
-                    search: search
+                    search: search,
+                    courseStatus: courseStatus
                 },
                 success: function(response) {
+                    console.log(response)
                     let data = response;
                     let courses = data.courses;
                     $("#course-list").empty();
+                    console.log(courses);
                     courses.forEach(course => {
                         let totalQuiz = 0;
                         let totalMaterial = 0;
@@ -101,22 +106,75 @@
                                 totalMaterial++;
                             }
                         });
+                        let additionalData = '';
+                        let buttonStart =
+                            `   <button onclick="startCourse(${course.id})"
+                                        class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-green-600 rounded-xl hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 flex items-center">Start</button>`;
+
+                        if (course.can_retake == false && course.score == null) {
+                            colorStatus =
+                                `bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300`;
+                            status = `Not Started`;
+                        } else if (course.can_retake == false) {
+                            colorStatus =
+                                `bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300`;
+                            status = `Completed`;
+                            buttonStart = ``;
+                        } else if (course.can_retake == true) {
+                            colorStatus =
+                                `bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300`;
+                            status = `Retake`;
+                        }
+                        if (course.score == null) {
+                            colorScore =
+                                `bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300`;
+                            score = `-`;
+                        }
+                        if (course.score != null) {
+                            if (course.score > 60) {
+                                colorScore =
+                                    `bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300`;
+                                score = `${course.score} %`;
+                            } else {
+                                colorScore =
+                                    `bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300`;
+                                score = `${course.score} %`;
+                            }
+
+                        }
                         let tr = `<div class="col-span-1">
                             <div class="bg-white dark:bg-gray-700 shadow-md rounded-xl p-4">
-                                <h2 class="text-lg font-semibold">${course.name}</h2>
-                                <div class="py-4">
+                               <div class="flex items-center justify-between">
+                                    <h1 class="text-2xl  font-semibold text-gray-900 dark:text-white">${course.name}</h1>
+                                    <div class="flex items-center justify-end">
+                                        <div class="text-lg ${colorStatus}  font-medium me-2 px-2.5 py-0.5 rounded inline-block">
+                                            ${status}
+                                        </div>
+                                        <div class="text-xl bg-blue-100 text-blue-800 ${colorScore} dark:bg-blue-900 dark:text-blue-300  font-medium me-2 px-2.5 py-0.5 rounded inline-block">
+                                            ${score}
+                                        </div>
+                                        </div> 
+                                </div>
+                                    <div class="py-4">
                                     <img src="${course.thumbnail_url}" alt="Thumbnail"
                                         class=" w-full  object-cover rounded-md">
                                 </div>
+                                    <table class="text-sm text-gray-400 w-full">
+                                        <tr>
+                                            <td class="py-1 pr-2">Total Material</td>
+                                            <td class="py-1">: ${totalMaterial}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="py-1 pr-2">Total Quiz</td>
+                                            <td class="py-1">: ${totalQuiz}</td>
+                                        </tr>
+                                    </table>
 
-                                <p class="text-sm text-gray-400">Total Material: ${totalMaterial}</p>
-                                <p class="text-sm text-gray-400">Total Quiz: ${totalQuiz}</p>
                                 <div class="flex justify-end pt-4 gap-2">
                                     <button onclick="showDescription('${course.name}', '${course.description}')"
                                         class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 flex items-center">Description</button>
 
-                                    <button onclick="startCourse(${course.id})"
-                                        class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-green-600 rounded-xl hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 flex items-center">Start</button>
+                                    ${buttonStart}
 
                                 </div>
                             </div>
