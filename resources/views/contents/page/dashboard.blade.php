@@ -1,224 +1,259 @@
 @extends('layouts.master')
 @section('title', 'Fischsim - Dashboard')
 @section('content')
-<div class=" p-4 w-full flex flex-col h-full min-h-screen  bg-gray-50 dark:bg-gray-800 dark:text-white text-gray-900">
-    <div class="judul-1">
-        <div class="flex p-4 items-center justify-between">
-            <h1 class="text-3xl font-semibold">Dashboard</h1>
-        </div>
-    </div>
-
-    <div class="flex flex-col gap-4">
-        <div class="bg-white dark:bg-gray-900 shadow-md rounded-lg p-4">
-            <h2 class="text-xl font-semibold">Welcome to Fischsim</h2>
-            <p class="text-gray-600 dark:text-gray-400">This is your dashboard where you can manage your phishing simulations.</p>
-        </div>
-
-        <div class="bg-white dark:bg-gray-900 shadow-md rounded-lg p-4">
-            <h2 class="text-xl font-semibold">Recent Activity</h2>
-            <ul class="list-disc pl-5">
-                <li>New phishing simulation created.</li>
-                <li>User registered for a new simulation.</li>
-                <li>Simulation report generated.</li>
-            </ul>
-        </div>
-
-        @IsAdmin()
-        <div class="max-w-full md:max-w-xs">
-            <div>
-                <label for="companyCheckAdmin"
-                    class="mb-1 mt-4 block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-300">Company</label>
-                <select id="companyCheckAdmin" name="companyCheckAdmin" onchange="getDashboardValue()"
-                    class="bg-gray-100 border border-gray-300 text-gray-900 text-xs md:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                    <option value="">All</option>
-                    @foreach ($companies as $company)
-                        <option value="{{ $company->id }}">{{ $company->name }}</option>
-                    @endforeach
-                </select>
-            </div>
-        </div>
-        @endIsAdmin()
-
-        <div class="p-4">
-            <div class="bg-white dark:bg-gray-700 dark:text-white rounded-lg p-4 flex flex-col items-center w-full">
-                <p class="text-xs md:text-sm font-semibold mb-4">Campaign Timeline</p>
-                <div id="timeline-campaign" class="w-full"></div>
+    <div class=" p-4 w-full flex flex-col h-full min-h-screen  bg-gray-50 dark:bg-gray-800 dark:text-white text-gray-900">
+        <div class="judul-1">
+            <div class="flex p-4 items-center justify-between">
+                <h1 class="text-3xl font-semibold">Dashboard</h1>
             </div>
         </div>
 
-        <div class="p-4">
-            <div class="bg-white dark:bg-gray-700 dark:text-white rounded-lg p-4">
-                <div class="grid grid-cols-4 gap-4">
-                    <div class="col-span-4 lg:col-span-1 md:col-span-2  flex flex-col items-center justify-center">
-                        <p class="text-xs md:text-sm font-semibold mb-4">Emails Sent</p>
-                        <div id="donut-email-sent"></div>
+        <div class="flex flex-col gap-4">
+            <div class="bg-white dark:bg-gray-900 shadow-md rounded-lg p-4">
+                <h2 class="text-xl font-semibold">Welcome to Fischsim</h2>
+                <p class="text-gray-600 dark:text-gray-400">This is your dashboard where you can manage your phishing
+                    simulations.</p>
+            </div>
+
+            <div class="bg-white dark:bg-gray-900 shadow-md rounded-lg p-4">
+                <h2 class="text-xl font-semibold">Recent Activity</h2>
+                <ul class="list-disc pl-5">
+                    <li>New phishing simulation created.</li>
+                    <li>User registered for a new simulation.</li>
+                    <li>Simulation report generated.</li>
+                </ul>
+            </div>
+
+            @IsAdmin()
+            <div class="max-w-full md:max-w-xs">
+                <div>
+                    <label for="companyCheckAdmin"
+                        class="mb-1 mt-4 block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-300">Company</label>
+                    <select id="companyCheckAdmin" name="companyCheckAdmin" onchange="getDashboardValue()"
+                        class="bg-gray-100 border border-gray-300 text-gray-900 text-xs md:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        <option value="">All</option>
+                        @foreach ($companies as $company)
+                            <option value="{{ $company->id }}">{{ $company->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            @endIsAdmin()
+
+            <div class="grid grid-cols-4 gap-8  dark:text-white p-4 w-full">
+                <div class="col-span-2  bg-white dark:bg-gray-700 rounded-lg">
+                    <label for="column-risk-score"
+                        class="text-xs md:text-sm font-semibold mb-4 flex items-center justify-center m-4">Human
+                        Risk</label>
+                    <div id="column-risk-score">
+
                     </div>
-                    <div class="col-span-4 lg:col-span-1 md:col-span-2 flex flex-col items-center justify-center">
-                        <p class="text-xs md:text-sm font-semibold mb-4">Emails Opened</p>
-                        <div id="donut-email-opened"></div>
+                </div>
+                <div class="col-span-1 bg-white dark:bg-gray-700 rounded-lg p-4">
+                    <h2 class="text-xs md:text-sm font-semibold mb-4 flex items-center justify-center">Top 5 Human Risk</h2>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-32 md:min-w-full divide-y divide-gray-200 dark:divide-gray-700 mt-4">
+                            <thead class="bg-gray-300 dark:bg-gray-700">
+                                <tr class="border-b">
+                                    <th class="p-4 text-left">Target Name</th>
+                                    <th class="p-4 text-left">Score</th>
+                                    <th class="p-4 text-left">Risk to Company</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b">
+                                    <td class="p-4">John Doe</td>
+                                    <td class="p-4">95</td>
+                                    <td class="p-4 text-red-500 font-semibold">High</td>
+                                </tr>
+                                <tr class="border-b">
+                                    <td class="p-4">Jane Smith</td>
+                                    <td class="p-4">88</td>
+                                    <td class="p-4 text-red-400 font-semibold">Medium-High</td>
+                                </tr>
+                                <tr class="border-b">
+                                    <td class="p-4">Alice Johnson</td>
+                                    <td class="p-4">76</td>
+                                    <td class="p-4 text-yellow-500 font-semibold">Medium</td>
+                                </tr>
+                                <tr class="border-b">
+                                    <td class="p-4">Bob Brown</td>
+                                    <td class="p-4">68</td>
+                                    <td class="p-4 text-yellow-400 font-semibold">Low-Medium</td>
+                                </tr>
+                                <tr class="border-b">
+                                    <td class="p-4">Charlie Green</td>
+                                    <td class="p-4">55</td>
+                                    <td class="p-4 text-green-500 font-semibold">Low</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
-                    <div class="col-span-4 lg:col-span-1 md:col-span-2 flex flex-col items-center justify-center">
-                        <p class="text-xs md:text-sm font-semibold mb-4">Links Clicked</p>
-                        <div id="donut-link-clicked"></div>
-                    </div>
-                    <div class="col-span-4 lg:col-span-1 md:col-span-2  flex flex-col items-center justify-center">
-                        <p class="text-xs md:text-sm font-semibold mb-4">Submitted Data</p>
-                        <div id="donut-submitted-data"></div>
+
+                </div>
+                <div class="col-span-1 bg-white dark:bg-gray-700 rounded-lg p-4">
+                    <h2 class="text-xs md:text-sm font-semibold mb-4 flex items-center justify-center">5 Recent Campaigns</h2>
+
+                    <table class="min-w-32 md:min-w-full divide-y divide-gray-200 dark:divide-gray-700 mt-4">
+                        <thead class="bg-gray-300 dark:bg-gray-700">
+                            <tr
+                                class="border-b">
+                                <th scope="col" class="p-4 text-left">Name</th>
+                                <th scope="col" class="p-4 text-left">Status</th>
+                                <th scope="col" class="p-4 text-left ">
+                                    <button onclick="showCampaignPage()"
+                                        class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">
+                                        View All
+                                    </button>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="list-campaign-tbody"
+                            class="">
+                        </tbody>
+                    </table>
+
+
+                </div>
+
+            </div>
+
+            <div class="p-4">
+                <div class="bg-white dark:bg-gray-700 dark:text-white rounded-lg p-4 flex flex-col items-center w-full">
+                    <p class="text-xs md:text-sm font-semibold mb-4">Campaign Timeline</p>
+                    <div id="timeline-campaign" class="w-full"></div>
+                </div>
+            </div>
+
+            <div class="p-4">
+                <div class="bg-white dark:bg-gray-700 dark:text-white rounded-lg p-4">
+                    <div class="grid grid-cols-4 gap-4">
+                        <div class="col-span-4 lg:col-span-1 md:col-span-2  flex flex-col items-center justify-center">
+                            <p class="text-xs md:text-sm font-semibold mb-4">Emails Sent</p>
+                            <div id="donut-email-sent"></div>
+                        </div>
+                        <div class="col-span-4 lg:col-span-1 md:col-span-2 flex flex-col items-center justify-center">
+                            <p class="text-xs md:text-sm font-semibold mb-4">Emails Opened</p>
+                            <div id="donut-email-opened"></div>
+                        </div>
+                        <div class="col-span-4 lg:col-span-1 md:col-span-2 flex flex-col items-center justify-center">
+                            <p class="text-xs md:text-sm font-semibold mb-4">Links Clicked</p>
+                            <div id="donut-link-clicked"></div>
+                        </div>
+                        <div class="col-span-4 lg:col-span-1 md:col-span-2  flex flex-col items-center justify-center">
+                            <p class="text-xs md:text-sm font-semibold mb-4">Submitted Data</p>
+                            <div id="donut-submitted-data"></div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-
-        <div class="judul-2">
-            <div class="flex p-4 items-center justify-between">
-                <h1 class="text-3xl font-semibold">Recent Campaigns</h1>
-            </div>
-        </div>
-
-        <div class="flex p-4 justify-start md:justify-end items-start md:items-center">
-            <div class="flex">
-                <input type="text" id="search" name="search" onchange="getDashboardValue()"
-                    class="bg-gray-100 border border-gray-300 text-gray-900 text-xs md:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5 w-64 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="Search by name only..">
-            </div>
-        </div>
-        <div class="p-4 min-w-32 overflow-x-auto md:min-w-full">
-            <table class="min-w-32 md:min-w-full divide-y divide-gray-200 dark:divide-gray-700 mt-4">
-            <thead class="bg-gray-300 dark:bg-gray-700">
-            <tr class="text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-300">
-            <th scope="col" class="p-4">Name</th>
-            <th scope="col" class="p-4">Created Date</th>
-            <th scope="col" class="p-4">Total Target</th>
-            <th scope="col" class="p-4">Status</th>
-            <th scope="col" class="p-4 ">
-                <button onclick="showCampaignPage()"
-                class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">
-                View All
-                </button>
-            </th>
-            </tr>
-            </thead>
-            <tbody id="list-campaign-tbody"
-            class="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
-            </tbody>
-            </table>
-        </div>
-        <nav class="flex items-center flex-column flex-col md:flex-row justify-between p-4"
-            aria-label="Table navigation">
-            {{-- <span
-                class="mb-4 md:mb-0 text-xs md:text-sm font-normal text-gray-500 dark:text-gray-400 block w-full md:inline md:w-auto">Showing
-                <span class="font-semibold text-gray-900 dark:text-white"> <span id="numberFirstItem">0</span> -
-                    <span id="numberLastItem">0</span></span> of
-                <span id="totalTemplatesCount" class="font-semibold text-gray-900 dark:text-white">0</span>
-            </span>
-            <ul id="page-button-dashboard"
-                class="inline-flex space-x-2 rtl:space-x-reverse text-xs md:text-sm h-8">
-            </ul> --}}
-        </nav>
     </div>
-</div>
-<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-<script>
-    $(document).ready(function() {
-        getDashboardValue();
-    });
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script>
+        $(document).ready(function() {
+            getDashboardValue();
+        });
 
-    function getDashboardValue(page = 1) {
-        let companyId = $('#companyCheckAdmin').val();
-        let search = $('#search').val();
-        let status = 2;
-        let show = 100;
-        $.ajax({
-            url: "{{ route('getCampaigns') }}?page=" + page,
+        function getDashboardValue() {
+            let companyId = $('#companyCheckAdmin').val();
+            let status = 2;
+            let show = 5;
+            $.ajax({
+                url: "{{ route('getDashboardData') }}",
                 type: "GET",
                 data: {
                     show: show,
-                    search: search,
                     status: status,
-                    page: page,
                     companyId: companyId
-            },
-            success: function(response) {
-                campaigns = [];
-                campaigns = response.data;
-                $("#list-campaign-tbody").empty();
-                if (campaigns.length == 0) {
-                    $("#list-campaign-tbody").append(`
+                },
+                success: function(response) {
+                    campaigns = [];
+                    campaigns = response.campaigns;
+                    $("#list-campaign-tbody").empty();
+                    if (campaigns.length == 0) {
+                        $("#list-campaign-tbody").append(`
                         <tr class="text-xs md:text-sm font-normal text-gray-900 dark:text-gray-400 bg-white dark:bg-gray-800">
                             <td class="p-4" colspan="4">
                                 No data available
                             </td>
                         </tr>
                     `);
-                } else {
-                    $("#list-campaign-tbody").empty();
-                    // console.log(campaigns.length);
-                    const total = campaigns.length;
-                    const start = Math.max(total - 5, 0);
-                    const end = total;
-                    campaigns.slice(start, end).reverse().forEach((campaign, index) => {
-                        let date = new Date(campaign.created_date);
-                        let formattedDate =
-                            `${date.toLocaleDateString('id-ID', {
+                    } else {
+                        $("#list-campaign-tbody").empty();
+                        // console.log(campaigns.length);
+                        const total = campaigns.length;
+                        const start = Math.max(total - 5, 0);
+                        const end = total;
+                        campaigns.slice(start, end).reverse().forEach((campaign, index) => {
+                            let date = new Date(campaign.created_date);
+                            let formattedDate =
+                                `${date.toLocaleDateString('id-ID', {
                             day: '2-digit',
                             month: 'long',
                             year: 'numeric'
                         })} ${String(date.getUTCHours()).padStart(2, '0')}:${String(date.getUTCMinutes()).padStart(2, '0')}`;
-                        let target = campaign.results && campaign.results.length > 0 ? campaign.results.length : 'Not Set';
+                            let target = campaign.results && campaign.results.length > 0 ? campaign
+                                .results.length : 'Not Set';
 
-                        $("#list-campaign-tbody").append(`
-                            <tr class="text-xs md:text-sm font-normal text-gray-900 dark:text-gray-400 bg-white dark:bg-gray-800">
+                            $("#list-campaign-tbody").append(`
+                            <tr class="border-b">
                                 <td class="p-4">${campaign.name}</td>
-                                <td class="p-4">${formattedDate}</td>
-                                <td class="p-4">${target}</td>
+                              
                                 <td class="p-4">${campaign.status}</td>
                                 <td class="p-4 flex gap-2">
                                 <button onclick="showDetailCampaign(${campaign.id})"
-                                    class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-green-600 rounded-xl hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600">Detail</button>
-                                @CanDeleteCampaign()
-                                    <button onclick="deleteCampaign(${campaign.id})"
-                                    class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-red-600 rounded-xl hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600">Delete</button>
-                                @endCanDeleteCampaign()
+                                    class="text-xs font-medium text-white  rounded-xl"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+                                    <path fill-rule="evenodd" d="M13.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L11.69 12 4.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z" clip-rule="evenodd" />
+                                    <path fill-rule="evenodd" d="M19.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 1 1-1.06-1.06L17.69 12l-6.97-6.97a.75.75 0 0 1 1.06-1.06l7.5 7.5Z" clip-rule="evenodd" />
+                                    </svg>
+                                    </button>
                                 </td>
 
                             </tr>
                         `);
-                    });
+                        });
 
-                    let dataEmailSent = calculateEmailSent(campaigns);
-                    getEmailSentChart(dataEmailSent.emailSent, dataEmailSent.emailNotSent, dataEmailSent.totalEmail);
+                        let dataEmailSent = calculateEmailSent(campaigns);
+                        getEmailSentChart(dataEmailSent.emailSent, dataEmailSent.emailNotSent, dataEmailSent
+                            .totalEmail);
 
-                    let dataEmailOpened = calculateEmailOpened(campaigns);
-                    getEmailOpenedChart(dataEmailOpened.emailOpened, dataEmailOpened.emailNotOpen, dataEmailOpened.totalEmail);
+                        let dataEmailOpened = calculateEmailOpened(campaigns);
+                        getEmailOpenedChart(dataEmailOpened.emailOpened, dataEmailOpened.emailNotOpen,
+                            dataEmailOpened.totalEmail);
 
-                    let dataLinkClicked = calculateLinkClicked(campaigns);
-                    getLinkClickedChart(dataLinkClicked.linkClicked, dataLinkClicked.linkNotClicked, dataLinkClicked.totalEmail);
+                        let dataLinkClicked = calculateLinkClicked(campaigns);
+                        getLinkClickedChart(dataLinkClicked.linkClicked, dataLinkClicked.linkNotClicked,
+                            dataLinkClicked.totalEmail);
 
-                    let dataSubmittedData = calculateSubmittedData(campaigns);
-                    getSubmittedData(dataSubmittedData.linkSubmitted, dataSubmittedData.linkNotSubmitted,dataSubmittedData.totalEmail);
+                        let dataSubmittedData = calculateSubmittedData(campaigns);
+                        getSubmittedData(dataSubmittedData.linkSubmitted, dataSubmittedData.linkNotSubmitted,
+                            dataSubmittedData.totalEmail);
 
-                    let combinedTimeline = [];
-                    campaigns.forEach(campaign => {
-                        let dataTimeline = getTimelineData(campaign);
-                        combinedTimeline = combinedTimeline.concat(dataTimeline);
-                    });
-                    combinedTimeline.sort((a, b) => new Date(a.date) - new Date(b.date));
-                    getTimelineCampaignChart(combinedTimeline);
+                        let combinedTimeline = [];
+                        campaigns.forEach(campaign => {
+                            let dataTimeline = getTimelineData(campaign);
+                            combinedTimeline = combinedTimeline.concat(dataTimeline);
+                        });
+                        combinedTimeline.sort((a, b) => new Date(a.date) - new Date(b.date));
+                        getTimelineCampaignChart(combinedTimeline);
 
+                        getRiskScoreData()
+
+                    }
+                    // $("#numberFirstItem").text(
+                    //     response.campaignTotal != 0 ? (page - 1) * show + 1 : 0
+                    // );
+                    // $("#numberLastItem").text(
+                    //     (page - 1) * show + response.data.length
+                    // );
+                    // $("#totalTemplatesCount").text(response.campaignTotal);
+                    // paginationDashboard("#page-button-dashboard", response.pageCount, response.currentPage);
                 }
-                // $("#numberFirstItem").text(
-                //     response.campaignTotal != 0 ? (page - 1) * show + 1 : 0
-                // );
-                // $("#numberLastItem").text(
-                //     (page - 1) * show + response.data.length
-                // );
-                // $("#totalTemplatesCount").text(response.campaignTotal);
-                // paginationDashboard("#page-button-dashboard", response.pageCount, response.currentPage);
-            }
-        });
-    }
+            });
+        }
 
-    function deleteCampaign(id) {
+        function deleteCampaign(id) {
             Swal.fire({
                 title: 'Are you sure?',
                 text: "You won't be able to revert this!",
@@ -264,7 +299,7 @@
             window.location.href = "{{ route('campaignDetailsView', '') }}/" + id;
         }
 
-        function showCampaignPage(){
+        function showCampaignPage() {
             window.location.href = "{{ route('campaignView') }}";
         }
 
@@ -279,7 +314,7 @@
                     if (result.status != "Scheduled") {
                         tempSent++;
                     }
-                    if(result.status == "Error" || campaign.status == "Queued"){
+                    if (result.status == "Error" || campaign.status == "Queued") {
                         tempSent--;
                     }
                 });
@@ -303,7 +338,7 @@
                     if (result.status != "Scheduled" && result.status != "Email Sent") {
                         tempOpened++;
                     }
-                    if(result.status == "Error" || result.status == "Queued"){
+                    if (result.status == "Error" || result.status == "Queued") {
                         tempOpened--;
                     }
                 });
@@ -663,8 +698,65 @@
             chart.render();
         }
 
+        function getRiskScoreData(high = 2, medium = 2, low = 2) {
+            var options = {
+                chart: {
+                    type: 'bar',
+                    height: 250,
+                },
+                series: [{
+                    name: 'Risk Levels',
+                    data: [high, medium, low]
+                }],
+                xaxis: {
+                    categories: ['High Risk', 'Medium Risk', 'Low Risk'],
+                    labels: {
+                        style: {
+                            colors: ['#f87171', '#facc15', '#4ade80'],
+                            fontSize: '12px'
+                        }
+                    }
+                },
+                colors: ['#f87171', '#facc15', '#4ade80'],
+                plotOptions: {
+                    bar: {
+                        horizontal: false,
+                        columnWidth: '50%',
+                        endingShape: 'rounded',
+                        distributed: true
+                    }
+                },
+                dataLabels: {
+                    enabled: true,
+                },
+                legend: {
+                    show: true,
+                    position: 'bottom',
+                },
+                tooltip: {
+                    custom: function({
+                        series,
+                        seriesIndex,
+                        dataPointIndex,
+                        w
+                    }) {
+                        const categories = w.globals.labels;
+                        const category = categories[dataPointIndex];
+                        const value = series[seriesIndex][dataPointIndex];
 
-</script>
+                        return `
+                            <div style="padding:8px;">
+                            <strong>Risk Levels</strong><br/>
+                            <span>${category} : ${value}</span>
+                            </div>
+                        `;
+                    }
+                }
+            };
+            var chart = new ApexCharts(document.querySelector("#column-risk-score"), options);
+            chart.render();
+        }
+    </script>
 
 
 

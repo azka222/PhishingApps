@@ -1281,4 +1281,51 @@ class GophishController extends Controller
         return response()->download($path, 'email-attachment.pdf');
     }
 
+    public function getDashboardData(){
+        if (Gate::allows('CanAccessDashboard')) {
+            $campaigns = auth()->user()->accessibleCampaign();
+
+            if (Gate::allows('IsAdmin')) {
+                if (request()->filled('companyId')) {
+                    $campaigns->where('company_id', request()->companyId);
+                }
+            }
+            $campaigns = $campaigns->get();
+            $campaignsData = [];
+       
+            foreach ($campaigns as $campaign) {
+                $response = Http::withHeaders([
+                    'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
+                ])->get("{$this->url}/campaigns/{$campaign->campaign_id}");
+                if ($response->successful()) {
+                    $data = $response->json();
+                    if (isset($data['name'])) {
+                        $data['name'] = explode('-+-', $data['name'])[0];
+                    }
+                    $campaignsData[] = $data;
+                }
+            }
+          
+            $target = [];
+            $target = [];
+
+            foreach ($campaignsData as $campaign) {
+                foreach ($campaign['results'] as $result) {
+                    $target[] = [
+                        'email' => $result['email'],
+                        'name'  => $result['first_name'] . ' ' . $result['last_name'],
+                        'status' => $result['status'],
+                    ];
+                }
+            }
+              
+            return response()->json([
+                'campaigns' => $campaignsData,
+                'target'    => $target,
+            ]);
+        } else {
+            abort(403);
+        }
+    }
+
 }

@@ -414,7 +414,7 @@
                 },
                 success: function(response) {
                     Swal.close();
-                    window.location.href = "{{ route('employeeDashboardView') }}";
+                    window.location.href = "{{ route('courseLists') }}";
                 },
                 error: function(xhr, status, error) {
                     Swal.close();

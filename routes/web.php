@@ -57,7 +57,7 @@ Route::post('/reset-password', [AuthenticateController::class, 'resetPasswordSub
 // ==================================== if user login success ====================================
 Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::middleware(['auth', 'employee'])->prefix('course')->group(function () {
-        Route::get('/dashboard', [ViewController::class, 'employeeDashboardView'])->name('employeeDashboardView');
+        // Route::get('/dashboard', [ViewController::class, 'employeeDashboardView'])->name('employeeDashboardView');
         Route::get('/employeeLogout', [AuthenticateController::class, 'logout'])->name('employeeLogout');
         Route::get('/lists', [ViewController::class, 'courseListsView'])->name('courseLists');
         Route::get('/getCourse', [CourseController::class, 'getCourseEmployee'])->name('getCourseEmployee');
@@ -89,6 +89,10 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
             Route::post('/deleteRole', [CompanyController::class, 'deleteRole'])->name('deleteRole');
             Route::post('/updateUserCompany', [CompanyController::class, 'updateUserCompany'])->name('updateUserCompany');
 
+        });
+
+        Route::group(['prefix' => 'dashboard'], function (){
+            Route::get('/getDataDashboard', [GophishController::class, 'getDashboardData'])->name('getDashboardData');
         });
 
         Route::group(['prefix' => 'target'], function () {
