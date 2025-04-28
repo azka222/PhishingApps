@@ -371,7 +371,7 @@ class AuthenticateController extends Controller
         $user->save();
         Auth::login($user);
 
-        return redirect()->route('employeeDashboardView');
+        return redirect()->route('courseLists');
     }
 
 }

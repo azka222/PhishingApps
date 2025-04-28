@@ -108,7 +108,7 @@ class User extends Authenticatable implements MustVerifyEmailContract
             return true;
         }
         if ($this->employeeCheck()) {
-            return redirect()->route('employeeDashboardView');
+            return redirect()->route('courseLists');
         }
         $role              = $this->role;
         $module            = $this->getModule($module);

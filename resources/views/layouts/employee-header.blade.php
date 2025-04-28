@@ -74,77 +74,7 @@
 
             <div class="items-center justify-between lg:flex gap-4 lg:w-auto lg:order-1"
                 data-collapse-target="navbar-menu">
-                @CanAccessEmployeeDashboard()
-                <div class="flex justify-end">
-                    <button
-                        class="w-full px-3 py-2 text-xs font-medium text-left hover:text-blue-600 dark:hover:text-blue-500 rounded-xl
-                               {{ $dashboard ? 'dark:text-blue-500 text-blue-500  shadow-blue-500/50 lg:dark:bg-gray-800 dark:bg-gray-800' : 'border-gray-700 text-gray-900 dark:text-white ' }} 
-                               rounded-xl "
-                        type="button">
-                        <a href="{{ url('course/dashboard') }}">Dashboard</a>
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" class="w-5 h-5 ms-1 inline">
-                            <defs>
-                                <style>
-                                    .cls-1 {
-                                        fill: #7c7d7d
-                                    }
-
-                                    .cls-2 {
-                                        fill: #919191
-                                    }
-
-                                    .cls-3 {
-                                        fill: #dad7e5
-                                    }
-
-                                    .cls-4 {
-                                        fill: #edebf2
-                                    }
-
-                                    .cls-7 {
-                                        fill: #c6c3d8
-                                    }
-
-                                    .cls-9 {
-                                        fill: #fc6
-                                    }
-
-                                    .cls-10 {
-                                        fill: #ffde76
-                                    }
-                                </style>
-                            </defs>
-                            <g id="Dashboard">
-                                <path class="cls-1" d="M6 31h36v16H6z" />
-                                <path class="cls-2" d="M42 31v14H11a3 3 0 0 1-3-3V31z" />
-                                <path class="cls-3" d="M18 36v3h-6v-3a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1z" />
-                                <path class="cls-4" d="M18 36v1h-2a2 2 0 0 1-2-2h3a1 1 0 0 1 1 1z" />
-                                <path class="cls-3" d="M18 39v3a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1v-3z" />
-                                <path class="cls-4"
-                                    d="M18 39v2h-3a1 1 0 0 1-1-1v-1zM38 40h-2a1 1 0 0 1 0-2h2a1 1 0 0 1 0 2zM38 44h-2a1 1 0 0 1 0-2h2a1 1 0 0 1 0 2zM32 40h-2a1 1 0 0 1 0-2h2a1 1 0 0 1 0 2zM32 44h-2a1 1 0 0 1 0-2h2a1 1 0 0 1 0 2zM26 40h-2a1 1 0 0 1 0-2h2a1 1 0 0 1 0 2zM26 44h-2a1 1 0 0 1 0-2h2a1 1 0 0 1 0 2zM38 36h-2a1 1 0 0 1 0-2h2a1 1 0 0 1 0 2zM32 36h-2a1 1 0 0 1 0-2h2a1 1 0 0 1 0 2zM26 36h-2a1 1 0 0 1 0-2h2a1 1 0 0 1 0 2z" />
-                                <path class="cls-1" d="M6 1h36v30H6z" />
-                                <path class="cls-2" d="M42 1v28H11a3 3 0 0 1-3-3V1z" />
-                                <path style="fill:#9fdbf3" d="M10 5h14v10H10z" />
-                                <path d="M24 5v8h-9a3 3 0 0 1-3-3V5z" style="fill:#b2e5fb" />
-                                <path class="cls-4" d="M29 15V5a1 1 0 0 1 2 0v10a1 1 0 0 1-2 0z" />
-                                <path class="cls-7" d="M31 14h-2a1 1 0 0 1 0-2h2a1 1 0 0 1 0 2z" />
-                                <path class="cls-4" d="M35 15V5a1 1 0 0 1 2 0v10a1 1 0 0 1-2 0z" />
-                                <path class="cls-7" d="M37 10h-2a1 1 0 0 1 0-2h2a1 1 0 0 1 0 2z" />
-                                <path
-                                    d="M24 9.5v2c-2.08 0-2.17-1.7-3.62-.69a3.17 3.17 0 0 1-4 0 1.2 1.2 0 0 0-1.63 0 3.16 3.16 0 0 1-4 0 1.18 1.18 0 0 0-.75-.31v-2c1.67 0 1.93 1 2.8 1s1.15-1 2.8-1 1.94 1 2.79 1 1.15-1 2.81-1 1.94 1 2.8 1z"
-                                    style="fill:#8bd1ea" />
-                                <path class="cls-9" d="M14 23a2 2 0 1 1-2.82-1.82A2 2 0 0 1 14 23z" />
-                                <path class="cls-10" d="M13.82 23.82a2 2 0 0 1-2.64-2.64 2 2 0 0 1 2.64 2.64z" />
-                                <circle class="cls-9" cx="20" cy="23" r="2" />
-                                <circle class="cls-9" cx="28" cy="23" r="2" />
-                                <circle class="cls-9" cx="36" cy="23" r="2" />
-                                <path class="cls-10"
-                                    d="M21.82 23.82a2 2 0 0 1-2.64-2.64 2 2 0 0 1 2.64 2.64zM29.82 23.82a2 2 0 0 1-2.64-2.64 2 2 0 0 1 2.64 2.64zM37.82 23.82a2 2 0 0 1-2.64-2.64 2 2 0 0 1 2.64 2.64z" />
-                            </g>
-                        </svg>
-                    </button>
-                </div>
-                @endCanAccessEmployeeDashboard()
+        
                 @CanAccessCourse()
                 <div class="flex justify-end">
                     <button

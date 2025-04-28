@@ -25,7 +25,7 @@
                 <div class="flex md:flex-row flex-col justify-between items-start md:items-center mt-8">
                     <div class="flex md:fs-center mb-4 md:mb-0">
                         <label for="show"
-                            class="mr-2 text-xs md:text-lex-row flex-col items-start md:itemsm font-medium mb-2 md:mb-0">Show</label>
+                            class="mr-2 text-xs md:text-lex-row flex-col items-start md:item-sm font-medium mb-2 md:mb-0">Show</label>
                         <select id="show" name="show" onchange="getCourse()"
                             class="bg-gray-100 border border-gray-300 text-gray-900 text-xs md:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                             <option value="5">5</option>
@@ -41,7 +41,7 @@
                     </div>
                 </div>
                 <div class=" min-w-38 overflow-x-auto md:min-w-full">
-                    <div id="course-list" class="grid grid-cols-3 gap-4">
+                    <div id="course-list" class="grid lg:grid-cols-3  grid-cols-1 gap-4">
 
 
                     </div>
@@ -144,13 +144,13 @@
                         }
                         let tr = `<div class="col-span-1">
                             <div class="bg-white dark:bg-gray-700 shadow-md rounded-xl p-4">
-                               <div class="flex items-center justify-between">
-                                    <h1 class="text-2xl  font-semibold text-gray-900 dark:text-white">${course.name}</h1>
+                               <div class="flex md:flex-row flex-col items-start md:justify-between">
+                                    <h1 class="md:text-2xl txt-sm mb-2 md:mb-0  font-semibold text-gray-900 dark:text-white">${course.name}</h1>
                                     <div class="flex items-center justify-end">
-                                        <div class="text-lg ${colorStatus}  font-medium me-2 px-2.5 py-0.5 rounded inline-block">
+                                        <div class="text-xs md:text-sm ${colorStatus}  font-medium me-2 px-2.5 py-0.5 rounded inline-block">
                                             ${status}
                                         </div>
-                                        <div class="text-xl bg-blue-100 text-blue-800 ${colorScore} dark:bg-blue-900 dark:text-blue-300  font-medium me-2 px-2.5 py-0.5 rounded inline-block">
+                                        <div class="text-xs md:text-sm bg-blue-100 text-blue-800 ${colorScore} dark:bg-blue-900 dark:text-blue-300  font-medium me-2 px-2.5 py-0.5 rounded inline-block">
                                             ${score}
                                         </div>
                                         </div> 
