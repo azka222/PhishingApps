@@ -115,16 +115,17 @@
             $("#status").val(2);
             getCampaigns();
 
+
         });
 
-        async function showAddCampaignModal() {
+        function showAddCampaignModal() {
             showModal('add-campaign-modal');
-            await getCampaignsResources();
+       
             $("#error_message_field").hide();
         }
 
-        async function getCampaignsResources() {
-            await $.ajax({
+        function getCampaignsResources() {
+            $.ajax({
                 url: "{{ route('getCampaignResources') }}",
                 type: "GET",
                 success: function(response) {
@@ -132,6 +133,7 @@
                     emailTemplates = response.emailTemplates;
                     sendingProfiles = response.sendingProfiles;
                     groups = response.groups;
+                    console.log(groups);
                     $("#campaign_page").empty();
                     $("#campaign_template").empty();
                     $("#campaign_profile").empty();
@@ -148,30 +150,35 @@
                     $("#group_campaign").append(
                         `<option value="">Select Group</option>`
                     );
-                    landingPages.forEach(data => {
+
+
+                    for (const data of landingPages) {
                         $("#campaign_page").append(
                             `<option value="${data.id}">${data.name}</option>`
                         );
-                    });
-                    emailTemplates.forEach(data => {
+                    }
+
+                    for (const data of emailTemplates) {
                         $("#campaign_template").append(
                             `<option value="${data.id}">${data.name}</option>`
                         );
-                    });
-                    sendingProfiles.forEach(data => {
+                    }
+
+                    for (const data of sendingProfiles) {
                         $("#campaign_profile").append(
                             `<option value="${data.id}">${data.name}</option>`
                         );
-                    });
+                    }
 
-                    groups.forEach(data => {
+                    for (const data of groups) {
                         $("#group_campaign").append(
                             `<option value="${data.id}">${data.name}</option>`
                         );
-                    });
+                    }
                 }
             })
         }
+
 
         function addGroupToCampaign(id) {
             let tempGroup = groups.find(group => group.id == id);
@@ -193,6 +200,7 @@
         async function copyGroupToCampaign(name) {
             $("#group-list").empty();
             let tempGroup = groups.find(group => group.name.trim() == name.trim());
+
             if (!tempGroup) {
                 return;
             }
@@ -263,7 +271,7 @@
                     customClass: {
                         confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700',
                     }
-                   
+
                 });
             }, 10000);
 
@@ -390,6 +398,7 @@
                     companyId: company
                 },
                 success: function(response) {
+                    getCampaignsResources();
                     campaigns = [];
                     campaigns = response.data;
                     console.log(response);
@@ -607,10 +616,10 @@
 
 
         function copyCampaign(id) {
+          
             let tempCampaign = campaigns.find(campaign => campaign.id == id);
             let data = JSON.parse(tempCampaign.data);
             console.log(data);
-            showModal('add-campaign-modal');
             $("#campaign_name").val(data.name + ' (Edited Version)');
             let tempTemplate = data.template.name;
             let tempLandingPage = data.page.name
@@ -626,28 +635,42 @@
                 $("#campaign_end_date").val(formattedEndDate);
             }
 
-            $("#campaign_template option").each(function() {
-                if ($(this).text() == tempTemplate.split('-+-')[0]) {
-                    $(this).prop('selected', true);
-                }
-            });
-
-            $("#campaign_page option").each(function() {
-                if ($(this).text() == tempLandingPage.split('-+-')[0]) {
-                    $(this).prop('selected', true);
-                }
-            });
-
             $("#campaign_url").val(data.url);
-            $("#campaign_profile option").each(function() {
-                if ($(this).text() == data.smtp.name.split('-+-')[0]) {
-                    $(this).prop('selected', true);
+   
+            const campaignTemplateOptions = Array.from($("#campaign_template option"));
+            for (const option of campaignTemplateOptions) {
+                if ($(option).text() == tempTemplate.split('-+-')[0]) {
+                    console.log($(option).text());
+                    $(option).prop('selected', true);
                 }
-            });
+            }
 
-            data.groups.forEach(group => {
-                copyGroupToCampaign(group.name.split('-+-')[0]);
-            });
+   
+            const campaignPageOptions = Array.from($("#campaign_page option"));
+            for (const option of campaignPageOptions) {
+                if ($(option).text() == tempLandingPage.split('-+-')[0]) {
+                    console.log($(option).text());
+                    $(option).prop('selected', true);
+                }
+            }
+
+ 
+            const campaignProfileOptions = Array.from($("#campaign_profile option"));
+            for (const option of campaignProfileOptions) {
+                if ($(option).text() == data.smtp.name.split('-+-')[0]) {
+                    console.log($(option).text());
+                    $(option).prop('selected', true);
+                }
+            }
+
+
+
+
+            for (let i = 0; i < data.groups.length; i++) {
+                copyGroupToCampaign(data.groups[i].name.split('-+-')[0]);
+            }
+
+            showAddCampaignModal()
 
         }
 
