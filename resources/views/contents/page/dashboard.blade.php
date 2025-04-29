@@ -52,7 +52,7 @@
                 <div class="col-span-1 bg-white dark:bg-gray-700 rounded-lg p-4">
                     <h2 class="text-xs md:text-sm font-semibold mb-4 flex items-center justify-center">Top 5 Human Risk</h2>
                     <div class="overflow-x-auto">
-                        <table class="min-w-32 md:min-w-full divide-y divide-gray-200 dark:divide-gray-700 mt-4">
+                        <table class="min-w-32 md:min-w-full divide-y text-sm divide-gray-200 dark:divide-gray-700 mt-4">
                             <thead class="bg-gray-300 dark:bg-gray-700">
                                 <tr class="border-b">
                                     <th class="p-4 text-left">Target Name</th>
@@ -94,7 +94,7 @@
                 <div class="col-span-1 bg-white dark:bg-gray-700 rounded-lg p-4">
                     <h2 class="text-xs md:text-sm font-semibold mb-4 flex items-center justify-center">5 Recent Campaigns</h2>
 
-                    <table class="min-w-32 md:min-w-full divide-y divide-gray-200 dark:divide-gray-700 mt-4">
+                    <table class="min-w-32 md:min-w-full divide-y text-sm divide-gray-200 dark:divide-gray-700 mt-4">
                         <thead class="bg-gray-300 dark:bg-gray-700">
                             <tr
                                 class="border-b">
