@@ -92,12 +92,12 @@
 
                 </div>
                 <div class="col-span-1 bg-white dark:bg-gray-700 rounded-lg p-4">
-                    <h2 class="text-xs md:text-sm font-semibold mb-4 flex items-center justify-center">5 Recent Campaigns</h2>
+                    <h2 class="text-xs md:text-sm font-semibold mb-4 flex items-center justify-center">5 Recent Campaigns
+                    </h2>
 
                     <table class="min-w-32 md:min-w-full divide-y text-sm divide-gray-200 dark:divide-gray-700 mt-4">
                         <thead class="bg-gray-300 dark:bg-gray-700">
-                            <tr
-                                class="border-b">
+                            <tr class="border-b">
                                 <th scope="col" class="p-4 text-left">Name</th>
                                 <th scope="col" class="p-4 text-left">Status</th>
                                 <th scope="col" class="p-4 text-left ">
@@ -108,8 +108,7 @@
                                 </th>
                             </tr>
                         </thead>
-                        <tbody id="list-campaign-tbody"
-                            class="">
+                        <tbody id="list-campaign-tbody" class="">
                         </tbody>
                     </table>
 
@@ -171,35 +170,69 @@
                     campaigns = [];
                     campaigns = response.campaigns;
                     $("#list-campaign-tbody").empty();
-                    if (campaigns.length == 0) {
-                        $("#list-campaign-tbody").append(`
-                        <tr class="text-xs md:text-sm font-normal text-gray-900 dark:text-gray-400 bg-white dark:bg-gray-800">
+
+
+                    getCampaignTable(campaigns);
+
+                    let dataEmailSent = calculateEmailSent(campaigns);
+                    let dataEmailOpened = calculateEmailOpened(campaigns);
+                    let dataLinkClicked = calculateLinkClicked(campaigns);
+                    let dataSubmittedData = calculateSubmittedData(campaigns);
+
+                    getEmailSentChart(dataEmailSent.emailSent, dataEmailSent.emailNotSent, dataEmailSent
+                        .totalEmail);
+                    getEmailOpenedChart(dataEmailOpened.emailOpened, dataEmailOpened.emailNotOpen,
+                        dataEmailOpened.totalEmail);
+
+                    getLinkClickedChart(dataLinkClicked.linkClicked, dataLinkClicked.linkNotClicked,
+                        dataLinkClicked.totalEmail);
+
+                    getSubmittedData(dataSubmittedData.linkSubmitted, dataSubmittedData.linkNotSubmitted,
+                        dataSubmittedData.totalEmail);
+
+                    let combinedTimeline = [];
+                    campaigns.forEach(campaign => {
+                        let dataTimeline = getTimelineData(campaign);
+                        combinedTimeline = combinedTimeline.concat(dataTimeline);
+                    });
+                    combinedTimeline.sort((a, b) => new Date(a.date) - new Date(b.date));
+                    getTimelineCampaignChart(combinedTimeline);
+
+                    getRiskScoreData(campaigns.length, campaigns.length, campaigns.length)
+
+
+                }
+            });
+        }
+
+        function getCampaignTable(campaigns) {
+            $("#list-campaign-tbody").empty();
+            if (campaigns.length == 0) {
+                $("#list-campaign-tbody").append(`
+                        <tr class="text-xs md:text-sm font-normal text-gray-900 dark:text-gray-400 bg-white dark:bg-gray-700">
                             <td class="p-4" colspan="4">
                                 No data available
                             </td>
                         </tr>
                     `);
-                    } else {
-                        $("#list-campaign-tbody").empty();
-                        // console.log(campaigns.length);
-                        const total = campaigns.length;
-                        const start = Math.max(total - 5, 0);
-                        const end = total;
-                        campaigns.slice(start, end).reverse().forEach((campaign, index) => {
-                            let date = new Date(campaign.created_date);
-                            let formattedDate =
-                                `${date.toLocaleDateString('id-ID', {
+            } else {
+                const total = campaigns.length;
+                const start = Math.max(total - 5, 0);
+                const end = total;
+                campaigns.slice(start, end).reverse().forEach((campaign, index) => {
+                    let date = new Date(campaign.created_date);
+                    let formattedDate =
+                        `${date.toLocaleDateString('id-ID', {
                             day: '2-digit',
                             month: 'long',
                             year: 'numeric'
                         })} ${String(date.getUTCHours()).padStart(2, '0')}:${String(date.getUTCMinutes()).padStart(2, '0')}`;
-                            let target = campaign.results && campaign.results.length > 0 ? campaign
-                                .results.length : 'Not Set';
+                    let target = campaign.results && campaign.results.length > 0 ? campaign
+                        .results.length : 'Not Set';
 
-                            $("#list-campaign-tbody").append(`
+                    $("#list-campaign-tbody").append(`
                             <tr class="border-b">
                                 <td class="p-4">${campaign.name}</td>
-                              
                                 <td class="p-4">${campaign.status}</td>
                                 <td class="p-4 flex gap-2">
                                 <button onclick="showDetailCampaign(${campaign.id})"
@@ -212,87 +245,9 @@
 
                             </tr>
                         `);
-                        });
+                });
 
-                        let dataEmailSent = calculateEmailSent(campaigns);
-                        getEmailSentChart(dataEmailSent.emailSent, dataEmailSent.emailNotSent, dataEmailSent
-                            .totalEmail);
-
-                        let dataEmailOpened = calculateEmailOpened(campaigns);
-                        getEmailOpenedChart(dataEmailOpened.emailOpened, dataEmailOpened.emailNotOpen,
-                            dataEmailOpened.totalEmail);
-
-                        let dataLinkClicked = calculateLinkClicked(campaigns);
-                        getLinkClickedChart(dataLinkClicked.linkClicked, dataLinkClicked.linkNotClicked,
-                            dataLinkClicked.totalEmail);
-
-                        let dataSubmittedData = calculateSubmittedData(campaigns);
-                        getSubmittedData(dataSubmittedData.linkSubmitted, dataSubmittedData.linkNotSubmitted,
-                            dataSubmittedData.totalEmail);
-
-                        let combinedTimeline = [];
-                        campaigns.forEach(campaign => {
-                            let dataTimeline = getTimelineData(campaign);
-                            combinedTimeline = combinedTimeline.concat(dataTimeline);
-                        });
-                        combinedTimeline.sort((a, b) => new Date(a.date) - new Date(b.date));
-                        getTimelineCampaignChart(combinedTimeline);
-
-                        getRiskScoreData()
-
-                    }
-                    // $("#numberFirstItem").text(
-                    //     response.campaignTotal != 0 ? (page - 1) * show + 1 : 0
-                    // );
-                    // $("#numberLastItem").text(
-                    //     (page - 1) * show + response.data.length
-                    // );
-                    // $("#totalTemplatesCount").text(response.campaignTotal);
-                    // paginationDashboard("#page-button-dashboard", response.pageCount, response.currentPage);
-                }
-            });
-        }
-
-        function deleteCampaign(id) {
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#10b981',
-                cancelButtonColor: '#d97706',
-                confirmButtonText: 'Yes, delete it!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        url: "{{ route('deleteCampaign') }}",
-                        type: "POST",
-                        data: {
-                            id: id,
-                            _token: "{{ csrf_token() }}"
-                        },
-                        success: function(response) {
-                            Swal.fire({
-                                title: 'Success',
-                                text: 'Campaign deleted successfully.',
-                                icon: 'success',
-                                confirmButtonColor: '#10b981',
-                                confirmButtonText: 'OK'
-                            });
-                            getCampaigns();
-                        },
-                        error: function(xhr, status, error) {
-                            Swal.fire({
-                                icon: "error",
-                                title: "Error",
-                                text: xhr.responseJSON.message,
-                                confirmButtonColor: '#10b981',
-                                confirmButtonText: 'Close'
-                            });
-                        }
-                    })
-                }
-            })
+            }
         }
 
         function showDetailCampaign(id) {
@@ -303,8 +258,8 @@
             window.location.href = "{{ route('campaignView') }}";
         }
 
-
         function calculateEmailSent(campaigns) {
+            console.log(campaigns);
             let tempTotal = 0;
             let tempSent = 0;
             let tempNotSent = 0;
@@ -698,7 +653,7 @@
             chart.render();
         }
 
-        function getRiskScoreData(high = 2, medium = 2, low = 2) {
+        function getRiskScoreData(high = 0, medium = 0, low = 0) {
             var options = {
                 chart: {
                     type: 'bar',

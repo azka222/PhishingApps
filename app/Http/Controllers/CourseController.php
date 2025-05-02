@@ -370,11 +370,23 @@ class CourseController extends Controller
                     $quizModel->title   = $quiz['title'];
                     $quizModel->content = $quiz['content'];
                     if (isset($quiz['attachment']) && ! empty($quiz['attachment'])) {
-                        $path                        = $quiz['attachment']->store('course/quiz', 'public');
-                        $quizModel->attachment->path = $path;
-                        $quizModel->attachment->name = $quiz['attachment']->getClientOriginalName();
-                        $quizModel->attachment->save();
-                        $quizModel->quiz_attachment_id = $quizModel->attachment->id;
+                        $path = $quiz['attachment']->store('course/quiz', 'public');
+                        // $quizModel->attachment       =
+                        // $quizModel->attachment->path = $path;
+                        // $quizModel->attachment->name = $quiz['attachment']->getClientOriginalName();
+                        // $quizModel->attachment->save();
+                        // $quizModel->quiz_attachment_id = $quizModel->attachment->id;
+                        if ($quizModel->attachment) {
+                            $quizModel->attachment->path = $path;
+                            $quizModel->attachment->name = $quiz['attachment']->getClientOriginalName();
+                            $quizModel->attachment->save();
+                        } else {
+                            $newQuizAttachment       = new QuizAttachment();
+                            $newQuizAttachment->name = $quiz['attachment']->getClientOriginalName();
+                            $newQuizAttachment->path = $path;
+                            $newQuizAttachment->save();
+                            $quizModel->quiz_attachment_id = $newQuizAttachment->id;
+                        }
                     }
                     if (isset($quiz['emailContent']) && $quiz['emailContent'] != null && $quiz['emailContent'] != '') {
 
@@ -539,8 +551,6 @@ class CourseController extends Controller
         $courses = $request->has('show')
         ? $coursesQuery->paginate($request->input('show'))
         : $coursesQuery->get();
-
-     
 
         foreach ($courses as $course) {
             if (isset($course->thumbnail)) {
