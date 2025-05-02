@@ -19,11 +19,12 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\Log;
+
 class GophishController extends Controller
 {
     public $url = 'http://127.0.0.1:3333/api';
@@ -1337,7 +1338,6 @@ class GophishController extends Controller
                 }
             }
 
-
             usort($target, function ($a, $b) {
                 return strtotime($a['campaign_launch_date']) <=> strtotime($b['campaign_launch_date']);
             });
@@ -1360,15 +1360,14 @@ class GophishController extends Controller
                 $scored[$email]['total_weight'] += $weight;
                 if (array_key_exists('azkaganteng50@gmail.com', $scored)) {
                     Log::debug("Updated scoring untuk {$email}", [
-                        'status' => $entry['status'],
-                        'weight' => $weight,
+                        'status'       => $entry['status'],
+                        'weight'       => $weight,
                         'weighted_sum' => $scored[$email]['weighted_sum'],
                         'total_weight' => $scored[$email]['total_weight'],
-                        'launch_date' => $entry['campaign_launch_date'],   
+                        'launch_date'  => $entry['campaign_launch_date'],
                     ]);
                 }
             }
-
 
             foreach ($scored as $email => &$data) {
                 $data['final_score'] = round($data['weighted_sum'] / $data['total_weight'], 2);
@@ -1423,11 +1422,11 @@ class GophishController extends Controller
                 ];
             });
             $scored       = $scored->sortByDesc('final_score')->values();
-            $floor        = 0.2;
-            $adjustedData = collect($scored)->map(function ($item) use ($floor) {
+            $adjustedData = collect($scored)->map(function ($item) {
                 $initialRisk = $item['final_score'];
-                $quizScore   = $item['average_score'];
-                $quizScore   = $quizScore ?? 0;
+                $quizScore   = $item['average_score'] ?? 0;
+
+                $floor = 0.65;
 
                 $adjustedRisk = $initialRisk * ($floor + (1 - $floor) * (1 - $quizScore / 100));
 
