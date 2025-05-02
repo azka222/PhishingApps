@@ -8,9 +8,10 @@ use App\Models\Campaign;
 use App\Models\Company;
 use App\Models\EmailTemplateCompany;
 use App\Models\Group;
-use App\Models\SendingProfileCompany;
-use App\Models\TargetGroup;
 use App\Models\LandingPageCompany;
+use App\Models\SendingProfileCompany;
+use App\Models\TargetCourseScore;
+use App\Models\TargetGroup;
 use Carbon\Carbon;
 use DateTime;
 use DateTimeZone;
@@ -19,10 +20,10 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\Session;
-
+use Illuminate\Support\Facades\Log;
 class GophishController extends Controller
 {
     public $url = 'http://127.0.0.1:3333/api';
@@ -103,18 +104,17 @@ class GophishController extends Controller
     public function testLandingPage(Request $request)
     {
         $request->validate([
-            'html' => 'required|string'
+            'html' => 'required|string',
         ]);
         $html_content = $request->html;
-        $preview_id = uniqid();
+        $preview_id   = uniqid();
 
         Session::put("preview_{$preview_id}", $html_content, now()->addMinutes(3));
         return response()->json([
-            'status' => 'success',
-            'preview_id' => $preview_id
+            'status'     => 'success',
+            'preview_id' => $preview_id,
         ]);
     }
-
 
     public function showPreviewPage($id)
     {
@@ -124,7 +124,7 @@ class GophishController extends Controller
 
         $html_content = Session::get("preview_{$id}");
 
-        if (!$html_content) {
+        if (! $html_content) {
             abort(404);
         }
 
@@ -133,24 +133,20 @@ class GophishController extends Controller
 
     public function getLandingPage(Request $request)
     {
-        $apiKey = env('GOPHISH_API_KEY');
+        $apiKey       = env('GOPHISH_API_KEY');
         $landingPages = auth()->user()->accessibleLandingPage();
         if (Gate::allows('CanReadLandingPage')) {
             if ($request->has('capture_credentials') && $request->capture_credentials == 2) {
-            }
-            else if ($request->has('capture_credentials') && $request->capture_credentials == 1) {
+            } else if ($request->has('capture_credentials') && $request->capture_credentials == 1) {
                 $landingPages = auth()->user()->accessibleLandingPage()->where('status_credentials', 1);
-            }
-            else if ($request->has('capture_credentials') && $request->capture_credentials == 0) {
+            } else if ($request->has('capture_credentials') && $request->capture_credentials == 0) {
                 $landingPages = auth()->user()->accessibleLandingPage()->where('status_credentials', 0);
             }
 
             if ($request->has('capture_passwords') && $request->capture_passwords == 2) {
-            }
-            else if ($request->has('capture_passwords') && $request->capture_passwords == 1) {
+            } else if ($request->has('capture_passwords') && $request->capture_passwords == 1) {
                 $landingPages = auth()->user()->accessibleLandingPage()->where('status_passwords', 1);
-            }
-            else if ($request->has('capture_passwords') && $request->capture_passwords == 0) {
+            } else if ($request->has('capture_passwords') && $request->capture_passwords == 0) {
                 $landingPages = auth()->user()->accessibleLandingPage()->where('status_passwords', 0);
             }
             if (Gate::allows('IsAdmin')) {
@@ -223,10 +219,10 @@ class GophishController extends Controller
                 ]);
             }
 
-            $url = $request->url;
+            $url      = $request->url;
             $jsonData = [
                 'include_resources' => false,
-                'url' => $url,
+                'url'               => $url,
             ];
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
@@ -242,14 +238,15 @@ class GophishController extends Controller
         }
     }
 
-    public function createLandingPage(Request $request){
+    public function createLandingPage(Request $request)
+    {
         if (Gate::allows('CanCreateLandingPage')) {
             $request->validate([
-                'landing_name'         => 'required|string',
-                'html_content'         => 'required|string',
-                'capture_credentials'  => 'required|integer',
-                'capture_passwords'    => 'required|integer',
-                'redirect_url'         => 'nullable|string',
+                'landing_name'        => 'required|string',
+                'html_content'        => 'required|string',
+                'capture_credentials' => 'required|integer',
+                'capture_passwords'   => 'required|integer',
+                'redirect_url'        => 'nullable|string',
             ]);
 
             if (auth()->user()->adminCheck()) {
@@ -258,33 +255,33 @@ class GophishController extends Controller
                 ]);
             }
             $capture_credentials = $request->capture_credentials == 1 ? true : false;
-            $capture_passwords = $request->capture_passwords == 1 ? true : false;
-            $newId = $this->getIdFromGophish('pages');
-            $formattedDate = $this->getTimeGoPhish();
-            $jsonData = [
+            $capture_passwords   = $request->capture_passwords == 1 ? true : false;
+            $newId               = $this->getIdFromGophish('pages');
+            $formattedDate       = $this->getTimeGoPhish();
+            $jsonData            = [
                 'id'                  => $newId,
                 'name'                => $request->landing_name . ' -+-' . $newId,
                 'html'                => $request->html_content,
                 'capture_credentials' => $capture_credentials,
                 'capture_passwords'   => $capture_passwords,
                 'modified_date'       => $formattedDate,
-                'redirect_url'        => $request->redirect_url
+                'redirect_url'        => $request->redirect_url,
 
             ];
             $json_string = json_encode($jsonData);
-            $response = Http::withHeaders([
+            $response    = Http::withHeaders([
                 'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
             ])->post("{$this->url}/pages/", $jsonData);
             if ($response->successful() && $response->body() != []) {
-                $companyLandingPage = new LandingPageCompany();
-                $companyLandingPage->company_id = auth()->user()->adminCheck() ? $request->company : auth()->user()->company_id;
-                $companyLandingPage->landing_page_id = $newId;
+                $companyLandingPage                     = new LandingPageCompany();
+                $companyLandingPage->company_id         = auth()->user()->adminCheck() ? $request->company : auth()->user()->company_id;
+                $companyLandingPage->landing_page_id    = $newId;
                 $companyLandingPage->status_credentials = $request->capture_credentials;
-                $companyLandingPage->status_passwords = $request->capture_passwords;
+                $companyLandingPage->status_passwords   = $request->capture_passwords;
                 $companyLandingPage->save();
                 return response()->json([
-                    'status' => 'success',
-                    'message' => 'Landing page created successfully'
+                    'status'  => 'success',
+                    'message' => 'Landing page created successfully',
                 ]);
             } else {
                 return response()->json(['error' => $response->json()], 500);
@@ -294,30 +291,30 @@ class GophishController extends Controller
         }
     }
 
-    public function updateLandingPage (Request $request)
+    public function updateLandingPage(Request $request)
     {
         if (Gate::allows('CanUpdateLandingPage')) {
             $request->validate([
                 'id'                  => 'required|integer',
-                'landing_name'         => 'required|string',
-                'html_content'         => 'required|string',
-                'capture_credentials'  => 'required|integer',
-                'capture_passwords'    => 'required|integer',
-                'redirect_url'         => 'nullable|string',
+                'landing_name'        => 'required|string',
+                'html_content'        => 'required|string',
+                'capture_credentials' => 'required|integer',
+                'capture_passwords'   => 'required|integer',
+                'redirect_url'        => 'nullable|string',
             ]);
 
-            $formattedDate = $this->getTimeGoPhish();
-            $pageId = $request->id;
+            $formattedDate       = $this->getTimeGoPhish();
+            $pageId              = $request->id;
             $capture_credentials = $request->capture_credentials == 1 ? true : false;
-            $capture_passwords = $request->capture_passwords == 1 ? true : false;
-            $jsonData = [
+            $capture_passwords   = $request->capture_passwords == 1 ? true : false;
+            $jsonData            = [
                 'id'                  => intval($request->id),
                 'name'                => $request->landing_name . ' -+-' . $request->id,
                 'html'                => $request->html_content,
                 'capture_credentials' => $capture_credentials,
                 'capture_passwords'   => $capture_passwords,
                 'modified_date'       => $formattedDate,
-                'redirect_url'        => $request->redirect_url
+                'redirect_url'        => $request->redirect_url,
             ];
 
             $response = Http::withHeaders([
@@ -325,25 +322,26 @@ class GophishController extends Controller
                 'Content-Type'  => 'application/json',
             ])->put("{$this->url}/pages/{$pageId}", $jsonData);
             if ($response->successful() && $response->body() != []) {
-                $companyLandingPage = auth()->user()->accessibleLandingPage()->where('landing_page_id', $request->id)->first();
+                $companyLandingPage                     = auth()->user()->accessibleLandingPage()->where('landing_page_id', $request->id)->first();
                 $companyLandingPage->status_credentials = $request->capture_credentials;
-                $companyLandingPage->status_passwords = $request->capture_passwords;
+                $companyLandingPage->status_passwords   = $request->capture_passwords;
                 $companyLandingPage->save();
                 return response()->json([
-                    'status' => 'success',
-                    'message' => 'Landing page updated successfully'
+                    'status'  => 'success',
+                    'message' => 'Landing page updated successfully',
                 ]);
             } else {
                 return response()->json(['error' => $response->json()], 500);
             }
-            } else {
-                abort (403);
-            }
+        } else {
+            abort(403);
         }
+    }
 
-    public function deleteLandingpage (Request $request){
+    public function deleteLandingpage(Request $request)
+    {
         if (Gate::allows('CanDeleteLandingPage')) {
-            $pageId = intval($request->id);
+            $pageId   = intval($request->id);
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
             ])->delete("{$this->url}/pages/{$pageId}");
@@ -351,8 +349,8 @@ class GophishController extends Controller
                 $companyLandingPage = auth()->user()->accessibleLandingPage()->where('landing_page_id', $pageId)->first();
                 $companyLandingPage->delete();
                 return response()->json([
-                    'status' => 'success',
-                    'message' => 'Landing page deleted successfully'
+                    'status'  => 'success',
+                    'message' => 'Landing page deleted successfully',
                 ]);
             } else {
                 return response()->json(['error' => $response->json()], 500);
@@ -1035,7 +1033,7 @@ class GophishController extends Controller
                 'template'   => 'required|integer|exists:email_template_companies,template_id',
                 'page'       => 'required|integer',
                 'launchDate' => 'required|date',
-                'endDate'   => 'nullable|date',
+                'endDate'    => 'nullable|date',
                 'url'        => 'required|url',
                 'status'     => 'required|in:1,0',
                 'profile'    => 'required|integer|exists:sending_profile_companies,sending_profile_id',
@@ -1092,8 +1090,8 @@ class GophishController extends Controller
                 'groups'       => $groupName,
             ];
 
-            if($formattedEndDate == null){
-                $jsonData['send_by_date'] = $formattedLaunchDate;
+            if ($formattedEndDate == null) {
+                $jsonData['send_by_date']   = $formattedLaunchDate;
                 $jsonData['completed_date'] = $formattedLaunchDate;
             }
 
@@ -1276,12 +1274,14 @@ class GophishController extends Controller
         return response()->json(['message' => 'Approval email sent successfully!']);
     }
 
-    public function downloadEmailAttachment(){
+    public function downloadEmailAttachment()
+    {
         $path = storage_path('attachment/email-attachment.pdf');
         return response()->download($path, 'email-attachment.pdf');
     }
 
-    public function getDashboardData(){
+    public function getDashboardData()
+    {
         if (Gate::allows('CanAccessDashboard')) {
             $campaigns = auth()->user()->accessibleCampaign();
 
@@ -1290,9 +1290,9 @@ class GophishController extends Controller
                     $campaigns->where('company_id', request()->companyId);
                 }
             }
-            $campaigns = $campaigns->get();
+            $campaigns     = $campaigns->get();
             $campaignsData = [];
-       
+
             foreach ($campaigns as $campaign) {
                 $response = Http::withHeaders([
                     'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
@@ -1305,23 +1305,159 @@ class GophishController extends Controller
                     $campaignsData[] = $data;
                 }
             }
-          
-            $target = [];
-            $target = [];
+
+            $target  = [];
+            $grouped = [];
 
             foreach ($campaignsData as $campaign) {
                 foreach ($campaign['results'] as $result) {
+                    switch ($result['status']) {
+                        case 'Email Sent':
+                            $result['status'] = 0;
+                            break;
+                        case 'Email Opened':
+                            $result['status'] = 10;
+                            break;
+                        case 'Clicked Link':
+                            $result['status'] = 40;
+                            break;
+                        case 'Submitted Data':
+                            $result['status'] = 100;
+                            break;
+                        default:
+                            $result['status'] = 0;
+                    }
                     $target[] = [
-                        'email' => $result['email'],
-                        'name'  => $result['first_name'] . ' ' . $result['last_name'],
-                        'status' => $result['status'],
+                        'email'                => $result['email'],
+                        'status'               => $result['status'],
+                        'campaign_name'        => $campaign['name'],
+                        'campaign_launch_date' => $campaign['launch_date'],
+                        'campaign_id'          => $campaign['id'],
                     ];
                 }
             }
-              
+
+
+            usort($target, function ($a, $b) {
+                return strtotime($a['campaign_launch_date']) <=> strtotime($b['campaign_launch_date']);
+            });
+
+            $scored = [];
+            foreach ($target as $entry) {
+                $email = $entry['email'];
+
+                if (! isset($scored[$email])) {
+                    $scored[$email] = [
+                        'total_campaign' => 0,
+                        'weighted_sum'   => 0,
+                        'total_weight'   => 0,
+                    ];
+                }
+
+                $scored[$email]['total_campaign']++;
+                $weight = $scored[$email]['total_campaign'];
+                $scored[$email]['weighted_sum'] += $entry['status'] * $weight;
+                $scored[$email]['total_weight'] += $weight;
+                if (array_key_exists('azkaganteng50@gmail.com', $scored)) {
+                    Log::debug("Updated scoring untuk {$email}", [
+                        'status' => $entry['status'],
+                        'weight' => $weight,
+                        'weighted_sum' => $scored[$email]['weighted_sum'],
+                        'total_weight' => $scored[$email]['total_weight'],
+                        'launch_date' => $entry['campaign_launch_date'],   
+                    ]);
+                }
+            }
+
+
+            foreach ($scored as $email => &$data) {
+                $data['final_score'] = round($data['weighted_sum'] / $data['total_weight'], 2);
+                $data['email']       = $email;
+                unset($data['weighted_sum'], $data['total_weight']);
+            }
+
+            unset($data);
+            usort($scored, function ($a, $b) {
+                return $b['final_score'] <=> $a['final_score'];
+            });
+
+            // dd($scored);
+
+            $courseScore = TargetCourseScore::query();
+            if (Gate::allows('IsAdmin')) {
+                if (request()->filled('companyId')) {
+                    $courseScore->whereHas('target', function ($query) {
+                        $query->where('company_id', request()->companyId);
+                    });
+                }
+            } else {
+                $courseScore->whereHas('target', function ($query) {
+                    $query->where('company_id', auth()->user()->company_id);
+                });
+            }
+
+            $courseScore = $courseScore->get();
+
+            $grouped = $courseScore->map(function ($item) {
+                return [
+                    'email' => $item->target->email,
+                    'score' => $item->score,
+                ];
+            });
+            $grouped = $grouped->groupBy('email')->map(function ($items) {
+                $averageScore = $items->pluck('score')->avg();
+                return [
+                    'email'         => $items->first()['email'],
+                    'average_score' => $averageScore,
+                ];
+            });
+
+            $grouped = $grouped->values();
+            $scored  = collect($scored)->map(function ($item) use ($grouped) {
+                $email        = $item['email'];
+                $averageScore = $grouped->firstWhere('email', $email)['average_score'] ?? null;
+                return [
+                    'email'         => $email,
+                    'final_score'   => $item['final_score'],
+                    'average_score' => $averageScore,
+                ];
+            });
+            $scored       = $scored->sortByDesc('final_score')->values();
+            $floor        = 0.2;
+            $adjustedData = collect($scored)->map(function ($item) use ($floor) {
+                $initialRisk = $item['final_score'];
+                $quizScore   = $item['average_score'];
+                $quizScore   = $quizScore ?? 0;
+
+                $adjustedRisk = $initialRisk * ($floor + (1 - $floor) * (1 - $quizScore / 100));
+
+                return array_merge($item, [
+                    'adjusted_risk' => round($adjustedRisk, 2),
+                ]);
+            });
+
+            $adjustedData = $adjustedData->sortByDesc('adjusted_risk')->values();
+
+            $parameters = [
+                'high'   => 0,
+                'medium' => 0,
+                'low'    => 0,
+            ];
+            foreach ($adjustedData as $key => $value) {
+                if ($value['adjusted_risk'] >= 70) {
+                    $parameters['high']++;
+                } elseif ($value['adjusted_risk'] >= 40 && $value['adjusted_risk'] < 70) {
+                    $parameters['medium']++;
+                } else {
+                    $parameters['low']++;
+                }
+            }
+
             return response()->json([
-                'campaigns' => $campaignsData,
-                'target'    => $target,
+                'campaigns'  => $campaignsData,
+                'target'     => $target,
+                'human_risk' => $adjustedData,
+                'parameters' => $parameters,
             ]);
         } else {
             abort(403);
