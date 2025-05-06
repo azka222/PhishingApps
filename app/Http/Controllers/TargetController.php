@@ -74,7 +74,10 @@ class TargetController extends Controller
                 'email'         => 'required|email|unique:targets,email',
                 'position'      => 'required|integer|exists:target_positions,id',
                 'createAccount' => 'required|',
+                'targetAge'   => 'required|integer|min:1|max:100',
             ]);
+
+            // dd($request->targetAge);
 
             if (auth()->user()->adminCheck()) {
                 $request->validate([
@@ -88,6 +91,7 @@ class TargetController extends Controller
             $target->department_id = $request->department;
             $target->email         = $request->email;
             $target->position_id   = $request->position;
+           $target->age = $request->targetAge;
             $target->company_id    = auth()->user()->adminCheck() ? $request->company : auth()->user()->company_id;
             $target->save();
 
@@ -104,6 +108,8 @@ class TargetController extends Controller
                     $user->phone      = '081234567890';
                     $user->gender     = 'aaa';
                     $user->employee   = 1;
+                    $user->is_admin = 0;
+                    $user->role_id = null;
                     $user->company_id = auth()->user()->adminCheck() ? $request->company : auth()->user()->company_id;
                     $user->save();
                     SendAccountCredentials::dispatch($user->email, $password, $user->first_name);
@@ -141,6 +147,7 @@ class TargetController extends Controller
                 'email'         => 'required|email',
                 'position'      => 'required|integer|exists:target_positions,id',
                 'createAccount' => 'required|',
+                'targetAge'   => 'required|integer|min:1|max:100',
             ]);
 
             $target   = auth()->user()->accessibleTarget()->where('id', $request->id)->first();
@@ -156,6 +163,7 @@ class TargetController extends Controller
             $target->department_id = $request->department;
             $target->email         = $request->email;
             $target->position_id   = $request->position;
+            $target->age = $request->targetAge;
             $target->save();
             if ($request->createAccount == 1) {
                 $existingUser = User::where('email', $request->email)->first();
@@ -246,6 +254,7 @@ class TargetController extends Controller
                     "RowColumns.*.3" => "max:256|required|email|unique:targets,email",
                     "RowColumns.*.4" => "exists:target_departments,id",
                     "RowColumns.*.5" => "exists:target_positions,id",
+                    "RowColumns.*.6" => "integer|min:1|max:100",
                 ],
                 [
                     "RowColumns.*.size"       => "Invalid row at :attribute",
@@ -260,6 +269,7 @@ class TargetController extends Controller
                     "RowColumns.*.3.max"      => "Email is too long at :attribute",
                     "RowColumns.*.4.exists"   => "Department not found at :attribute",
                     "RowColumns.*.5.exists"   => "Position not found at :attribute",
+                    "RowColumns.*.6.integer"  => "Age must be a number at :attribute",
                 ]
             )->setAttributeNames(
                 collect($csvRowsColumns->toArray())->mapWithKeys(function ($_, $index) {
@@ -270,6 +280,7 @@ class TargetController extends Controller
                         "RowColumns.$index.3" => "Row " . ($index + 1),
                         "RowColumns.$index.4" => "Row " . ($index + 1),
                         "RowColumns.$index.5" => "Row " . ($index + 1),
+                        "RowColumns.$index.6" => "Row " . ($index + 1),
                     ];
                 })->toArray()
             );
@@ -320,13 +331,14 @@ class TargetController extends Controller
                 $validator = Validator::make(
                     ["RowColumns" => $csvRowsColumns->toArray()],
                     [
-                        "RowColumns.*"   => "size:6",
+                        "RowColumns.*"   => "size:7",
                         "RowColumns.*.0" => "distinct",
                         "RowColumns.*.1" => "max:256|required",
                         "RowColumns.*.2" => "max:256|required",
                         "RowColumns.*.3" => "max:256|required|email|unique:targets,email",
                         "RowColumns.*.4" => "exists:target_departments,id",
                         "RowColumns.*.5" => "exists:target_positions,id",
+                        "RowColumns.*.6" => "integer|min:1|max:100",
                     ],
                     [
                         "RowColumns.*.size"       => "Invalid row at :attribute",
@@ -341,6 +353,7 @@ class TargetController extends Controller
                         "RowColumns.*.3.max"      => "Email is too long at :attribute",
                         "RowColumns.*.4.exists"   => "Department not found at :attribute",
                         "RowColumns.*.5.exists"   => "Position not found at :attribute",
+                        "RowColumns.*.6.integer"  => "Age must be a number at :attribute",
                     ]
                 )->setAttributeNames(
                     collect($csvRowsColumns->toArray())->mapWithKeys(function ($_, $index) {
@@ -351,6 +364,7 @@ class TargetController extends Controller
                             "RowColumns.$index.3" => "Row " . ($index + 1),
                             "RowColumns.$index.4" => "Row " . ($index + 1),
                             "RowColumns.$index.5" => "Row " . ($index + 1),
+                            "RowColumns.$index.6" => "Row " . ($index + 1),
                         ];
                     })->toArray()
                 );
@@ -393,7 +407,7 @@ class TargetController extends Controller
 
     public function downloadTemplateTarget()
     {
-        $filePath = storage_path('template/importTarget.zip');
+        $filePath = storage_path('template/importTarget2.zip');
         return response()->download($filePath, 'template.zip');
 
     }

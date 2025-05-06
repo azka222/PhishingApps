@@ -261,7 +261,7 @@
                         @CanModifyTarget()
                         <td class="p-4 flex gap-2">
                             @CanUpdateTarget()
-                            <button onclick="showUpdateTargetModal(${target.id}, '${target.first_name}', '${target.last_name}','${target.email}', '${target.position.id}', '${target.department.id}', '${target.account}', '${target.has_account}')"
+                            <button onclick="showUpdateTargetModal(${target.id}, '${target.first_name}', '${target.last_name}','${target.email}', '${target.position.id}', '${target.department.id}', '${target.account}', '${target.has_account}', '${target.age}')"
                                 class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">Update</button>
                             @endCanUpdateTarget()
                             @CanDeleteTarget()
@@ -317,6 +317,7 @@
             $("#target_email").val('');
             $("#target_department").val('');
             $("#target_position").val('');
+            $("#target_age").val('');
             $("#title-add-target-modal").text('Add Target');
             $("#button-for-target").removeAttr('onclick').attr('onclick', 'createTarget()');
             $("#button-for-target").text('Add');
@@ -325,12 +326,13 @@
             showModal('add-target-modal');
         }
 
-        function showUpdateTargetModal(id, firstName, lastName, email, position, department, account, createAccount) {
+        function showUpdateTargetModal(id, firstName, lastName, email, position, department, account, createAccount, age) {
 
             $("#target_first_name").val(firstName);
             $("#target_last_name").val(lastName);
             $("#target_email").val(email);
             $("#target_department").val(department);
+            $("#target_age").val(age);
             $("#target_position").val(position);
             $("#create_account").prop('checked', account == 1 ? true : false);
             $("#title-add-target-modal").text('Update Target');
@@ -358,6 +360,7 @@
             let department = $('#target_department').val();
             let company = $('#admin_company_input').val() == '' ? '' : $('#admin_company_input').val();
             let createAccount = $('#create_account').is(':checked') ? 1 : 0;
+            let targetAge = $('#target_age').val();
 
             $.ajax({
                 url: "{{ route('createTarget') }}",
@@ -370,7 +373,8 @@
                     department: department,
                     _token: "{{ csrf_token() }}",
                     company: company,
-                    createAccount: createAccount
+                    createAccount: createAccount,
+                    targetAge: targetAge
                 },
                 success: function(response) {
                     preventDoubleClick('button-for-target', false);
@@ -380,7 +384,12 @@
                         title: "Success",
                         text: response.message,
                         confirmButtonColor: '#10b981',
-                        confirmButtonText: 'Close'
+                        confirmButtonText: 'Close',
+                        customClass: {
+                            confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700',
+                            cancelButton: 'bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 ml-2'
+                        },
+
                     });
                     $("#error_message_field").hide();
                     hideModal('add-target-modal');
@@ -409,6 +418,7 @@
             let department = $('#target_department').val();
             let account = $('#create_account').is(':checked') ? 1 : 0;
             let createAccount = $("#create_account").is(':checked') ? 1 : 0;
+            let targetAge = $('#target_age').val();
 
             $.ajax({
                 url: "{{ route('updateTarget') }}",
@@ -422,6 +432,8 @@
                     department: department,
                     account: account,
                     createAccount: createAccount,
+                    targetAge: targetAge,
+
                     _token: "{{ csrf_token() }}"
                 },
                 success: function(response) {
@@ -432,7 +444,11 @@
                         title: "Success",
                         text: response.message,
                         confirmButtonColor: '#10b981',
-                        confirmButtonText: 'Close'
+                        confirmButtonText: 'Close',
+                        customClass: {
+                            confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700',
+                            cancelButton: 'bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 ml-2'
+                        },
                     });
                     $("#error_message_field").hide();
                     hideModal('add-target-modal');
