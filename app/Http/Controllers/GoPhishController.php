@@ -10,6 +10,7 @@ use App\Models\EmailTemplateCompany;
 use App\Models\Group;
 use App\Models\LandingPageCompany;
 use App\Models\SendingProfileCompany;
+use App\Models\Target;
 use App\Models\TargetCourseScore;
 use App\Models\TargetGroup;
 use Carbon\Carbon;
@@ -23,7 +24,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\Log;
+
 class GophishController extends Controller
 {
     public $url = 'http://127.0.0.1:3333/api';
@@ -1330,13 +1331,13 @@ class GophishController extends Controller
                     $target[] = [
                         'email'                => $result['email'],
                         'status'               => $result['status'],
+                        'age'                  => Target::where('email', $result['email'])->first()->age ?? null,
                         'campaign_name'        => $campaign['name'],
                         'campaign_launch_date' => $campaign['launch_date'],
                         'campaign_id'          => $campaign['id'],
                     ];
                 }
             }
-
 
             usort($target, function ($a, $b) {
                 return strtotime($a['campaign_launch_date']) <=> strtotime($b['campaign_launch_date']);
@@ -1358,21 +1359,22 @@ class GophishController extends Controller
                 $weight = $scored[$email]['total_campaign'];
                 $scored[$email]['weighted_sum'] += $entry['status'] * $weight;
                 $scored[$email]['total_weight'] += $weight;
-                if (array_key_exists('azkaganteng50@gmail.com', $scored)) {
-                    Log::debug("Updated scoring untuk {$email}", [
-                        'status' => $entry['status'],
-                        'weight' => $weight,
-                        'weighted_sum' => $scored[$email]['weighted_sum'],
-                        'total_weight' => $scored[$email]['total_weight'],
-                        'launch_date' => $entry['campaign_launch_date'],   
-                    ]);
-                }
+                $scored[$email]['age'] = $entry['age'];
+                // if (array_key_exists('azkaganteng50@gmail.com', $scored)) {
+                //     Log::debug("Updated scoring untuk {$email}", [
+                //         'status'       => $entry['status'],
+                //         'weight'       => $weight,
+                //         'weighted_sum' => $scored[$email]['weighted_sum'],
+                //         'total_weight' => $scored[$email]['total_weight'],
+                //         'launch_date'  => $entry['campaign_launch_date'],
+                //     ]);
+                // }
             }
-
 
             foreach ($scored as $email => &$data) {
                 $data['final_score'] = round($data['weighted_sum'] / $data['total_weight'], 2);
                 $data['email']       = $email;
+                $data['age']         = $data['age'] ?? 30;
                 unset($data['weighted_sum'], $data['total_weight']);
             }
 
@@ -1420,14 +1422,15 @@ class GophishController extends Controller
                     'email'         => $email,
                     'final_score'   => $item['final_score'],
                     'average_score' => $averageScore,
+                    'age'           => $item['age'],
                 ];
             });
             $scored       = $scored->sortByDesc('final_score')->values();
-            $floor        = 0.2;
-            $adjustedData = collect($scored)->map(function ($item) use ($floor) {
+            $adjustedData = collect($scored)->map(function ($item) {
                 $initialRisk = $item['final_score'];
-                $quizScore   = $item['average_score'];
-                $quizScore   = $quizScore ?? 0;
+                $quizScore   = $item['average_score'] ?? 0;
+
+                $floor = 0.65;
 
                 $adjustedRisk = $initialRisk * ($floor + (1 - $floor) * (1 - $quizScore / 100));
 
@@ -1437,6 +1440,8 @@ class GophishController extends Controller
             });
 
             $adjustedData = $adjustedData->sortByDesc('adjusted_risk')->values();
+
+            // dd($adjustedData);
 
             $parameters = [
                 'high'   => 0,
@@ -1453,11 +1458,53 @@ class GophishController extends Controller
                 }
             }
 
+            $ageGroups = [
+                '18-25' => ['low' => 0, 'medium' => 0, 'high' => 0],
+                '26-35' => ['low' => 0, 'medium' => 0, 'high' => 0],
+                '36-45' => ['low' => 0, 'medium' => 0, 'high' => 0],
+                '46-55' => ['low' => 0, 'medium' => 0, 'high' => 0],
+                '55+'   => ['low' => 0, 'medium' => 0, 'high' => 0],
+            ];
+
+            foreach ($adjustedData as $item) {
+                if (! isset($item['age']) || ! isset($item['adjusted_risk'])) {
+                    continue;
+                }
+
+                $age  = (int) $item['age'];
+                $risk = $item['adjusted_risk'];
+
+                
+                if ($age >= 18 && $age <= 25) {
+                    $group = '18-25';
+                } elseif ($age >= 26 && $age <= 35) {
+                    $group = '26-35';
+                } elseif ($age >= 36 && $age <= 45) {
+                    $group = '36-45';
+                } elseif ($age >= 46 && $age <= 55) {
+                    $group = '46-55';
+                } else {
+                    $group = '55+';
+                }
+
+            
+                if ($risk >= 70) {
+                    $ageGroups[$group]['high']++;
+                } elseif ($risk >= 40) {
+                    $ageGroups[$group]['medium']++;
+                } else {
+                    $ageGroups[$group]['low']++;
+                }
+            }
+
+            
+
             return response()->json([
                 'campaigns'  => $campaignsData,
                 'target'     => $target,
                 'human_risk' => $adjustedData,
                 'parameters' => $parameters,
+                'age_groups' => $ageGroups,
             ]);
         } else {
             abort(403);

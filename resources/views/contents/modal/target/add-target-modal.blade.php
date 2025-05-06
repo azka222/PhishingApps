@@ -60,6 +60,13 @@
                             class="mt-1 bg-gray-100 border border-gray-300 text-gray-900 text-xs md:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                         </select>
                     </div>
+                    <div class="col-span-2 md:col-span-1">
+                        <label for="target_age"
+                            class="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-200">Target
+                            Age</label>
+                        <input type="number" min="0" id="target_age" name="target_age" placeholder="Enter target age"
+                            class="mt-1 block w-full px-3 py-2 border bg-gray-100 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-xs md:text-sm dark:bg-gray-600 dark:border-gray-700 dark:text-gray-300">
+                    </div>
 
                     @IsAdmin()
                     <div class="col-span-2 md:col-span-1" id="admin_company_input_div">

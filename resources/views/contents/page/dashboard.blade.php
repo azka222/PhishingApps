@@ -41,26 +41,21 @@
             @endIsAdmin()
 
             <div class="grid grid-cols-4 gap-8  dark:text-white p-4 w-full">
-                <div class="col-span-2  bg-white dark:bg-gray-700 rounded-lg">
-                    <label for="column-risk-score"
-                        class="text-xs md:text-sm font-semibold mb-4 flex items-center justify-center m-4">Human
-                        Risk</label>
-                    <div id="column-risk-score">
 
-                    </div>
-                </div>
-                <div class="col-span-1 bg-white dark:bg-gray-700 rounded-lg p-4">
-                    <h2 class="text-xs md:text-sm font-semibold mb-4 flex items-center justify-center">Top 5 Human Risk</h2>
+                <div class="col-span-2 bg-white dark:bg-gray-700 rounded-lg p-4">
+                    <h2 class="text-xs md:text-sm font-semibold mb-4 flex items-center justify-center">Top 5 Human Risks
+                    </h2>
                     <div class="overflow-x-auto">
                         <table class="min-w-32 md:min-w-full divide-y text-sm divide-gray-200 dark:divide-gray-700 mt-4">
                             <thead class="bg-gray-300 dark:bg-gray-700">
                                 <tr class="border-b">
                                     <th class="p-4 text-left">Target Name</th>
-                                    <th class="p-4 text-left">Score</th>
+                                    <th class="p-4 text-left">Phishing Score</th>
+                                    <th class="p-4 text-left">Course Score</th>
                                     <th class="p-4 text-left">Risk to Company</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="list-human-risk-tbody" class="">
                                 <tr class="border-b">
                                     <td class="p-4">John Doe</td>
                                     <td class="p-4">95</td>
@@ -91,7 +86,7 @@
                     </div>
 
                 </div>
-                <div class="col-span-1 bg-white dark:bg-gray-700 rounded-lg p-4">
+                <div class="col-span-2 bg-white dark:bg-gray-700 rounded-lg p-4">
                     <h2 class="text-xs md:text-sm font-semibold mb-4 flex items-center justify-center">5 Recent Campaigns
                     </h2>
 
@@ -114,19 +109,38 @@
 
 
                 </div>
+                <div class="col-span-2  bg-white dark:bg-gray-700 rounded-lg">
+                    <label for="column-risk-score"
+                        class="text-xs md:text-sm font-semibold mb-4 flex items-center justify-center m-4">Human
+                        Risks</label>
+                    <div id="column-risk-score">
+
+                    </div>
+                </div>
+                <div class="col-span-2 bg-white dark:bg-gray-700 rounded-lg">
+                    <label for="column-risk-score"
+                        class="text-xs md:text-sm font-semibold mb-4 flex items-center justify-center m-4">User Risk
+                        Distribution by Age Group</label>
+                    <div id="area-chart-age-group"></div>
+                </div>
 
             </div>
 
-            <div class="p-4">
+            <div class="p-4 hidden">
                 <div class="bg-white dark:bg-gray-700 dark:text-white rounded-lg p-4 flex flex-col items-center w-full">
                     <p class="text-xs md:text-sm font-semibold mb-4">Campaign Timeline</p>
                     <div id="timeline-campaign" class="w-full"></div>
                 </div>
             </div>
 
-            <div class="p-4">
-                <div class="bg-white dark:bg-gray-700 dark:text-white rounded-lg p-4">
-                    <div class="grid grid-cols-4 gap-4">
+            <div class="px-4">
+                <div class="bg-white dark:bg-gray-700 dark:text-white rounded-lg">
+                    <div class="p-2">
+                        <label for="column-risk-score"
+                            class="text-xs md:text-sm font-semibold mb-4 flex items-center justify-center m-4">Phishing
+                            Simulation Engagement Summary</label>
+                    </div>
+                    <div class="grid grid-cols-4 gap-4 p-4">
                         <div class="col-span-4 lg:col-span-1 md:col-span-2  flex flex-col items-center justify-center">
                             <p class="text-xs md:text-sm font-semibold mb-4">Emails Sent</p>
                             <div id="donut-email-sent"></div>
@@ -152,6 +166,9 @@
     <script>
         $(document).ready(function() {
             getDashboardValue();
+            let campaigns = [];
+            let humanRisks = [];
+
         });
 
         function getDashboardValue() {
@@ -167,12 +184,14 @@
                     companyId: companyId
                 },
                 success: function(response) {
-                    campaigns = [];
+
                     campaigns = response.campaigns;
+                    humanRisks = response.human_risk;
                     $("#list-campaign-tbody").empty();
 
 
                     getCampaignTable(campaigns);
+                    getHumanRiskTable(humanRisks);
 
                     let dataEmailSent = calculateEmailSent(campaigns);
                     let dataEmailOpened = calculateEmailOpened(campaigns);
@@ -198,11 +217,72 @@
                     combinedTimeline.sort((a, b) => new Date(a.date) - new Date(b.date));
                     getTimelineCampaignChart(combinedTimeline);
 
-                    getRiskScoreData(campaigns.length, campaigns.length, campaigns.length)
+                    getRiskScoreData(response.parameters.high, response.parameters.medium,
+                        response.parameters.low);
+
+                    getRiskScoreByAgeGroup(response.age_groups);
 
 
                 }
             });
+        }
+
+        function getHumanRiskTable(humanRisks) {
+            $("#list-human-risk-tbody").empty();
+            console.log(humanRisks);
+            if (humanRisks.length == 0) {
+                $("#list-human-risk-tbody").append(`
+                        <tr class="text-xs md:text-sm font-normal text-gray-900 dark:text-gray-400 bg-white dark:bg-gray-700">
+                            <td class="p-4" colspan="4">
+                                No data available
+                            </td>
+                        </tr>
+                    `);
+            } else {
+                humanRisks.forEach((humanRisk, index) => {
+                    let date = new Date(humanRisk.created_date);
+                    let formattedDate =
+                        `${date.toLocaleDateString('id-ID', {
+                            day: '2-digit',
+                            month: 'long',
+                            year: 'numeric'
+                        })} ${String(date.getUTCHours()).padStart(2, '0')}:${String(date.getUTCMinutes()).padStart(2, '0')}`;
+                    if (humanRisk.adjusted_risk >= 70) {
+                        humanRisk.adjusted_risk =
+                            `<span class="text-red-500 font-semibold">${humanRisk.adjusted_risk}</span>`;
+                    } else if (humanRisk.adjusted_risk >= 40) {
+                        humanRisk.adjusted_risk =
+                            `<span class="text-yellow-500 font-semibold">${humanRisk.adjusted_risk}</span>`;
+                    } else {
+                        humanRisk.adjusted_risk =
+                            `<span class="text-green-500 font-semibold">${humanRisk.adjusted_risk}</span>`;
+                    }
+                    if (humanRisk.average_score < 60) {
+                        if (humanRisk.average_score == null) {
+                            humanRisk.average_score = '0 (Not started)';
+                        }
+                        humanRisk.average_score =
+                            `<span class="text-red-500 font-semibold">${humanRisk.average_score}</span>`;
+                    } else {
+
+                        humanRisk.average_score =
+                            `<span class="text-green-500 font-semibold">${humanRisk.average_score}</span>`;
+                    }
+                    $("#list-human-risk-tbody").append(`
+                            <tr class="border-b">
+                                <td class="p-4">${humanRisk.email}</td>
+                                <td class="p-4">${humanRisk.final_score}</td>
+                                <td class="p-4">${humanRisk.average_score}</td>
+                                <td class="p-4">${humanRisk.adjusted_risk}</td>
+                                
+
+                            </tr>
+                        `);
+                    if (index == 4) {
+                        return false;
+                    }
+                });
+            }
         }
 
         function getCampaignTable(campaigns) {
@@ -231,7 +311,7 @@
                         .results.length : 'Not Set';
 
                     $("#list-campaign-tbody").append(`
-                            <tr class="border-b">
+                            <tr class="border-b text-xs">
                                 <td class="p-4">${campaign.name}</td>
                                 <td class="p-4">${campaign.status}</td>
                                 <td class="p-4 flex gap-2">
@@ -652,6 +732,57 @@
             const chart = new ApexCharts(document.querySelector("#timeline-campaign"), options);
             chart.render();
         }
+
+        function getRiskScoreByAgeGroup(ageGroupData) {
+            const categories = ['18-25', '26-35', '36-45', '46-55', '55+'];
+
+            const lowSeries = categories.map(age => ageGroupData[age].low);
+            const mediumSeries = categories.map(age => ageGroupData[age].medium);
+            const highSeries = categories.map(age => ageGroupData[age].high);
+
+            var options = {
+                chart: {
+                    type: 'area',
+                    height: 300,
+                    stacked: false,
+                },
+                series: [{
+                        name: 'Low Risk',
+                        data: lowSeries
+                    },
+                    {
+                        name: 'Medium Risk',
+                        data: mediumSeries
+                    },
+                    {
+                        name: 'High Risk',
+                        data: highSeries
+                    },
+                ],
+                xaxis: {
+                    categories: categories,
+                    title: {
+                        text: 'Age Group'
+                    }
+                },
+                colors: ['#4ade80', '#facc15', '#f87171'],
+                dataLabels: {
+                    enabled: true,
+                },
+                legend: {
+                    show: true,
+                    position: 'bottom',
+                },
+                title: {
+                    text: 'User Risk Distribution by Age Group',
+                    align: 'left'
+                }
+            };
+
+            var chart = new ApexCharts(document.querySelector("#area-chart-age-group"), options);
+            chart.render();
+        }
+
 
         function getRiskScoreData(high = 0, medium = 0, low = 0) {
             var options = {
