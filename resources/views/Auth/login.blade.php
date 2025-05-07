@@ -271,7 +271,7 @@
             var email = $('#login_email').val();
             var password = $('#login_password').val();
             $.ajax({
-                url: "{{ route('login') }}",
+                url: "{{ secure_url(route('login')) }}",
                 type: 'POST',
                 data: {
                     email: email,

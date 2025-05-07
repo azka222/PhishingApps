@@ -41,6 +41,11 @@ class ViewServiceProvider extends ServiceProvider
             $view->with('name', $name);
         });
 
+        view()->composer('contents.page.landing-page', function($view){
+            $companies = Company::all();
+            $view->with('companies', $companies);
+        });
+
         view()->composer('contents.admin.create-course', function($view){
         $options = \App\Models\Option::all()->groupBy('group');
         $options = $options->map(function ($group, $groupName) {

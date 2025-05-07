@@ -298,6 +298,8 @@
             });
         }
 
+
+
         function companyView() {
             $('#register').hide();
             $('#chooseCompany').show();
@@ -388,6 +390,8 @@
             var phone = $('#phone').val();
             var gender = $('#gender').val();
 
+            
+            
             $.ajax({
                 url: "{{ route('register') }}",
                 type: 'POST',

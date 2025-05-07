@@ -474,7 +474,12 @@
                 showCancelButton: true,
                 confirmButtonColor: '#10b981',
                 cancelButtonColor: '#d97706',
-                confirmButtonText: 'Yes, delete it!'
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'No, cancel!',
+                customClass: {
+                    confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700',
+                    cancelButton: 'bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 ml-2'
+                }
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
@@ -490,7 +495,11 @@
                                 title: "Success",
                                 text: response.message,
                                 confirmButtonColor: '#10b981',
-                                confirmButtonText: 'Close'
+                                confirmButtonText: 'Close',
+                                customClass: {
+                                    confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700',
+                                    cancelButton: 'bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 ml-2'
+                                },
                             });
                             getTargets();
                         },
@@ -500,7 +509,10 @@
                                 title: "Oops...",
                                 text: xhr.responseJSON.message,
                                 confirmButtonColor: '#ef4444',
-                                confirmButtonText: 'Close'
+                                confirmButtonText: 'Close',
+                                customClass: {
+                                    confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2'
+                                }
                             });
                         }
                     });
@@ -550,7 +562,10 @@
                             title: "Oops...",
                             text: errorMessage.errors[0],
                             confirmButtonColor: '#ef4444',
-                            confirmButtonText: 'Close'
+                            confirmButtonText: 'Close',
+                            customClass: {
+                                confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2'
+                            }
 
                         })
                     } else {
@@ -560,7 +575,10 @@
                             title: "Oops...",
                             text: errorMessage.message,
                             confirmButtonColor: '#ef4444',
-                            confirmButtonText: 'Close'
+                            confirmButtonText: 'Close',
+                            customClass: {
+                                confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2'
+                            }
                         })
                     }
                 }
@@ -584,7 +602,10 @@
                         title: "Success",
                         text: response.message,
                         confirmButtonColor: '#10b981',
-                        confirmButtonText: 'Close'
+                        confirmButtonText: 'Close',
+                        customClass: {
+                            confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2'
+                        }
                     });
                     hideModal('preview-import-target-modal');
                     getTargets();
@@ -596,7 +617,10 @@
                         title: "Oops...",
                         text: errorMessage.message,
                         confirmButtonColor: '#ef4444',
-                        confirmButtonText: 'Close'
+                        confirmButtonText: 'Close',
+                        customClass: {
+                            confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2'
+                        }
                     });
                 }
             });

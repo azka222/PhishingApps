@@ -244,6 +244,7 @@ class TargetController extends Controller
             $targetCsv      = trim($targetCsv, "\n");
             $csvRowsColumns = FileHelper::convertCsvToCollection($targetCsv, $projectsSeparator);
             $csvRowsColumns->shift();
+            // dd($csvRowsColumns);
             $validator = Validator::make(
                 ["RowColumns" => $csvRowsColumns->toArray()],
                 [
@@ -254,7 +255,7 @@ class TargetController extends Controller
                     "RowColumns.*.3" => "max:256|required|email|unique:targets,email",
                     "RowColumns.*.4" => "exists:target_departments,id",
                     "RowColumns.*.5" => "exists:target_positions,id",
-                    "RowColumns.*.6" => "integer|min:1|max:100",
+                    "RowColumns.*.6" => "required|min:1|max:100",
                 ],
                 [
                     "RowColumns.*.size"       => "Invalid row at :attribute",
@@ -328,6 +329,7 @@ class TargetController extends Controller
                 $targetCsv      = trim($targetCsv, "\n");
                 $csvRowsColumns = FileHelper::convertCsvToCollection($targetCsv, $projectsSeparator);
                 $csvRowsColumns->shift();
+                
                 $validator = Validator::make(
                     ["RowColumns" => $csvRowsColumns->toArray()],
                     [
@@ -338,7 +340,7 @@ class TargetController extends Controller
                         "RowColumns.*.3" => "max:256|required|email|unique:targets,email",
                         "RowColumns.*.4" => "exists:target_departments,id",
                         "RowColumns.*.5" => "exists:target_positions,id",
-                        "RowColumns.*.6" => "integer|min:1|max:100",
+                        "RowColumns.*.6" => "required|integer|min:1|max:100",
                     ],
                     [
                         "RowColumns.*.size"       => "Invalid row at :attribute",
@@ -354,6 +356,9 @@ class TargetController extends Controller
                         "RowColumns.*.4.exists"   => "Department not found at :attribute",
                         "RowColumns.*.5.exists"   => "Position not found at :attribute",
                         "RowColumns.*.6.integer"  => "Age must be a number at :attribute",
+                        "RowColumns.*.6.min"      => "Age must be at least 1 at :attribute",
+                        "RowColumns.*.6.max"      => "Age must be at most 100 at :attribute",
+                        "RowColumns.*.6.required" => "Age is required at :attribute",
                     ]
                 )->setAttributeNames(
                     collect($csvRowsColumns->toArray())->mapWithKeys(function ($_, $index) {

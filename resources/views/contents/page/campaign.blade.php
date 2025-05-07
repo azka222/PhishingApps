@@ -120,7 +120,7 @@
 
         function showAddCampaignModal() {
             showModal('add-campaign-modal');
-       
+
             $("#error_message_field").hide();
         }
 
@@ -292,7 +292,10 @@
                         text: 'Connection is successful.',
                         icon: 'success',
                         confirmButtonColor: '#10b981',
-                        confirmButtonText: 'OK'
+                        confirmButtonText: 'OK',
+                        customClass: {
+                            confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2',
+                        }
                     });
                 },
                 error: function(xhr, status, error) {
@@ -353,7 +356,10 @@
                         text: 'Campaign created successfully.',
                         icon: 'success',
                         confirmButtonColor: '#10b981',
-                        confirmButtonText: 'OK'
+                        confirmButtonText: 'OK',
+                        customClass: {
+                            confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2',
+                        }
                     });
                     hideModal('add-campaign-modal');
                     getCampaigns();
@@ -374,7 +380,10 @@
                             title: "Error",
                             text: xhr.responseJSON.message,
                             confirmButtonColor: '#10b981',
-                            confirmButtonText: 'Close'
+                            confirmButtonText: 'Close',
+                            customClass: {
+                                confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2',
+                            }
                         });
                     }
                 }
@@ -528,7 +537,12 @@
                 showCancelButton: true,
                 confirmButtonColor: '#10b981',
                 cancelButtonColor: '#d97706',
-                confirmButtonText: 'Yes, delete it!'
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'No, cancel!',
+                customClass: {
+                    confirmButton: 'bg-red-600 text-white rounded-lg px-4 py-2',
+                    cancelButton: 'bg-gray-300 text-gray-800 rounded-lg px-4 py-2'
+                }
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
@@ -544,7 +558,10 @@
                                 text: 'Campaign deleted successfully.',
                                 icon: 'success',
                                 confirmButtonColor: '#10b981',
-                                confirmButtonText: 'OK'
+                                confirmButtonText: 'OK',
+                                customClass: {
+                                    confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2',
+                                }
                             });
                             getCampaigns();
                         },
@@ -554,7 +571,10 @@
                                 title: "Error",
                                 text: xhr.responseJSON.message,
                                 confirmButtonColor: '#10b981',
-                                confirmButtonText: 'Close'
+                                confirmButtonText: 'Close',
+                                customClass: {
+                                    confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2',
+                                }
                             });
                         }
                     })
@@ -596,7 +616,10 @@
                         text: 'Approval request sent successfully.',
                         icon: 'success',
                         confirmButtonColor: '#10b981',
-                        confirmButtonText: 'OK'
+                        confirmButtonText: 'OK',
+                        customClass: {
+                            confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2',
+                        }
                     });
                 },
                 error: function(xhr, status, error) {
@@ -607,7 +630,10 @@
                         title: "Error",
                         text: JSON.parse(xhr.responseText).message,
                         confirmButtonColor: '#10b981',
-                        confirmButtonText: 'Close'
+                        confirmButtonText: 'Close',
+                        customClass: {
+                            confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2',
+                        }
                     });
 
                 }
@@ -616,7 +642,7 @@
 
 
         function copyCampaign(id) {
-          
+
             let tempCampaign = campaigns.find(campaign => campaign.id == id);
             let data = JSON.parse(tempCampaign.data);
             console.log(data);
@@ -636,7 +662,7 @@
             }
 
             $("#campaign_url").val(data.url);
-   
+
             const campaignTemplateOptions = Array.from($("#campaign_template option"));
             for (const option of campaignTemplateOptions) {
                 if ($(option).text() == tempTemplate.split('-+-')[0]) {
@@ -645,7 +671,7 @@
                 }
             }
 
-   
+
             const campaignPageOptions = Array.from($("#campaign_page option"));
             for (const option of campaignPageOptions) {
                 if ($(option).text() == tempLandingPage.split('-+-')[0]) {
@@ -654,7 +680,7 @@
                 }
             }
 
- 
+
             const campaignProfileOptions = Array.from($("#campaign_profile option"));
             for (const option of campaignProfileOptions) {
                 if ($(option).text() == data.smtp.name.split('-+-')[0]) {

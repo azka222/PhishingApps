@@ -92,11 +92,13 @@
                                 <div class="flex flex-row justify-between">
                                     <div class="flex flex-row items-center justify-start ps-2 md:ps-4 gap-8 ">
                                         <div class="h-full flex items-center hidden md:flex">
-                                            <img src="{{ Avatar::create($name)->toBase64() }}" class="w-20 h-20 rounded-full">
+                                            <img src="{{ Avatar::create($name)->toBase64() }}"
+                                                class="w-20 h-20 rounded-full">
                                         </div>
                                         <div class="h-full flex gap-4 items-center">
                                             <div>
-                                                <h1 id="username" class="text-xs md:text-lg font-semibold text-gray-800 dark:text-white">
+                                                <h1 id="username"
+                                                    class="text-xs md:text-lg font-semibold text-gray-800 dark:text-white">
                                                     User Name
                                                 </h1>
                                                 <p id="company_display"
@@ -127,23 +129,27 @@
                                         <h1 class="text-xs md:text-sm text-gray-800 dark:text-white font-semibold">First
                                             Name
                                         </h1>
-                                        <h2 id="first_name_display" class="text-xs text-gray-700 md:text-sm pt-2 dark:text-white"></h2>
+                                        <h2 id="first_name_display"
+                                            class="text-xs text-gray-700 md:text-sm pt-2 dark:text-white"></h2>
                                     </div>
                                     <div class="ps-2 pt-2 col-span-2 md:col-span-1">
                                         <h1 class="text-xs md:text-sm text-gray-800 dark:text-white font-semibold">Last Name
                                         </h1>
-                                        <h2 id="last_name_display" class="text-xs text-gray-700 md:text-sm pt-2 dark:text-white"></h2>
+                                        <h2 id="last_name_display"
+                                            class="text-xs text-gray-700 md:text-sm pt-2 dark:text-white"></h2>
                                     </div>
                                     <div class="ps-2 pt-2 col-span-2 md:col-span-1">
                                         <h1 class="text-xs md:text-sm text-gray-800 dark:text-white font-semibold">Phone
                                             Number
                                         </h1>
-                                        <h2 id="phone_number_display" class="text-xs text-gray-700 md:text-sm pt-2 dark:text-white"></h2>
+                                        <h2 id="phone_number_display"
+                                            class="text-xs text-gray-700 md:text-sm pt-2 dark:text-white"></h2>
                                     </div>
                                     <div class="ps-2 pt-2 col-span-2 md:col-span-1 mb-4">
                                         <h1 class="text-xs md:text-sm text-gray-800 dark:text-white font-semibold">Gender
                                         </h1>
-                                        <h2 id="gender_display" class="text-xs text-gray-700 md:text-sm pt-2 dark:text-white"></h2>
+                                        <h2 id="gender_display"
+                                            class="text-xs text-gray-700 md:text-sm pt-2 dark:text-white"></h2>
                                     </div>
 
                                     <div class="relative flex items-center justify-center col-span-2">
@@ -156,14 +162,16 @@
                                     <div class="ps-2 pt-4 col-span-2 md:col-span-1">
                                         <h1 class="text-xs md:text-sm text-gray-800 dark:text-white font-semibold">Company
                                             Address</h1>
-                                        <h2 id="address_display" class="text-xs md:text-sm pt-2 text-gray-700 dark:text-white">Not Set
+                                        <h2 id="address_display"
+                                            class="text-xs md:text-sm pt-2 text-gray-700 dark:text-white">Not Set
                                         </h2>
                                     </div>
                                     <div class="ps-2 pt-4 col-span-2 md:col-span-1">
                                         <h1 class="text-xs md:text-sm text-gray-800 dark:text-white font-semibold">Company
                                             Type
                                         </h1>
-                                        <h2 id="company_type_display" class="text-xs text-gray-700 md:text-sm pt-2 dark:text-white">Not
+                                        <h2 id="company_type_display"
+                                            class="text-xs text-gray-700 md:text-sm pt-2 dark:text-white">Not
                                             Set</h2>
                                     </div>
                                 </div>
@@ -248,32 +256,40 @@
                                 <hr class="w-full border-gray-400 dark:border-gray-500">
                             </div>
                             <div class="ps-2 pt-2 col-span-2 md:col-span-1">
-                                <h1 class="text-xs md:text-sm text-gray-800 dark:text-white font-semibold">Company Email</h1>
-                                <h2 id="company_email_display" class="text-xs text-gray-700 md:text-sm pt-2 dark:text-white">Not Set
+                                <h1 class="text-xs md:text-sm text-gray-800 dark:text-white font-semibold">Company Email
+                                </h1>
+                                <h2 id="company_email_display"
+                                    class="text-xs text-gray-700 md:text-sm pt-2 dark:text-white">Not Set
                                 </h2>
                             </div>
                             <div class="ps-2 pt-2 col-span-2 md:col-span-1">
                                 <h1 class="text-xs md:text-sm dark:text-white text-gray-800 font-semibold">Owner</h1>
-                                <h2 id="company_owner_display" class="text-xs md:text-sm pt-2 text-gray-700 dark:text-white">Not Set
+                                <h2 id="company_owner_display"
+                                    class="text-xs md:text-sm pt-2 text-gray-700 dark:text-white">Not Set
                                 </h2>
                             </div>
                             <div class="ps-2 pt-2 col-span-2 md:col-span-1">
-                                <h1 class="text-xs md:text-sm dark:text-white text-gray-800 font-semibold">Allowed User</h1>
-                                <h2 id="company_user_display" class="text-xs md:text-sm pt-2 text-gray-700 dark:text-white">Not Set</h2>
+                                <h1 class="text-xs md:text-sm dark:text-white text-gray-800 font-semibold">Allowed User
+                                </h1>
+                                <h2 id="company_user_display"
+                                    class="text-xs md:text-sm pt-2 text-gray-700 dark:text-white">Not Set</h2>
                             </div>
                             <div class="ps-2 pt-2 col-span-2 md:col-span-1">
                                 <h1 class="text-xs md:text-sm dark:text-white text-gray-800 font-semibold">Address</h1>
-                                <h2 id="company_address_display" class="text-xs md:text-sm pt-2 text-gray-700 dark:text-white">Not Set
+                                <h2 id="company_address_display"
+                                    class="text-xs md:text-sm pt-2 text-gray-700 dark:text-white">Not Set
                                 </h2>
                             </div>
                             <div class="ps-2 pt-2 col-span-2 md:col-span-1">
                                 <h1 class="text-xs md:text-sm dark:text-white font-semibold text-gray-800">Status</h1>
-                                <h2 id="company_status_display" class="text-xs md:text-sm pt-2 text-gray-700 dark:text-white">Not Set
+                                <h2 id="company_status_display"
+                                    class="text-xs md:text-sm pt-2 text-gray-700 dark:text-white">Not Set
                                 </h2>
                             </div>
                             <div class="ps-2 pt-2 col-span-2 md:col-span-1">
                                 <h1 class="text-xs md:text-sm dark:text-white text-gray-800 font-semibold">Visibility</h1>
-                                <h2 id="company_visibility_display" class="text-xs text-gray-700 md:text-sm pt-2 dark:text-white">Not
+                                <h2 id="company_visibility_display"
+                                    class="text-xs text-gray-700 md:text-sm pt-2 dark:text-white">Not
                                     Set</h2>
                             </div>
                         </div>
@@ -447,7 +463,10 @@
                             title: 'Success',
                             text: response.message,
                             confirmButtonColor: '#22c55e',
-                            confirmButtonText: 'Ok'
+                            confirmButtonText: 'Ok',
+                            customClass: {
+                                confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2',
+                            }
                         })
                         getProfile();
                         hideModal("edit-profile-modal");
@@ -488,7 +507,10 @@
                         text: "We have sent an OTP to your email address. Please check your email and enter the OTP to continue.",
                         closeOnClickOutside: false,
                         confirmButtonColor: '#40c3ed',
-                        confirmButtonText: 'Ok'
+                        confirmButtonText: 'Ok',
+                        customClass: {
+                            confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2',
+                        }
                     });
                     showStaticModal("otp-modal");
                 },
@@ -513,7 +535,10 @@
                         title: 'Success',
                         text: response.message,
                         confirmButtonColor: '#22c55e',
-                        confirmButtonText: 'Ok'
+                        confirmButtonText: 'Ok',
+                        customClass: {
+                            confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2',
+                        }
                     })
                     $("#password").prop("disabled", false);
                     $("#button-password-group").show();
@@ -528,7 +553,10 @@
                         title: "Oops...",
                         text: error.message,
                         confirmButtonColor: '#ef4444',
-                        confirmButtonText: 'Close'
+                        confirmButtonText: 'Close',
+                        customClass: {
+                            confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2',
+                        }
                     });
                 }
             })
@@ -558,7 +586,10 @@
                         title: 'Success',
                         text: response.message,
                         confirmButtonColor: '#22c55e',
-                        confirmButtonText: 'Ok'
+                        confirmButtonText: 'Ok',
+                        customClass: {
+                            confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2',
+                        }
                     })
                 },
                 error: function(xhr) {}
@@ -581,7 +612,10 @@
                         title: 'Success',
                         text: response.message,
                         confirmButtonColor: '#22c55e',
-                        confirmButtonText: 'Ok'
+                        confirmButtonText: 'Ok',
+                        customClass: {
+                            confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2',
+                        }
                     })
                     cancelChangePassword();
                 },
@@ -592,7 +626,10 @@
                         title: "Oops...",
                         text: error.message,
                         confirmButtonColor: '#ef4444',
-                        confirmButtonText: 'Close'
+                        confirmButtonText: 'Close',
+                        customClass: {
+                            confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2',
+                        }
                     });
                 }
             })
@@ -661,7 +698,10 @@
                             title: 'Success',
                             text: response.message,
                             confirmButtonColor: '#22c55e',
-                            confirmButtonText: 'Ok'
+                            confirmButtonText: 'Ok',
+                            customClass: {
+                                confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2',
+                            }
                         })
                         getCompany();
                         hideModal("edit-company-modal");
@@ -755,7 +795,10 @@
                             title: 'Success',
                             text: response.message,
                             confirmButtonColor: '#22c55e',
-                            confirmButtonText: 'Ok'
+                            confirmButtonText: 'Ok',
+                            customClass: {
+                                confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2',
+                            }
                         })
                         getUser();
                         hideModal("update-user-modal");
@@ -874,7 +917,10 @@
                             title: 'Success',
                             text: response.message,
                             confirmButtonColor: '#22c55e',
-                            confirmButtonText: 'Ok'
+                            confirmButtonText: 'Ok',
+                            customClass: {
+                                confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2',
+                            }
                         })
                         getRole();
                         hideModal("create-role-modal");
@@ -887,7 +933,10 @@
                         title: "Oops...",
                         text: error.message,
                         confirmButtonColor: '#ef4444',
-                        confirmButtonText: 'Close'
+                        confirmButtonText: 'Close',
+                        customClass: {
+                            confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2',
+                        }
                     });
                 }
             })
@@ -917,7 +966,10 @@
                             title: 'Success',
                             text: response.message,
                             confirmButtonColor: '#22c55e',
-                            confirmButtonText: 'Ok'
+                            confirmButtonText: 'Ok',
+                            customClass: {
+                                confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2',
+                            }
                         })
                         getRole();
                         hideModal("create-role-modal");
@@ -930,7 +982,10 @@
                         title: "Oops...",
                         text: error.message,
                         confirmButtonColor: '#ef4444',
-                        confirmButtonText: 'Close'
+                        confirmButtonText: 'Close',
+                        customClass: {
+                            confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2',
+                        }
                     });
                 }
             })
@@ -945,7 +1000,12 @@
                 showCancelButton: true,
                 confirmButtonColor: '#22c55e',
                 cancelButtonColor: '#ef4444',
-                confirmButtonText: 'Yes, delete it!'
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'No, cancel!',
+                customClass: {
+                    confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2',
+                    cancelButton: 'bg-red-500 text-white rounded-lg px-4 py-2',
+                }
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
@@ -962,7 +1022,10 @@
                                     title: 'Success',
                                     text: response.message,
                                     confirmButtonColor: '#22c55e',
-                                    confirmButtonText: 'Ok'
+                                    confirmButtonText: 'Ok',
+                                    customClass: {
+                                        confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2',
+                                    }
                                 })
                                 getRole();
                             }
@@ -974,7 +1037,10 @@
                                 title: "Oops...",
                                 text: error.message,
                                 confirmButtonColor: '#ef4444',
-                                confirmButtonText: 'Close'
+                                confirmButtonText: 'Close',
+                                customClass: {
+                                    confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2',
+                                }
                             });
                         }
                     })

@@ -896,6 +896,7 @@ class GophishController extends Controller
         $emailTemplatesApp  = auth()->user()->accessibleEmailTemplate()->where('status', 1)->pluck('template_id');
         $sendingProfilesApp = auth()->user()->accessibleSendingProfile()->where('status', 1)->pluck('sending_profile_id');
         $groupApp           = auth()->user()->accessibleGroup()->where('status', 1)->pluck('gophish_id');
+        $landingPageApp     = auth()->user()->accessibleLandingPage()->pluck('landing_page_id');
         $emailTemplates     = [];
         $sendingProfiles    = [];
         $groups             = [];
@@ -936,16 +937,16 @@ class GophishController extends Controller
                 $groups[] = ['id' => $data['id'], 'name' => $data['name']];
             }
         }
-        $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
-        ])->get("{$this->url}/pages");
-        if ($response->successful()) {
-            $data = $response->json();
-            foreach ($data as $value) {
-                if (isset($value['name'])) {
-                    $value['name'] = explode('-+-', $value['name'])[0];
+        foreach ($landingPageApp as $value) {
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
+            ])->get("{$this->url}/pages/{$value}");
+            if ($response->successful()) {
+                $data = $response->json();
+                if (isset($data['name'])) {
+                    $data['name'] = explode('-+-', $data['name'])[0];
                 }
-                $landingPages[] = ['id' => $value['id'], 'name' => $value['name']];
+                $landingPages[] = ['id' => $data['id'], 'name' => $data['name']];
             }
         }
         return response()->json([
@@ -1474,7 +1475,6 @@ class GophishController extends Controller
                 $age  = (int) $item['age'];
                 $risk = $item['adjusted_risk'];
 
-                
                 if ($age >= 18 && $age <= 25) {
                     $group = '18-25';
                 } elseif ($age >= 26 && $age <= 35) {
@@ -1487,7 +1487,6 @@ class GophishController extends Controller
                     $group = '55+';
                 }
 
-            
                 if ($risk >= 70) {
                     $ageGroups[$group]['high']++;
                 } elseif ($risk >= 40) {
@@ -1496,8 +1495,6 @@ class GophishController extends Controller
                     $ageGroups[$group]['low']++;
                 }
             }
-
-            
 
             return response()->json([
                 'campaigns'  => $campaignsData,

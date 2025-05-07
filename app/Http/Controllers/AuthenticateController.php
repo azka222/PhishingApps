@@ -56,11 +56,12 @@ class AuthenticateController extends Controller
             'last_name'             => 'required|string',
             'email'                 => 'required|email|unique:users',
             'password'              => 'required|string|min:6',
-            'company'               => 'required|string',
+            'company'               => 'required|exists:companies,id',
             'phone'                 => 'required|string|regex:/^08[0-9]{8,}$/',
             'password_confirmation' => 'required|same:password',
             'gender'                => 'required|string',
         ]);
+        // dd($request->company);
         $user             = new User();
         $user->first_name = $request->first_name;
         $user->last_name  = $request->last_name;
