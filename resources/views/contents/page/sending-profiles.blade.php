@@ -207,7 +207,10 @@
                         title: 'Success',
                         text: 'Sending Profile has been added successfully',
                         confirmButtonColor: '#10b981',
-                        confirmButtonText: 'Close'
+                        confirmButtonText: 'Close',
+                        customClass: {
+                            confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2',
+                        }
 
                     })
                 },
@@ -226,7 +229,10 @@
                             title: "Error",
                             text: xhr.responseJSON.message,
                             confirmButtonColor: '#10b981',
-                            confirmButtonText: 'Close'
+                            confirmButtonText: 'Close',
+                            customClass: {
+                                confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2',
+                            }
                         });
                     }
                 }
@@ -427,7 +433,10 @@
                         title: 'Success',
                         text: 'Sending Profile has been updated!',
                         confirmButtonColor: '#10b981',
-                        confirmButtonText: 'Close'
+                        confirmButtonText: 'Close',
+                        customClass: {
+                            confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2',
+                        }
                     });
                     hideModal('add-sending-profile-modal');
                 },
@@ -446,7 +455,10 @@
                             title: "Error",
                             text: xhr.responseJSON.message,
                             confirmButtonColor: '#10b981',
-                            confirmButtonText: 'Close'
+                            confirmButtonText: 'Close',
+                            customClass: {
+                                confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2',
+                            }
                         });
                     }
                 }
@@ -461,7 +473,12 @@
                 showCancelButton: true,
                 confirmButtonColor: '#10b981',
                 cancelButtonColor: '#d97706',
-                confirmButtonText: 'Yes, delete it!'
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'No, cancel!',
+                customClass: {
+                    confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2',
+                    cancelButton: 'bg-red-500 text-white rounded-lg px-4 py-2',
+                }
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
@@ -478,7 +495,10 @@
                                 title: 'Success',
                                 text: 'Sending Profile has been deleted!',
                                 confirmButtonColor: '#10b981',
-                                confirmButtonText: 'Close'
+                                confirmButtonText: 'Close',
+                                customClass: {
+                                    confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2',
+                                }
                             });
                         }
                     });
@@ -494,7 +514,12 @@
                 showCancelButton: true,
                 confirmButtonColor: '#10b981',
                 cancelButtonColor: '#d97706',
-                confirmButtonText: 'Yes, activate it!'
+                confirmButtonText: 'Yes, activate it!',
+                cancelButtonText: 'No, cancel!',
+                customClass: {
+                    confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2',
+                    cancelButton: 'bg-red-500 text-white rounded-lg px-4 py-2',
+                }
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
@@ -511,7 +536,10 @@
                                 title: 'Success',
                                 text: 'Sending Profile has been activated!',
                                 confirmButtonColor: '#10b981',
-                                confirmButtonText: 'Close'
+                                confirmButtonText: 'Close',
+                                customClass: {
+                                    confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2',
+                                }
                             });
                         }
                     });
@@ -558,9 +586,12 @@
                     title: "Response Took Too Long",
                     text: "The connection is taking longer than expected. Please check your input.",
                     confirmButtonColor: '#10b981',
-                    confirmButtonText: 'Close'
+                    confirmButtonText: 'Close',
+                    customClass: {
+                        confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2',
+                    }
                 });
-               
+
             }, 10000);
             if (!isTimedOut) {
                 await $.ajax({
@@ -588,7 +619,10 @@
                             title: 'Success',
                             text: 'Success! The test email has been sent successfully!',
                             confirmButtonColor: '#10b981',
-                            confirmButtonText: 'Close'
+                            confirmButtonText: 'Close',
+                            customClass: {
+                                confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2',
+                            }
                         });
                         hideModal('test-connection-modal');
                     },
@@ -611,7 +645,10 @@
                                     title: "Error",
                                     text: errorMessage.error,
                                     confirmButtonColor: '#10b981',
-                                    confirmButtonText: 'Close'
+                                    confirmButtonText: 'Close',
+                                    customClass: {
+                                        confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2',
+                                    }
                                 });
                                 console.log(errorMessage);
                             }

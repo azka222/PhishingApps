@@ -431,7 +431,10 @@
                     title: 'Oops...',
                     text: 'Please select department!',
                     confirmButtonColor: '#ef4444',
-                    confirmButtonText: 'Close'
+                    confirmButtonText: 'Close',
+                    customClass: {
+                        confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2'
+                    }
 
                 });
                 return;
@@ -468,7 +471,10 @@
                         title: 'Success',
                         text: response.message,
                         confirmButtonColor: '#10b981',
-                        confirmButtonText: 'Close'
+                        confirmButtonText: 'Close',
+                        customClass: {
+                            confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2'
+                        }
                     });
                     hideModal('add-group-modal');
                     $("#error_message_field").hide();
@@ -515,7 +521,10 @@
                         title: 'Success',
                         text: response.message,
                         confirmButtonColor: '#10b981',
-                        confirmButtonText: 'Close'
+                        confirmButtonText: 'Close',
+                        customClass: {
+                            confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2'
+                        }
                     });
                     hideModal('add-group-modal');
                     $("#error_message_field").hide();
@@ -544,7 +553,11 @@
                 confirmButtonText: 'Yes, delete it!',
                 cancelButtonText: 'No, cancel!',
                 cancelButtonColor: '#3b82f6',
-                reverseButtons: true
+                reverseButtons: true,
+                customClass: {
+                    confirmButton: 'bg-red-500 text-white rounded-lg px-4 py-2',
+                    cancelButton: 'bg-blue-500 text-white rounded-lg px-4 py-2'
+                }
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
@@ -560,7 +573,10 @@
                                 title: 'Success',
                                 text: response.message,
                                 confirmButtonColor: '#10b981',
-                                confirmButtonText: 'Close'
+                                confirmButtonText: 'Close',
+                                customClass: {
+                                    confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2'
+                                }
                             });
                             getGroups();
                         },

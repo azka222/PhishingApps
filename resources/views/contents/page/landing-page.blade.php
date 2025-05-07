@@ -256,7 +256,10 @@
                     title: "Success",
                     text: response.message,
                     confirmButtonColor: '#10b981',
-                    confirmButtonText: 'Close'
+                    confirmButtonText: 'Close',
+                    customClass: {
+                        confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2'
+                    }
                 }).then((result) => {
                     if (result.isConfirmed) {
                         hideModal('import-site-modal');
@@ -278,6 +281,9 @@
                     text: errorMessage,
                     confirmButtonColor: '#10b981',
                     confirmButtonText: 'Close',
+                    customClass: {
+                        confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2'
+                    }
                 });
             }
         }
@@ -336,6 +342,9 @@
                                 text: response.message,
                                 confirmButtonColor: '#10b981',
                                 confirmButtonText: 'Close',
+                                customClass: {
+                                    confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2'
+                                },
                             }).then((result) => {
                                 if (result.isConfirmed) {
                                     hideModal('add-landing-page-modal')
@@ -350,6 +359,9 @@
                                 text: response.message,
                                 confirmButtonColor: '#10b981',
                                 confirmButtonText: 'Close',
+                                customClass: {
+                                    confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2'
+                                }
                             });
                         }
                     },
@@ -361,6 +373,9 @@
                             text: "An error occurred!",
                             confirmButtonColor: '#10b981',
                             confirmButtonText: 'Close',
+                            customClass: {
+                                confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2'
+                            }
                         });
                     }
                 });
@@ -389,6 +404,9 @@
                             text: response.message,
                             confirmButtonColor: '#10b981',
                             confirmButtonText: 'Close',
+                            customClass: {
+                                confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2'
+                            }
                         });
                     }
                 },
@@ -438,6 +456,9 @@
                             text: response.message,
                             confirmButtonColor: '#10b981',
                             confirmButtonText: 'Close',
+                            customClass: {
+                                confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2'
+                            }
                         }).then((result) => {
                             if (result.isConfirmed) {
                                 preventDoubleClick('button-for-pages', false);
@@ -452,6 +473,9 @@
                             text: response.message,
                             confirmButtonColor: '#10b981',
                             confirmButtonText: 'Close',
+                            customClass: {
+                                confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2'
+                            }
                         });
                     }
                 },
@@ -463,6 +487,9 @@
                         text: "An error occurred!",
                         confirmButtonColor: '#10b981',
                         confirmButtonText: 'Close',
+                        customClass: {
+                            confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2'
+                        }
                     });
                 }
             });
@@ -477,7 +504,12 @@
                 showCancelButton: true,
                 confirmButtonColor: '#10b981',
                 cancelButtonColor: '#d97706',
-                confirmButtonText: 'Yes, delete it!'
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'No, cancel!',
+                customClass: {
+                    confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2',
+                    cancelButton: 'bg-red-500 text-white rounded-lg px-4 py-2'
+                }
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
@@ -494,7 +526,10 @@
                                 title: 'Success',
                                 text: 'Landing Page has been deleted!',
                                 confirmButtonColor: '#10b981',
-                                confirmButtonText: 'Close'
+                                confirmButtonText: 'Close',
+                                customClass: {
+                                    confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2'
+                                }
                             });
                         }
                     });

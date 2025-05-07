@@ -163,7 +163,10 @@
                             title: "Success",
                             text: response.message,
                             confirmButtonColor: '#10b981',
-                            confirmButtonText: 'Close'
+                            confirmButtonText: 'Close',
+                            customClass: {
+                                confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2'
+                            }
                         }).then((result) => {
                             if (result.isConfirmed) {
                                 hideModal('add-email-templates-modal');
@@ -187,7 +190,10 @@
                                 title: "Error",
                                 text: xhr.responseJSON.message,
                                 confirmButtonColor: '#10b981',
-                                confirmButtonText: 'Close'
+                                confirmButtonText: 'Close',
+                                customClass: {
+                                    confirmButton: 'bg-red-500 text-white rounded-lg px-4 py-2'
+                                }
                             });
                         }
                     }
@@ -423,7 +429,10 @@
                             title: "Success",
                             text: response.message,
                             confirmButtonColor: '#10b981',
-                            confirmButtonText: 'Close'
+                            confirmButtonText: 'Close',
+                            customClass: {
+                                confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2'
+                            }
                         })
                         preventDoubleClick('button-for-email-template', false);
                         getEmailTemplates();
@@ -445,7 +454,10 @@
                                 title: "Error",
                                 text: xhr.responseJSON.message,
                                 confirmButtonColor: '#10b981',
-                                confirmButtonText: 'Close'
+                                confirmButtonText: 'Close',
+                                customClass: {
+                                    confirmButton: 'bg-red-500 text-white rounded-lg px-4 py-2'
+                                }
                             });
                         }
                     }
@@ -460,7 +472,11 @@
                     showCancelButton: true,
                     confirmButtonColor: '#10b981',
                     cancelButtonColor: '#d97706',
-                    confirmButtonText: 'Yes, remove it!'
+                    confirmButtonText: 'Yes, remove it!',
+                    customClass: {
+                        confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2',
+                        cancelButton: 'bg-red-500 text-white rounded-lg px-4 py-2'
+                    }
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
@@ -476,7 +492,10 @@
                                     title: "Success",
                                     text: response.message,
                                     confirmButtonColor: '#10b981',
-                                    confirmButtonText: 'Close'
+                                    confirmButtonText: 'Close',
+                                    customClass: {
+                                        confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2',
+                                    }
                                 });
                                 getEmailTemplates();
                             },
@@ -486,7 +505,10 @@
                                     title: "Error",
                                     text: xhr.responseJSON.message,
                                     confirmButtonColor: '#10b981',
-                                    confirmButtonText: 'Close'
+                                    confirmButtonText: 'Close',
+                                    customClass: {
+                                        confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2',
+                                    }
                                 });
                             }
                         });
@@ -502,7 +524,11 @@
                     showCancelButton: true,
                     confirmButtonColor: '#10b981',
                     cancelButtonColor: '#d97706',
-                    confirmButtonText: 'Yes, activate it!'
+                    confirmButtonText: 'Yes, activate it!',
+                    customClass: {
+                        confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2',
+                        cancelButton: 'bg-red-500 text-white rounded-lg px-4 py-2'
+                    }
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
@@ -518,7 +544,10 @@
                                     title: "Success",
                                     text: response.message,
                                     confirmButtonColor: '#10b981',
-                                    confirmButtonText: 'Close'
+                                    confirmButtonText: 'Close',
+                                    customClass: {
+                                        confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2',
+                                    }
                                 });
                                 getEmailTemplates();
                             },
@@ -528,7 +557,10 @@
                                     title: "Error",
                                     text: xhr.responseJSON.message,
                                     confirmButtonColor: '#10b981',
-                                    confirmButtonText: 'Close'
+                                    confirmButtonText: 'Close',
+                                    customClass: {
+                                        confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2',
+                                    }
                                 });
                             }
                         });
@@ -541,12 +573,11 @@
                 console.log(emailTemplate);
             }
 
-            function downloadAttachment(){
+            function downloadAttachment() {
                 $.ajax({
                     url: "{{ route('downloadEmailAttachment') }}",
                     type: 'GET',
-                    success: function(response) {
-                    }
+                    success: function(response) {}
                 });
             }
         </script>
