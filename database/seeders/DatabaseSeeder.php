@@ -19,6 +19,8 @@ class DatabaseSeeder extends Seeder
             AbilitySeeder::class,
             ModuleAbilitySeeder::class,
             ApprovalStatusSeeder::class,
+            OptionSeeder::class,
+
 
         ]);
     }
