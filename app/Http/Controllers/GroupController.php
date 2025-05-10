@@ -46,10 +46,12 @@ class GroupController extends Controller
     {
         if (Gate::allows('CanReadGroup')) {
             $query = auth()->user()->accessibleGroup();
+            
             if ($request->has('status') && $request->status != null) {
                 $query = $query->where('status', $request->status);
             }
-            if ($request->has('department') && $request->department != 'null') {
+
+            if ($request->has('department') && $request->department != null) {
                 $query = $query->where('department_id', $request->department);
             }
             if (Gate::allows('IsAdmin')) {

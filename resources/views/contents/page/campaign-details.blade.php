@@ -179,11 +179,11 @@
                             statusColor = 'bg-green-200 dark:bg-green-500';
                         } else if (status === 'Clicked Link') {
                             statusColor = 'bg-purple-200 dark:bg-purple-500';
-                        } else if (status === 'Reported') {
+                        } else if (status === 'Submitted Data') {
                             statusColor = 'bg-red-200 dark:bg-red-500';
                         }
                         let reportedColor = reported ? 'bg-red-200 dark:bg-red-500' : '';
-                        let reportedText = reported ? 'Reported' : 'Not Reported';
+                        let reportedText = ''; 
                         let html = `<tr class="text-xs md:text-sm font-light text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800">
                             <td class="p-4">
                                 ${result.first_name}

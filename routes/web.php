@@ -4,8 +4,8 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ApprovalController;
 use App\Http\Controllers\AuthenticateController;
 use App\Http\Controllers\CompanyController;
-use App\Http\Controllers\GophishController;
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\GophishController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\TargetController;
 use App\Http\Controllers\UserController;
@@ -23,21 +23,6 @@ Route::group(['middleware' => 'guest'], function () {
     Route::get('/email/verify', function () {
         return view('auth.verify-email');
     })->middleware('auth')->name('verification.notice');
-    Route::get('/email/verify/{id}/{hash}', function (Request $request, $id, $hash) {
-        $user = User::find($id);
-        if (! $user) {
-            abort(404, 'User not found');
-        }
-        if ($user->hasVerifiedEmail()) {
-            return redirect()->route('login')->with('message', 'Email already verified.');
-        }
-        if (! hash_equals((string) $hash, sha1($user->getEmailForVerification()))) {
-            throw new AuthorizationException();
-        }
-        $user->markEmailAsVerified();
-        event(new Verified($user));
-        return redirect()->route('login')->with('message', 'Email verified successfully.');
-    })->middleware(['signed'])->name('verification.verify');
 
     Route::post('/loginEmployeeAccount', [AuthenticateController::class, 'loginEmployeeAccount'])->name('loginEmployeeAccount');
     Route::get('/login', [ViewController::class, 'loginView'])->name('loginView');
@@ -53,7 +38,22 @@ Route::group(['middleware' => 'guest'], function () {
     Route::post('/checkAccountEmployee', [AuthenticateController::class, 'checkAccountEmployee'])->name('checkAccountEmployee');
 });
 Route::post('/reset-password', [AuthenticateController::class, 'resetPasswordSubmit'])->name('resetPassword');
-
+Route::get('/email/verify/{id}/{hash}', function (Request $request, $id, $hash) {
+    // URL::forceVerificationUrl();''
+    $user = User::find($id);
+    if (! $user) {
+        abort(404, 'User not found');
+    }
+    if ($user->hasVerifiedEmail()) {
+        return redirect()->route('login')->with('message', 'Email already verified.');
+    }
+    if (! hash_equals((string) $hash, sha1($user->getEmailForVerification()))) {
+        throw new AuthorizationException();
+    }
+    auth()->user()->sendEmailVerificationNotification();
+    event(new Verified($user));
+    return redirect()->route('login')->with('message', 'Email verified successfully.');
+})->middleware(['signed'])->name('verification.verify');
 // ==================================== if user login success ====================================
 Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::middleware(['auth', 'employee'])->prefix('course')->group(function () {
@@ -64,7 +64,6 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         Route::get('/start-course/{id}', [ViewController::class, 'startCourseView'])->name('startCourseView');
         Route::get('/getCourseDetails', [CourseController::class, 'getCourseDetails'])->name('getCourseDetailsEmployee');
         Route::post('/submitCourse', [CourseController::class, 'submitCourse'])->name('submitQuizEmployee');
-        
 
     });
     route::group(['middleware' => ['auth', 'notEmployee']], function () {
@@ -91,7 +90,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
 
         });
 
-        Route::group(['prefix' => 'dashboard'], function (){
+        Route::group(['prefix' => 'dashboard'], function () {
             Route::get('/getDataDashboard', [GophishController::class, 'getDashboardData'])->name('getDashboardData');
         });
 

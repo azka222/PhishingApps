@@ -773,10 +773,7 @@
                     show: true,
                     position: 'bottom',
                 },
-                title: {
-                    text: 'User Risk Distribution by Age Group',
-                    align: 'left'
-                }
+                
             };
 
             var chart = new ApexCharts(document.querySelector("#area-chart-age-group"), options);
