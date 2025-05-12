@@ -5,9 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title')</title>
-    <script src='{{ url('/js/app.js') }}'></script>
-    <link rel="icon" href="{{ asset('image/kittyoEat.png') }}" type="image/x-icon" />
-    <link rel="stylesheet" href="{{ url('css/flowbite.min.css') }}">
+    <script src='{{ asset('/js/app.js') }}'></script>
+    {{-- <link rel="icon" href="{{ asset('image/kittyoEat.png') }}" type="image/x-icon" /> --}}
+    <link rel="stylesheet" href="{{ asset('css/flowbite.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <link rel="stylesheet" href="{{ asset('css/select2.css') }}">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>

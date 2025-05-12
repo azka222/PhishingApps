@@ -13,7 +13,12 @@ use Illuminate\Support\Facades\Http;
 
 class GroupController extends Controller
 {
-    public $url = 'http://127.0.0.1:3333/api';
+    public $url;
+
+    public function __construct()
+    {
+        $this->url = env('GOPHISH_URL');
+    }
 
     public function getTimeGoPhish()
     {
@@ -44,6 +49,7 @@ class GroupController extends Controller
     }
     public function getGroups(Request $request)
     {
+        
         if (Gate::allows('CanReadGroup')) {
             $query = auth()->user()->accessibleGroup();
             
@@ -51,7 +57,7 @@ class GroupController extends Controller
                 $query = $query->where('status', $request->status);
             }
 
-            if ($request->has('department') && $request->department != null) {
+            if ($request->has('department') && $request->department !=0) {
                 $query = $query->where('department_id', $request->department);
             }
             if (Gate::allows('IsAdmin')) {
@@ -73,11 +79,11 @@ class GroupController extends Controller
                     $group                 = auth()->user()->accessibleGroup()->where('gophish_id', $id)->first();
                     $data['department']    = $group->department;
                     $data['status']        = $group->status;
-                    $data['member']        = count($data['targets']);
                     $data['description']   = $group->description;
                     $data['department_id'] = $group->department_id;
                     $data['targets']       = [];
                     $data['targets']       = $group->target;
+                    $data['member']        = count($data['targets']);
                     $data['created_at']    = $group->created_at;
                     $data['updated_at']    = $group->updated_at;
                     $data['target_count']  = count($data['targets']);

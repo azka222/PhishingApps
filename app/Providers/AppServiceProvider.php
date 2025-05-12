@@ -1,10 +1,12 @@
 <?php
 namespace App\Providers;
 
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Facades\URL;
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -20,6 +22,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        URL::forceScheme('https');
+        
         {
             Relation::morphMap([
                 'quiz'     => \App\Models\Quiz::class,
@@ -267,7 +271,7 @@ class AppServiceProvider extends ServiceProvider
             return $user->haveAccessApproval();
         });
 
-        Gate::define('CanStartCourse', function($user, $id){
+        Gate::define('CanStartCourse', function ($user, $id) {
             return $user->canStartCourse($id);
         });
 

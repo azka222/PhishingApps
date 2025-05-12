@@ -14,12 +14,12 @@
     <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/43.0.0/ckeditor5.css" />
     <script src="https://cdn.ckeditor.com/ckeditor5/43.0.0/ckeditor5.umd.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="icon" href="{{ asset('image/kittyoEat.png') }}" type="image/x-icon" />
+    <link rel="icon" href="{{ url('image/kittyoEat.png') }}" type="image/x-icon" />
 </head>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="{{ asset('css/flowbite.min.css') }}">
-<link rel="stylesheet" href="{{ asset('css/app.css') }}">
+<link rel="stylesheet" href="{{ url('css/flowbite.min.css') }}">
+<link rel="stylesheet" href="{{ url('css/app.css') }}">
 <script src='{{ url('/js/app.js') }}'></script>
 </head>
 

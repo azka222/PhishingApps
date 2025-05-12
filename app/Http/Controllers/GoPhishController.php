@@ -27,7 +27,12 @@ use Illuminate\Validation\Rule;
 
 class GophishController extends Controller
 {
-    public $url = 'http://127.0.0.1:3333/api';
+    public $url;
+
+    public function __construct()
+    {
+        $this->url = env('GOPHISH_URL');
+    }
 
     public static function updateTarget($target, $original)
     {

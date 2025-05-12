@@ -139,12 +139,11 @@
         }
 
         function getGroups(page = 1) {
-            let department = $('#department').val();
-
+            let department = $('#department').val() ? $('#department').val() : 0;
             let show = $('#show').val();
-            let status = $('#status').val();
+            let status = $('#status').val() ? $('#status').val() : '';
             let search = $('#search').val() ? $('#search').val() : '';
-            let company = $('#companyCheckAdmin').val();
+            let company = $('#companyCheckAdmin').val() ? $('#companyCheckAdmin').val() : '';
             $.ajax({
                 url: "{{ route('getGroups') }}" + '?page=' + page,
                 type: 'GET',
@@ -264,10 +263,10 @@
         function setFilter(department, users) {
             let departmentSelectModal = $('#group_department');
             departmentSelectModal.empty();
-            departmentSelectModal.append('<option value="" selected>Select Department</option>');
+            departmentSelectModal.append('<option value="0" selected>Select Department</option>');
             let departmentSelect = $('#department');
             departmentSelect.empty();
-            departmentSelect.append('<option value=null selected>Select Department</option>');
+            departmentSelect.append('<option value="0" selected>Select Department</option>');
             department.forEach(function(department) {
                 departmentSelect.append('<option value="' + department.id + '">' + department.name + '</option>');
             });

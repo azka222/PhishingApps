@@ -14,7 +14,12 @@ use Illuminate\Support\Str;
 
 class ApprovalController extends Controller
 {
-    public $url = 'http://127.0.0.1:3333/api';
+    public $url;
+
+    public function __construct()
+    {
+        $this->url = env('GOPHISH_URL');
+    }
     public function getIdFromGophish($module)
     {
         $response = Http::withHeaders([
