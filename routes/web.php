@@ -24,6 +24,24 @@ Route::group(['middleware' => 'guest'], function () {
         return view('auth.verify-email');
     })->middleware('auth')->name('verification.notice');
 
+    Route::get('/email/verify/{id}/{hash}', function (Request $request, $id, $hash) {
+        $user = User::find($id);
+        if (! $user) {
+            abort(404, 'User not found');
+        }
+
+        if (! hash_equals((string) $hash, sha1($user->getEmailForVerification()))) {
+            throw new AuthorizationException();
+        }
+
+        if (! $user->hasVerifiedEmail()) {
+            $user->markEmailAsVerified();
+            event(new Verified($user));
+        }
+
+        return redirect()->route('login')->with('message', 'Email verified successfully.');
+    })->middleware(['signed'])->name('verification.verify');
+
     Route::post('/loginEmployeeAccount', [AuthenticateController::class, 'loginEmployeeAccount'])->name('loginEmployeeAccount');
     Route::get('/login', [ViewController::class, 'loginView'])->name('loginView');
     Route::get('/register', [ViewController::class, 'registerView'])->name('registerView');
@@ -38,22 +56,7 @@ Route::group(['middleware' => 'guest'], function () {
     Route::post('/checkAccountEmployee', [AuthenticateController::class, 'checkAccountEmployee'])->name('checkAccountEmployee');
 });
 Route::post('/reset-password', [AuthenticateController::class, 'resetPasswordSubmit'])->name('resetPassword');
-Route::get('/email/verify/{id}/{hash}', function (Request $request, $id, $hash) {
-    // URL::forceVerificationUrl();''
-    $user = User::find($id);
-    if (! $user) {
-        abort(404, 'User not found');
-    }
-    if ($user->hasVerifiedEmail()) {
-        return redirect()->route('login')->with('message', 'Email already verified.');
-    }
-    if (! hash_equals((string) $hash, sha1($user->getEmailForVerification()))) {
-        throw new AuthorizationException();
-    }
-    auth()->user()->sendEmailVerificationNotification();
-    event(new Verified($user));
-    return redirect()->route('login')->with('message', 'Email verified successfully.');
-})->middleware(['signed'])->name('verification.verify');
+
 // ==================================== if user login success ====================================
 Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::middleware(['auth', 'employee'])->prefix('course')->group(function () {
