@@ -836,7 +836,7 @@
         }
 
         async function showAllEmployeeRisks(humanRisks) {
-            console.log(humanRisks);
+            humanRisks = [];
             $("#all-human-risk-body").empty();
 
             if (humanRisks.length == 0) {
@@ -888,8 +888,8 @@
                             </tr>
                         `);
                 });
-                await showModal('show-all-employee-modal');
             }
+            await showModal('show-all-employee-modal');
 
 
 
