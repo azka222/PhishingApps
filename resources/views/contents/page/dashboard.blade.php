@@ -45,11 +45,8 @@
             <div class="grid grid-cols-4 gap-8  dark:text-white p-4 w-full">
                 <div class="col-span-4 md:col-span-2 bg-white dark:bg-gray-700 rounded-lg p-4">
                     <div class="relative m-4">
-                        <h2 class="text-xs md:text-sm font-semibold text-center">5 Recent Human Risks</h2>
-                        <button id="showAllEmployee"
-                            class="absolute right-0 top-1/2 -translate-y-1/2 px-4 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">
-                            View All
-                        </button>
+                        <h2 class="text-xs md:text-sm font-semibold md:text-center">5 Recent Human Risks</h2>
+
                     </div>
                     <div class="overflow-x-auto">
                         <table class="min-w-32 md:min-w-full divide-y text-sm divide-gray-200 dark:divide-gray-700 mt-4">
@@ -65,15 +62,19 @@
                             </tbody>
                         </table>
                     </div>
+                    <div class="flex items-center justify-end mt-4">
+                        <button id="showAllEmployee" type="button"
+                            class="text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 px-4 py-2">
+                            View All
+                        </button>
+
+                    </div>
 
                 </div>
                 <div class="col-span-4 md:col-span-2 bg-white dark:bg-gray-700 rounded-lg p-4">
                     <div class="relative m-4">
                         <h2 class="text-xs md:text-sm font-semibold text-center">5 Recent Campaigns</h2>
-                        <button onclick="showCampaignPage()"
-                            class="absolute right-0 top-1/2 -translate-y-1/2 px-4 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">
-                            View All
-                        </button>
+
                     </div>
                     <div class="overflow-x-auto">
                         <table class="min-w-32 md:min-w-full divide-y text-sm divide-gray-200 dark:divide-gray-700 mt-4">
@@ -88,10 +89,15 @@
                             </tbody>
                         </table>
                     </div>
-
+                    <div class="flex items-center justify-end mt-4">
+                        <button onclick="showCampaignPage()"
+                            class="text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 px-4 py-2">
+                            View All
+                        </button>
+                    </div>
 
                 </div>
-                <div class="col-span-4 md:col-span-2  bg-white dark:bg-gray-700 rounded-lg">
+                <div class="col-span-4 md:col-span-2 bg-white dark:bg-gray-700 rounded-lg">
                     <label for="column-risk-score"
                         class="text-xs md:text-sm font-semibold mb-4 flex items-center justify-center m-4">Human
                         Risks</label>
@@ -105,44 +111,46 @@
                         Distribution by Age Group</label>
                     <div id="area-chart-age-group"></div>
                 </div>
-
             </div>
 
-            <div class="p-4 hidden">
-                <div class="bg-white dark:bg-gray-700 dark:text-white rounded-lg p-4 flex flex-col items-center w-full">
-                    <p class="text-xs md:text-sm font-semibold mb-4">Campaign Timeline</p>
-                    <div id="timeline-campaign" class="w-full"></div>
+
+        </div>
+
+        <div class="p-4 hidden">
+            <div class="bg-white dark:bg-gray-700 dark:text-white rounded-lg p-4 flex flex-col items-center w-full">
+                <p class="text-xs md:text-sm font-semibold mb-4">Campaign Timeline</p>
+                <div id="timeline-campaign" class="w-full"></div>
+            </div>
+        </div>
+
+        <div class="px-4">
+            <div class="bg-white dark:bg-gray-700 dark:text-white rounded-lg">
+                <div class="p-2">
+                    <label for="column-risk-score"
+                        class="text-xs md:text-sm font-semibold mb-4 flex items-center justify-center m-4">Phishing
+                        Simulation Engagement Summary</label>
                 </div>
-            </div>
-
-            <div class="px-4">
-                <div class="bg-white dark:bg-gray-700 dark:text-white rounded-lg">
-                    <div class="p-2">
-                        <label for="column-risk-score"
-                            class="text-xs md:text-sm font-semibold mb-4 flex items-center justify-center m-4">Phishing
-                            Simulation Engagement Summary</label>
+                <div class="grid grid-cols-4 gap-4 p-4">
+                    <div class="col-span-4 lg:col-span-1 md:col-span-2  flex flex-col items-center justify-center">
+                        <p class="text-xs md:text-sm font-semibold mb-4">Emails Sent</p>
+                        <div id="donut-email-sent"></div>
                     </div>
-                    <div class="grid grid-cols-4 gap-4 p-4">
-                        <div class="col-span-4 lg:col-span-1 md:col-span-2  flex flex-col items-center justify-center">
-                            <p class="text-xs md:text-sm font-semibold mb-4">Emails Sent</p>
-                            <div id="donut-email-sent"></div>
-                        </div>
-                        <div class="col-span-4 lg:col-span-1 md:col-span-2 flex flex-col items-center justify-center">
-                            <p class="text-xs md:text-sm font-semibold mb-4">Emails Opened</p>
-                            <div id="donut-email-opened"></div>
-                        </div>
-                        <div class="col-span-4 lg:col-span-1 md:col-span-2 flex flex-col items-center justify-center">
-                            <p class="text-xs md:text-sm font-semibold mb-4">Links Clicked</p>
-                            <div id="donut-link-clicked"></div>
-                        </div>
-                        <div class="col-span-4 lg:col-span-1 md:col-span-2  flex flex-col items-center justify-center">
-                            <p class="text-xs md:text-sm font-semibold mb-4">Submitted Data</p>
-                            <div id="donut-submitted-data"></div>
-                        </div>
+                    <div class="col-span-4 lg:col-span-1 md:col-span-2 flex flex-col items-center justify-center">
+                        <p class="text-xs md:text-sm font-semibold mb-4">Emails Opened</p>
+                        <div id="donut-email-opened"></div>
+                    </div>
+                    <div class="col-span-4 lg:col-span-1 md:col-span-2 flex flex-col items-center justify-center">
+                        <p class="text-xs md:text-sm font-semibold mb-4">Links Clicked</p>
+                        <div id="donut-link-clicked"></div>
+                    </div>
+                    <div class="col-span-4 lg:col-span-1 md:col-span-2  flex flex-col items-center justify-center">
+                        <p class="text-xs md:text-sm font-semibold mb-4">Submitted Data</p>
+                        <div id="donut-submitted-data"></div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script>
