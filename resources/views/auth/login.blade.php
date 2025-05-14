@@ -204,11 +204,11 @@
                 </div>
         </fieldset>
         <!-- Fun fact area -->
-        <fieldset id="content" class="col-span-1 lg:block hidden">
+        {{-- <fieldset id="content" class="col-span-1 lg:block hidden">
             <div class="min-h-screen flex items-center justify-center bg-skyBlue">
                 aaaaaaa
             </div>
-        </fieldset>
+        </fieldset> --}}
 
     </div>
 

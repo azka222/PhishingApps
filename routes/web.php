@@ -95,6 +95,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
 
         Route::group(['prefix' => 'dashboard'], function () {
             Route::get('/getDataDashboard', [GophishController::class, 'getDashboardData'])->name('getDashboardData');
+            Route::get('/getAllEmployeeRisks', [GophishController::class, 'getAllEmployeeRisks'])->name('getAllEmployeeRisks');
         });
 
         Route::group(['prefix' => 'target'], function () {

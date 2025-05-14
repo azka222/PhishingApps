@@ -224,11 +224,11 @@
                 </div>
             </div>
         </fieldset>
-        <fieldset id="content" class="col-span-1 lg:block hidden">
+        {{-- <fieldset id="content" class="col-span-1 lg:block hidden">
             <div class="min-h-screen flex items-center justify-center bg-skyBlue">
                 Nanti Jadiin Content Apa Gitu
             </div>
-        </fieldset>
+        </fieldset> --}}
     </div>
     <script>
         let selectedCompany = null;

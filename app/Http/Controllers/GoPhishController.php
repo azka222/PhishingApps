@@ -1439,6 +1439,11 @@ class GophishController extends Controller
                 $floor = 0.65;
 
                 $adjustedRisk = $initialRisk * ($floor + (1 - $floor) * (1 - $quizScore / 100));
+                if($adjustedRisk < 0) {
+                    $adjustedRisk = 0;
+                } elseif ($adjustedRisk > 100) {
+                    $adjustedRisk = 100;
+                }
 
                 return array_merge($item, [
                     'adjusted_risk' => round($adjustedRisk, 2),
@@ -1512,5 +1517,25 @@ class GophishController extends Controller
             abort(403);
         }
     }
+
+    // public function getAllEmployeeRisks(){
+    //         $campaigns = auth()->user()->accessibleCampaign();
+
+    //         $campaigns     = $campaigns->get();
+    //         $campaignsData = [];
+
+    //         foreach ($campaigns as $campaign) {
+    //             $response = Http::withHeaders([
+    //                 'Authorization' => 'Bearer ' . env('GOPHISH_API_KEY'),
+    //             ])->get("{$this->url}/campaigns/{$campaign->campaign_id}");
+    //             if ($response->successful()) {
+    //                 $data = $response->json();
+    //                 if (isset($data['name'])) {
+    //                     $data['name'] = explode('-+-', $data['name'])[0];
+    //                 }
+    //                 $campaignsData[] = $data;
+    //             }
+    //         }
+    // }
 
 }

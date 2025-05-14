@@ -1,6 +1,7 @@
 @extends('layouts.master')
 @section('title', 'Fischsim - Dashboard')
 @section('content')
+    @include('contents.modal.dashboard.showAllEmployee')
     <div class=" p-4 w-full flex flex-col h-full min-h-screen  bg-gray-50 dark:bg-gray-800 dark:text-white text-gray-900">
         <div class="judul-1">
             <div class="flex p-4 items-center justify-between">
@@ -10,19 +11,20 @@
 
         <div class="flex flex-col gap-4">
             <div class="bg-white dark:bg-gray-900 shadow-md rounded-lg p-4">
-                <h2 class="text-xl font-semibold">Welcome to Fischsim</h2>
-                <p class="text-gray-600 dark:text-gray-400">This is your dashboard where you can manage your phishing
+                <h2 class="md:text-xl text-sm font-semibold">Welcome to Fischsim</h2>
+                <p class="text-gray-600 text-xs md:text-sm dark:text-gray-400">This is your dashboard where you can manage
+                    your phishing
                     simulations.</p>
             </div>
 
-            <div class="bg-white dark:bg-gray-900 shadow-md rounded-lg p-4">
+            {{-- <div class="bg-white dark:bg-gray-900 shadow-md rounded-lg p-4">
                 <h2 class="text-xl font-semibold">Recent Activity</h2>
                 <ul class="list-disc pl-5">
                     <li>New phishing simulation created.</li>
                     <li>User registered for a new simulation.</li>
                     <li>Simulation report generated.</li>
                 </ul>
-            </div>
+            </div> --}}
 
             @IsAdmin()
             <div class="max-w-full md:max-w-xs">
@@ -41,13 +43,17 @@
             @endIsAdmin()
 
             <div class="grid grid-cols-4 gap-8  dark:text-white p-4 w-full">
-
-                <div class="col-span-2 bg-white dark:bg-gray-700 rounded-lg p-4">
-                    <h2 class="text-xs md:text-sm font-semibold mb-4 flex items-center justify-center">Top 5 Human Risks
-                    </h2>
+                <div class="col-span-4 md:col-span-2 bg-white dark:bg-gray-700 rounded-lg p-4">
+                    <div class="relative m-4">
+                        <h2 class="text-xs md:text-sm font-semibold text-center">5 Recent Human Risks</h2>
+                        <button id="showAllEmployee"
+                            class="absolute right-0 top-1/2 -translate-y-1/2 px-4 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">
+                            View All
+                        </button>
+                    </div>
                     <div class="overflow-x-auto">
                         <table class="min-w-32 md:min-w-full divide-y text-sm divide-gray-200 dark:divide-gray-700 mt-4">
-                            <thead class="bg-gray-300 dark:bg-gray-700">
+                            <thead class="bg-gray-50 dark:bg-gray-700 text-xs md:text-sm">
                                 <tr class="border-b">
                                     <th class="p-4 text-left">Target Name</th>
                                     <th class="p-4 text-left">Phishing Score</th>
@@ -56,60 +62,36 @@
                                 </tr>
                             </thead>
                             <tbody id="list-human-risk-tbody" class="">
-                                <tr class="border-b">
-                                    <td class="p-4">John Doe</td>
-                                    <td class="p-4">95</td>
-                                    <td class="p-4 text-red-500 font-semibold">High</td>
-                                </tr>
-                                <tr class="border-b">
-                                    <td class="p-4">Jane Smith</td>
-                                    <td class="p-4">88</td>
-                                    <td class="p-4 text-red-400 font-semibold">Medium-High</td>
-                                </tr>
-                                <tr class="border-b">
-                                    <td class="p-4">Alice Johnson</td>
-                                    <td class="p-4">76</td>
-                                    <td class="p-4 text-yellow-500 font-semibold">Medium</td>
-                                </tr>
-                                <tr class="border-b">
-                                    <td class="p-4">Bob Brown</td>
-                                    <td class="p-4">68</td>
-                                    <td class="p-4 text-yellow-400 font-semibold">Low-Medium</td>
-                                </tr>
-                                <tr class="border-b">
-                                    <td class="p-4">Charlie Green</td>
-                                    <td class="p-4">55</td>
-                                    <td class="p-4 text-green-500 font-semibold">Low</td>
-                                </tr>
                             </tbody>
                         </table>
                     </div>
 
                 </div>
-                <div class="col-span-2 bg-white dark:bg-gray-700 rounded-lg p-4">
-                    <h2 class="text-xs md:text-sm font-semibold mb-4 flex items-center justify-center">5 Recent Campaigns
-                    </h2>
-
-                    <table class="min-w-32 md:min-w-full divide-y text-sm divide-gray-200 dark:divide-gray-700 mt-4">
-                        <thead class="bg-gray-300 dark:bg-gray-700">
-                            <tr class="border-b">
-                                <th scope="col" class="p-4 text-left">Name</th>
-                                <th scope="col" class="p-4 text-left">Status</th>
-                                <th scope="col" class="p-4 text-left ">
-                                    <button onclick="showCampaignPage()"
-                                        class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">
-                                        View All
-                                    </button>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody id="list-campaign-tbody" class="">
-                        </tbody>
-                    </table>
+                <div class="col-span-4 md:col-span-2 bg-white dark:bg-gray-700 rounded-lg p-4">
+                    <div class="relative m-4">
+                        <h2 class="text-xs md:text-sm font-semibold text-center">5 Recent Campaigns</h2>
+                        <button onclick="showCampaignPage()"
+                            class="absolute right-0 top-1/2 -translate-y-1/2 px-4 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">
+                            View All
+                        </button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-32 md:min-w-full divide-y text-sm divide-gray-200 dark:divide-gray-700 mt-4">
+                            <thead class="bg-gray-50 dark:bg-gray-700 text-xs md:text-sm">
+                                <tr class="border-b">
+                                    <th scope="col" class="p-4 text-left">Name</th>
+                                    <th scope="col" class="p-4 text-left">Status</th>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="list-campaign-tbody" class="">
+                            </tbody>
+                        </table>
+                    </div>
 
 
                 </div>
-                <div class="col-span-2  bg-white dark:bg-gray-700 rounded-lg">
+                <div class="col-span-4 md:col-span-2  bg-white dark:bg-gray-700 rounded-lg">
                     <label for="column-risk-score"
                         class="text-xs md:text-sm font-semibold mb-4 flex items-center justify-center m-4">Human
                         Risks</label>
@@ -117,7 +99,7 @@
 
                     </div>
                 </div>
-                <div class="col-span-2 bg-white dark:bg-gray-700 rounded-lg">
+                <div class="col-span-4 md:col-span-2 bg-white dark:bg-gray-700 rounded-lg">
                     <label for="column-risk-score"
                         class="text-xs md:text-sm font-semibold mb-4 flex items-center justify-center m-4">User Risk
                         Distribution by Age Group</label>
@@ -164,10 +146,16 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script>
+        let humanRisks = [];
+        let campaigns = [];
         $(document).ready(function() {
             getDashboardValue();
-            let campaigns = [];
-            let humanRisks = [];
+
+            $("#showAllEmployee").on('click', function() {
+                showAllEmployeeRisks(humanRisks);
+            });
+
+
 
         });
 
@@ -229,7 +217,7 @@
 
         function getHumanRiskTable(humanRisks) {
             $("#list-human-risk-tbody").empty();
-            console.log(humanRisks);
+            // console.log(humanRisks);
             if (humanRisks.length == 0) {
                 $("#list-human-risk-tbody").append(`
                         <tr class="text-xs md:text-sm font-normal text-gray-900 dark:text-gray-400 bg-white dark:bg-gray-700">
@@ -239,7 +227,8 @@
                         </tr>
                     `);
             } else {
-                humanRisks.forEach((humanRisk, index) => {
+                humanRisksSliced = humanRisks.slice(0, 5);
+                humanRisksSliced.forEach((humanRisk, index) => {
                     let date = new Date(humanRisk.created_date);
                     let formattedDate =
                         `${date.toLocaleDateString('id-ID', {
@@ -269,7 +258,7 @@
                             `<span class="text-green-500 font-semibold">${humanRisk.average_score}</span>`;
                     }
                     $("#list-human-risk-tbody").append(`
-                            <tr class="border-b">
+                            <tr class="border-b text-xs md:text-sm">
                                 <td class="p-4">${humanRisk.email}</td>
                                 <td class="p-4">${humanRisk.final_score}</td>
                                 <td class="p-4">${humanRisk.average_score}</td>
@@ -278,9 +267,7 @@
 
                             </tr>
                         `);
-                    if (index == 4) {
-                        return false;
-                    }
+
                 });
             }
         }
@@ -311,10 +298,10 @@
                         .results.length : 'Not Set';
 
                     $("#list-campaign-tbody").append(`
-                            <tr class="border-b text-xs">
+                            <tr class="border-b text-xs md:text-sm">
                                 <td class="p-4">${campaign.name}</td>
                                 <td class="p-4">${campaign.status}</td>
-                                <td class="p-4 flex gap-2">
+                               
                                 <button onclick="showDetailCampaign(${campaign.id})"
                                     class="text-xs font-medium text-white  rounded-xl"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
                                     <path fill-rule="evenodd" d="M13.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L11.69 12 4.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z" clip-rule="evenodd" />
@@ -773,7 +760,7 @@
                     show: true,
                     position: 'bottom',
                 },
-                
+
             };
 
             var chart = new ApexCharts(document.querySelector("#area-chart-age-group"), options);
@@ -838,6 +825,67 @@
             };
             var chart = new ApexCharts(document.querySelector("#column-risk-score"), options);
             chart.render();
+        }
+
+        async function showAllEmployeeRisks(humanRisks) {
+            console.log(humanRisks);
+            $("#all-human-risk-body").empty();
+
+            if (humanRisks.length == 0) {
+                $("#all-human-risk-body").append(`
+                        <tr class="text-xs md:text-sm font-normal text-gray-900 dark:text-gray-400 bg-white dark:bg-gray-700">
+                            <td class="p-4" colspan="4">
+                                No data available
+                            </td>
+                        </tr>
+                    `);
+            } else {
+                await humanRisks.forEach((humanRisk, index) => {
+                    let date = new Date(humanRisk.created_date);
+                    let formattedDate =
+                        `${date.toLocaleDateString('id-ID', {
+                            day: '2-digit',
+                            month: 'long',
+                            year: 'numeric'
+                        })} ${String(date.getUTCHours()).padStart(2, '0')}:${String(date.getUTCMinutes()).padStart(2, '0')}`;
+                    if (humanRisk.adjusted_risk >= 70) {
+                        humanRisk.adjusted_risk =
+                            `<span class="text-red-500 font-semibold">${humanRisk.adjusted_risk}</span>`;
+                    } else if (humanRisk.adjusted_risk >= 40) {
+                        humanRisk.adjusted_risk =
+                            `<span class="text-yellow-500 font-semibold">${humanRisk.adjusted_risk}</span>`;
+                    } else {
+                        humanRisk.adjusted_risk =
+                            `<span class="text-green-500 font-semibold">${humanRisk.adjusted_risk}</span>`;
+                    }
+                    if (humanRisk.average_score < 60) {
+                        if (humanRisk.average_score == null) {
+                            humanRisk.average_score = '0 (Not started)';
+                        }
+                        humanRisk.average_score =
+                            `<span class="text-red-500 font-semibold">${humanRisk.average_score}</span>`;
+                    } else {
+
+                        humanRisk.average_score =
+                            `<span class="text-green-500 font-semibold">${humanRisk.average_score}</span>`;
+                    }
+                    $("#all-human-risk-body").append(`
+                            <tr class="border-b text-xs md:text-sm">
+                                <td class="p-4">${humanRisk.email}</td>
+                                <td class="p-4">${humanRisk.final_score}</td>
+                                <td class="p-4">${humanRisk.average_score}</td>
+                                <td class="p-4">${humanRisk.adjusted_risk}</td>
+                                
+
+                            </tr>
+                        `);
+                });
+                await showModal('show-all-employee-modal');
+            }
+
+
+
+
         }
     </script>
 
