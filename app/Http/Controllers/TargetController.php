@@ -224,8 +224,11 @@ class TargetController extends Controller
             ]);
 
             $target = auth()->user()->accessibleTarget()->where('id', $request->id)->first();
+            $user = User::where('email', $target->email)->first();
+            if ($user && $target->has_account) {
+                $user->delete();
+            }
             $target->delete();
-
             return response()->json([
                 'message' => 'Target deleted successfully',
                 'success' => true,
