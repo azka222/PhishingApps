@@ -97,7 +97,6 @@ class TargetController extends Controller
 
             if ($request->createAccount) {
                 $existingUser = User::where('email', $request->email)->first();
-
                 if (! $existingUser) {
                     $password         = Str::random(12);
                     $user             = new User();
@@ -157,7 +156,7 @@ class TargetController extends Controller
                 'email'      => $target->email,
                 'position'   => $target->position_id,
             ];
-
+            $oldEmail = $target->email;
             $target->first_name    = $request->first_name;
             $target->last_name     = $request->last_name;
             $target->department_id = $request->department;
@@ -166,7 +165,13 @@ class TargetController extends Controller
             $target->age = $request->targetAge;
             $target->save();
             if ($request->createAccount == 1) {
-                $existingUser = User::where('email', $request->email)->first();
+                $existingUser = User::where('email', $oldEmail)->first();
+                if($oldEmail !== $request->email) {
+                 return response()->json([
+                    'message' => 'You cannot change the email address',
+                    'success' => false,
+                ], 422);
+                }
                 if (! $existingUser) {
                     $password         = Str::random(12);
                     $user             = new User();
