@@ -187,10 +187,14 @@ class TargetController extends Controller
                     $target->has_account = true;
                     $target->save();
                 } else {
-                    return response()->json([
-                        'message' => 'Email already exists',
-                        'success' => false,
-                    ], 422);
+                    if($existingUser->email !== $request->email) {
+                        return response()->json([
+                            'message' => 'Email already exists',
+                            'success' => false,
+                        ], 422);
+                    }
+                    $existingUser->first_name = $request->first_name;
+                    $existingUser->last_name  = $request->last_name;
                 }
             } else {
                 $target->email = $request->email;
