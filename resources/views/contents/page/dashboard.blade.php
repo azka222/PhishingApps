@@ -166,6 +166,7 @@
             Swal.fire({
                 title: 'Loading...',
                 allowOutsideClick: false,
+                text: 'Please wait while we load the data',
                 didOpen: () => {
                     Swal.showLoading();
                 }
@@ -214,7 +215,7 @@
                             response.parameters.low);
 
                         getRiskScoreByAgeGroup(response.age_groups);
-                        
+
                         Swal.close();
 
                     }
