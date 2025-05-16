@@ -378,7 +378,7 @@ class GophishController extends Controller
                 'email_subject'    => 'required|string',
                 'status'           => 'required|boolean',
                 'email_body'       => 'required',
-                'email_attachment' => 'nullable|file|max:1000',
+                'email_attachment' => 'nullable',
                 'sender_name'      => 'required|string',
                 'sender_email'     => 'required|email',
             ]);
