@@ -26,7 +26,7 @@
                         <div class="grid grid-cols-2 gap-4">
                             <div class="col-span-2">
                                 <label for="landing_name"
-                                    class="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-200">Profile
+                                    class="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-200">Page
                                     Name</label>
                                 <input type="text" id="landing_name" name="landing_name"
                                     placeholder="Enter landing name"

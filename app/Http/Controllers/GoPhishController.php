@@ -378,7 +378,7 @@ class GophishController extends Controller
                 'email_subject'    => 'required|string',
                 'status'           => 'required|boolean',
                 'email_body'       => 'required',
-                'email_attachment' => 'required|file|max:1000',
+                'email_attachment' => 'nullable|file|max:1000',
                 'sender_name'      => 'required|string',
                 'sender_email'     => 'required|email',
             ]);
@@ -513,21 +513,8 @@ class GophishController extends Controller
                 'email_subject'        => 'required|string',
                 'email_body'           => 'required',
                 'status'               => 'required|boolean',
-                'old_email_attachment' => [
-                    'nullable',
-                    'string',
-                    Rule::requiredIf(function () use ($request) {
-                        return $request->input('email_attachment') === null;
-                    }),
-                ],
-                'email_attachment'     => [
-                    'nullable',
-                    'file',
-                    'max:1000',
-                    Rule::requiredIf(function () use ($request) {
-                        return $request->input('old_email_attachment') === 'null';
-                    }),
-                ],
+                'email_attachment'     => 'nullable|file|max:1000',
+                'old_email_attachment' => 'nullable|string',
                 'sender_name'          => 'required|string',
                 'sender_email'         => 'required|email',
                 'body_type'            => 'required|in:text,html',
@@ -544,16 +531,17 @@ class GophishController extends Controller
                     ],
                 ];
             } else {
-                $tempFile       = $request->old_email_attachment;
-                $tempAttachment = json_decode($tempFile);
-                $attachments    = [
-                    [
-                        'content' => $tempAttachment->content,
-                        'type'    => $tempAttachment->type,
-                        'name'    => $tempAttachment->name,
-                    ],
-
-                ];
+                if($request->old_email_attachment != 'null') {
+                    $attachments = [
+                        [
+                            'content' => base64_encode(file_get_contents($request->old_email_attachment)),
+                            'type'    => 'application/octet-stream',
+                            'name'    => basename($request->old_email_attachment),
+                        ],
+                    ];
+                } else {
+                    $attachments = [];
+                }
             }
 
             if ($request->body_type == 'html') {

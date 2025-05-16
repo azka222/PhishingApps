@@ -317,8 +317,9 @@
             function showAttachmentFileNameEdit(value) {
                 // console.log(value)
                 $("#attachment-file").empty();
-                $("#attachment-file").append(
-                    `<div class="group-member flex items-center justify-between mb-4 shadow-md p-3 rounded-xl">
+                if (value != null) {
+                    $("#attachment-file").append(
+                        `<div class="group-member flex items-center justify-between mb-4 shadow-md p-3 rounded-xl">
                             <input type="hidden" id="img-file" data-content="${value.content}" data-title="${value.name}" data-type="${value.type}">
                                     <div class="flex flex-col gap-1">
 
@@ -334,7 +335,8 @@
 
                                     </div>
                                 </div>`
-                );
+                    );
+                }
             }
 
             function separateEnvelope(sender) {

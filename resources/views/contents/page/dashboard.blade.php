@@ -2,14 +2,15 @@
 @section('title', 'Fischsim - Dashboard')
 @section('content')
     @include('contents.modal.dashboard.showAllEmployee')
-    <div class=" p-4 w-full flex flex-col h-full min-h-screen  bg-gray-50 dark:bg-gray-800 dark:text-white text-gray-900">
+    <div
+        class="p-8 w-full flex flex-col h-full min-h-screen  bg-gray-50 dark:bg-gray-800 dark:text-white text-gray-900">
         <div class="judul-1">
-            <div class="flex p-4 items-center justify-between">
+            <div class="flex py-4 items-center justify-between">
                 <h1 class="text-3xl font-semibold">Dashboard</h1>
             </div>
         </div>
 
-        <div class="flex flex-col gap-4">
+        <div class="flex flex-col gap-4 md:gap-8">
             <div class="bg-white dark:bg-gray-900 shadow-md rounded-lg p-4">
                 <h2 class="md:text-xl text-sm font-semibold">Welcome to Fischsim</h2>
                 <p class="text-gray-600 text-xs md:text-sm dark:text-gray-400">This is your dashboard where you can manage
@@ -30,7 +31,7 @@
             <div class="max-w-full md:max-w-xs">
                 <div>
                     <label for="companyCheckAdmin"
-                        class="mb-1 mt-4 block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-300">Company</label>
+                        class="mb-1  block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-300">Company</label>
                     <select id="companyCheckAdmin" name="companyCheckAdmin" onchange="getDashboardValue()"
                         class="bg-gray-100 border border-gray-300 text-gray-900 text-xs md:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                         <option value="">All</option>
@@ -42,14 +43,14 @@
             </div>
             @endIsAdmin()
 
-            <div class="grid grid-cols-4 gap-8  dark:text-white p-4 w-full">
+            <div class="grid grid-cols-4 gap-4 md:gap-8  dark:text-white  w-full">
                 <div class="col-span-4 md:col-span-2 bg-white dark:bg-gray-700 rounded-lg p-4">
-                    <div class="relative m-4">
-                        <h2 class="text-xs md:text-sm font-semibold md:text-center">5 Recent Human Risks</h2>
+                    <div class="relative">
+                        <h2 class="text-xs md:text-sm font-semibold text-center">5 Recent Human Risks</h2>
 
                     </div>
                     <div class="overflow-x-auto">
-                        <table class="min-w-32 md:min-w-full divide-y text-sm divide-gray-200 dark:divide-gray-700 mt-4">
+                        <table class="w-full divide-y text-sm divide-gray-200 dark:divide-gray-700 mt-4">
                             <thead class="bg-gray-50 dark:bg-gray-700 text-xs md:text-sm">
                                 <tr class="border-b">
                                     <th class="p-4 text-left">Target Name</th>
@@ -72,12 +73,12 @@
 
                 </div>
                 <div class="col-span-4 md:col-span-2 bg-white dark:bg-gray-700 rounded-lg p-4">
-                    <div class="relative m-4">
+                    <div class="relative">
                         <h2 class="text-xs md:text-sm font-semibold text-center">5 Recent Campaigns</h2>
 
                     </div>
                     <div class="overflow-x-auto">
-                        <table class="min-w-32 md:min-w-full divide-y text-sm divide-gray-200 dark:divide-gray-700 mt-4">
+                        <table class="w-full divide-y text-sm divide-gray-200 dark:divide-gray-700 mt-4">
                             <thead class="bg-gray-50 dark:bg-gray-700 text-xs md:text-sm">
                                 <tr class="border-b">
                                     <th scope="col" class="p-4 text-left">Name</th>
@@ -111,45 +112,39 @@
                         Distribution by Age Group</label>
                     <div id="area-chart-age-group"></div>
                 </div>
-            </div>
-
-
-        </div>
-
-        <div class="p-4 hidden">
-            <div class="bg-white dark:bg-gray-700 dark:text-white rounded-lg p-4 flex flex-col items-center w-full">
-                <p class="text-xs md:text-sm font-semibold mb-4">Campaign Timeline</p>
-                <div id="timeline-campaign" class="w-full"></div>
-            </div>
-        </div>
-
-        <div class="px-4">
-            <div class="bg-white dark:bg-gray-700 dark:text-white rounded-lg">
-                <div class="p-2">
-                    <label for="column-risk-score"
-                        class="text-xs md:text-sm font-semibold mb-4 flex items-center justify-center m-4">Phishing
-                        Simulation Engagement Summary</label>
-                </div>
-                <div class="grid grid-cols-4 gap-4 p-4">
-                    <div class="col-span-4 lg:col-span-1 md:col-span-2  flex flex-col items-center justify-center">
-                        <p class="text-xs md:text-sm font-semibold mb-4">Emails Sent</p>
-                        <div id="donut-email-sent"></div>
-                    </div>
-                    <div class="col-span-4 lg:col-span-1 md:col-span-2 flex flex-col items-center justify-center">
-                        <p class="text-xs md:text-sm font-semibold mb-4">Emails Opened</p>
-                        <div id="donut-email-opened"></div>
-                    </div>
-                    <div class="col-span-4 lg:col-span-1 md:col-span-2 flex flex-col items-center justify-center">
-                        <p class="text-xs md:text-sm font-semibold mb-4">Links Clicked</p>
-                        <div id="donut-link-clicked"></div>
-                    </div>
-                    <div class="col-span-4 lg:col-span-1 md:col-span-2  flex flex-col items-center justify-center">
-                        <p class="text-xs md:text-sm font-semibold mb-4">Submitted Data</p>
-                        <div id="donut-submitted-data"></div>
+                <div class="col-span-4">
+                    <div class="bg-white dark:bg-gray-700 dark:text-white rounded-lg p-4">
+                        <div class="">
+                            <label for="column-risk-score"
+                                class="text-xs md:text-sm font-semibold flex items-center justify-center">Phishing
+                                Simulation Engagement Summary</label>
+                        </div>
+                        <div class="grid grid-cols-4 gap-4 p-4">
+                            <div class="col-span-4 lg:col-span-1 md:col-span-2  flex flex-col items-center justify-center">
+                                <p class="text-xs md:text-sm font-semibold mb-4">Emails Sent</p>
+                                <div id="donut-email-sent"></div>
+                            </div>
+                            <div class="col-span-4 lg:col-span-1 md:col-span-2 flex flex-col items-center justify-center">
+                                <p class="text-xs md:text-sm font-semibold mb-4">Emails Opened</p>
+                                <div id="donut-email-opened"></div>
+                            </div>
+                            <div class="col-span-4 lg:col-span-1 md:col-span-2 flex flex-col items-center justify-center">
+                                <p class="text-xs md:text-sm font-semibold mb-4">Links Clicked</p>
+                                <div id="donut-link-clicked"></div>
+                            </div>
+                            <div class="col-span-4 lg:col-span-1 md:col-span-2  flex flex-col items-center justify-center">
+                                <p class="text-xs md:text-sm font-semibold mb-4">Submitted Data</p>
+                                <div id="donut-submitted-data"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+
+
+
+
     </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
@@ -208,14 +203,6 @@
 
                         getSubmittedData(dataSubmittedData.linkSubmitted, dataSubmittedData.linkNotSubmitted,
                             dataSubmittedData.totalEmail);
-
-                        let combinedTimeline = [];
-                        campaigns.forEach(campaign => {
-                            let dataTimeline = getTimelineData(campaign);
-                            combinedTimeline = combinedTimeline.concat(dataTimeline);
-                        });
-                        combinedTimeline.sort((a, b) => new Date(a.date) - new Date(b.date));
-                        getTimelineCampaignChart(combinedTimeline);
 
                         getRiskScoreData(response.parameters.high, response.parameters.medium,
                             response.parameters.low);
@@ -444,7 +431,7 @@
         }
 
         function getEmailSentChart(emailSent = 0, emailNotSent = 0, totalEmail = 0) {
-            if(window.emailSentChart) {
+            if (window.emailSentChart) {
                 window.emailSentChart.destroy();
             }
             var options = {
@@ -483,7 +470,7 @@
         }
 
         function getEmailOpenedChart(emailOpened = 0, emailNotOpen = 0, totalEmail = 0) {
-            if(window.emailOpenedChart) {
+            if (window.emailOpenedChart) {
                 window.emailOpenedChart.destroy();
             }
             var options = {
@@ -522,7 +509,7 @@
         }
 
         function getLinkClickedChart(linkClicked = 0, linkNotClicked = 0, totalEmail = 0) {
-            if(window.linkClickedChart) {
+            if (window.linkClickedChart) {
                 window.linkClickedChart.destroy();
             }
             var options = {
@@ -561,7 +548,7 @@
         }
 
         function getSubmittedData(linkSubmitted = 0, linkNotSubmitted = 0, totalEmail = 0) {
-            if(window.submittedDataChart) {
+            if (window.submittedDataChart) {
                 window.submittedDataChart.destroy();
             }
             var options = {
@@ -796,10 +783,10 @@
         }
 
         function getRiskScoreData(high = 0, medium = 0, low = 0) {
-            if(window.riskScoreChart) {
+            if (window.riskScoreChart) {
                 window.riskScoreChart.destroy();
             }
-            
+
             var options = {
                 chart: {
                     type: 'bar',
