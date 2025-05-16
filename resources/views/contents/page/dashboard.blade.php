@@ -2,8 +2,7 @@
 @section('title', 'Fischsim - Dashboard')
 @section('content')
     @include('contents.modal.dashboard.showAllEmployee')
-    <div
-        class="p-8 w-full flex flex-col h-full min-h-screen  bg-gray-50 dark:bg-gray-800 dark:text-white text-gray-900">
+    <div class="p-8 w-full flex flex-col h-full min-h-screen  bg-gray-50 dark:bg-gray-800 dark:text-white text-gray-900">
         <div class="judul-1">
             <div class="flex py-4 items-center justify-between">
                 <h1 class="text-3xl font-semibold">Dashboard</h1>
@@ -164,6 +163,13 @@
         });
 
         function getDashboardValue() {
+            Swal.fire({
+                title: 'Loading...',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
             let companyId = $('#companyCheckAdmin').val();
             let status = 2;
             let show = 5;
@@ -208,7 +214,8 @@
                             response.parameters.low);
 
                         getRiskScoreByAgeGroup(response.age_groups);
-
+                        
+                        Swal.close();
 
                     }
                 });
