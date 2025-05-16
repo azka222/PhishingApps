@@ -156,6 +156,7 @@
     <script>
         let humanRisks = [];
         let campaigns = [];
+        let dashboardRequest = null;
         $(document).ready(function() {
             getDashboardValue();
 
@@ -171,56 +172,60 @@
             let companyId = $('#companyCheckAdmin').val();
             let status = 2;
             let show = 5;
-            $.ajax({
-                url: "{{ route('getDashboardData') }}",
-                type: "GET",
-                data: {
-                    show: show,
-                    status: status,
-                    companyId: companyId
-                },
-                success: function(response) {
-
-                    campaigns = response.campaigns;
-                    humanRisks = response.human_risk;
-                    $("#list-campaign-tbody").empty();
-
-
-                    getCampaignTable(campaigns);
-                    getHumanRiskTable(humanRisks);
-
-                    let dataEmailSent = calculateEmailSent(campaigns);
-                    let dataEmailOpened = calculateEmailOpened(campaigns);
-                    let dataLinkClicked = calculateLinkClicked(campaigns);
-                    let dataSubmittedData = calculateSubmittedData(campaigns);
-
-                    getEmailSentChart(dataEmailSent.emailSent, dataEmailSent.emailNotSent, dataEmailSent
-                        .totalEmail);
-                    getEmailOpenedChart(dataEmailOpened.emailOpened, dataEmailOpened.emailNotOpen,
-                        dataEmailOpened.totalEmail);
-
-                    getLinkClickedChart(dataLinkClicked.linkClicked, dataLinkClicked.linkNotClicked,
-                        dataLinkClicked.totalEmail);
-
-                    getSubmittedData(dataSubmittedData.linkSubmitted, dataSubmittedData.linkNotSubmitted,
-                        dataSubmittedData.totalEmail);
-
-                    let combinedTimeline = [];
-                    campaigns.forEach(campaign => {
-                        let dataTimeline = getTimelineData(campaign);
-                        combinedTimeline = combinedTimeline.concat(dataTimeline);
-                    });
-                    combinedTimeline.sort((a, b) => new Date(a.date) - new Date(b.date));
-                    getTimelineCampaignChart(combinedTimeline);
-
-                    getRiskScoreData(response.parameters.high, response.parameters.medium,
-                        response.parameters.low);
-
-                    getRiskScoreByAgeGroup(response.age_groups);
+            if (dashboardRequest) {
+                dashboardRequest.abort();
+            } else {
+                dashboardRequest = $.ajax({
+                    url: "{{ route('getDashboardData') }}",
+                    type: "GET",
+                    data: {
+                        show: show,
+                        status: status,
+                        companyId: companyId
+                    },
+                    success: function(response) {
+                        dashboardRequest = null;
+                        campaigns = response.campaigns;
+                        humanRisks = response.human_risk;
+                        $("#list-campaign-tbody").empty();
 
 
-                }
-            });
+                        getCampaignTable(campaigns);
+                        getHumanRiskTable(humanRisks);
+
+                        let dataEmailSent = calculateEmailSent(campaigns);
+                        let dataEmailOpened = calculateEmailOpened(campaigns);
+                        let dataLinkClicked = calculateLinkClicked(campaigns);
+                        let dataSubmittedData = calculateSubmittedData(campaigns);
+
+                        getEmailSentChart(dataEmailSent.emailSent, dataEmailSent.emailNotSent, dataEmailSent
+                            .totalEmail);
+                        getEmailOpenedChart(dataEmailOpened.emailOpened, dataEmailOpened.emailNotOpen,
+                            dataEmailOpened.totalEmail);
+
+                        getLinkClickedChart(dataLinkClicked.linkClicked, dataLinkClicked.linkNotClicked,
+                            dataLinkClicked.totalEmail);
+
+                        getSubmittedData(dataSubmittedData.linkSubmitted, dataSubmittedData.linkNotSubmitted,
+                            dataSubmittedData.totalEmail);
+
+                        let combinedTimeline = [];
+                        campaigns.forEach(campaign => {
+                            let dataTimeline = getTimelineData(campaign);
+                            combinedTimeline = combinedTimeline.concat(dataTimeline);
+                        });
+                        combinedTimeline.sort((a, b) => new Date(a.date) - new Date(b.date));
+                        getTimelineCampaignChart(combinedTimeline);
+
+                        getRiskScoreData(response.parameters.high, response.parameters.medium,
+                            response.parameters.low);
+
+                        getRiskScoreByAgeGroup(response.age_groups);
+
+
+                    }
+                });
+            }
         }
 
         function getHumanRiskTable(humanRisks) {
@@ -334,7 +339,7 @@
         }
 
         function calculateEmailSent(campaigns) {
-            console.log(campaigns);
+            // console.log(campaigns);
             let tempTotal = 0;
             let tempSent = 0;
             let tempNotSent = 0;
@@ -363,7 +368,7 @@
             let tempNotOpen = 0;
             campaigns.forEach(function(campaign) {
                 campaign.results.forEach(function(result) {
-                    console.log(result.status);
+                    // console.log(result.status);
                     tempTotal++;
                     if (result.status != "Scheduled" && result.status != "Email Sent") {
                         tempOpened++;
@@ -439,6 +444,9 @@
         }
 
         function getEmailSentChart(emailSent = 0, emailNotSent = 0, totalEmail = 0) {
+            if(window.emailSentChart) {
+                window.emailSentChart.destroy();
+            }
             var options = {
                 chart: {
                     type: 'donut',
@@ -470,11 +478,14 @@
                 }
 
             }
-            var chart = new ApexCharts(document.querySelector("#donut-email-sent"), options);
-            chart.render();
+            window.emailSentChart = new ApexCharts(document.querySelector("#donut-email-sent"), options);
+            window.emailSentChart.render();
         }
 
         function getEmailOpenedChart(emailOpened = 0, emailNotOpen = 0, totalEmail = 0) {
+            if(window.emailOpenedChart) {
+                window.emailOpenedChart.destroy();
+            }
             var options = {
                 chart: {
                     type: 'donut',
@@ -506,11 +517,14 @@
                 }
 
             }
-            var chart = new ApexCharts(document.querySelector("#donut-email-opened"), options);
-            chart.render();
+            window.emailOpenedChart = new ApexCharts(document.querySelector("#donut-email-opened"), options);
+            window.emailOpenedChart.render();
         }
 
         function getLinkClickedChart(linkClicked = 0, linkNotClicked = 0, totalEmail = 0) {
+            if(window.linkClickedChart) {
+                window.linkClickedChart.destroy();
+            }
             var options = {
                 chart: {
                     type: 'donut',
@@ -542,11 +556,14 @@
                 }
 
             }
-            var chart = new ApexCharts(document.querySelector("#donut-link-clicked"), options);
-            chart.render();
+            window.linkClickedChart = new ApexCharts(document.querySelector("#donut-link-clicked"), options);
+            window.linkClickedChart.render();
         }
 
         function getSubmittedData(linkSubmitted = 0, linkNotSubmitted = 0, totalEmail = 0) {
+            if(window.submittedDataChart) {
+                window.submittedDataChart.destroy();
+            }
             var options = {
                 chart: {
                     type: 'donut',
@@ -578,8 +595,8 @@
                 }
 
             }
-            var chart = new ApexCharts(document.querySelector("#donut-submitted-data"), options);
-            chart.render();
+            window.submittedDataChart = new ApexCharts(document.querySelector("#donut-submitted-data"), options);
+            window.submittedDataChart.render();
         }
 
         function getTimelineData(data) {
@@ -730,10 +747,13 @@
 
         function getRiskScoreByAgeGroup(ageGroupData) {
             const categories = ['18-25', '26-35', '36-45', '46-55', '55+'];
-
             const lowSeries = categories.map(age => ageGroupData[age].low);
             const mediumSeries = categories.map(age => ageGroupData[age].medium);
             const highSeries = categories.map(age => ageGroupData[age].high);
+
+            if (window.ageGroupChart) {
+                window.ageGroupChart.destroy();
+            }
 
             var options = {
                 chart: {
@@ -771,12 +791,15 @@
 
             };
 
-            var chart = new ApexCharts(document.querySelector("#area-chart-age-group"), options);
-            chart.render();
+            window.ageGroupChart = new ApexCharts(document.querySelector("#area-chart-age-group"), options);
+            window.ageGroupChart.render();
         }
 
-
         function getRiskScoreData(high = 0, medium = 0, low = 0) {
+            if(window.riskScoreChart) {
+                window.riskScoreChart.destroy();
+            }
+            
             var options = {
                 chart: {
                     type: 'bar',
@@ -831,12 +854,11 @@
                     }
                 }
             };
-            var chart = new ApexCharts(document.querySelector("#column-risk-score"), options);
-            chart.render();
+            window.riskScoreChart = new ApexCharts(document.querySelector("#column-risk-score"), options);
+            window.riskScoreChart.render();
         }
 
         async function showAllEmployeeRisks(humanRisks) {
-            humanRisks = [];
             $("#all-human-risk-body").empty();
 
             if (humanRisks.length == 0) {

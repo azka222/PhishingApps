@@ -283,7 +283,7 @@
                     })
                 },
                 error: function(xhr, status, error) {
-                    console.log(xhr.responseText);
+                    // console.log(xhr.responseText);
                     var errorMessage = JSON.parse(xhr.responseText);
                     var errors = errorMessage.errors;
                     $('#error_message_field_company_create').show();
@@ -368,7 +368,7 @@
                     });
                 },
                 error: function(xhr, status, error) {
-                    console.log(xhr.responseText);
+                    // console.log(xhr.responseText);
                 }
             });
         }

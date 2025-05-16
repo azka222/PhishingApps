@@ -724,7 +724,7 @@
                 type: "GET",
                 success: function(response) {
                     users = response.data;
-                    console.log(users);
+                    // console.log(users);
                     let html = "";
                     $("#tbody-company-user").empty();
                     users.forEach((user, index) => {

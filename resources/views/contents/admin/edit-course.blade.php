@@ -91,7 +91,7 @@
         }
 
         function uploadContent(idButton, idTarget) {
-            console.log(idButton, idTarget)
+            // console.log(idButton, idTarget)
             $('#' + idButton).on('change', function(e) {
                 const file = e.target.files[0];
                 if (!file) return;
@@ -116,7 +116,7 @@
 
         function getOptions(index) {
             let selectedOption = $('#options-' + index).val();
-            console.log(selectedOption)
+            // console.log(selectedOption)
         }
 
         function deleteContentQuiz() {
@@ -332,7 +332,7 @@
                 let attachmentId = type === "material" ? 'uploadMaterialContent-' + index : 'uploadQuizContent-' +
                     index;
                 let attachment = document.getElementById(attachmentId)?.files[0] ?? null;
-                console.log(attachment)
+                // console.log(attachment)
                 let content = {
                     type: type,
                     name: $('#' + (type === 'material' ? 'course-name-' : 'quiz-name-') + index).val(),

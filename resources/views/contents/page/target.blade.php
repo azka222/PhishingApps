@@ -148,7 +148,7 @@
                     setSelectForModal(position, department);
                 },
                 error: function(error) {
-                    console.log(error);
+                    // console.log(error);
                 }
             });
         }
@@ -181,7 +181,7 @@
                     $("#totalTemplatesCount").text(response.targetTotal);
                 },
                 error: function(error) {
-                    console.log(error);
+                    // console.log(error);
                 }
             });
         }
@@ -556,7 +556,7 @@
                     if (xhr.status == 403 || xhr.status == 400) {
                         var errorMessage = JSON.parse(xhr.responseText) ? JSON.parse(xhr.responseText) : xhr
                             .responseText;
-                        console.log(errorMessage);
+                        // console.log(errorMessage);
                         Swal.fire({
                             icon: "error",
                             title: "Oops...",

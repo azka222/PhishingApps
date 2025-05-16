@@ -255,7 +255,7 @@
                     companyId
                 },
                 success: function(response) {
-                    console.log(response)
+                    // console.log(response)
                     sendingProfiles = [];
                     sendingProfiles = response.data;
                     $("#list-sending-profile-tbody").empty();
@@ -408,7 +408,7 @@
                     header_value
                 });
             });
-            console.log(http_headers)
+            // console.log(http_headers)
             $.ajax({
                 url: "{{ route('updateSendingProfile') }}",
                 type: "POST",
@@ -650,7 +650,7 @@
                                         confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2',
                                     }
                                 });
-                                console.log(errorMessage);
+                                // console.log(errorMessage);
                             }
                         }
                     },

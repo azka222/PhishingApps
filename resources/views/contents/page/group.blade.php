@@ -133,7 +133,7 @@
 
                 },
                 error: function(error) {
-                    console.log(error);
+                    // console.log(error);
                 }
             });
         }
@@ -156,7 +156,7 @@
                 },
                 success: function(response) {
                     groups = response.data;
-                    console.log(groups);
+                    // console.log(groups);
                     $("#list-groups-tbody").empty();
                     if (groups.length == 0) {
                         $("#list-groups-tbody").append(`
@@ -255,7 +255,7 @@
                     $("#totalTemplatesCount").text(response.totalGroup);
                 },
                 error: function(error) {
-                    console.log(error);
+                    // console.log(error);
                 }
             });
         }
@@ -303,7 +303,7 @@
 
         function showEditGroupModal(id) {
             tempGroup = groups.find(group => group.id == id);
-            console.log(tempGroup);
+            // console.log(tempGroup);
             showModal('add-group-modal');
             $("#group_status").prop('disabled', false);
             $("#strict_user_selected_department").prop('checked', false);
@@ -600,7 +600,7 @@
 
         function showDetailsGroupModal(id) {
             tempGroup = groups.find(group => group.id == id);
-            console.log(tempGroup);
+            // console.log(tempGroup);
             showModal('details-group-modal');
             $("#group_name_details").text(tempGroup.name);
             $("#group_status_details").text(tempGroup.status == 1 ? 'Active' : 'Inactive');

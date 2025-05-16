@@ -99,7 +99,7 @@
                     courses.forEach(course => {
                         let totalQuiz = 0;
                         let totalMaterial = 0;
-                        console.log(course);
+                        // console.log(course);
                         course.course_quiz_material.forEach(quizMaterial => {
 
                             if (quizMaterial.model_type == 'quiz') {

@@ -284,7 +284,7 @@
                 },
                 error: function(xhr, status, error) {
                     Swal.close();
-                    console.log(xhr.responseText);
+                    // console.log(xhr.responseText);
                     var errorMessage = JSON.parse(xhr.responseText) ? JSON.parse(xhr.responseText) : xhr
                         .responseText;
                     var errors = errorMessage.message;
@@ -365,7 +365,7 @@
 
                 },
                 error: function(xhr, status, error) {
-                    console.log(xhr.responseText);
+                    // console.log(xhr.responseText);
                     var errorMessage = JSON.parse(xhr.responseText) ? JSON.parse(xhr.responseText) : xhr
                         .responseText;
                     var errors = errorMessage.message;

@@ -77,7 +77,7 @@
                                     bg-gray-100 dark:text-gray-400 col-span-5 focus:outline-none dark:bg-gray-700
                                     dark:border-gray-600 dark:placeholder-gray-400"
                                     id="email_attachment" type="file" name="email_attachment">
-                                <p class="text-xs mt-2 text-red-700 dark:text-red-500">* Only image files can be
+                                <p class="text-xs mt-2 text-red-700 dark:text-red-500">* Only files can be
                                     uploaded.</p>
                             </div>
                             @IsAdmin()

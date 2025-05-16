@@ -123,11 +123,11 @@
                     companyId: companyId
                 },
                 success: function(response) {
-                    console.log(response);
+                    // console.log(response);
                     $("#list-page-tbody").empty();
                     $("#pagination-page-button").empty();
                     landingPages = response.landingPage; // landingPage == data
-                    console.log(landingPages.length);
+                    // console.log(landingPages.length);
                     if (landingPages.length == 0) {
                         let data = `<tr class="text-xs md:text-sm font-light text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800">
                                 <td class="p-4" colspan="4">No data available</td>
@@ -268,7 +268,7 @@
                             $("#content").empty(); // Clear the editor content
                             $("#content").text(response_html); // Set the editor content
                         } else {
-                            console.log("HTML not found!");
+                            // console.log("HTML not found!");
                         }
                     }
                 });
@@ -311,8 +311,8 @@
             if (content === "") {
                 error_message.push("Content is required");
             }
-            console.log(submitted);
-            console.log(passwords);
+            // console.log(submitted);
+            // console.log(passwords);
             if (error_message.length > 0) {
                 $("#error_message_field").show();
                 $("#error_message").empty();
@@ -334,7 +334,7 @@
                         company: company
                     },
                     success: function(response) {
-                        console.log(response);
+                        // console.log(response);
                         if (response.status === "success") {
                             Swal.fire({
                                 icon: "success",
@@ -366,7 +366,7 @@
                         }
                     },
                     error: function(error) {
-                        console.log(error);
+                        // console.log(error);
                         Swal.fire({
                             icon: "error",
                             title: "Error",
@@ -393,7 +393,7 @@
                     html: content
                 },
                 success: function(response) {
-                    console.log(response.preview_id);
+                    // console.log(response.preview_id);
                     id = response.preview_id;
                     if (response.status === "success") {
                         window.open("{{ route('showPagePreview', ['id' => '__ID__']) }}".replace('__ID__', id));
@@ -448,7 +448,7 @@
                     redirect_url: url
                 },
                 success: function(response) {
-                    console.log(response);
+                    // console.log(response);
                     if (response.status === "success") {
                         Swal.fire({
                             icon: "success",
@@ -480,7 +480,7 @@
                     }
                 },
                 error: function(error) {
-                    console.log(error);
+                    // console.log(error);
                     Swal.fire({
                         icon: "error",
                         title: "Error",

@@ -133,7 +133,7 @@
                     emailTemplates = response.emailTemplates;
                     sendingProfiles = response.sendingProfiles;
                     groups = response.groups;
-                    console.log(groups);
+                    // console.log(groups);
                     $("#campaign_page").empty();
                     $("#campaign_template").empty();
                     $("#campaign_profile").empty();
@@ -410,7 +410,7 @@
                     getCampaignsResources();
                     campaigns = [];
                     campaigns = response.data;
-                    console.log(response);
+                    // console.log(response);
                     $("#list-campaign-tbody").empty();
                     if (campaigns.length == 0) {
                         $("#list-campaign-tbody").append(`
@@ -593,7 +593,7 @@
         }
 
         function sendNewApproval(id) {
-            console.log(id);
+            // console.log(id);
             Swal.fire({
                 title: 'Registering...',
                 text: 'Please wait while we process your registration.',
@@ -645,7 +645,7 @@
 
             let tempCampaign = campaigns.find(campaign => campaign.id == id);
             let data = JSON.parse(tempCampaign.data);
-            console.log(data);
+            // console.log(data);
             $("#campaign_name").val(data.name + ' (Edited Version)');
             let tempTemplate = data.template.name;
             let tempLandingPage = data.page.name
@@ -666,7 +666,7 @@
             const campaignTemplateOptions = Array.from($("#campaign_template option"));
             for (const option of campaignTemplateOptions) {
                 if ($(option).text() == tempTemplate.split('-+-')[0]) {
-                    console.log($(option).text());
+                    // console.log($(option).text());
                     $(option).prop('selected', true);
                 }
             }
@@ -675,7 +675,7 @@
             const campaignPageOptions = Array.from($("#campaign_page option"));
             for (const option of campaignPageOptions) {
                 if ($(option).text() == tempLandingPage.split('-+-')[0]) {
-                    console.log($(option).text());
+                    // console.log($(option).text());
                     $(option).prop('selected', true);
                 }
             }
@@ -684,7 +684,7 @@
             const campaignProfileOptions = Array.from($("#campaign_profile option"));
             for (const option of campaignProfileOptions) {
                 if ($(option).text() == data.smtp.name.split('-+-')[0]) {
-                    console.log($(option).text());
+                    // console.log($(option).text());
                     $(option).prop('selected', true);
                 }
             }

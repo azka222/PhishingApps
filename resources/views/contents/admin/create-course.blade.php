@@ -111,7 +111,7 @@
 
         function getOptions(index) {
             let selectedOption = $('#options-' + index).val();
-            console.log(selectedOption)
+            // console.log(selectedOption)
         }
 
         function deleteContentQuiz() {

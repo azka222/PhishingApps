@@ -294,7 +294,7 @@
 
             function showAttachmentFileNameCreate() {
                 let file = $("#email_attachment")[0].files[0];
-                console.log(file)
+                // console.log(file)
                 $("#attachment-file").empty();
                 $("#attachment-file").append(
                     `<div class="group-member flex items-center justify-between mb-4 shadow-md p-3 rounded-xl">
@@ -315,7 +315,7 @@
             }
 
             function showAttachmentFileNameEdit(value) {
-                console.log(value)
+                // console.log(value)
                 $("#attachment-file").empty();
                 $("#attachment-file").append(
                     `<div class="group-member flex items-center justify-between mb-4 shadow-md p-3 rounded-xl">
@@ -351,7 +351,7 @@
 
             function showEditEmailTemplatesModal(id) {
                 let emailTemplate = emailTemplates.find(x => x.id === id);
-                console.log(emailTemplate);
+                // console.log(emailTemplate);
                 $("#template_name").val(emailTemplate.name);
                 $("#email_subject").val(emailTemplate.subject);
                 $("#email_text").val(emailTemplate.text);
@@ -570,7 +570,7 @@
 
             function showEmailTemplateDetails(id) {
                 let emailTemplate = emailTemplates.find(x => x.id === id);
-                console.log(emailTemplate);
+                // console.log(emailTemplate);
             }
 
             function downloadAttachment() {

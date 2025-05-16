@@ -108,7 +108,7 @@
                 },
                 success: function(data) {
                     companies = data.companies;
-                    console.log(data);
+                    // console.log(data);
                     $("#list-admin-company-tbody").empty();
                     companies.forEach(function(company) {
                         if ((company.max_account - company.total_user) == 0) {
@@ -264,7 +264,7 @@
                     id: id
                 },
                 success: function(data) {
-                    console.log(data);
+                    // console.log(data);
                     $('#owner').empty();
                     $('#owner').append(`<option value="" disabled>Select Owner</option>`);
                     data.users.forEach(function(user) {

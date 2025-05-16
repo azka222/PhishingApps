@@ -160,7 +160,7 @@
                         _token: "{{ csrf_token() }}"
                     },
                     success: function(response) {
-                        console.log(response);
+                        // console.log(response);
                         Swal.fire({
                             icon: 'success',
                             title: 'Success',
@@ -231,7 +231,7 @@
                     _token: "{{ csrf_token() }}"
                 },
                 success: function(response) {
-                    console.log(response);
+                    // console.log(response);
                     $("#content-section").empty();
                     $("#number-section").empty();
                     $("#course-thumbnail").append(`<img src="${response.course.thumbnail_url}" alt="Thumbnail"

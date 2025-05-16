@@ -89,15 +89,15 @@
                     courseStatus: courseStatus
                 },
                 success: function(response) {
-                    console.log(response)
+                    // console.log(response)
                     let data = response;
                     let courses = data.courses;
                     $("#course-list").empty();
-                    console.log(courses);
+                    // console.log(courses);
                     courses.forEach(course => {
                         let totalQuiz = 0;
                         let totalMaterial = 0;
-                        console.log(course);
+                        // console.log(course);
                         course.course_quiz_material.forEach(quizMaterial => {
 
                             if (quizMaterial.model_type == 'quiz') {
