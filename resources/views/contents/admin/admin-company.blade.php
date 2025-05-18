@@ -111,6 +111,7 @@
                     // console.log(data);
                     $("#list-admin-company-tbody").empty();
                     companies.forEach(function(company) {
+                        let available = "";
                         if ((company.max_account - company.total_user) == 0) {
 
                             available = `<div class="bg-orange-100 text-orange-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-orange-900 dark:text-orange-300 inline-block">Full

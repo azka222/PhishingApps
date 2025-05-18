@@ -294,21 +294,67 @@
                         <div>
                             <label for="options" class="block mb-2 text-sm sm:text-base font-medium">Options
                             </label>
-                         <select id="options-${index}" onchange="getOptions(${index})"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                            <option selected disabled value="0">Choose an option</option>
-                            @foreach ($options as $optionGroup)
-                                <optgroup label="{{ $optionGroup['group'] }}">
-                                    @foreach ($optionGroup['options'] as $option)
-                                        <option value="{{ $option['id'] }}">{{ $option['name'] }}</option>
-                                    @endforeach
-                                </optgroup>
-                            @endforeach
-                        </select>
+                            <div class="options-section-${index} flex flex-col gap-2">
+                                
+                            </div>
+                            <div class="flex flex-row justify-center items-center gap-2 mt-4">
+                                 <button type="button" onclick="addOptions(${index})"
+                            class="text-white w-56 bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 focus:outline-none dark:focus:ring-green-800">
+                            Add Option</button>
+                                </div>
+                         
                     </div>
                 </div>`
 
             $(".content").append(content)
+        }
+
+        function addOptions(index) {
+            let checked = 'checked';
+            if ($(".options-section-" + index).children().length >= 1) {
+                checked = '';
+                console.log($(".options-section-" + index).children().length)
+            }
+            let options = `<div class="flex flex-row items-center gap-2">
+                            <input type="text" placeholder="Enter options here..."
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            <input id="" onclick="checkOptions(${index})" type="checkbox" ${checked} value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                <button type="button" onclick="deleteOptions(this)"
+                            class="text-white w-56 bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 focus:outline-none dark:focus:ring-red-800">
+                            Delete</button>
+                        </div>`
+            $(".options-section-" + index).append(options);
+
+
+        }
+
+        function checkOptions(index) {
+            if ($(event.target).is(':checked')) {
+                $(event.target).prop("checked", true);
+            } else {
+                $(event.target).prop("checked", false);
+            }
+            let siblingCheckboxes = $(".options-section-" + index + " input[type='checkbox']");
+            let checkedCount = siblingCheckboxes.filter(":checked").length;
+            if (checkedCount > 1) {
+                $(event.target).prop("checked", false);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'You can only select one option as the correct answer.',
+                    showConfirmButton: true,
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'OK',
+                    customClass: {
+                        confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700',
+
+                    }
+                });
+            }
+        }
+
+        function deleteOptions(element) {
+            $(element).closest('.flex').remove();
         }
 
         function saveCourse() {
@@ -336,9 +382,24 @@
                 };
                 if (type === 'quiz') {
                     content.emailContent = $('#quiz-email-content-' + index).val();
-                    content.option = $('#options-' + index).val();
-                }
+                    content.option = [];
+                    content.isTrue = ''
+                    $('.options-section-' + index + ' input[type=text]').each(function() {
+                        const textValue = $(this).val();
+                        content.option.push(textValue);
 
+                        let checkboxes = $(this).siblings("input[type='checkbox']");
+                        checkboxes.each(function(idx2, cb) {
+                            if ($(cb).is(":checked")) {
+                                content.isTrue =
+                                    textValue;
+                            }
+                        });
+                    });
+
+
+
+                }
                 contents.push(content);
                 order++;
             });
@@ -364,7 +425,13 @@
                     formData.append(`contents[${idx}][emailContent]`, item.emailContent);
                 }
                 if (item.type === 'quiz' && item.option) {
-                    formData.append(`contents[${idx}][option]`, item.option);
+                    item.option.forEach((opt, optIdx) => {
+                        formData.append(`contents[${idx}][option][]`, opt);
+                    });
+                }
+
+                if (item.type === 'quiz' && item.isTrue) {
+                    formData.append(`contents[${idx}][isTrue]`, item.isTrue);
                 }
             });
             formData.append('_token', '{{ csrf_token() }}');
