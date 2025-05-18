@@ -366,7 +366,7 @@ class CourseController extends Controller
                 $quizIds[] = $quiz['id'];
             }
         }
-      
+
         foreach ($materials as $material) {
             if (isset($material['id'])) {
                 $materialIds[] = $material['id'];
@@ -386,7 +386,6 @@ class CourseController extends Controller
             }
         }
 
-      
         foreach ($quizzes as $quiz) {
             if (isset($quiz['id'])) {
                 $quizModel = Quiz::find($quiz['id']);
@@ -417,7 +416,6 @@ class CourseController extends Controller
                         $quizModel->quiz_email_content_id = $quizModel->emailContent->id;
                     }
 
-                
                     if (isset($quiz['option'])) {
                         $newGroup = Option::max('group') + 1;
                         foreach ($quiz['option'] as $option) {
@@ -427,20 +425,18 @@ class CourseController extends Controller
                             $newOption->save();
                         }
                     }
-                    
+
                     $isTrue               = Option::where('name', $quiz['isTrue'])->where('group', $newGroup)->first();
                     $quizModel->option_id = $isTrue->id;
                     $quizModel->group     = $isTrue->group;
                     $quizModel->save();
-                    $courseQuiz           = CourseQuizMaterial::where('course_id', $course->id)->where('model_id', $quizModel->id)->where('model_type', 'quiz')->first();
-                    $courseQuiz->order    = $quiz['order'];
+                    $courseQuiz        = CourseQuizMaterial::where('course_id', $course->id)->where('model_id', $quizModel->id)->where('model_type', 'quiz')->first();
+                    $courseQuiz->order = $quiz['order'];
                     $courseQuiz->save();
-                    
-                    
+
                 }
 
             } else {
-
                 $newQuiz          = new Quiz();
                 $newQuiz->name    = $quiz['name'];
                 $newQuiz->title   = $quiz['title'];
@@ -468,6 +464,10 @@ class CourseController extends Controller
                         $newOption->save();
                     }
                 }
+                $isTrue               = Option::where('name', $quiz['isTrue'])->where('group', $newGroup)->first();
+                $newQuiz->option_id = $isTrue->id;
+                $newQuiz->group     = $isTrue->group;
+                $newQuiz->save();
                 $newQuiz->save();
                 $courseQuiz             = new CourseQuizMaterial();
                 $courseQuiz->course_id  = $course->id;
@@ -491,6 +491,7 @@ class CourseController extends Controller
                         $materialModel->attachment->save();
                         $materialModel->material_attachment_id = $materialModel->attachment->id;
                     }
+
                     $materialModel->save();
                     $courseQuiz        = CourseQuizMaterial::where('course_id', $course->id)->where('model_type', 'material')->where('model_id', $materialModel->id)->first();
                     $courseQuiz->order = $material['order'];
