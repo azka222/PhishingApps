@@ -333,7 +333,7 @@
                                                     ${course.model.content}
                                                 </h2>
                                             </div>
-                                            <div id="option-section-${order}" class="flex flex-col items-center justify-center gap-4 mt-8">
+                                            <div id="option-section-${order}" class="flex flex-col items-center justify-start gap-4 mt-8">
                                             
                                             </div>
                                             <div class="flex items-center justify-end mt-8 gap-2">
