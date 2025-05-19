@@ -322,7 +322,7 @@
                                 .group);
                             options = shuffleArray(options);
                             let quiz = ` <div id="content-${order}"
-                                            class="need-to-hide w-full md:p-8 p-2 dark:bg-gray-500   border-2 dark:border-gray-500 border-gray-800 rounded-xl">
+                                            class="need-to-hide w-full md:p-8 p-2 dark:bg-gray-700   border-2 dark:border-gray-500 border-gray-800 rounded-xl">
                                             <div class="flex  items-center justify-center mb-4">
                                                 <h1 class="md:text-3xl text-xl font-semibold" id="">${course.model.title}</h1>
                                             </div>
