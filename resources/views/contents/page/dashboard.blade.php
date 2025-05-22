@@ -771,9 +771,16 @@
                 ],
                 xaxis: {
                     categories: categories,
-                    title: {
-                        text: 'Age Group'
-                    }
+                    labels: {
+                        style: {
+                            colors: (Array(categories.length).fill(
+                                window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+                                    ? '#fff'
+                                    : '#000'
+                            )),
+                        }
+                    },
+                },
                 },
                 colors: ['#4ade80', '#facc15', '#f87171'],
                 dataLabels: {
