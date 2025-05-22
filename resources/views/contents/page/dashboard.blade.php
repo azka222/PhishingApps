@@ -771,6 +771,12 @@
                 ],
                 xaxis: {
                     categories: categories,
+                    labels: {
+                        style: {
+                            colors: ['#4ade80', '#facc15', '#f87171'],
+                            fontSize: '12px'
+                        }
+                    }
                 },
                 
                 colors: ['#4ade80', '#facc15', '#f87171'],
