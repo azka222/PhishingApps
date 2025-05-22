@@ -109,7 +109,7 @@
                     <label for="column-risk-score"
                         class="text-xs md:text-sm font-semibold mb-4 flex items-center justify-center m-4">User Risk
                         Distribution by Age Group</label>
-                    <div id="area-chart-age-group"></div>
+                    <div id="area-chart-age-group" class="text-black dark:text-white"></div>
                 </div>
                 <div class="col-span-4">
                     <div class="bg-white dark:bg-gray-700 dark:text-white rounded-lg p-4">
@@ -771,15 +771,6 @@
                 ],
                 xaxis: {
                     categories: categories,
-                    labels: {
-                        style: {
-                            colors: (Array(categories.length).fill(
-                                window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
-                                    ? '#fff'
-                                    : '#000'
-                            )),
-                        }
-                    },
                 },
                 
                 colors: ['#4ade80', '#facc15', '#f87171'],
