@@ -781,7 +781,7 @@
                         }
                     },
                 },
-                },
+                
                 colors: ['#4ade80', '#facc15', '#f87171'],
                 dataLabels: {
                     enabled: true,
