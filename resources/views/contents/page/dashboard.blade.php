@@ -773,7 +773,7 @@
                     categories: categories,
                     labels: {
                         style: {
-                            colors: ['#4ade80', '#facc15', '#f87171'],
+                            colors: ['#9ca3af', '#9ca3af', '#9ca3af', '#9ca3af', '#9ca3af'],
                             fontSize: '12px'
                         }
                     }
