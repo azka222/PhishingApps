@@ -746,6 +746,8 @@
             const mediumSeries = categories.map(age => ageGroupData[age].medium);
             const highSeries = categories.map(age => ageGroupData[age].high);
 
+            const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+
             if (window.ageGroupChart) {
                 window.ageGroupChart.destroy();
             }
@@ -771,8 +773,12 @@
                 ],
                 xaxis: {
                     categories: categories,
+                    labels: {
+                        style: {
+                            colors: Array(categories.length).fill(isDark ? '#fff' : '#000')
+                        }
+                    }
                 },
-                
                 colors: ['#4ade80', '#facc15', '#f87171'],
                 dataLabels: {
                     enabled: true,
@@ -780,13 +786,19 @@
                 legend: {
                     show: true,
                     position: 'bottom',
+                    labels: {
+                        colors: isDark ? '#fff' : '#000'
+                    }
                 },
-
+                theme: {
+                    mode: isDark ? 'dark' : 'light' 
+                }
             };
 
             window.ageGroupChart = new ApexCharts(document.querySelector("#area-chart-age-group"), options);
             window.ageGroupChart.render();
         }
+
 
         function getRiskScoreData(high = 0, medium = 0, low = 0) {
             if (window.riskScoreChart) {
