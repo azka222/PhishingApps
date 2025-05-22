@@ -779,7 +779,6 @@
                         }
                     }
                 },
-                colors: ['#4ade80', '#facc15', '#f87171'],
                 dataLabels: {
                     enabled: true,
                 },
@@ -790,9 +789,6 @@
                         colors: isDark ? '#fff' : '#000'
                     }
                 },
-                theme: {
-                    mode: isDark ? 'dark' : 'light' 
-                }
             };
 
             window.ageGroupChart = new ApexCharts(document.querySelector("#area-chart-age-group"), options);
