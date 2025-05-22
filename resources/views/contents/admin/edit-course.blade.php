@@ -1,5 +1,5 @@
 @extends('layouts.master')
-@section('title', 'Fischsim - Create Course')
+@section('title', 'Fischsim - Edit Course')
 @section('content')
     <input type="hidden" id="options" value="{{ json_encode($options) }}">
     <input type="hidden" id="courseId" value="{{ $id }}">
@@ -213,7 +213,7 @@
                             </button>
                             </div>
                     <input type="hidden" id="materialId-${index}" value="">
-                    <div class=" border-2 dark:border-gray-500 border-gray-800 rounded-xl p-4 md:p-8">
+                    <div class=" border-2 dark:border-gray-500 border-gray-300 rounded-xl p-4 md:p-8">
                         <div class="flex  items-center justify-between mb-4">
                             <h1 class="text-xl md:text-3xl font-semibold">Material Content</h1>
                           <button onclick="uploadContent('uploadMaterialContent-${index}', 'image-material-${index}')">
@@ -274,7 +274,7 @@
                             </button>
                             <input type="hidden" id="quizId-${index}" value="">
                             </div>
-                    <div class=" border-2 dark:border-gray-500 border-gray-800 rounded-xl p-4 md:p-8">
+                    <div class=" border-2 dark:border-gray-500 border-gray-300 rounded-xl p-4 md:p-8">
                         <div class="flex  items-center justify-between mb-4">
                             <h1 class="text-xl md:text-3xl font-semibold">Quiz Content</h1>
                             <button onclick="uploadContent('uploadQuizContent-${index}', 'image-quiz-${index}')">

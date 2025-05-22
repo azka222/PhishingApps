@@ -205,7 +205,7 @@
                             <span class="hidden md:inline">Delete</span>
                             </button>
                             </div>
-                    <div class=" border-2 dark:border-gray-500 border-gray-800 rounded-xl p-4 md:p-8">
+                    <div class=" border-2 dark:border-gray-500 border-gray-300 rounded-xl p-4 md:p-8">
                         <div class="flex  items-center justify-between mb-4">
                             <h1 class="text-xl md:text-3xl font-semibold">Material Content</h1>
                           <button onclick="uploadContent('uploadMaterialContent-${index}', 'image-material-${index}')">
@@ -266,7 +266,7 @@
                             <span class="hidden md:inline">Delete</span>
                             </button>
                             </div>
-                    <div class=" border-2 dark:border-gray-500 border-gray-800 rounded-xl p-4 md:p-8">
+                    <div class=" border-2 dark:border-gray-500 border-gray-300 rounded-xl p-4 md:p-8">
                         <div class="flex  items-center justify-between mb-4">
                             <h1 class="text-3xl font-semibold">Quiz Content</h1>
                             <button onclick="uploadContent('uploadQuizContent-${index}', 'image-quiz-${index}')">
