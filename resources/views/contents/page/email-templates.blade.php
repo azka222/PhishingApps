@@ -120,7 +120,7 @@
                 $("#sender_name").val('');
                 $("#sender_email").val('');
                 $("#email_html").val('');
-                $("#title-add-email-templates-modal").text('Add Email Templates');
+                $("#title-add-email-templates-modal").text('Create Email Templates');
                 $("#button-for-email-template").text('Create');
                 $("#button-for-email-template").removeAttr('onclick').attr('onclick',
                     'createEmailTemplates()');
@@ -245,7 +245,7 @@
                                     button =
                                         `
                             <button onclick="showEditEmailTemplatesModal(${emailTemplate.id})"
-                                class="px-4 me-2 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">Edit</button>`;
+                                class="px-4 me-2 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">Update</button>`;
                                 } else {
                                     button = `
                             <button onclick="ActivateEmailTemplate(${emailTemplate.id})"
@@ -363,7 +363,7 @@
                 $("#sender_email").val(separateEnvelope(emailTemplate.envelope_sender).email);
                 $("#error_message_field").hide();
                 $("#email_status").prop('disabled', true);
-                $("#title-add-email-templates-modal").text('Edit Email Templates');
+                $("#title-add-email-templates-modal").text('Update Email Templates');
                 $("#button-for-email-template").text('Update');
                 $("#button-for-email-template").removeAttr('onclick').attr('onclick',
                     `editEmailTemplates(${id})`);
@@ -521,7 +521,7 @@
             function ActivateEmailTemplate(id) {
                 Swal.fire({
                     title: 'Are you sure?',
-                    text: "You want to activate this email template!",
+                    text: "You want to activate this email template?",
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#10b981',

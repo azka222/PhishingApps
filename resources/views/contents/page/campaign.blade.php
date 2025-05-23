@@ -120,6 +120,15 @@
 
         function showAddCampaignModal() {
             showModal('add-campaign-modal');
+            $("#campaign_name").val('');
+            $("#campaign_page").val('');
+            $("#campaign_template").val('');
+            $("#campaign_profile").val('');
+            $("#campaign_launch_date").val('');
+            $("#campaign_end_date").val('');
+            $("#campaign_url").val('');
+            $("#campaign_status").val(1);
+            $("#group-list").empty();
 
             $("#error_message_field").hide();
         }
@@ -472,7 +481,7 @@
                             if ($("#status").val() == 2) {
                                 button = `<td class="p-4 flex gap-2">
                                         <button onclick="showDetailCampaign(${campaign.id})"
-                                            class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-green-600 rounded-xl hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600">Detail</button>
+                                            class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-green-600 rounded-xl hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600">Details</button>
                                         @CanDeleteCampaign()
                                             <button onclick="deleteCampaign(${campaign.id})"
                                             class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-red-600 rounded-xl hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600">Delete</button>
@@ -540,8 +549,8 @@
                 confirmButtonText: 'Yes, delete it!',
                 cancelButtonText: 'No, cancel!',
                 customClass: {
-                    confirmButton: 'bg-red-600 text-white rounded-lg px-4 py-2',
-                    cancelButton: 'bg-gray-300 text-gray-800 rounded-lg px-4 py-2'
+                    confirmButton: 'bg-red-500 text-white rounded-lg px-4 py-2',
+                    cancelButton: 'bg-blue-500 text-white rounded-lg px-4 py-2'
                 }
             }).then((result) => {
                 if (result.isConfirmed) {
@@ -642,7 +651,7 @@
 
 
         function copyCampaign(id) {
-
+            showAddCampaignModal()
             let tempCampaign = campaigns.find(campaign => campaign.id == id);
             let data = JSON.parse(tempCampaign.data);
             // console.log(data);
@@ -696,7 +705,7 @@
                 copyGroupToCampaign(data.groups[i].name.split('-+-')[0]);
             }
 
-            showAddCampaignModal()
+
 
         }
 

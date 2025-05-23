@@ -38,6 +38,9 @@
                                         Last Name
                                     </th>
                                     <th scope="col" class="px-6 py-3">
+                                        Age
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
                                         Email
                                     </th>
                                     <th scope="col" class="px-6 py-3">
@@ -46,6 +49,7 @@
                                     <th scope="col" class="px-6 py-3">
                                         Department
                                     </th>
+
                                 </tr>
                             </thead>
                             <tbody id="target-preview-body">

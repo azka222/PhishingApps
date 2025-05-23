@@ -258,11 +258,10 @@ class TargetController extends Controller
             $targetCsv      = trim($targetCsv, "\n");
             $csvRowsColumns = FileHelper::convertCsvToCollection($targetCsv, $projectsSeparator);
             $csvRowsColumns->shift();
-            // dd($csvRowsColumns);
             $validator = Validator::make(
                 ["RowColumns" => $csvRowsColumns->toArray()],
                 [
-                    "RowColumns.*"   => "size:6",
+                    "RowColumns.*"   => "size:7",
                     "RowColumns.*.0" => "distinct",
                     "RowColumns.*.1" => "max:256|required",
                     "RowColumns.*.2" => "max:256|required",
@@ -299,6 +298,7 @@ class TargetController extends Controller
                     ];
                 })->toArray()
             );
+            // dd($csvRowsColumns->toArray());
 
             if ($validator->errors()->any()) {
                 return response()->json([
@@ -426,7 +426,7 @@ class TargetController extends Controller
 
     public function downloadTemplateTarget()
     {
-        $filePath = storage_path('template/importTarget2.zip');
+        $filePath = storage_path('template/templateImportTarget.zip');
         return response()->download($filePath, 'template.zip');
 
     }

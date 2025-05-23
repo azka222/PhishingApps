@@ -266,7 +266,7 @@
                             @endCanUpdateTarget()
                             @CanDeleteTarget()
                             <button onclick="deleteTarget(${target.id})"
-                                class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-red-600 rounded-xl hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600">Delete</>
+                                class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-red-600 rounded-xl hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600">Remove</>
                             @endCanDeleteTarget()
                                 </td>
                         @endCanModifyTarget()
@@ -318,11 +318,13 @@
             $("#target_department").val('');
             $("#target_position").val('');
             $("#target_age").val('');
-            $("#title-add-target-modal").text('Add Target');
+            $("#title-add-target-modal").text('Create Target');
             $("#button-for-target").removeAttr('onclick').attr('onclick', 'createTarget()');
-            $("#button-for-target").text('Add');
+            $("#button-for-target").text('Save');
             $("#admin_company_input_div").show();
             $("#error_message_field").hide();
+            $("#create_account").prop('checked', false);
+            $("#create_account").prop('disabled', false);
             showModal('add-target-modal');
         }
 
@@ -545,6 +547,7 @@
                         <tr class=text-xs md:text-sm font-light text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800">
                             <td class="p-4">${target.first_name}</td>
                             <td class="p-4">${target.last_name}</td>
+                            <td class="p-4">${target.age}</td>
                             <td class="p-4">${target.email}</td>
                             <td class="p-4">${target.position}</td>
                             <td class="p-4">${target.department}</td>

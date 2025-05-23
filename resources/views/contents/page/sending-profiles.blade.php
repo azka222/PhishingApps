@@ -122,7 +122,7 @@
             $("#header_email").val("X-Custom-Header");
             $("#header_value").val("");
             $("#error-message-field").hide();
-            $("#button-for-profile").text('Add');
+            $("#button-for-profile").text('Save');
             $("#title-add-sending-profile-modal").text('Create Sending Profile');
             $("#admin_company_input").val("");
             $("#admin_company_input_div").show();
@@ -295,7 +295,7 @@
                                 button =
                                     `
                             <button onclick="showEditSendingProfileModal(${sendingProfile.id})"
-                                class="px-4 me-2 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">Edit</button>
+                                class="px-4 me-2 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">Update</button>
                                 
                                 `;
                             } else {
@@ -383,7 +383,7 @@
             $("#error-message-field").hide();
 
             $("#header_value").val("");
-            $("#title-add-sending-profile-modal").text('Edit Sending Profile');
+            $("#title-add-sending-profile-modal").text('Update Sending Profile');
             $("#error_message_field").hide();
             showModal('add-sending-profile-modal');
 

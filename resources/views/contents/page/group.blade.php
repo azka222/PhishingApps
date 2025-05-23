@@ -117,13 +117,13 @@
         let tempTargetValues = [];
         let groups = null;
         $(document).ready(function() {
-            getGroupResources();
-            getGroups();
-
+            getGroupResources().then(() => {
+                getGroups();
+            });
         });
 
-        function getGroupResources() {
-            $.ajax({
+        async function getGroupResources() {
+            await $.ajax({
                 url: "{{ route('getGroupResources') }}",
                 type: 'GET',
                 success: function(response) {
@@ -138,13 +138,13 @@
             });
         }
 
-        function getGroups(page = 1) {
+       async function getGroups(page = 1) {
             let department = $('#department').val() ? $('#department').val() : 0;
             let show = $('#show').val();
             let status = $('#status').val() ? $('#status').val() : '';
             let search = $('#search').val() ? $('#search').val() : '';
             let company = $('#companyCheckAdmin').val() ? $('#companyCheckAdmin').val() : '';
-            $.ajax({
+            await $.ajax({
                 url: "{{ route('getGroups') }}" + '?page=' + page,
                 type: 'GET',
                 data: {
@@ -233,10 +233,10 @@
                                 <td class="p-4 flex gap-2">
                                     <button onclick="showDetailsGroupModal(${group.id})" class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-green-600 rounded-xl hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600">Details</button>
                                     @CanUpdateGroup()
-                                    <button onclick="showEditGroupModal(${group.id})" class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">Edit</button>
+                                    <button onclick="showEditGroupModal(${group.id})" class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">Update</button>
                                     @endCanUpdateGroup()
                                     @CanDeleteGroup()
-                                    <button onclick="showDeleteGroupModal(${group.id})" class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-red-600 rounded-xl hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600">Delete</button>
+                                    <button onclick="showDeleteGroupModal(${group.id})" class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-red-600 rounded-xl hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600">Remove</button>
                                     @endCanDeleteGroup()
                                     </td>
                                 @endCanModifyGroup()
@@ -292,8 +292,8 @@
             $("#group_member_list").empty();
             $("#group_description").val('');
             $("#strict_user_selected_department").prop('checked', false);
-            $("#title-add-group-modal").text('Add Group');
-            $("#button-for-group").text('Create');
+            $("#title-add-group-modal").text('Create Group');
+            $("#button-for-group").text('Save');
             $("#button-for-group").removeAttr('onclick').attr('onclick', 'createGroup()');
             $("#group_status").prop('disabled', true);
             $("#admin_company_input_div").show();
@@ -307,7 +307,7 @@
             showModal('add-group-modal');
             $("#group_status").prop('disabled', false);
             $("#strict_user_selected_department").prop('checked', false);
-            $("#title-add-group-modal").text('Edit Group');
+            $("#title-add-group-modal").text('Update Group');
             $("#button-for-group").removeAttr('onclick').attr('onclick', `updateGroup(${id})`);
             $("#button-for-group").text('Update');
             $("#admin_company_input_div").hide();

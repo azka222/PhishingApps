@@ -166,7 +166,7 @@
                                     <button onclick="showLandingPage(${value.id})" class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-green-600 rounded-xl hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600">Preview</button>
                                     @CanModifyLandingPage()
                                         @CanUpdateLandingPage()
-                                            <button onclick="showModalEditLandingPage(${value.id})" class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">Edit</button>
+                                            <button onclick="showModalEditLandingPage(${value.id})" class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">Update</button>
                                         @endCanUpdateLandingPage()
                                         @CanDeleteLandingPage()
                                             <button onclick="deleteLandingPage(${value.id})" class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-red-600 rounded-xl hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600">Delete</button>
@@ -194,6 +194,18 @@
         function showAddLandingPageModal() {
             showModal('add-landing-page-modal');
             $("#admin_company_input_div").show();
+            $("#title-add-landing-page-modal").text('Create Landing Page');
+            $("#button-for-pages").text('Create');
+            $("#button-for-pages").removeAttr('onclick').attr('onclick',
+                `createLandingPage()`);
+            $("#landing_name").val('');
+            $("#content").val('');
+            $("#submitted-checkbox").prop("checked", false);
+            $("#passwords-checkbox").prop("checked", false);
+            $("#redirect_url").val('');
+            $("#error_message_field").hide();
+            $("#error_http_header").hide();
+            $("#error_message").empty();
             // await fetchWebsiteUrl(); // Call the async function
         }
 
@@ -420,7 +432,7 @@
             $("#submitted-checkbox").prop("checked", LandingPage.capture_credentials == 1 ? true : false);
             $("#passwords-checkbox").prop("checked", LandingPage.capture_passwords == 1 ? true : false);
             $("#redirect_url").val(LandingPage.redirect_url);
-            $("#title-add-landing-page-modal").text('Edit Landing Page');
+            $("#title-add-landing-page-modal").text('Update Landing Page');
             $("#button-for-pages").text('Update');
             $("#button-for-pages").removeAttr('onclick').attr('onclick',
                 `editLandingPage(${id})`);

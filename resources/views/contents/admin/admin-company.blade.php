@@ -141,9 +141,9 @@
                                 <td class="p-4">${company.user ? company.user.email : "N/A"}</td>
                                 <td class="p-4 flex gap-2">
                                     <button onclick="showEditCompanyModal(${company.id})"
-                                        class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">Edit</button>
+                                        class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">Update</button>
                                     <button onclick="deleteCompany(${company.id})"
-                                        class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-red-600 rounded-xl hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600">Delete</button>
+                                        class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-red-600 rounded-xl hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600">Remove</button>
                                 </td>
                             </tr>`;
                         $("#list-admin-company-tbody").append(row);
@@ -173,6 +173,7 @@
             $("#visibility").prop('checked', company.visibility_id === 1 ? true : false);
             $("#status").prop('checked', company.status_id === 1 ? true : false);
             $("#button-for-target").attr('onclick', `editCompany(${id})`);
+            $("#button-for-target").text('Update');
             $("#owner").val(company.user ? company.user.id : "");
         }
 

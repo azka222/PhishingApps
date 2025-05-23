@@ -111,7 +111,7 @@
                                     <div class="flex items-center p-4">
                                         <button onclick="showEditProfileModal()"
                                             class="px-4 flex items-center gap-2 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">
-                                            <span class="md:flex hidden">Edit</span>
+                                            <span class="md:flex hidden">Update</span>
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
                                                 class="w-4 h-4">
                                                 <path
@@ -241,7 +241,7 @@
                                         Name</div>
                                     <button onclick="showEditCompanyModal()"
                                         class="px-4 flex items-center gap-2 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">
-                                        <span class="md:flex hidden">Edit</span>
+                                        <span class="md:flex hidden">Update</span>
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
                                             class="w-4 h-4">
                                             <path
@@ -745,7 +745,7 @@
                                 <td class="px-6 py-4">
                                     <button onclick="showEditUserModal(${user.id})"
                                         class="px-4 flex items-center gap-2 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">
-                                        <span class="">Edit</span>
+                                        <span class="">Update</span>
                                     </button>
                                 </td>
                             </tr>
@@ -838,11 +838,11 @@
                                 <td class="px-6 py-4 flex gap-2">
                                     <button onclick="showEditRoleModal(${role.id})"
                                         class="px-4 flex items-center gap-2 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">
-                                        <span class="">Edit</span>
+                                        <span class="">Update</span>
                                     </button>
                                     <button onclick="deleteRole(${role.id})"
                                         class="px-4 flex items-center gap-2 py-2 text-xs md:text-sm font-medium text-white bg-red-600 rounded-xl hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600">
-                                        <span class="">Delete</span>
+                                        <span class="">Remove</span>
                                     </button>
                                 </td>
                             </tr>
