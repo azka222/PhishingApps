@@ -320,7 +320,7 @@
             $("#target_age").val('');
             $("#title-add-target-modal").text('Create Target');
             $("#button-for-target").removeAttr('onclick').attr('onclick', 'createTarget()');
-            $("#button-for-target").text('Save');
+            $("#button-for-target").text('Create');
             $("#admin_company_input_div").show();
             $("#error_message_field").hide();
             $("#create_account").prop('checked', false);
