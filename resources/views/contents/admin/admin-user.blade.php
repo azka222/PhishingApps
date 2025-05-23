@@ -131,7 +131,7 @@
                                 <td class="p-4">${verified}</td>
                                 <td class="p-4 flex gap-2">
                                     <button onclick="showEditUserModal(${user.id})"
-                                    class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">Edit</button>
+                                    class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">Update</button>
                                       <button onclick="deleteUser(${user.id})"
                                     class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-red-600 rounded-xl hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600">Remove</button>
                                 </td>
@@ -159,6 +159,7 @@
                 $("#email_user").val(user.email);
                 $("#phone_user").val(user.phone);
                 $("#button-for-target").attr('onclick', `editUser(${id})`);
+                $("#button-for-target").text('Update');
                 user.email_verified_at != null ? $("#verified-user").prop('checked', true) : $(
                     "#verified-user").prop('checked', false);
 
