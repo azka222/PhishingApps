@@ -10,7 +10,14 @@
     
     <h2 style="color: #2c3e50; margin-bottom: 20px;">Halo {{ $name }},</h2>
 
-    <p style="margin-bottom: 16px;">Selamat! Akun Anda telah berhasil dibuat. Berikut informasi login sementara Anda:</p>
+    <p style="margin-bottom: 16px;">
+      Akun Anda telah dibuat oleh administrator perusahaan untuk memberikan akses ke aplikasi kami.  
+      Akun ini diperlukan agar Anda dapat mengakses dan menyelesaikan course yang telah ditugaskan kepada Anda.
+    </p>
+
+    <p style="margin-bottom: 16px;">
+      Berikut adalah informasi login sementara Anda:
+    </p>
 
     <table style="width: 100%; margin-bottom: 20px;">
       <tr>
@@ -23,15 +30,15 @@
       </tr>
     </table>
 
-    <p style="margin-bottom: 20px;">Silakan login menggunakan informasi di atas. Demi keamanan, segera ganti password Anda setelah login pertama kali.</p>
+    <p style="margin-bottom: 20px;">
+      Silakan login menggunakan informasi di atas. Demi keamanan, kami sarankan Anda segera mengganti password setelah login pertama kali.
+    </p>
 
     <div style="text-align: center; margin: 30px 0;">
       <a href="https://fischsim.xyz/login" style="display: inline-block; background-color: #1d4ed8; color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 8px; font-weight: bold;">
         Login Sekarang
       </a>
     </div>
-
-    <p style="font-size: 14px; color: #555;">Jika Anda tidak merasa mendaftar akun ini, abaikan email ini atau hubungi administrator.</p>
 
     <br>
 
