@@ -122,7 +122,7 @@
             $("#header_email").val("X-Custom-Header");
             $("#header_value").val("");
             $("#error-message-field").hide();
-            $("#button-for-profile").text('Save');
+            $("#button-for-profile").text('Create');
             $("#title-add-sending-profile-modal").text('Create Sending Profile');
             $("#admin_company_input").val("");
             $("#admin_company_input_div").show();
