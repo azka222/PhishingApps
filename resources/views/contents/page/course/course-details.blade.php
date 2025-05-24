@@ -296,9 +296,9 @@
                                         ${materialImage}
                                     </div>
                                     <div id="desc-box" class="mt-8">
-                                        <h2 class="md:text-lg text-xs">
-                                           ${course.model.content}
-                                        </h2>
+                                        <h2 class="md:text-lg text-xs whitespace-pre-line">
+                                            ${course.model.content}
+                                            </h2>
                                     </div>
 
                                     <div class="flex items-center justify-end mt-8 gap-2">
@@ -330,7 +330,7 @@
                                                 ${quizImage}
                                             </div>
                                             <div id="desc-box" class="mt-8">
-                                                <h2 id="quiz-material-${order}" class="text-xs md:text-lg">
+                                                <h2 id="quiz-material-${order}" class="whitespace-pre-line text-xs md:text-lg">
                                                     ${course.model.content}
                                                 </h2>
                                             </div>

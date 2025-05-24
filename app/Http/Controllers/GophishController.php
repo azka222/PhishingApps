@@ -1,29 +1,31 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Jobs\RequestApprovalCampaignJob;
-use App\Mail\ApprovalMail;
-use App\Models\Campaign;
-use App\Models\Company;
-use App\Models\EmailTemplateCompany;
-use App\Models\Group;
-use App\Models\LandingPageCompany;
-use App\Models\SendingProfileCompany;
-use App\Models\Target;
-use App\Models\TargetCourseScore;
-use App\Models\TargetGroup;
-use Carbon\Carbon;
 use DateTime;
 use DateTimeZone;
+use Carbon\Carbon;
+use App\Models\Group;
+use App\Models\Course;
+use App\Models\Target;
+use App\Models\Company;
+use App\Models\Campaign;
+use App\Mail\ApprovalMail;
+use App\Models\TargetGroup;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Validation\Rule;
+use App\Models\TargetCourseScore;
+use App\Models\LandingPageCompany;
+use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
+use App\Models\EmailTemplateCompany;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
+use App\Models\SendingProfileCompany;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Str;
-use Illuminate\Validation\Rule;
+use App\Jobs\RequestApprovalCampaignJob;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class GophishController extends Controller
 {
@@ -1401,7 +1403,9 @@ class GophishController extends Controller
                 ];
             });
             $grouped = $grouped->groupBy('email')->map(function ($items) {
-                $averageScore = $items->pluck('score')->avg();
+                $totalCourse = Course::count();
+                $averageScore = $items->pluck('score')->sum() / $totalCourse;
+                $averageScore = round($averageScore, 2);
                 return [
                     'email'         => $items->first()['email'],
                     'average_score' => $averageScore,
@@ -1412,11 +1416,20 @@ class GophishController extends Controller
             $scored  = collect($scored)->map(function ($item) use ($grouped) {
                 $email        = $item['email'];
                 $averageScore = $grouped->firstWhere('email', $email)['average_score'] ?? null;
+                $targetExist = Target::where('email', $email)->exists();
+                if (! $targetExist) {
+                    $completedCourse = 0; // Skip if target does not exist
+                }
+                else{
+                    $completedCourse = TargetCourseScore::where('target_id', Target::where('email', $email)->first()->id)->count();
+                }
                 return [
                     'email'         => $email,
                     'final_score'   => $item['final_score'],
                     'average_score' => $averageScore,
                     'age'           => $item['age'],
+                    'completed_course' => $completedCourse,
+                    'total_course'  => Course::count()
                 ];
             });
             $scored       = $scored->sortByDesc('final_score')->values();

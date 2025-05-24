@@ -55,6 +55,7 @@
                                     <th class="p-4 text-left">Target Name</th>
                                     <th class="p-4 text-left">Phishing Score</th>
                                     <th class="p-4 text-left">Course Score</th>
+                                    <th class="p-4 text-left">Status </th>
                                     <th class="p-4 text-left">Risk to Company</th>
                                 </tr>
                             </thead>
@@ -256,7 +257,7 @@
                     }
                     if (humanRisk.average_score < 60) {
                         if (humanRisk.average_score == null) {
-                            humanRisk.average_score = '0 (Not started)';
+                            humanRisk.average_score = '0';
                         }
                         humanRisk.average_score =
                             `<span class="text-red-500 font-semibold">${humanRisk.average_score}</span>`;
@@ -269,7 +270,37 @@
                             <tr class="border-b text-xs md:text-sm">
                                 <td class="p-4">${humanRisk.email}</td>
                                 <td class="p-4">${humanRisk.final_score}</td>
-                                <td class="p-4">${humanRisk.average_score}</td>
+                               <td class="p-4">
+                                <span>${humanRisk.average_score}</span>
+                                </td>
+                                <td class="p-4">
+                                     <div class="flex items-center gap-2 relative group">
+                                    <!-- Ikon informasi -->
+                                    <div class="relative">
+                                    <svg xmlns="http://www.w3.org/2000/svg" 
+                                        viewBox="0 0 24 24" 
+                                        fill="currentColor" 
+                                        class="size-4 text-gray-500 cursor-pointer">
+                                        <path fill-rule="evenodd" 
+                                            d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 
+                                            4.365 9.75 9.75-4.365 9.75-9.75 
+                                            9.75S2.25 17.385 2.25 12Zm8.706-1.442c1.146-.573 
+                                            2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 
+                                            0 0 1 .67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 
+                                            0 1 1-.671-1.34l.041-.022ZM12 
+                                            9a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z" 
+                                            clip-rule="evenodd" />
+                                    </svg>
+
+                                    <!-- Tooltip -->
+                                    <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block bg-gray-800 text-white text-xs rounded px-2 py-1 whitespace-nowrap z-20">
+                                        Completed ${humanRisk.completed_course} out of ${humanRisk.total_course} courses
+                                    </div>
+                                    </div>
+                                </div>
+                                    </td>
+                                    
+                             
                                 <td class="p-4">${humanRisk.adjusted_risk}</td>
                                 
 
@@ -279,6 +310,8 @@
                 });
             }
         }
+   
+
 
         function getCampaignTable(campaigns) {
             $("#list-campaign-tbody").empty();
@@ -309,7 +342,6 @@
                             <tr class="border-b text-xs md:text-sm">
                                 <td class="p-4">${campaign.name}</td>
                                 <td class="p-4">${campaign.status}</td>
-                               
                                 <button onclick="showDetailCampaign(${campaign.id})"
                                     class="text-xs font-medium text-white  rounded-xl"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
                                     <path fill-rule="evenodd" d="M13.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L11.69 12 4.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z" clip-rule="evenodd" />
@@ -889,7 +921,7 @@
                     }
                     if (humanRisk.average_score < 60) {
                         if (humanRisk.average_score == null) {
-                            humanRisk.average_score = '0 (Not started)';
+                            humanRisk.average_score = '0';
                         }
                         humanRisk.average_score =
                             `<span class="text-red-500 font-semibold">${humanRisk.average_score}</span>`;
@@ -903,6 +935,32 @@
                                 <td class="p-4">${humanRisk.email}</td>
                                 <td class="p-4">${humanRisk.final_score}</td>
                                 <td class="p-4">${humanRisk.average_score}</td>
+                                <td class="p-4">
+                                     <div class="flex items-center gap-2 relative group">
+                                    <!-- Ikon informasi -->
+                                    <div class="relative">
+                                    <svg xmlns="http://www.w3.org/2000/svg" 
+                                        viewBox="0 0 24 24" 
+                                        fill="currentColor" 
+                                        class="size-4 text-gray-500 cursor-pointer">
+                                        <path fill-rule="evenodd" 
+                                            d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 
+                                            4.365 9.75 9.75-4.365 9.75-9.75 
+                                            9.75S2.25 17.385 2.25 12Zm8.706-1.442c1.146-.573 
+                                            2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 
+                                            0 0 1 .67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 
+                                            0 1 1-.671-1.34l.041-.022ZM12 
+                                            9a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z" 
+                                            clip-rule="evenodd" />
+                                    </svg>
+
+                                    <!-- Tooltip -->
+                                    <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block bg-gray-800 text-white text-xs rounded px-2 py-1 whitespace-nowrap z-20">
+                                        Completed ${humanRisk.completed_course} out of ${humanRisk.total_course} courses
+                                    </div>
+                                    </div>
+                                </div>
+                                    </td>
                                 <td class="p-4">${humanRisk.adjusted_risk}</td>
                                 
 

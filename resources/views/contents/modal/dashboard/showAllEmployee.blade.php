@@ -40,6 +40,8 @@
                                         Course Score
                                     </th>
                                     <th scope="col" class="px-6 py-3">
+                                        Status
+                                    <th scope="col" class="px-6 py-3">
                                         Risk to Company
                                     </th>
                                 </tr>
