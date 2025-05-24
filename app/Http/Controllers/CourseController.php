@@ -31,6 +31,21 @@ class CourseController extends Controller
                 'message' => 'Content is required',
             ], 400);
         }
+        $hasQuiz = false;
+        $hasMaterial = false;
+        foreach ($request->contents as $value) {
+            if ($value['type'] == 'quiz') {
+                $hasQuiz = true;
+            } else if ($value['type'] == 'material') {
+                $hasMaterial = true;
+            }
+        }
+        if (! $hasQuiz || ! $hasMaterial) {
+            return response()->json([
+                'status'  => 'error',
+                'message' => 'At least one quiz and material is required.',
+            ], 400);
+        }
 
         foreach ($request->contents as $key => $value) {
             if ($value['type'] == 'material') {
@@ -94,10 +109,10 @@ class CourseController extends Controller
         $courseThumbnail             = new CourseThumbnail();
         $courseThumbnail->path       = $thumbnail->store('course/thumbnail', 'public');
         $courseThumbnail->name       = $thumbnail->getClientOriginalName();
-        $course->course_thumbnail_id = $courseThumbnail->id;
         $contents                    = $request->contents;
         $quizzes                     = array_filter($contents, fn($value) => $value['type'] === 'quiz');
         $courseThumbnail->save();
+        $course->course_thumbnail_id = $courseThumbnail->id;
         $course->save();
 
         foreach ($quizzes as $quiz) {
