@@ -12,7 +12,7 @@
                 <h2>
                     Description :
                 </h2>
-                <h2 id="course-description" class="mt-2 text-xs md:text-sm">
+                <h2 id="course-description" class="whitespace-pre-line mt-2 text-xs md:text-sm">
                     Nanti Description Disini
                 </h2>
             </div>

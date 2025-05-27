@@ -145,7 +145,7 @@
                         let tr = `<div class="col-span-1">
                             <div class="bg-white dark:bg-gray-700 shadow-md rounded-xl p-4">
                                <div class="flex md:flex-row flex-col items-start md:justify-between">
-                                    <h1 class="md:text-2xl txt-sm mb-2 md:mb-0  font-semibold text-gray-900 dark:text-white">${course.name}</h1>
+                                    <h1 class="md:text-lg text-sm mb-2 md:mb-0  font-semibold text-gray-900 dark:text-white">${course.name}</h1>
                                     <div class="flex items-center justify-end">
                                         <div class="text-xs md:text-sm ${colorStatus}  font-medium me-2 px-2.5 py-0.5 rounded inline-block">
                                             ${status}
@@ -157,7 +157,7 @@
                                 </div>
                                     <div class="py-4">
                                     <img src="${course.thumbnail_url}" alt="Thumbnail"
-                                        class=" w-full  object-cover rounded-md">
+                                        class=" w-full max-h-[230px]  object-cover rounded-md">
                                 </div>
                                     <table class="text-sm text-gray-400 w-full">
                                         <tr>
