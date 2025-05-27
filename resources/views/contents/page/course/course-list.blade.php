@@ -146,7 +146,13 @@
                             <div class="bg-white dark:bg-gray-700 shadow-md rounded-xl p-4">
                                <div class="flex md:flex-row flex-col items-start md:justify-between">
                                     <h1 class="md:text-lg text-sm mb-2 md:mb-0  font-semibold text-gray-900 dark:text-white">${course.name}</h1>
-                                    <div class="flex items-center justify-end">
+                                   
+                                </div>
+                                    <div class="py-4">
+                                    <img src="${course.thumbnail_url}" alt="Thumbnail"
+                                        class=" w-full max-h-[230px]  object-cover rounded-md">
+                                </div>
+                                 <div class="flex items-center justify-start py-2 md:py-4">
                                         <div class="text-xs md:text-sm ${colorStatus}  font-medium me-2 px-2.5 py-0.5 rounded inline-block">
                                             ${status}
                                         </div>
@@ -154,11 +160,6 @@
                                             ${score}
                                         </div>
                                         </div> 
-                                </div>
-                                    <div class="py-4">
-                                    <img src="${course.thumbnail_url}" alt="Thumbnail"
-                                        class=" w-full max-h-[230px]  object-cover rounded-md">
-                                </div>
                                     <table class="text-sm text-gray-400 w-full">
                                         <tr>
                                             <td class="py-1 pr-2">Total Material</td>
@@ -171,7 +172,7 @@
                                     </table>
 
                                 <div class="flex justify-end pt-4 gap-2">
-                                    <button onclick="showDescription('${course.name}', '${course.description}')"
+                                    <button onclick="showDescription('${course.name}', decodeURIComponent('${encodeURIComponent(course.description)}'))"
                                         class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 flex items-center">Description</button>
 
                                     ${buttonStart}

@@ -24,7 +24,7 @@
                 <h3 class="text-lg font-light text-gray-900 dark:text-white">
                     Description :
                 </h3>
-                <h3 class="text-md font-light text-gray-900 dark:text-white" id="course-desc-details">
+                <h3 class="text-md font-light text-gray-900 dark:text-white whitespace-pre-line" id="course-desc-details">
 
                 </h3>
                 <!-- Modal footer -->

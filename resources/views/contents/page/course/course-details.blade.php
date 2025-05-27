@@ -3,7 +3,7 @@
     <input type="hidden" id="course-id" value="{{ $id }}">
     <div id="term-condition"
         class="p-4 w-full flex flex-col h-full min-h-screen md:items-center items-start justify-center  bg-gray-50 dark:bg-gray-800 dark:text-white text-gray-900">
-        <div class="flex flex-col mt-8 lg:w-1/2 md:w-full w-full dark:bg-gray-700 bg-gray-200 p-8 rounded-xl">
+        <div class="flex flex-col my-8 lg:w-1/2 md:w-full w-full dark:bg-gray-700 bg-white border border-gray-200 p-8 rounded-xl">
             <h1 class="md:text-3xl text-xl mb-4 font-semibold" id="course-name">Nama Course Nanti Disini</h1>
             <div class="py-4" id="course-thumbnail">
 
@@ -67,7 +67,7 @@
                 </button>
             </div>
         </div>
-        <div class="w-full lg:w-1/4 dark:bg-gray-800 bg-gray-200 p-4 items-start rounded-xl hidden xl:flex">
+        <div class="w-full lg:w-1/4 dark:bg-gray-800 p-4 items-start rounded-xl hidden xl:flex">
 
             <div id="number-section" class="grid grid-cols-4 gap-4">
 
@@ -217,10 +217,10 @@
             $(".need-to-hide").hide();
             $("#content-" + order).show();
             let buttonNumber = document.getElementById("button-number-" + order);
-            $(".number-section").removeClass("bg-green-600 text-white").addClass("bg-gray-500 text-white");
+            $(".number-section").removeClass("bg-green-600 dark:bg-green-700 text-white").addClass("bg-gray-300 dark:bg-gray-500 text-white");
             // Aktifkan warna tombol yang dipilih
-            buttonNumber.classList.add("bg-green-600", "text-white");
-            buttonNumber.classList.remove("bg-gray-500", "text-black");
+            buttonNumber.classList.add("bg-green-600", "text-white", "dark:bg-green-700");
+            buttonNumber.classList.remove("bg-gray-300", "text-black", "dark:bg-gray-500", "dark:text-white");
         }
 
         function getCourse() {
@@ -288,7 +288,7 @@
                             let materialImage = course.model.attachment != null ? `<img src=${course.model.attachment_url}
                             class="w-full h-auto rounded-xl shadow">` : '';
                             let material = `<div id="content-${order}"
-                                    class="need-to-hide w-full md:p-8 p-4 dark:bg-gray-700 border-2 dark:border-gray-500 border-gray-800 rounded-xl">
+                                    class="need-to-hide w-full md:p-8 p-4 dark:bg-gray-700 border-2 bg-white dark:border-gray-500 border-gray-300 rounded-xl">
                                     <div class="flex items-center justify-center mb-4">
                                         <h1 class="md:text-3xl text-xl font-semibold">${course.model.title}</h1>
                                     </div>
@@ -307,8 +307,8 @@
                                     </div>
                                 </div>`;
 
-                            let buttonNumber = `<button onclick="goToNumber(${order})" class="4xl:col-span-1 col-span-2">
-                                    <div id="button-number-${order}" class="number-section text-xs md:text-sm bg-gray-500 p-4 rounded-lg dark:hover:bg-green-600">
+                            let buttonNumber = `<button onclick="goToNumber(${order})" class="xl:col-span-1 col-span-2">
+                                    <div id="button-number-${order}" class="number-section text-xs md:text-sm bg-gray-300 dark:bg-gray-500 p-4 rounded-lg hover:bg-green-500 dark:hover:bg-green-600">
                                         Material ${order}
                                     </div>
                                 </button>`
@@ -322,7 +322,7 @@
                                 .group);
                             options = shuffleArray(options);
                             let quiz = ` <div id="content-${order}"
-                                            class="need-to-hide w-full md:p-8 p-2 dark:bg-gray-700   border-2 dark:border-gray-500 border-gray-800 rounded-xl">
+                                            class="need-to-hide w-full md:p-8 p-2 dark:bg-gray-700 bg-white   border-2 dark:border-gray-500 border-gray-300 rounded-xl">
                                             <div class="flex  items-center justify-center mb-4">
                                                 <h1 class="md:text-3xl text-xl font-semibold" id="">${course.model.title}</h1>
                                             </div>
@@ -342,8 +342,8 @@
                                             </div>
                                         </div>`;
 
-                            let buttonNumber = `<button onclick="goToNumber(${order})" class="4xl:col-span-1 col-span-2">
-                                    <div id="button-number-${order}" class="number-section text-xs md:text-sm  bg-gray-500 p-4 rounded-lg dark:hover:bg-green-600">
+                            let buttonNumber = `<button onclick="goToNumber(${order})" class="xl:col-span-1 col-span-2">
+                                    <div id="button-number-${order}" class="number-section text-xs md:text-sm  bg-gray-300 dark:bg-gray-500 p-4 rounded-lg hover:bg-green-500 dark:hover:bg-green-600">
                                         Quiz ${order}
                                     </div>
                                 </button>`
