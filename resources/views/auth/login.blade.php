@@ -19,12 +19,12 @@
                         <ul class="flex flex-wrap p-4 text-sm font-medium text-center" id="default-tab"
                             data-tabs-toggle="#default-tab-content" role="tablist">
                             <li class="me-2" role="presentation">
-                                <button class="inline-block border-b-2 py-2 px-4 " id="profile-tab"
+                                <button class="inline-block border-b-2 py-2 px-4 " id="profile-tab" onclick="changeTab('admin')"
                                     data-tabs-target="#profile" type="button" role="tab" aria-controls="profile"
                                     aria-selected="false">Admin</button>
                             </li>
                             <li class="me-2" role="presentation">
-                                <button class="inline-block border-b-2 py-2 px-4 " id="dashboard-tab"
+                                <button class="inline-block border-b-2 py-2 px-4 " id="dashboard-tab" onclick="changeTab('employee')"
                                     data-tabs-target="#dashboard" type="button" role="tab" aria-controls="dashboard"
                                     aria-selected="false">Employee</button>
                             </li>
@@ -228,6 +228,7 @@
             });
         });
         let employeeLogin = '';
+        let tab = 'admin';
         $(document).ready(function() {
             const otpInputs = $(".otp-input");
             otpInputs.on("input", function() {
@@ -246,11 +247,7 @@
                 }
             });
 
-            $(document).on('keydown', function(e) {
-                if (e.key === 'Enter') {
-                    login();
-                }
-            });
+       
         });
 
         function registerView() {
@@ -435,6 +432,11 @@
                 }
             });
 
+        }
+
+        function changeTab(user){
+            tab = user;
+            console.log(tab);
         }
     </script>
 
