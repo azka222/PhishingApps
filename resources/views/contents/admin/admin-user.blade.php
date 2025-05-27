@@ -225,12 +225,13 @@
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#d97706',
-                    cancelButtonColor: '#e3342f',
-                    confirmButtonText: 'Yes, delete it!',
+                    reverseButtons: true,
+                    confirmButtonText: 'Yes, remove it!',
+                    cancelButtonText: 'No, cancel!',
                     customClass: {
-                        confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700',
-                        cancelButton: 'bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 ml-2'
-                    },
+                        confirmButton: 'bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 ml-r',
+                        cancelButton: 'bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700'
+                    }
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({

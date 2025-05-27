@@ -145,12 +145,13 @@
                 text: "You won't be able to revert this!",
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonText: 'Yes, delete it!',
-                cancelButtonText: 'Cancel',
+                reverseButtons: true,
+                confirmButtonText: 'Yes, remove it!',
+                cancelButtonText: 'No, cancel!',
                 customClass: {
-                    confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700',
-                    cancelButton: 'bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 ml-2'
-                },
+                    confirmButton: 'bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 ml-r',
+                    cancelButton: 'bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700'
+                }
                 buttonsStyling: false
             }).then((result) => {
                 if (result.isConfirmed) {
@@ -172,7 +173,7 @@
                                 confirmButtonText: 'OK',
                                 customClass: {
                                     confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700',
-                                    
+
                                 },
 
                             })
