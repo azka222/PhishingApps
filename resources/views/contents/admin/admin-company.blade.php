@@ -230,7 +230,7 @@
                 confirmButtonText: 'Yes, remove it!',
                 cancelButtonText: 'No, cancel!',
                 customClass: {
-                    confirmButton: 'bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 ml-r',
+                    confirmButton: 'bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 ml-2',
                     cancelButton: 'bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700'
                 }
             }).then((result) => {
