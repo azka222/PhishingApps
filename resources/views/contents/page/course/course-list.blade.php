@@ -150,7 +150,7 @@
                                 </div>
                                     <div class="py-4">
                                     <img src="${course.thumbnail_url}" alt="Thumbnail"
-                                        class=" w-full max-h-[230px]  object-cover rounded-md">
+                                        class=" w-full  object-cover rounded-md">
                                 </div>
                                  <div class="flex items-center justify-start py-2 md:py-4">
                                         <div class="text-xs md:text-sm ${colorStatus}  font-medium me-2 px-2.5 py-0.5 rounded inline-block">
