@@ -145,7 +145,7 @@
                         let tr = `<div class="col-span-1">
                             <div class="bg-white dark:bg-gray-700 shadow-md rounded-xl p-4">
                                <div class="flex md:flex-row flex-col items-start md:justify-between">
-                                    <h1 class="md:text-lg text-sm mb-2 md:mb-0  font-semibold text-gray-900 dark:text-white">${course.name}</h1>
+                                    <h1 class="md:text-2xl text-sm mb-2 md:mb-0  font-semibold text-gray-900 dark:text-white">${course.name}</h1>
                                    
                                 </div>
                                     <div class="py-4">
