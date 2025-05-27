@@ -26,6 +26,6 @@
         </div>
     </div>
     <div class="text-center mt-6 text-gray-500 text-sm">
-        &copy; 2025 Your Company Name. All rights reserved.
+        &copy; 2025 Fischsim. All rights reserved.
     </div>
 </footer>

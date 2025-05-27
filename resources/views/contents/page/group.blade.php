@@ -549,13 +549,13 @@
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#ef4444',
-                confirmButtonText: 'Yes, delete it!',
-                cancelButtonText: 'No, cancel!',
                 cancelButtonColor: '#3b82f6',
                 reverseButtons: true,
+                confirmButtonText: 'Yes, remove it!',
+                cancelButtonText: 'No, cancel!',
                 customClass: {
-                    confirmButton: 'bg-red-500 text-white rounded-lg px-4 py-2',
-                    cancelButton: 'bg-blue-500 text-white rounded-lg px-4 py-2'
+                    confirmButton: 'bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 ml-r',
+                    cancelButton: 'bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700'
                 }
             }).then((result) => {
                 if (result.isConfirmed) {
