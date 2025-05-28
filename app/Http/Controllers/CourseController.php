@@ -31,7 +31,7 @@ class CourseController extends Controller
                 'message' => 'Content is required',
             ], 400);
         }
-        $hasQuiz = false;
+        $hasQuiz     = false;
         $hasMaterial = false;
         foreach ($request->contents as $value) {
             if ($value['type'] == 'quiz') {
@@ -102,15 +102,15 @@ class CourseController extends Controller
 
             }
         }
-        $thumbnail                   = $request->courseThumbnail;
-        $course                      = new Course();
-        $course->name                = $request->input('courseName');
-        $course->description         = $request->input('courseDescription');
-        $courseThumbnail             = new CourseThumbnail();
-        $courseThumbnail->path       = $thumbnail->store('course/thumbnail', 'public');
-        $courseThumbnail->name       = $thumbnail->getClientOriginalName();
-        $contents                    = $request->contents;
-        $quizzes                     = array_filter($contents, fn($value) => $value['type'] === 'quiz');
+        $thumbnail             = $request->courseThumbnail;
+        $course                = new Course();
+        $course->name          = $request->input('courseName');
+        $course->description   = $request->input('courseDescription');
+        $courseThumbnail       = new CourseThumbnail();
+        $courseThumbnail->path = $thumbnail->store('course/thumbnail', 'public');
+        $courseThumbnail->name = $thumbnail->getClientOriginalName();
+        $contents              = $request->contents;
+        $quizzes               = array_filter($contents, fn($value) => $value['type'] === 'quiz');
         $courseThumbnail->save();
         $course->course_thumbnail_id = $courseThumbnail->id;
         $course->save();
@@ -479,7 +479,7 @@ class CourseController extends Controller
                         $newOption->save();
                     }
                 }
-                $isTrue               = Option::where('name', $quiz['isTrue'])->where('group', $newGroup)->first();
+                $isTrue             = Option::where('name', $quiz['isTrue'])->where('group', $newGroup)->first();
                 $newQuiz->option_id = $isTrue->id;
                 $newQuiz->group     = $isTrue->group;
                 $newQuiz->save();
@@ -493,6 +493,7 @@ class CourseController extends Controller
             }
         }
         foreach ($materials as $material) {
+
             if (isset($material['id'])) {
                 $materialModel = Material::find($material['id']);
                 if ($materialModel) {
@@ -500,13 +501,20 @@ class CourseController extends Controller
                     $materialModel->title   = $material['title'];
                     $materialModel->content = $material['content'];
                     if (isset($material['attachment']) && ! empty($material['attachment'])) {
-                        $path                            = $material['attachment']->store('course/material', 'public');
-                        $materialModel->attachment->path = $path;
-                        $materialModel->attachment->name = $material['attachment']->getClientOriginalName();
-                        $materialModel->attachment->save();
-                        $materialModel->material_attachment_id = $materialModel->attachment->id;
+                        $path = $material['attachment']->store('course/material', 'public');
+                        $attachment = $materialModel->attachment;
+                        if ($attachment) {
+                            $attachment->path = $path;
+                            $attachment->name = $material['attachment']->getClientOriginalName();
+                            $attachment->save();
+                        } else {
+                            $attachment = \App\Models\MaterialAttachment::create([
+                                'path' => $path,
+                                'name' => $material['attachment']->getClientOriginalName(),
+                            ]);
+                        }
+                        $materialModel->material_attachment_id = $attachment->id;
                     }
-
                     $materialModel->save();
                     $courseQuiz        = CourseQuizMaterial::where('course_id', $course->id)->where('model_type', 'material')->where('model_id', $materialModel->id)->first();
                     $courseQuiz->order = $material['order'];
