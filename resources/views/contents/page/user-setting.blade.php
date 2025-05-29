@@ -326,7 +326,7 @@
                         <div>
                             <button onclick="showAddRoleModal()"
                                 class="mx-4 bg-blue-600 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-800 text-white text-xs md:text-sm p-2 rounded-lg mt-1">
-                                Add Role
+                                Create Role
                             </button>
                         </div>
                     </div>
@@ -873,8 +873,8 @@
         }
 
         function showAddRoleModal() {
-            $("#button-for-submit-role").text("Add");
-            $("#title-create-role-modal").text("Add Role");
+            $("#button-for-submit-role").text("Create");
+            $("#title-create-role-modal").text("Create Role");
             $("#button-for-submit-role").removeAttr('onclick').attr('onclick', 'addRole()');
             $(".access-role-checkbox input[type='checkbox']").prop("checked", false);
             $("#role_id").val("");
