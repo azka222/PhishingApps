@@ -220,10 +220,10 @@
                         case 6:
                             color = 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300';
                             break;
-                        case 7:
+                        case 13:
                             color = 'bg-teal-100 text-teal-800 dark:bg-teal-900 dark:text-teal-300';
                             break;
-                        case 8:
+                        case 14:
                             color = 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300';
                             break;
                         case 9:
