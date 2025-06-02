@@ -277,6 +277,7 @@
                     let response_html = response.html;
                     $("#content").empty(); // Clear the editor content
                     $("#content").val(response_html); // Set the editor content
+                    hideModal('import-site-modal'); // Hide the modal
                 } else {
                     // console.log("HTML not found!");
                 }
