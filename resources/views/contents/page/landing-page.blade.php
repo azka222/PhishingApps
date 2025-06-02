@@ -272,18 +272,14 @@
                     customClass: {
                         confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2'
                     }
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        hideModal('import-site-modal');
-                        if (response.html) {
-                            let response_html = response.html;
-                            $("#content").empty(); // Clear the editor content
-                            $("#content").text(response_html); // Set the editor content
-                        } else {
-                            // console.log("HTML not found!");
-                        }
-                    }
                 });
+                if (response.html) {
+                    let response_html = response.html;
+                    $("#content").empty(); // Clear the editor content
+                    $("#content").text(response_html); // Set the editor content
+                } else {
+                    // console.log("HTML not found!");
+                }
             } catch (error) {
                 // Handle errors
                 let errorMessage = error.responseJSON?.message || "An error occurred!";
