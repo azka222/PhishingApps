@@ -276,7 +276,7 @@
                 if (response.html) {
                     let response_html = response.html;
                     $("#content").empty(); // Clear the editor content
-                    $("#content").text(response_html); // Set the editor content
+                    $("#content").val(response_html); // Set the editor content
                 } else {
                     // console.log("HTML not found!");
                 }
