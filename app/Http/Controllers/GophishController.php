@@ -1475,11 +1475,11 @@ class GophishController extends Controller
             }
 
             $ageGroups = [
-                '18-25' => ['low' => 0, 'medium' => 0, 'high' => 0],
-                '26-35' => ['low' => 0, 'medium' => 0, 'high' => 0],
-                '36-45' => ['low' => 0, 'medium' => 0, 'high' => 0],
-                '46-55' => ['low' => 0, 'medium' => 0, 'high' => 0],
-                '55+'   => ['low' => 0, 'medium' => 0, 'high' => 0],
+                '18-25' => ['low' => 0, 'medium' => 0, 'high' => 0, 'no_risk' => 0],
+                '26-35' => ['low' => 0, 'medium' => 0, 'high' => 0, 'no_risk' => 0],
+                '36-45' => ['low' => 0, 'medium' => 0, 'high' => 0, 'no_risk' => 0],
+                '46-55' => ['low' => 0, 'medium' => 0, 'high' => 0, 'no_risk' => 0],
+                '55+'   => ['low' => 0, 'medium' => 0, 'high' => 0, 'no_risk' => 0],
             ];
 
             foreach ($adjustedData as $item) {
