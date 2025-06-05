@@ -52,7 +52,7 @@
                         <table class="w-full divide-y text-sm divide-gray-200 dark:divide-gray-700 mt-4">
                             <thead class="bg-gray-50 dark:bg-gray-700 text-xs md:text-sm">
                                 <tr class="border-b">
-                                    <th class="p-4 text-left">Target Name</th>
+                                    <th class="p-4 text-left">Target Email</th>
                                     <th class="p-4 text-left">Phishing Score</th>
                                     <th class="p-4 text-left">Course Score</th>
                                     <th class="p-4 text-left">Status </th>
@@ -230,7 +230,7 @@
             if (humanRisks.length == 0) {
                 $("#list-human-risk-tbody").append(`
                         <tr class="text-xs md:text-sm font-normal text-gray-900 dark:text-gray-400 bg-white dark:bg-gray-700">
-                            <td class="p-4" colspan="4">
+                            <td class="p-5" colspan="4">
                                 No data available
                             </td>
                         </tr>
@@ -904,7 +904,7 @@
             if (humanRisks.length == 0) {
                 $("#all-human-risk-body").append(`
                         <tr class="text-xs md:text-sm font-normal text-gray-900 dark:text-gray-400 bg-white dark:bg-gray-700">
-                            <td class="p-4" colspan="4">
+                            <td class="p-5" colspan="4">
                                 No data available
                             </td>
                         </tr>
