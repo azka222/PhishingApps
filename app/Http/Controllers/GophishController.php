@@ -1465,8 +1465,11 @@ class GophishController extends Controller
                     $parameters['high']++;
                 } elseif ($value['adjusted_risk'] >= 40 && $value['adjusted_risk'] < 70) {
                     $parameters['medium']++;
-                } else {
+                } elseif($value['adjusted_risk'] < 40 && $value['adjusted_risk'] > 0) {
                     $parameters['low']++;
+                }
+                else{
+                    $parameters['no_risk']++;
                 }
             }
 
@@ -1502,8 +1505,11 @@ class GophishController extends Controller
                     $ageGroups[$group]['high']++;
                 } elseif ($risk >= 40) {
                     $ageGroups[$group]['medium']++;
-                } else {
+                } elseif($risk < 40 && $risk > 0) {
                     $ageGroups[$group]['low']++;
+                }
+                else{
+                    $ageGroups[$group]['no_risk']++;
                 }
             }
 

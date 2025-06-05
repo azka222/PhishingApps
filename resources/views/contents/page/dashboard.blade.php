@@ -213,7 +213,7 @@
                             dataSubmittedData.totalEmail);
 
                         getRiskScoreData(response.parameters.high, response.parameters.medium,
-                            response.parameters.low);
+                            response.parameters.low, response.parameters.no_risk);
 
                         getRiskScoreByAgeGroup(response.age_groups);
 
@@ -251,9 +251,13 @@
                     } else if (humanRisk.adjusted_risk >= 40) {
                         humanRisk.adjusted_risk =
                             `<span class="text-yellow-500 font-semibold">${humanRisk.adjusted_risk}</span>`;
-                    } else {
+                    } else if( humanRisk.adjusted_risk < 40 && humanRisk.adjusted_risk > 0) {
                         humanRisk.adjusted_risk =
                             `<span class="text-green-500 font-semibold">${humanRisk.adjusted_risk}</span>`;
+                    }
+                    else {
+                        humanRisk.adjusted_risk =
+                            `<span class="text-gray-500 font-semibold">${humanRisk.adjusted_risk}</span>`;
                     }
                     if (humanRisk.average_score < 60) {
                         if (humanRisk.average_score == null) {
@@ -777,6 +781,7 @@
             const lowSeries = categories.map(age => ageGroupData[age].low);
             const mediumSeries = categories.map(age => ageGroupData[age].medium);
             const highSeries = categories.map(age => ageGroupData[age].high);
+            const noRiskSeries = categories.map(age => ageGroupData[age].no_risk);
 
             if (window.ageGroupChart) {
                 window.ageGroupChart.destroy();
@@ -800,6 +805,10 @@
                         name: 'High Risk',
                         data: highSeries
                     },
+                    {
+                        name: 'No Risk',
+                        data: noRiskSeries
+                    }
                 ],
                 xaxis: {
                     categories: categories,
@@ -811,7 +820,7 @@
                     }
                 },
                 
-                colors: ['#4ade80', '#facc15', '#f87171'],
+                colors: ['#4ade80', '#facc15', '#f87171', '#9ca3af'],
                 dataLabels: {
                     enabled: true,
                 },
@@ -826,7 +835,7 @@
             window.ageGroupChart.render();
         }
 
-        function getRiskScoreData(high = 0, medium = 0, low = 0) {
+        function getRiskScoreData(high = 0, medium = 0, low = 0, no_risk = 0) {
             if (window.riskScoreChart) {
                 window.riskScoreChart.destroy();
             }
@@ -838,18 +847,18 @@
                 },
                 series: [{
                     name: 'Risk Levels',
-                    data: [high, medium, low]
+                    data: [high, medium, low, no_risk]
                 }],
                 xaxis: {
-                    categories: ['High Risk', 'Medium Risk', 'Low Risk'],
+                    categories: ['High Risk', 'Medium Risk', 'Low Risk', 'No Risk'],
                     labels: {
                         style: {
-                            colors: ['#f87171', '#facc15', '#4ade80'],
+                            colors: ['#f87171', '#facc15', '#4ade80', '#9ca3af'],
                             fontSize: '12px'
                         }
                     }
                 },
-                colors: ['#f87171', '#facc15', '#4ade80'],
+                colors: ['#f87171', '#facc15', '#4ade80', '#9ca3af'],
                 plotOptions: {
                     bar: {
                         horizontal: false,
@@ -915,9 +924,13 @@
                     } else if (humanRisk.adjusted_risk >= 40) {
                         humanRisk.adjusted_risk =
                             `<span class="text-yellow-500 font-semibold">${humanRisk.adjusted_risk}</span>`;
-                    } else {
+                    } else if( humanRisk.adjusted_risk < 40 && humanRisk.adjusted_risk > 0) {
                         humanRisk.adjusted_risk =
                             `<span class="text-green-500 font-semibold">${humanRisk.adjusted_risk}</span>`;
+                    }
+                    else {
+                        humanRisk.adjusted_risk =
+                            `<span class="text-gray-500 font-semibold">${humanRisk.adjusted_risk}</span>`;
                     }
                     if (humanRisk.average_score < 60) {
                         if (humanRisk.average_score == null) {
