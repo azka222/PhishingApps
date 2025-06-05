@@ -1459,6 +1459,7 @@ class GophishController extends Controller
                 'high'   => 0,
                 'medium' => 0,
                 'low'    => 0,
+                'no_risk' => 0,
             ];
             foreach ($adjustedData as $key => $value) {
                 if ($value['adjusted_risk'] >= 70) {
