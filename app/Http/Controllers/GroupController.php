@@ -141,7 +141,7 @@ class GroupController extends Controller
             $group->department_id = $request->department;
             $group->status        = $request->status;
             $group->description   = $request->description;
-            $group->company_id    = auth()->user()->adminCheck() ? $request->company_id : auth()->user()->company_id;
+            $group->company_id    = auth()->user()->adminCheck() ? $request->company : auth()->user()->company_id;
             $targets              = auth()->user()->accessibleTarget()->whereIn('id', $request->members)->get();
             $jsonTarget           = [];
             foreach ($targets as $target) {
