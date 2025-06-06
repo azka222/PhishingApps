@@ -357,6 +357,9 @@
             if (company) {
                 tempTargets = tempTargets.filter(target => target.company_id == company);
             }
+            if($("#admin_company_input").val()) {
+                tempTargets = tempTargets.filter(target => target.company_id == $("#admin_company_input").val());
+            }
             $(".group-member").each(function() {
                 groupMembers.push($(this).attr("value"));
             });
