@@ -120,6 +120,11 @@
             getGroupResources().then(() => {
                 getGroups();
             });
+
+            $("#admin_company_input").on('change', function() {
+                let company = $(this).val();
+                setTargetSelection(company);
+            });
         });
 
         async function getGroupResources() {
@@ -298,11 +303,10 @@
             $("#group_status").prop('disabled', true);
             $("#admin_company_input_div").show();
             $("#error_message_field").hide();
-            if($("#admin_company_input") != null) {
-                setTargetSelection($("#admin_company_input").val());
-            }
             setTargetSelection();
         }
+
+
 
         function showEditGroupModal(id) {
             tempGroup = groups.find(group => group.id == id);
