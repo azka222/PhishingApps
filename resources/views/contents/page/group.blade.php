@@ -409,7 +409,7 @@
                 tempMemberForImport.push($(this).attr("value"));
             });
             if (department) {
-                if($("admin_company_input").val()) {
+                if($("admin_company_input").val() != null && $("#admin_company_input").val() != '') {
                     tempTargets = targets.filter(target => target.department_id == department && target.company_id == $("#admin_company_input").val());
                 } else {
                     tempTargets = targets.filter(target => target.department_id == department);
