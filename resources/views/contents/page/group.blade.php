@@ -409,9 +409,11 @@
                 tempMemberForImport.push($(this).attr("value"));
             });
             if (department) {
-
-
-                tempTargets = targets.filter(target => target.department_id == department);
+                if($("admin_company_input").val()) {
+                    tempTargets = targets.filter(target => target.department_id == department && target.company_id == $("#admin_company_input").val());
+                } else {
+                    tempTargets = targets.filter(target => target.department_id == department);
+                }
                 if (tempMemberForImport.length > 0) {
                     tempTargets = tempTargets.filter(target =>
                         !tempMemberForImport.map(Number).includes(target.id)
