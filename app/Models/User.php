@@ -168,7 +168,7 @@ class User extends Authenticatable implements MustVerifyEmailContract
 
     public function canCreateGroup()
     {
-        return $this->haveAccess('Group', 'create') && ! $this->adminCheck();
+        return $this->haveAccess('Group', 'create');
     }
 
     public function accessibleGroup()
