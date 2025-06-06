@@ -298,6 +298,9 @@
             $("#group_status").prop('disabled', true);
             $("#admin_company_input_div").show();
             $("#error_message_field").hide();
+            if($("#admin_company_input") != null) {
+                setTargetSelection($("#admin_company_input").val());
+            }
             setTargetSelection();
         }
 
@@ -337,7 +340,7 @@
             setTargetSelection();
         }
 
-        function setTargetSelection() {
+        function setTargetSelection(company=null) {
             tempTargets = [];
             let strict = $("#strict_user_selected_department").is(":checked") ? 1 : 0;
             let department = $("#group_department").val();
@@ -346,6 +349,9 @@
                 tempTargets = targets.filter(target => target.department_id == department);
             } else {
                 tempTargets = targets;
+            }
+            if (company) {
+                tempTargets = tempTargets.filter(target => target.company_id == company);
             }
             $(".group-member").each(function() {
                 groupMembers.push($(this).attr("value"));
