@@ -1,31 +1,29 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
+use App\Jobs\RequestApprovalCampaignJob;
+use App\Mail\ApprovalMail;
+use App\Models\Campaign;
+use App\Models\Company;
+use App\Models\Course;
+use App\Models\EmailTemplateCompany;
+use App\Models\Group;
+use App\Models\LandingPageCompany;
+use App\Models\SendingProfileCompany;
+use App\Models\Target;
+use App\Models\TargetCourseScore;
+use App\Models\TargetGroup;
+use Carbon\Carbon;
 use DateTime;
 use DateTimeZone;
-use Carbon\Carbon;
-use App\Models\Group;
-use App\Models\Course;
-use App\Models\Target;
-use App\Models\Company;
-use App\Models\Campaign;
-use App\Mail\ApprovalMail;
-use App\Models\TargetGroup;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
-use App\Models\TargetCourseScore;
-use App\Models\LandingPageCompany;
-use Illuminate\Support\Facades\Log;
-use App\Http\Controllers\Controller;
-use App\Models\EmailTemplateCompany;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
-use App\Models\SendingProfileCompany;
 use Illuminate\Support\Facades\Session;
-use App\Jobs\RequestApprovalCampaignJob;
-use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Str;
 
 class GophishController extends Controller
 {
@@ -533,7 +531,7 @@ class GophishController extends Controller
                     ],
                 ];
             } else {
-                if($request->old_email_attachment != 'null') {
+                if ($request->old_email_attachment != 'null') {
                     $attachments = [
                         [
                             'content' => base64_encode(file_get_contents($request->old_email_attachment)),
@@ -1406,8 +1404,12 @@ class GophishController extends Controller
                 ];
             });
             $grouped = $grouped->groupBy('email')->map(function ($items) {
-                $totalCourse = Course::count();
-                $averageScore = $items->pluck('score')->sum() / $totalCourse;
+                $totalCourse  = Course::count();
+                $averageScore = $items->pluck('score')
+                    ->map(function ($score) {
+                        return $score >= 60 ? $score : 0;
+                    })
+                    ->sum() / $totalCourse;
                 $averageScore = round($averageScore, 2);
                 return [
                     'email'         => $items->first()['email'],
@@ -1419,20 +1421,19 @@ class GophishController extends Controller
             $scored  = collect($scored)->map(function ($item) use ($grouped) {
                 $email        = $item['email'];
                 $averageScore = $grouped->firstWhere('email', $email)['average_score'] ?? null;
-                $targetExist = Target::where('email', $email)->exists();
+                $targetExist  = Target::where('email', $email)->exists();
                 if (! $targetExist) {
                     $completedCourse = 0; // Skip if target does not exist
-                }
-                else{
+                } else {
                     $completedCourse = TargetCourseScore::where('target_id', Target::where('email', $email)->first()->id)->count();
                 }
                 return [
-                    'email'         => $email,
-                    'final_score'   => $item['final_score'],
-                    'average_score' => $averageScore,
-                    'age'           => $item['age'],
+                    'email'            => $email,
+                    'final_score'      => $item['final_score'],
+                    'average_score'    => $averageScore,
+                    'age'              => $item['age'],
                     'completed_course' => $completedCourse,
-                    'total_course'  => Course::count()
+                    'total_course'     => Course::count(),
                 ];
             });
             $scored       = $scored->sortByDesc('final_score')->values();
@@ -1443,7 +1444,7 @@ class GophishController extends Controller
                 $floor = 0.65;
 
                 $adjustedRisk = $initialRisk * ($floor + (1 - $floor) * (1 - $quizScore / 100));
-                if($adjustedRisk < 0) {
+                if ($adjustedRisk < 0) {
                     $adjustedRisk = 0;
                 } elseif ($adjustedRisk > 100) {
                     $adjustedRisk = 100;
@@ -1459,9 +1460,9 @@ class GophishController extends Controller
             // dd($adjustedData);
 
             $parameters = [
-                'high'   => 0,
-                'medium' => 0,
-                'low'    => 0,
+                'high'    => 0,
+                'medium'  => 0,
+                'low'     => 0,
                 'no_risk' => 0,
             ];
             foreach ($adjustedData as $key => $value) {
@@ -1469,10 +1470,9 @@ class GophishController extends Controller
                     $parameters['high']++;
                 } elseif ($value['adjusted_risk'] >= 40 && $value['adjusted_risk'] < 70) {
                     $parameters['medium']++;
-                } elseif($value['adjusted_risk'] < 40 && $value['adjusted_risk'] > 0) {
+                } elseif ($value['adjusted_risk'] < 40 && $value['adjusted_risk'] > 0) {
                     $parameters['low']++;
-                }
-                else{
+                } else {
                     $parameters['no_risk']++;
                 }
             }
@@ -1509,10 +1509,9 @@ class GophishController extends Controller
                     $ageGroups[$group]['high']++;
                 } elseif ($risk >= 40) {
                     $ageGroups[$group]['medium']++;
-                } elseif($risk < 40 && $risk > 0) {
+                } elseif ($risk < 40 && $risk > 0) {
                     $ageGroups[$group]['low']++;
-                }
-                else{
+                } else {
                     $ageGroups[$group]['no_risk']++;
                 }
             }
