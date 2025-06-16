@@ -13,7 +13,7 @@
 <nav class="border-b-2 p-4 border-b-gray-100 bg-white border-gray-200 dark:border-gray-600 dark:bg-gray-800 items-center"
     id="navbar-header">
     <div class="max-w-full flex flex-wrap items-center justify-between mx-4">
-        <a href="{{ url('/dashboard') }}" class="flex items-center space-x-3 rtl:space-x-reverse">
+        <a href="{{ url('/course/lists') }}" class="flex items-center space-x-3 rtl:space-x-reverse">
             <img src="{{ asset('image/kittyoEat.png') }}" class="md:h-12 h-8" alt="Flowbite Logo" />
             <span class="self-center text-xl md:text-2xl font-semibold whitespace-nowrap dark:text-white">Fischsim</span>
         </a>

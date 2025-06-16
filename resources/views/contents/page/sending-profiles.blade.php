@@ -122,7 +122,7 @@
             $("#header_email").val("X-Custom-Header");
             $("#header_value").val("");
             $("#error-message-field").hide();
-            $("#button-for-profile").text('Add');
+            $("#button-for-profile").text('Create');
             $("#title-add-sending-profile-modal").text('Create Sending Profile');
             $("#admin_company_input").val("");
             $("#admin_company_input_div").show();
@@ -255,7 +255,7 @@
                     companyId
                 },
                 success: function(response) {
-                    console.log(response)
+                    // console.log(response)
                     sendingProfiles = [];
                     sendingProfiles = response.data;
                     $("#list-sending-profile-tbody").empty();
@@ -295,7 +295,7 @@
                                 button =
                                     `
                             <button onclick="showEditSendingProfileModal(${sendingProfile.id})"
-                                class="px-4 me-2 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">Edit</button>
+                                class="px-4 me-2 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">Update</button>
                                 
                                 `;
                             } else {
@@ -383,7 +383,7 @@
             $("#error-message-field").hide();
 
             $("#header_value").val("");
-            $("#title-add-sending-profile-modal").text('Edit Sending Profile');
+            $("#title-add-sending-profile-modal").text('Update Sending Profile');
             $("#error_message_field").hide();
             showModal('add-sending-profile-modal');
 
@@ -408,7 +408,7 @@
                     header_value
                 });
             });
-            console.log(http_headers)
+            // console.log(http_headers)
             $.ajax({
                 url: "{{ route('updateSendingProfile') }}",
                 type: "POST",
@@ -473,11 +473,12 @@
                 showCancelButton: true,
                 confirmButtonColor: '#10b981',
                 cancelButtonColor: '#d97706',
-                confirmButtonText: 'Yes, delete it!',
+                reverseButtons: true,
+                confirmButtonText: 'Yes, remove it!',
                 cancelButtonText: 'No, cancel!',
                 customClass: {
-                    confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2',
-                    cancelButton: 'bg-red-500 text-white rounded-lg px-4 py-2',
+                    confirmButton: 'bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 ml-r',
+                    cancelButton: 'bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700'
                 }
             }).then((result) => {
                 if (result.isConfirmed) {
@@ -650,7 +651,7 @@
                                         confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2',
                                     }
                                 });
-                                console.log(errorMessage);
+                                // console.log(errorMessage);
                             }
                         }
                     },

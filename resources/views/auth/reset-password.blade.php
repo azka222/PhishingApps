@@ -94,7 +94,7 @@
                     var errorMessage = JSON.parse(xhr.responseText) ? JSON.parse(xhr.responseText) : xhr
                         .responseText;
                     var errors = errorMessage.errors ? errorMessage.errors : errorMessage.message;
-                    console.log(errors);
+                    // console.log(errors);
                     if (typeof errors === 'object') {
                         $.each(errors, function(field, messages) {
                             $.each(messages, function(index, message) {

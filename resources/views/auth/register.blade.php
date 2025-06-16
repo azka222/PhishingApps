@@ -137,7 +137,7 @@
                         <div class="flex flex-col items-center">
                             <div class="flex w-full items-center gap-2 justify-center">
                                 <button id="chooseCompanyBtn" type="button" onclick="createCompanyView()"
-                                    class="w-full max-w-32 bg-[#38A169] text-white py-2 rounded-lg hover:bg-[#2F855A] transition duration-300 ease-in-out">Create</button>
+                                    class="w-full max-w-32 text-white py-2 rounded-lg hover:bg-[#2F855A] bg-green-500  transition duration-300 ease-in-out">Create</button>
                                 <button id="nextToRegisterUser" type="button" onclick="registerView()" hidden
                                     class="w-full max-w-32 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-300 ease-in-out">Next</button>
                             </div>
@@ -224,11 +224,11 @@
                 </div>
             </div>
         </fieldset>
-        <fieldset id="content" class="col-span-1 lg:block hidden">
+        {{-- <fieldset id="content" class="col-span-1 lg:block hidden">
             <div class="min-h-screen flex items-center justify-center bg-skyBlue">
                 Nanti Jadiin Content Apa Gitu
             </div>
-        </fieldset>
+        </fieldset> --}}
     </div>
     <script>
         let selectedCompany = null;
@@ -283,7 +283,7 @@
                     })
                 },
                 error: function(xhr, status, error) {
-                    console.log(xhr.responseText);
+                    // console.log(xhr.responseText);
                     var errorMessage = JSON.parse(xhr.responseText);
                     var errors = errorMessage.errors;
                     $('#error_message_field_company_create').show();
@@ -368,7 +368,7 @@
                     });
                 },
                 error: function(xhr, status, error) {
-                    console.log(xhr.responseText);
+                    // console.log(xhr.responseText);
                 }
             });
         }

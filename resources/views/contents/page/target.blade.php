@@ -148,7 +148,7 @@
                     setSelectForModal(position, department);
                 },
                 error: function(error) {
-                    console.log(error);
+                    // console.log(error);
                 }
             });
         }
@@ -181,7 +181,7 @@
                     $("#totalTemplatesCount").text(response.targetTotal);
                 },
                 error: function(error) {
-                    console.log(error);
+                    // console.log(error);
                 }
             });
         }
@@ -220,10 +220,10 @@
                         case 6:
                             color = 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300';
                             break;
-                        case 7:
+                        case 13:
                             color = 'bg-teal-100 text-teal-800 dark:bg-teal-900 dark:text-teal-300';
                             break;
-                        case 8:
+                        case 14:
                             color = 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300';
                             break;
                         case 9:
@@ -266,7 +266,7 @@
                             @endCanUpdateTarget()
                             @CanDeleteTarget()
                             <button onclick="deleteTarget(${target.id})"
-                                class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-red-600 rounded-xl hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600">Delete</>
+                                class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-red-600 rounded-xl hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600">Remove</>
                             @endCanDeleteTarget()
                                 </td>
                         @endCanModifyTarget()
@@ -318,11 +318,13 @@
             $("#target_department").val('');
             $("#target_position").val('');
             $("#target_age").val('');
-            $("#title-add-target-modal").text('Add Target');
+            $("#title-add-target-modal").text('Create Target');
             $("#button-for-target").removeAttr('onclick').attr('onclick', 'createTarget()');
-            $("#button-for-target").text('Add');
+            $("#button-for-target").text('Create');
             $("#admin_company_input_div").show();
             $("#error_message_field").hide();
+            $("#create_account").prop('checked', false);
+            $("#create_account").prop('disabled', false);
             showModal('add-target-modal');
         }
 
@@ -474,11 +476,12 @@
                 showCancelButton: true,
                 confirmButtonColor: '#10b981',
                 cancelButtonColor: '#d97706',
-                confirmButtonText: 'Yes, delete it!',
+               reverseButtons: true,
+                confirmButtonText: 'Yes, remove it!',
                 cancelButtonText: 'No, cancel!',
                 customClass: {
-                    confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700',
-                    cancelButton: 'bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 ml-2'
+                    confirmButton: 'bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 ml-r',
+                    cancelButton: 'bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700'
                 }
             }).then((result) => {
                 if (result.isConfirmed) {
@@ -545,6 +548,7 @@
                         <tr class=text-xs md:text-sm font-light text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800">
                             <td class="p-4">${target.first_name}</td>
                             <td class="p-4">${target.last_name}</td>
+                            <td class="p-4">${target.age}</td>
                             <td class="p-4">${target.email}</td>
                             <td class="p-4">${target.position}</td>
                             <td class="p-4">${target.department}</td>
@@ -556,7 +560,7 @@
                     if (xhr.status == 403 || xhr.status == 400) {
                         var errorMessage = JSON.parse(xhr.responseText) ? JSON.parse(xhr.responseText) : xhr
                             .responseText;
-                        console.log(errorMessage);
+                        // console.log(errorMessage);
                         Swal.fire({
                             icon: "error",
                             title: "Oops...",

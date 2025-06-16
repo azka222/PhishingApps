@@ -37,7 +37,7 @@
                         <!-- Button -->
                         <div class="flex flex-col items-center">
                             <button id="choosePasswordBtn" type="button" onclick="sentLinkForgotPassword()"
-                                class="w-full max-w-64 bg-[#38A169] text-white py-2 rounded-lg hover:bg-[#2F855A] transition duration-300 ease-in-out">Send
+                                class="w-full max-w-32 text-white py-2 rounded-lg hover:bg-[#2F855A] bg-green-500  transition duration-300 ease-in-out">Send
                                 Link</button>
                             <!-- Login -->
                             <div class="mt-2 text-center text-white">

@@ -123,11 +123,11 @@
                     companyId: companyId
                 },
                 success: function(response) {
-                    console.log(response);
+                    // console.log(response);
                     $("#list-page-tbody").empty();
                     $("#pagination-page-button").empty();
                     landingPages = response.landingPage; // landingPage == data
-                    console.log(landingPages.length);
+                    // console.log(landingPages.length);
                     if (landingPages.length == 0) {
                         let data = `<tr class="text-xs md:text-sm font-light text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800">
                                 <td class="p-4" colspan="4">No data available</td>
@@ -166,7 +166,7 @@
                                     <button onclick="showLandingPage(${value.id})" class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-green-600 rounded-xl hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600">Preview</button>
                                     @CanModifyLandingPage()
                                         @CanUpdateLandingPage()
-                                            <button onclick="showModalEditLandingPage(${value.id})" class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">Edit</button>
+                                            <button onclick="showModalEditLandingPage(${value.id})" class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">Update</button>
                                         @endCanUpdateLandingPage()
                                         @CanDeleteLandingPage()
                                             <button onclick="deleteLandingPage(${value.id})" class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-red-600 rounded-xl hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600">Delete</button>
@@ -194,6 +194,18 @@
         function showAddLandingPageModal() {
             showModal('add-landing-page-modal');
             $("#admin_company_input_div").show();
+            $("#title-add-landing-page-modal").text('Create Landing Page');
+            $("#button-for-pages").text('Create');
+            $("#button-for-pages").removeAttr('onclick').attr('onclick',
+                `createLandingPage()`);
+            $("#landing_name").val('');
+            $("#content").val('');
+            $("#submitted-checkbox").prop("checked", false);
+            $("#passwords-checkbox").prop("checked", false);
+            $("#redirect_url").val('');
+            $("#error_message_field").hide();
+            $("#error_http_header").hide();
+            $("#error_message").empty();
             // await fetchWebsiteUrl(); // Call the async function
         }
 
@@ -260,18 +272,15 @@
                     customClass: {
                         confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2'
                     }
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        hideModal('import-site-modal');
-                        if (response.html) {
-                            let response_html = response.html;
-                            $("#content").empty(); // Clear the editor content
-                            $("#content").text(response_html); // Set the editor content
-                        } else {
-                            console.log("HTML not found!");
-                        }
-                    }
                 });
+                if (response.html) {
+                    let response_html = response.html;
+                    $("#content").empty(); // Clear the editor content
+                    $("#content").val(response_html); // Set the editor content
+                    hideModal('import-site-modal'); // Hide the modal
+                } else {
+                    // console.log("HTML not found!");
+                }
             } catch (error) {
                 // Handle errors
                 let errorMessage = error.responseJSON?.message || "An error occurred!";
@@ -311,8 +320,8 @@
             if (content === "") {
                 error_message.push("Content is required");
             }
-            console.log(submitted);
-            console.log(passwords);
+            // console.log(submitted);
+            // console.log(passwords);
             if (error_message.length > 0) {
                 $("#error_message_field").show();
                 $("#error_message").empty();
@@ -334,7 +343,7 @@
                         company: company
                     },
                     success: function(response) {
-                        console.log(response);
+                        // console.log(response);
                         if (response.status === "success") {
                             Swal.fire({
                                 icon: "success",
@@ -366,7 +375,7 @@
                         }
                     },
                     error: function(error) {
-                        console.log(error);
+                        // console.log(error);
                         Swal.fire({
                             icon: "error",
                             title: "Error",
@@ -393,7 +402,7 @@
                     html: content
                 },
                 success: function(response) {
-                    console.log(response.preview_id);
+                    // console.log(response.preview_id);
                     id = response.preview_id;
                     if (response.status === "success") {
                         window.open("{{ route('showPagePreview', ['id' => '__ID__']) }}".replace('__ID__', id));
@@ -420,7 +429,7 @@
             $("#submitted-checkbox").prop("checked", LandingPage.capture_credentials == 1 ? true : false);
             $("#passwords-checkbox").prop("checked", LandingPage.capture_passwords == 1 ? true : false);
             $("#redirect_url").val(LandingPage.redirect_url);
-            $("#title-add-landing-page-modal").text('Edit Landing Page');
+            $("#title-add-landing-page-modal").text('Update Landing Page');
             $("#button-for-pages").text('Update');
             $("#button-for-pages").removeAttr('onclick').attr('onclick',
                 `editLandingPage(${id})`);
@@ -448,7 +457,7 @@
                     redirect_url: url
                 },
                 success: function(response) {
-                    console.log(response);
+                    // console.log(response);
                     if (response.status === "success") {
                         Swal.fire({
                             icon: "success",
@@ -480,7 +489,7 @@
                     }
                 },
                 error: function(error) {
-                    console.log(error);
+                    // console.log(error);
                     Swal.fire({
                         icon: "error",
                         title: "Error",
@@ -504,11 +513,12 @@
                 showCancelButton: true,
                 confirmButtonColor: '#10b981',
                 cancelButtonColor: '#d97706',
-                confirmButtonText: 'Yes, delete it!',
+                reverseButtons: true,
+                confirmButtonText: 'Yes, remove it!',
                 cancelButtonText: 'No, cancel!',
                 customClass: {
-                    confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2',
-                    cancelButton: 'bg-red-500 text-white rounded-lg px-4 py-2'
+                    confirmButton: 'bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 ml-r',
+                    cancelButton: 'bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700'
                 }
             }).then((result) => {
                 if (result.isConfirmed) {

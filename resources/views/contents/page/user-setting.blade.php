@@ -111,7 +111,7 @@
                                     <div class="flex items-center p-4">
                                         <button onclick="showEditProfileModal()"
                                             class="px-4 flex items-center gap-2 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">
-                                            <span class="md:flex hidden">Edit</span>
+                                            <span class="md:flex hidden">Update</span>
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
                                                 class="w-4 h-4">
                                                 <path
@@ -241,7 +241,7 @@
                                         Name</div>
                                     <button onclick="showEditCompanyModal()"
                                         class="px-4 flex items-center gap-2 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">
-                                        <span class="md:flex hidden">Edit</span>
+                                        <span class="md:flex hidden">Update</span>
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
                                             class="w-4 h-4">
                                             <path
@@ -326,7 +326,7 @@
                         <div>
                             <button onclick="showAddRoleModal()"
                                 class="mx-4 bg-blue-600 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-800 text-white text-xs md:text-sm p-2 rounded-lg mt-1">
-                                Add Role
+                                Create Role
                             </button>
                         </div>
                     </div>
@@ -724,7 +724,7 @@
                 type: "GET",
                 success: function(response) {
                     users = response.data;
-                    console.log(users);
+                    // console.log(users);
                     let html = "";
                     $("#tbody-company-user").empty();
                     users.forEach((user, index) => {
@@ -745,7 +745,7 @@
                                 <td class="px-6 py-4">
                                     <button onclick="showEditUserModal(${user.id})"
                                         class="px-4 flex items-center gap-2 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">
-                                        <span class="">Edit</span>
+                                        <span class="">Update</span>
                                     </button>
                                 </td>
                             </tr>
@@ -838,11 +838,11 @@
                                 <td class="px-6 py-4 flex gap-2">
                                     <button onclick="showEditRoleModal(${role.id})"
                                         class="px-4 flex items-center gap-2 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">
-                                        <span class="">Edit</span>
+                                        <span class="">Update</span>
                                     </button>
                                     <button onclick="deleteRole(${role.id})"
                                         class="px-4 flex items-center gap-2 py-2 text-xs md:text-sm font-medium text-white bg-red-600 rounded-xl hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600">
-                                        <span class="">Delete</span>
+                                        <span class="">Remove</span>
                                     </button>
                                 </td>
                             </tr>
@@ -873,8 +873,8 @@
         }
 
         function showAddRoleModal() {
-            $("#button-for-submit-role").text("Add");
-            $("#title-create-role-modal").text("Add Role");
+            $("#button-for-submit-role").text("Create");
+            $("#title-create-role-modal").text("Create Role");
             $("#button-for-submit-role").removeAttr('onclick').attr('onclick', 'addRole()');
             $(".access-role-checkbox input[type='checkbox']").prop("checked", false);
             $("#role_id").val("");
@@ -1000,11 +1000,12 @@
                 showCancelButton: true,
                 confirmButtonColor: '#22c55e',
                 cancelButtonColor: '#ef4444',
-                confirmButtonText: 'Yes, delete it!',
+                reverseButtons: true,
+                confirmButtonText: 'Yes, remove it!',
                 cancelButtonText: 'No, cancel!',
                 customClass: {
-                    confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2',
-                    cancelButton: 'bg-red-500 text-white rounded-lg px-4 py-2',
+                    confirmButton: 'bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 ml-r',
+                    cancelButton: 'bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700'
                 }
             }).then((result) => {
                 if (result.isConfirmed) {

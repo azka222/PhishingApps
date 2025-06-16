@@ -74,7 +74,7 @@ class TargetController extends Controller
                 'email'         => 'required|email|unique:targets,email',
                 'position'      => 'required|integer|exists:target_positions,id',
                 'createAccount' => 'required|',
-                'targetAge'   => 'required|integer|min:1|max:100',
+                'targetAge'     => 'required|integer|min:1|max:100',
             ]);
 
             // dd($request->targetAge);
@@ -91,13 +91,12 @@ class TargetController extends Controller
             $target->department_id = $request->department;
             $target->email         = $request->email;
             $target->position_id   = $request->position;
-           $target->age = $request->targetAge;
+            $target->age           = $request->targetAge;
             $target->company_id    = auth()->user()->adminCheck() ? $request->company : auth()->user()->company_id;
             $target->save();
 
             if ($request->createAccount) {
                 $existingUser = User::where('email', $request->email)->first();
-
                 if (! $existingUser) {
                     $password         = Str::random(12);
                     $user             = new User();
@@ -108,8 +107,8 @@ class TargetController extends Controller
                     $user->phone      = '081234567890';
                     $user->gender     = 'aaa';
                     $user->employee   = 1;
-                    $user->is_admin = 0;
-                    $user->role_id = null;
+                    $user->is_admin   = 0;
+                    $user->role_id    = null;
                     $user->company_id = auth()->user()->adminCheck() ? $request->company : auth()->user()->company_id;
                     $user->save();
                     SendAccountCredentials::dispatch($user->email, $password, $user->first_name);
@@ -120,7 +119,7 @@ class TargetController extends Controller
                         'message' => 'Email already exists',
                         'success' => false,
                     ], 422);
-                } 
+                }
             }
 
             return response()->json([
@@ -147,7 +146,7 @@ class TargetController extends Controller
                 'email'         => 'required|email',
                 'position'      => 'required|integer|exists:target_positions,id',
                 'createAccount' => 'required|',
-                'targetAge'   => 'required|integer|min:1|max:100',
+                'targetAge'     => 'required|integer|min:1|max:100',
             ]);
 
             $target   = auth()->user()->accessibleTarget()->where('id', $request->id)->first();
@@ -157,16 +156,21 @@ class TargetController extends Controller
                 'email'      => $target->email,
                 'position'   => $target->position_id,
             ];
-
+            $oldEmail              = $target->email;
             $target->first_name    = $request->first_name;
             $target->last_name     = $request->last_name;
             $target->department_id = $request->department;
-            $target->email         = $request->email;
             $target->position_id   = $request->position;
-            $target->age = $request->targetAge;
+            $target->age           = $request->targetAge;
             $target->save();
             if ($request->createAccount == 1) {
-                $existingUser = User::where('email', $request->email)->first();
+                $existingUser = User::where('email', $oldEmail)->first();
+                if ($oldEmail !== $request->email) {
+                    return response()->json([
+                        'message' => 'You cannot change the email address',
+                        'success' => false,
+                    ], 422);
+                }
                 if (! $existingUser) {
                     $password         = Str::random(12);
                     $user             = new User();
@@ -183,11 +187,18 @@ class TargetController extends Controller
                     $target->has_account = true;
                     $target->save();
                 } else {
-                    return response()->json([
-                        'message' => 'Email already exists',
-                        'success' => false,
-                    ], 422);
+                    if($existingUser->email !== $request->email) {
+                        return response()->json([
+                            'message' => 'Email already exists',
+                            'success' => false,
+                        ], 422);
+                    }
+                    $existingUser->first_name = $request->first_name;
+                    $existingUser->last_name  = $request->last_name;
                 }
+            } else {
+                $target->email = $request->email;
+                $target->save();
             }
             if (
                 $original['first_name'] !== $target->first_name ||
@@ -217,8 +228,11 @@ class TargetController extends Controller
             ]);
 
             $target = auth()->user()->accessibleTarget()->where('id', $request->id)->first();
+            $user = User::where('email', $target->email)->first();
+            if ($user && $target->has_account) {
+                $user->delete();
+            }
             $target->delete();
-
             return response()->json([
                 'message' => 'Target deleted successfully',
                 'success' => true,
@@ -244,11 +258,10 @@ class TargetController extends Controller
             $targetCsv      = trim($targetCsv, "\n");
             $csvRowsColumns = FileHelper::convertCsvToCollection($targetCsv, $projectsSeparator);
             $csvRowsColumns->shift();
-            // dd($csvRowsColumns);
             $validator = Validator::make(
                 ["RowColumns" => $csvRowsColumns->toArray()],
                 [
-                    "RowColumns.*"   => "size:6",
+                    "RowColumns.*"   => "size:7",
                     "RowColumns.*.0" => "distinct",
                     "RowColumns.*.1" => "max:256|required",
                     "RowColumns.*.2" => "max:256|required",
@@ -285,6 +298,7 @@ class TargetController extends Controller
                     ];
                 })->toArray()
             );
+            // dd($csvRowsColumns->toArray());
 
             if ($validator->errors()->any()) {
                 return response()->json([
@@ -329,7 +343,7 @@ class TargetController extends Controller
                 $targetCsv      = trim($targetCsv, "\n");
                 $csvRowsColumns = FileHelper::convertCsvToCollection($targetCsv, $projectsSeparator);
                 $csvRowsColumns->shift();
-                
+
                 $validator = Validator::make(
                     ["RowColumns" => $csvRowsColumns->toArray()],
                     [
@@ -412,7 +426,7 @@ class TargetController extends Controller
 
     public function downloadTemplateTarget()
     {
-        $filePath = storage_path('template/importTarget2.zip');
+        $filePath = storage_path('template/templateImportTarget.zip');
         return response()->download($filePath, 'template.zip');
 
     }

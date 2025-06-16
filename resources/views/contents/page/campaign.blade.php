@@ -120,6 +120,15 @@
 
         function showAddCampaignModal() {
             showModal('add-campaign-modal');
+            $("#campaign_name").val('');
+            $("#campaign_page").val('');
+            $("#campaign_template").val('');
+            $("#campaign_profile").val('');
+            $("#campaign_launch_date").val('');
+            $("#campaign_end_date").val('');
+            $("#campaign_url").val('');
+            $("#campaign_status").val(1);
+            $("#group-list").empty();
 
             $("#error_message_field").hide();
         }
@@ -133,7 +142,7 @@
                     emailTemplates = response.emailTemplates;
                     sendingProfiles = response.sendingProfiles;
                     groups = response.groups;
-                    console.log(groups);
+                    // console.log(groups);
                     $("#campaign_page").empty();
                     $("#campaign_template").empty();
                     $("#campaign_profile").empty();
@@ -410,7 +419,7 @@
                     getCampaignsResources();
                     campaigns = [];
                     campaigns = response.data;
-                    console.log(response);
+                    // console.log(response);
                     $("#list-campaign-tbody").empty();
                     if (campaigns.length == 0) {
                         $("#list-campaign-tbody").append(`
@@ -472,7 +481,7 @@
                             if ($("#status").val() == 2) {
                                 button = `<td class="p-4 flex gap-2">
                                         <button onclick="showDetailCampaign(${campaign.id})"
-                                            class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-green-600 rounded-xl hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600">Detail</button>
+                                            class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-green-600 rounded-xl hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600">Details</button>
                                         @CanDeleteCampaign()
                                             <button onclick="deleteCampaign(${campaign.id})"
                                             class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-red-600 rounded-xl hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600">Delete</button>
@@ -537,11 +546,12 @@
                 showCancelButton: true,
                 confirmButtonColor: '#10b981',
                 cancelButtonColor: '#d97706',
-                confirmButtonText: 'Yes, delete it!',
+                reverseButtons: true,
+                confirmButtonText: 'Yes, remove it!',
                 cancelButtonText: 'No, cancel!',
                 customClass: {
-                    confirmButton: 'bg-red-600 text-white rounded-lg px-4 py-2',
-                    cancelButton: 'bg-gray-300 text-gray-800 rounded-lg px-4 py-2'
+                    confirmButton: 'bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 ml-r',
+                    cancelButton: 'bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700'
                 }
             }).then((result) => {
                 if (result.isConfirmed) {
@@ -593,7 +603,7 @@
         }
 
         function sendNewApproval(id) {
-            console.log(id);
+            // console.log(id);
             Swal.fire({
                 title: 'Registering...',
                 text: 'Please wait while we process your registration.',
@@ -642,10 +652,10 @@
 
 
         function copyCampaign(id) {
-
+            showAddCampaignModal()
             let tempCampaign = campaigns.find(campaign => campaign.id == id);
             let data = JSON.parse(tempCampaign.data);
-            console.log(data);
+            // console.log(data);
             $("#campaign_name").val(data.name + ' (Edited Version)');
             let tempTemplate = data.template.name;
             let tempLandingPage = data.page.name
@@ -666,7 +676,7 @@
             const campaignTemplateOptions = Array.from($("#campaign_template option"));
             for (const option of campaignTemplateOptions) {
                 if ($(option).text() == tempTemplate.split('-+-')[0]) {
-                    console.log($(option).text());
+                    // console.log($(option).text());
                     $(option).prop('selected', true);
                 }
             }
@@ -675,7 +685,7 @@
             const campaignPageOptions = Array.from($("#campaign_page option"));
             for (const option of campaignPageOptions) {
                 if ($(option).text() == tempLandingPage.split('-+-')[0]) {
-                    console.log($(option).text());
+                    // console.log($(option).text());
                     $(option).prop('selected', true);
                 }
             }
@@ -684,7 +694,7 @@
             const campaignProfileOptions = Array.from($("#campaign_profile option"));
             for (const option of campaignProfileOptions) {
                 if ($(option).text() == data.smtp.name.split('-+-')[0]) {
-                    console.log($(option).text());
+                    // console.log($(option).text());
                     $(option).prop('selected', true);
                 }
             }
@@ -696,7 +706,7 @@
                 copyGroupToCampaign(data.groups[i].name.split('-+-')[0]);
             }
 
-            showAddCampaignModal()
+
 
         }
 

@@ -108,9 +108,10 @@
                 },
                 success: function(data) {
                     companies = data.companies;
-                    console.log(data);
+                    // console.log(data);
                     $("#list-admin-company-tbody").empty();
                     companies.forEach(function(company) {
+                        let available = "";
                         if ((company.max_account - company.total_user) == 0) {
 
                             available = `<div class="bg-orange-100 text-orange-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-orange-900 dark:text-orange-300 inline-block">Full
@@ -140,9 +141,9 @@
                                 <td class="p-4">${company.user ? company.user.email : "N/A"}</td>
                                 <td class="p-4 flex gap-2">
                                     <button onclick="showEditCompanyModal(${company.id})"
-                                        class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">Edit</button>
+                                        class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">Update</button>
                                     <button onclick="deleteCompany(${company.id})"
-                                        class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-red-600 rounded-xl hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600">Delete</button>
+                                        class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-red-600 rounded-xl hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600">Remove</button>
                                 </td>
                             </tr>`;
                         $("#list-admin-company-tbody").append(row);
@@ -172,6 +173,7 @@
             $("#visibility").prop('checked', company.visibility_id === 1 ? true : false);
             $("#status").prop('checked', company.status_id === 1 ? true : false);
             $("#button-for-target").attr('onclick', `editCompany(${id})`);
+            $("#button-for-target").text('Update');
             $("#owner").val(company.user ? company.user.id : "");
         }
 
@@ -224,10 +226,12 @@
                 showCancelButton: true,
                 confirmButtonColor: '#ef4444',
                 cancelButtonColor: '#26d43b',
-                confirmButtonText: 'Yes, delete it!',
+                reverseButtons: true,
+                confirmButtonText: 'Yes, remove it!',
+                cancelButtonText: 'No, cancel!',
                 customClass: {
-                    confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700',
-                    cancelButton: 'bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 ml-2'
+                    confirmButton: 'bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 ml-2',
+                    cancelButton: 'bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700'
                 }
             }).then((result) => {
                 if (result.isConfirmed) {
@@ -264,7 +268,7 @@
                     id: id
                 },
                 success: function(data) {
-                    console.log(data);
+                    // console.log(data);
                     $('#owner').empty();
                     $('#owner').append(`<option value="" disabled>Select Owner</option>`);
                     data.users.forEach(function(user) {

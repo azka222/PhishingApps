@@ -129,7 +129,7 @@
                     search: $("#search").val()
                 },
                 success: function(response) {
-                    console.log(response);
+                    // console.log(response);
                     let date = new Date(response.launch_date);
                     let formattedDate =
                         `${date.toLocaleDateString('id-ID', {
@@ -259,7 +259,7 @@
                 }
             });
             campaignTimeLine.sort((a, b) => new Date(a.time) - new Date(b.time));
-            console.log(timelineData);
+            // console.log(timelineData);
             return timelineData;
         }
 

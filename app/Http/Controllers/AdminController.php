@@ -71,7 +71,7 @@ class AdminController extends Controller
             $totalCompany = $company->count();
             $company      = $company->paginate($request->show);
             foreach ($company as $comp) {
-                $totalUser = User::where('company_id', $comp->id)->count();
+                $totalUser = User::where('company_id', $comp->id)->where('employee', '=', false)->count();
                 $comp->setAttribute('total_user', $totalUser);
             }
 

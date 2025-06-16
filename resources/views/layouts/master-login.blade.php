@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title')</title>
     <script src='{{ asset('/js/app.js') }}'></script>
-    {{-- <link rel="icon" href="{{ asset('image/kittyoEat.png') }}" type="image/x-icon" /> --}}
+    <link rel="icon" href="{{ url('image/kittyoEat.png') }}" type="image/x-icon" />
     <link rel="stylesheet" href="{{ asset('css/flowbite.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <link rel="stylesheet" href="{{ asset('css/select2.css') }}">

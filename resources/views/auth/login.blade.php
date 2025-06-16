@@ -19,12 +19,12 @@
                         <ul class="flex flex-wrap p-4 text-sm font-medium text-center" id="default-tab"
                             data-tabs-toggle="#default-tab-content" role="tablist">
                             <li class="me-2" role="presentation">
-                                <button class="inline-block border-b-2 py-2 px-4 " id="profile-tab"
+                                <button class="inline-block border-b-2 py-2 px-4 " id="profile-tab" onclick="changeTab('admin')"
                                     data-tabs-target="#profile" type="button" role="tab" aria-controls="profile"
                                     aria-selected="false">Admin</button>
                             </li>
                             <li class="me-2" role="presentation">
-                                <button class="inline-block border-b-2 py-2 px-4 " id="dashboard-tab"
+                                <button class="inline-block border-b-2 py-2 px-4 " id="dashboard-tab" onclick="changeTab('employee')"
                                     data-tabs-target="#dashboard" type="button" role="tab" aria-controls="dashboard"
                                     aria-selected="false">Employee</button>
                             </li>
@@ -204,11 +204,11 @@
                 </div>
         </fieldset>
         <!-- Fun fact area -->
-        <fieldset id="content" class="col-span-1 lg:block hidden">
+        {{-- <fieldset id="content" class="col-span-1 lg:block hidden">
             <div class="min-h-screen flex items-center justify-center bg-skyBlue">
                 aaaaaaa
             </div>
-        </fieldset>
+        </fieldset> --}}
 
     </div>
 
@@ -228,6 +228,7 @@
             });
         });
         let employeeLogin = '';
+        let tab = 'admin';
         $(document).ready(function() {
             const otpInputs = $(".otp-input");
             otpInputs.on("input", function() {
@@ -246,11 +247,7 @@
                 }
             });
 
-            $(document).on('keydown', function(e) {
-                if (e.key === 'Enter') {
-                    login();
-                }
-            });
+       
         });
 
         function registerView() {
@@ -284,7 +281,7 @@
                 },
                 error: function(xhr, status, error) {
                     Swal.close();
-                    console.log(xhr.responseText);
+                    // console.log(xhr.responseText);
                     var errorMessage = JSON.parse(xhr.responseText) ? JSON.parse(xhr.responseText) : xhr
                         .responseText;
                     var errors = errorMessage.message;
@@ -365,7 +362,7 @@
 
                 },
                 error: function(xhr, status, error) {
-                    console.log(xhr.responseText);
+                    // console.log(xhr.responseText);
                     var errorMessage = JSON.parse(xhr.responseText) ? JSON.parse(xhr.responseText) : xhr
                         .responseText;
                     var errors = errorMessage.message;
@@ -435,6 +432,11 @@
                 }
             });
 
+        }
+
+        function changeTab(user){
+            tab = user;
+            console.log(tab);
         }
     </script>
 

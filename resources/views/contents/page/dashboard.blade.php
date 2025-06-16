@@ -1,34 +1,36 @@
 @extends('layouts.master')
 @section('title', 'Fischsim - Dashboard')
 @section('content')
-    <div class=" p-4 w-full flex flex-col h-full min-h-screen  bg-gray-50 dark:bg-gray-800 dark:text-white text-gray-900">
+    @include('contents.modal.dashboard.showAllEmployee')
+    <div class="p-8 w-full flex flex-col h-full min-h-screen  bg-gray-50 dark:bg-gray-800 dark:text-white text-gray-900">
         <div class="judul-1">
-            <div class="flex p-4 items-center justify-between">
+            <div class="flex py-4 items-center justify-between">
                 <h1 class="text-3xl font-semibold">Dashboard</h1>
             </div>
         </div>
 
-        <div class="flex flex-col gap-4">
+        <div class="flex flex-col gap-4 md:gap-8">
             <div class="bg-white dark:bg-gray-900 shadow-md rounded-lg p-4">
-                <h2 class="text-xl font-semibold">Welcome to Fischsim</h2>
-                <p class="text-gray-600 dark:text-gray-400">This is your dashboard where you can manage your phishing
+                <h2 class="md:text-xl text-sm font-semibold">Welcome to Fischsim</h2>
+                <p class="text-gray-600 text-xs md:text-sm dark:text-gray-400">This is your dashboard where you can manage
+                    your phishing
                     simulations.</p>
             </div>
 
-            <div class="bg-white dark:bg-gray-900 shadow-md rounded-lg p-4">
+            {{-- <div class="bg-white dark:bg-gray-900 shadow-md rounded-lg p-4">
                 <h2 class="text-xl font-semibold">Recent Activity</h2>
                 <ul class="list-disc pl-5">
                     <li>New phishing simulation created.</li>
                     <li>User registered for a new simulation.</li>
                     <li>Simulation report generated.</li>
                 </ul>
-            </div>
+            </div> --}}
 
             @IsAdmin()
             <div class="max-w-full md:max-w-xs">
                 <div>
                     <label for="companyCheckAdmin"
-                        class="mb-1 mt-4 block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-300">Company</label>
+                        class="mb-1  block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-300">Company</label>
                     <select id="companyCheckAdmin" name="companyCheckAdmin" onchange="getDashboardValue()"
                         class="bg-gray-100 border border-gray-300 text-gray-900 text-xs md:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                         <option value="">All</option>
@@ -40,76 +42,63 @@
             </div>
             @endIsAdmin()
 
-            <div class="grid grid-cols-4 gap-8  dark:text-white p-4 w-full">
+            <div class="grid grid-cols-4 gap-4 md:gap-8  dark:text-white  w-full">
+                <div class="col-span-4 md:col-span-2 bg-white dark:bg-gray-700 rounded-lg p-4">
+                    <div class="relative">
+                        <h2 class="text-xs md:text-sm font-semibold text-center">5 Recent Human Risks</h2>
 
-                <div class="col-span-2 bg-white dark:bg-gray-700 rounded-lg p-4">
-                    <h2 class="text-xs md:text-sm font-semibold mb-4 flex items-center justify-center">Top 5 Human Risks
-                    </h2>
+                    </div>
                     <div class="overflow-x-auto">
-                        <table class="min-w-32 md:min-w-full divide-y text-sm divide-gray-200 dark:divide-gray-700 mt-4">
-                            <thead class="bg-gray-300 dark:bg-gray-700">
+                        <table class="w-full divide-y text-sm divide-gray-200 dark:divide-gray-700 mt-4">
+                            <thead class="bg-gray-50 dark:bg-gray-700 text-xs md:text-sm">
                                 <tr class="border-b">
-                                    <th class="p-4 text-left">Target Name</th>
+                                    <th class="p-4 text-left">Target Email</th>
                                     <th class="p-4 text-left">Phishing Score</th>
                                     <th class="p-4 text-left">Course Score</th>
+                                    <th class="p-4 text-left">Status </th>
                                     <th class="p-4 text-left">Risk to Company</th>
                                 </tr>
                             </thead>
                             <tbody id="list-human-risk-tbody" class="">
-                                <tr class="border-b">
-                                    <td class="p-4">John Doe</td>
-                                    <td class="p-4">95</td>
-                                    <td class="p-4 text-red-500 font-semibold">High</td>
-                                </tr>
-                                <tr class="border-b">
-                                    <td class="p-4">Jane Smith</td>
-                                    <td class="p-4">88</td>
-                                    <td class="p-4 text-red-400 font-semibold">Medium-High</td>
-                                </tr>
-                                <tr class="border-b">
-                                    <td class="p-4">Alice Johnson</td>
-                                    <td class="p-4">76</td>
-                                    <td class="p-4 text-yellow-500 font-semibold">Medium</td>
-                                </tr>
-                                <tr class="border-b">
-                                    <td class="p-4">Bob Brown</td>
-                                    <td class="p-4">68</td>
-                                    <td class="p-4 text-yellow-400 font-semibold">Low-Medium</td>
-                                </tr>
-                                <tr class="border-b">
-                                    <td class="p-4">Charlie Green</td>
-                                    <td class="p-4">55</td>
-                                    <td class="p-4 text-green-500 font-semibold">Low</td>
-                                </tr>
                             </tbody>
                         </table>
                     </div>
+                    <div class="flex items-center justify-end mt-4">
+                        <button id="showAllEmployee" type="button"
+                            class="text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 px-4 py-2">
+                            View All
+                        </button>
+
+                    </div>
 
                 </div>
-                <div class="col-span-2 bg-white dark:bg-gray-700 rounded-lg p-4">
-                    <h2 class="text-xs md:text-sm font-semibold mb-4 flex items-center justify-center">5 Recent Campaigns
-                    </h2>
+                <div class="col-span-4 md:col-span-2 bg-white dark:bg-gray-700 rounded-lg p-4">
+                    <div class="relative">
+                        <h2 class="text-xs md:text-sm font-semibold text-center">5 Recent Campaigns</h2>
 
-                    <table class="min-w-32 md:min-w-full divide-y text-sm divide-gray-200 dark:divide-gray-700 mt-4">
-                        <thead class="bg-gray-300 dark:bg-gray-700">
-                            <tr class="border-b">
-                                <th scope="col" class="p-4 text-left">Name</th>
-                                <th scope="col" class="p-4 text-left">Status</th>
-                                <th scope="col" class="p-4 text-left ">
-                                    <button onclick="showCampaignPage()"
-                                        class="px-4 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">
-                                        View All
-                                    </button>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody id="list-campaign-tbody" class="">
-                        </tbody>
-                    </table>
-
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full divide-y text-sm divide-gray-200 dark:divide-gray-700 mt-4">
+                            <thead class="bg-gray-50 dark:bg-gray-700 text-xs md:text-sm">
+                                <tr class="border-b">
+                                    <th scope="col" class="p-4 text-left">Name</th>
+                                    <th scope="col" class="p-4 text-left">Status</th>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="list-campaign-tbody" class="">
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="flex items-center justify-end mt-4">
+                        <button onclick="showCampaignPage()"
+                            class="text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 px-4 py-2">
+                            View All
+                        </button>
+                    </div>
 
                 </div>
-                <div class="col-span-2  bg-white dark:bg-gray-700 rounded-lg">
+                <div class="col-span-4 md:col-span-2 bg-white dark:bg-gray-700 rounded-lg">
                     <label for="column-risk-score"
                         class="text-xs md:text-sm font-semibold mb-4 flex items-center justify-center m-4">Human
                         Risks</label>
@@ -117,129 +106,138 @@
 
                     </div>
                 </div>
-                <div class="col-span-2 bg-white dark:bg-gray-700 rounded-lg">
+                <div class="col-span-4 md:col-span-2 bg-white dark:bg-gray-700 rounded-lg">
                     <label for="column-risk-score"
                         class="text-xs md:text-sm font-semibold mb-4 flex items-center justify-center m-4">User Risk
                         Distribution by Age Group</label>
-                    <div id="area-chart-age-group"></div>
+                    <div id="area-chart-age-group" class="text-black dark:text-white"></div>
                 </div>
-
-            </div>
-
-            <div class="p-4 hidden">
-                <div class="bg-white dark:bg-gray-700 dark:text-white rounded-lg p-4 flex flex-col items-center w-full">
-                    <p class="text-xs md:text-sm font-semibold mb-4">Campaign Timeline</p>
-                    <div id="timeline-campaign" class="w-full"></div>
-                </div>
-            </div>
-
-            <div class="px-4">
-                <div class="bg-white dark:bg-gray-700 dark:text-white rounded-lg">
-                    <div class="p-2">
-                        <label for="column-risk-score"
-                            class="text-xs md:text-sm font-semibold mb-4 flex items-center justify-center m-4">Phishing
-                            Simulation Engagement Summary</label>
-                    </div>
-                    <div class="grid grid-cols-4 gap-4 p-4">
-                        <div class="col-span-4 lg:col-span-1 md:col-span-2  flex flex-col items-center justify-center">
-                            <p class="text-xs md:text-sm font-semibold mb-4">Emails Sent</p>
-                            <div id="donut-email-sent"></div>
+                <div class="col-span-4">
+                    <div class="bg-white dark:bg-gray-700 dark:text-white rounded-lg p-4">
+                        <div class="">
+                            <label for="column-risk-score"
+                                class="text-xs md:text-sm font-semibold flex items-center justify-center">Phishing
+                                Simulation Engagement Summary</label>
                         </div>
-                        <div class="col-span-4 lg:col-span-1 md:col-span-2 flex flex-col items-center justify-center">
-                            <p class="text-xs md:text-sm font-semibold mb-4">Emails Opened</p>
-                            <div id="donut-email-opened"></div>
-                        </div>
-                        <div class="col-span-4 lg:col-span-1 md:col-span-2 flex flex-col items-center justify-center">
-                            <p class="text-xs md:text-sm font-semibold mb-4">Links Clicked</p>
-                            <div id="donut-link-clicked"></div>
-                        </div>
-                        <div class="col-span-4 lg:col-span-1 md:col-span-2  flex flex-col items-center justify-center">
-                            <p class="text-xs md:text-sm font-semibold mb-4">Submitted Data</p>
-                            <div id="donut-submitted-data"></div>
+                        <div class="grid grid-cols-4 gap-4 p-4">
+                            <div class="col-span-4 lg:col-span-1 md:col-span-2  flex flex-col items-center justify-center">
+                                <p class="text-xs md:text-sm font-semibold mb-4">Emails Sent</p>
+                                <div id="donut-email-sent"></div>
+                            </div>
+                            <div class="col-span-4 lg:col-span-1 md:col-span-2 flex flex-col items-center justify-center">
+                                <p class="text-xs md:text-sm font-semibold mb-4">Emails Opened</p>
+                                <div id="donut-email-opened"></div>
+                            </div>
+                            <div class="col-span-4 lg:col-span-1 md:col-span-2 flex flex-col items-center justify-center">
+                                <p class="text-xs md:text-sm font-semibold mb-4">Links Clicked</p>
+                                <div id="donut-link-clicked"></div>
+                            </div>
+                            <div class="col-span-4 lg:col-span-1 md:col-span-2  flex flex-col items-center justify-center">
+                                <p class="text-xs md:text-sm font-semibold mb-4">Submitted Data</p>
+                                <div id="donut-submitted-data"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+
+
+
+    </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script>
+        let humanRisks = [];
+        let campaigns = [];
+        let dashboardRequest = null;
         $(document).ready(function() {
             getDashboardValue();
-            let campaigns = [];
-            let humanRisks = [];
+
+            $("#showAllEmployee").on('click', function() {
+                showAllEmployeeRisks(humanRisks);
+            });
+
+
 
         });
 
         function getDashboardValue() {
+            Swal.fire({
+                title: 'Loading...',
+                allowOutsideClick: false,
+                text: 'Please wait while we load the data',
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
             let companyId = $('#companyCheckAdmin').val();
             let status = 2;
             let show = 5;
-            $.ajax({
-                url: "{{ route('getDashboardData') }}",
-                type: "GET",
-                data: {
-                    show: show,
-                    status: status,
-                    companyId: companyId
-                },
-                success: function(response) {
-
-                    campaigns = response.campaigns;
-                    humanRisks = response.human_risk;
-                    $("#list-campaign-tbody").empty();
-
-
-                    getCampaignTable(campaigns);
-                    getHumanRiskTable(humanRisks);
-
-                    let dataEmailSent = calculateEmailSent(campaigns);
-                    let dataEmailOpened = calculateEmailOpened(campaigns);
-                    let dataLinkClicked = calculateLinkClicked(campaigns);
-                    let dataSubmittedData = calculateSubmittedData(campaigns);
-
-                    getEmailSentChart(dataEmailSent.emailSent, dataEmailSent.emailNotSent, dataEmailSent
-                        .totalEmail);
-                    getEmailOpenedChart(dataEmailOpened.emailOpened, dataEmailOpened.emailNotOpen,
-                        dataEmailOpened.totalEmail);
-
-                    getLinkClickedChart(dataLinkClicked.linkClicked, dataLinkClicked.linkNotClicked,
-                        dataLinkClicked.totalEmail);
-
-                    getSubmittedData(dataSubmittedData.linkSubmitted, dataSubmittedData.linkNotSubmitted,
-                        dataSubmittedData.totalEmail);
-
-                    let combinedTimeline = [];
-                    campaigns.forEach(campaign => {
-                        let dataTimeline = getTimelineData(campaign);
-                        combinedTimeline = combinedTimeline.concat(dataTimeline);
-                    });
-                    combinedTimeline.sort((a, b) => new Date(a.date) - new Date(b.date));
-                    getTimelineCampaignChart(combinedTimeline);
-
-                    getRiskScoreData(response.parameters.high, response.parameters.medium,
-                        response.parameters.low);
-
-                    getRiskScoreByAgeGroup(response.age_groups);
+            if (dashboardRequest) {
+                dashboardRequest.abort();
+            } else {
+                dashboardRequest = $.ajax({
+                    url: "{{ route('getDashboardData') }}",
+                    type: "GET",
+                    data: {
+                        show: show,
+                        status: status,
+                        companyId: companyId
+                    },
+                    success: function(response) {
+                        dashboardRequest = null;
+                        campaigns = response.campaigns;
+                        humanRisks = response.human_risk;
+                        $("#list-campaign-tbody").empty();
 
 
-                }
-            });
+                        getCampaignTable(campaigns);
+                        getHumanRiskTable(humanRisks);
+
+                        let dataEmailSent = calculateEmailSent(campaigns);
+                        let dataEmailOpened = calculateEmailOpened(campaigns);
+                        let dataLinkClicked = calculateLinkClicked(campaigns);
+                        let dataSubmittedData = calculateSubmittedData(campaigns);
+
+                        getEmailSentChart(dataEmailSent.emailSent, dataEmailSent.emailNotSent, dataEmailSent
+                            .totalEmail);
+                        getEmailOpenedChart(dataEmailOpened.emailOpened, dataEmailOpened.emailNotOpen,
+                            dataEmailOpened.totalEmail);
+
+                        getLinkClickedChart(dataLinkClicked.linkClicked, dataLinkClicked.linkNotClicked,
+                            dataLinkClicked.totalEmail);
+
+                        getSubmittedData(dataSubmittedData.linkSubmitted, dataSubmittedData.linkNotSubmitted,
+                            dataSubmittedData.totalEmail);
+
+                        getRiskScoreData(response.parameters.high, response.parameters.medium,
+                            response.parameters.low, response.parameters.no_risk);
+
+                        getRiskScoreByAgeGroup(response.age_groups);
+
+                        Swal.close();
+
+                    }
+                });
+            }
         }
 
         function getHumanRiskTable(humanRisks) {
             $("#list-human-risk-tbody").empty();
-            console.log(humanRisks);
+            // console.log(humanRisks);
             if (humanRisks.length == 0) {
                 $("#list-human-risk-tbody").append(`
                         <tr class="text-xs md:text-sm font-normal text-gray-900 dark:text-gray-400 bg-white dark:bg-gray-700">
-                            <td class="p-4" colspan="4">
+                            <td class="p-5" colspan="4">
                                 No data available
                             </td>
                         </tr>
                     `);
             } else {
-                humanRisks.forEach((humanRisk, index) => {
+                humanRisksSliced = humanRisks.slice(0, 5);
+                humanRisksSliced.forEach((humanRisk, index) => {
                     let date = new Date(humanRisk.created_date);
                     let formattedDate =
                         `${date.toLocaleDateString('id-ID', {
@@ -253,13 +251,17 @@
                     } else if (humanRisk.adjusted_risk >= 40) {
                         humanRisk.adjusted_risk =
                             `<span class="text-yellow-500 font-semibold">${humanRisk.adjusted_risk}</span>`;
-                    } else {
+                    } else if( humanRisk.adjusted_risk < 40 && humanRisk.adjusted_risk > 0) {
                         humanRisk.adjusted_risk =
                             `<span class="text-green-500 font-semibold">${humanRisk.adjusted_risk}</span>`;
                     }
+                    else {
+                        humanRisk.adjusted_risk =
+                            `<span class="text-gray-500 font-semibold">${humanRisk.adjusted_risk}</span>`;
+                    }
                     if (humanRisk.average_score < 60) {
                         if (humanRisk.average_score == null) {
-                            humanRisk.average_score = '0 (Not started)';
+                            humanRisk.average_score = '0';
                         }
                         humanRisk.average_score =
                             `<span class="text-red-500 font-semibold">${humanRisk.average_score}</span>`;
@@ -269,21 +271,51 @@
                             `<span class="text-green-500 font-semibold">${humanRisk.average_score}</span>`;
                     }
                     $("#list-human-risk-tbody").append(`
-                            <tr class="border-b">
+                            <tr class="border-b text-xs md:text-sm">
                                 <td class="p-4">${humanRisk.email}</td>
                                 <td class="p-4">${humanRisk.final_score}</td>
-                                <td class="p-4">${humanRisk.average_score}</td>
+                               <td class="p-4">
+                                <span>${humanRisk.average_score}</span>
+                                </td>
+                                <td class="p-4">
+                                     <div class="flex items-center gap-2 relative group">
+                                    <!-- Ikon informasi -->
+                                    <div class="relative">
+                                    <svg xmlns="http://www.w3.org/2000/svg" 
+                                        viewBox="0 0 24 24" 
+                                        fill="currentColor" 
+                                        class="size-4 text-gray-500 cursor-pointer">
+                                        <path fill-rule="evenodd" 
+                                            d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 
+                                            4.365 9.75 9.75-4.365 9.75-9.75 
+                                            9.75S2.25 17.385 2.25 12Zm8.706-1.442c1.146-.573 
+                                            2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 
+                                            0 0 1 .67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 
+                                            0 1 1-.671-1.34l.041-.022ZM12 
+                                            9a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z" 
+                                            clip-rule="evenodd" />
+                                    </svg>
+
+                                    <!-- Tooltip -->
+                                    <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block bg-gray-800 text-white text-xs rounded px-2 py-1 whitespace-nowrap z-20">
+                                        Completed ${humanRisk.completed_course} out of ${humanRisk.total_course} courses
+                                    </div>
+                                    </div>
+                                </div>
+                                    </td>
+                                    
+                             
                                 <td class="p-4">${humanRisk.adjusted_risk}</td>
                                 
 
                             </tr>
                         `);
-                    if (index == 4) {
-                        return false;
-                    }
+
                 });
             }
         }
+   
+
 
         function getCampaignTable(campaigns) {
             $("#list-campaign-tbody").empty();
@@ -311,10 +343,9 @@
                         .results.length : 'Not Set';
 
                     $("#list-campaign-tbody").append(`
-                            <tr class="border-b text-xs">
+                            <tr class="border-b text-xs md:text-sm">
                                 <td class="p-4">${campaign.name}</td>
                                 <td class="p-4">${campaign.status}</td>
-                                <td class="p-4 flex gap-2">
                                 <button onclick="showDetailCampaign(${campaign.id})"
                                     class="text-xs font-medium text-white  rounded-xl"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
                                     <path fill-rule="evenodd" d="M13.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L11.69 12 4.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z" clip-rule="evenodd" />
@@ -339,7 +370,7 @@
         }
 
         function calculateEmailSent(campaigns) {
-            console.log(campaigns);
+            // console.log(campaigns);
             let tempTotal = 0;
             let tempSent = 0;
             let tempNotSent = 0;
@@ -368,7 +399,7 @@
             let tempNotOpen = 0;
             campaigns.forEach(function(campaign) {
                 campaign.results.forEach(function(result) {
-                    console.log(result.status);
+                    // console.log(result.status);
                     tempTotal++;
                     if (result.status != "Scheduled" && result.status != "Email Sent") {
                         tempOpened++;
@@ -444,6 +475,9 @@
         }
 
         function getEmailSentChart(emailSent = 0, emailNotSent = 0, totalEmail = 0) {
+            if (window.emailSentChart) {
+                window.emailSentChart.destroy();
+            }
             var options = {
                 chart: {
                     type: 'donut',
@@ -475,11 +509,14 @@
                 }
 
             }
-            var chart = new ApexCharts(document.querySelector("#donut-email-sent"), options);
-            chart.render();
+            window.emailSentChart = new ApexCharts(document.querySelector("#donut-email-sent"), options);
+            window.emailSentChart.render();
         }
 
         function getEmailOpenedChart(emailOpened = 0, emailNotOpen = 0, totalEmail = 0) {
+            if (window.emailOpenedChart) {
+                window.emailOpenedChart.destroy();
+            }
             var options = {
                 chart: {
                     type: 'donut',
@@ -511,11 +548,14 @@
                 }
 
             }
-            var chart = new ApexCharts(document.querySelector("#donut-email-opened"), options);
-            chart.render();
+            window.emailOpenedChart = new ApexCharts(document.querySelector("#donut-email-opened"), options);
+            window.emailOpenedChart.render();
         }
 
         function getLinkClickedChart(linkClicked = 0, linkNotClicked = 0, totalEmail = 0) {
+            if (window.linkClickedChart) {
+                window.linkClickedChart.destroy();
+            }
             var options = {
                 chart: {
                     type: 'donut',
@@ -547,11 +587,14 @@
                 }
 
             }
-            var chart = new ApexCharts(document.querySelector("#donut-link-clicked"), options);
-            chart.render();
+            window.linkClickedChart = new ApexCharts(document.querySelector("#donut-link-clicked"), options);
+            window.linkClickedChart.render();
         }
 
         function getSubmittedData(linkSubmitted = 0, linkNotSubmitted = 0, totalEmail = 0) {
+            if (window.submittedDataChart) {
+                window.submittedDataChart.destroy();
+            }
             var options = {
                 chart: {
                     type: 'donut',
@@ -583,8 +626,8 @@
                 }
 
             }
-            var chart = new ApexCharts(document.querySelector("#donut-submitted-data"), options);
-            chart.render();
+            window.submittedDataChart = new ApexCharts(document.querySelector("#donut-submitted-data"), options);
+            window.submittedDataChart.render();
         }
 
         function getTimelineData(data) {
@@ -735,10 +778,14 @@
 
         function getRiskScoreByAgeGroup(ageGroupData) {
             const categories = ['18-25', '26-35', '36-45', '46-55', '55+'];
-
             const lowSeries = categories.map(age => ageGroupData[age].low);
             const mediumSeries = categories.map(age => ageGroupData[age].medium);
             const highSeries = categories.map(age => ageGroupData[age].high);
+            const noRiskSeries = categories.map(age => ageGroupData[age].no_risk);
+
+            if (window.ageGroupChart) {
+                window.ageGroupChart.destroy();
+            }
 
             var options = {
                 chart: {
@@ -758,14 +805,22 @@
                         name: 'High Risk',
                         data: highSeries
                     },
+                    {
+                        name: 'No Risk',
+                        data: noRiskSeries
+                    }
                 ],
                 xaxis: {
                     categories: categories,
-                    title: {
-                        text: 'Age Group'
+                    labels: {
+                        style: {
+                            colors: ['#9ca3af', '#9ca3af', '#9ca3af', '#9ca3af', '#9ca3af'],
+                            fontSize: '12px'
+                        }
                     }
                 },
-                colors: ['#4ade80', '#facc15', '#f87171'],
+                
+                colors: ['#4ade80', '#facc15', '#f87171', '#9ca3af'],
                 dataLabels: {
                     enabled: true,
                 },
@@ -773,15 +828,18 @@
                     show: true,
                     position: 'bottom',
                 },
-                
+
             };
 
-            var chart = new ApexCharts(document.querySelector("#area-chart-age-group"), options);
-            chart.render();
+            window.ageGroupChart = new ApexCharts(document.querySelector("#area-chart-age-group"), options);
+            window.ageGroupChart.render();
         }
 
+        function getRiskScoreData(high = 0, medium = 0, low = 0, no_risk = 0) {
+            if (window.riskScoreChart) {
+                window.riskScoreChart.destroy();
+            }
 
-        function getRiskScoreData(high = 0, medium = 0, low = 0) {
             var options = {
                 chart: {
                     type: 'bar',
@@ -789,18 +847,18 @@
                 },
                 series: [{
                     name: 'Risk Levels',
-                    data: [high, medium, low]
+                    data: [high, medium, low, no_risk]
                 }],
                 xaxis: {
-                    categories: ['High Risk', 'Medium Risk', 'Low Risk'],
+                    categories: ['High Risk', 'Medium Risk', 'Low Risk', 'No Risk'],
                     labels: {
                         style: {
-                            colors: ['#f87171', '#facc15', '#4ade80'],
+                            colors: ['#f87171', '#facc15', '#4ade80', '#9ca3af'],
                             fontSize: '12px'
                         }
                     }
                 },
-                colors: ['#f87171', '#facc15', '#4ade80'],
+                colors: ['#f87171', '#facc15', '#4ade80', '#9ca3af'],
                 plotOptions: {
                     bar: {
                         horizontal: false,
@@ -836,8 +894,98 @@
                     }
                 }
             };
-            var chart = new ApexCharts(document.querySelector("#column-risk-score"), options);
-            chart.render();
+            window.riskScoreChart = new ApexCharts(document.querySelector("#column-risk-score"), options);
+            window.riskScoreChart.render();
+        }
+
+        async function showAllEmployeeRisks(humanRisks) {
+            $("#all-human-risk-body").empty();
+
+            if (humanRisks.length == 0) {
+                $("#all-human-risk-body").append(`
+                        <tr class="text-xs md:text-sm font-normal text-gray-900 dark:text-gray-400 bg-white dark:bg-gray-700">
+                            <td class="p-5" colspan="4">
+                                No data available
+                            </td>
+                        </tr>
+                    `);
+            } else {
+                await humanRisks.forEach((humanRisk, index) => {
+                    let date = new Date(humanRisk.created_date);
+                    let formattedDate =
+                        `${date.toLocaleDateString('id-ID', {
+                            day: '2-digit',
+                            month: 'long',
+                            year: 'numeric'
+                        })} ${String(date.getUTCHours()).padStart(2, '0')}:${String(date.getUTCMinutes()).padStart(2, '0')}`;
+                    if (humanRisk.adjusted_risk >= 70) {
+                        humanRisk.adjusted_risk =
+                            `<span class="text-red-500 font-semibold">${humanRisk.adjusted_risk}</span>`;
+                    } else if (humanRisk.adjusted_risk >= 40) {
+                        humanRisk.adjusted_risk =
+                            `<span class="text-yellow-500 font-semibold">${humanRisk.adjusted_risk}</span>`;
+                    } else if( humanRisk.adjusted_risk < 40 && humanRisk.adjusted_risk > 0) {
+                        humanRisk.adjusted_risk =
+                            `<span class="text-green-500 font-semibold">${humanRisk.adjusted_risk}</span>`;
+                    }
+                    else {
+                        humanRisk.adjusted_risk =
+                            `<span class="text-gray-500 font-semibold">${humanRisk.adjusted_risk}</span>`;
+                    }
+                    if (humanRisk.average_score < 60) {
+                        if (humanRisk.average_score == null) {
+                            humanRisk.average_score = '0';
+                        }
+                        humanRisk.average_score =
+                            `<span class="text-red-500 font-semibold">${humanRisk.average_score}</span>`;
+                    } else {
+
+                        humanRisk.average_score =
+                            `<span class="text-green-500 font-semibold">${humanRisk.average_score}</span>`;
+                    }
+                    $("#all-human-risk-body").append(`
+                            <tr class="border-b text-xs md:text-sm">
+                                <td class="p-4">${humanRisk.email}</td>
+                                <td class="p-4">${humanRisk.final_score}</td>
+                                <td class="p-4">${humanRisk.average_score}</td>
+                                <td class="p-4">
+                                     <div class="flex items-center gap-2 relative group">
+                                    <!-- Ikon informasi -->
+                                    <div class="relative">
+                                    <svg xmlns="http://www.w3.org/2000/svg" 
+                                        viewBox="0 0 24 24" 
+                                        fill="currentColor" 
+                                        class="size-4 text-gray-500 cursor-pointer">
+                                        <path fill-rule="evenodd" 
+                                            d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 
+                                            4.365 9.75 9.75-4.365 9.75-9.75 
+                                            9.75S2.25 17.385 2.25 12Zm8.706-1.442c1.146-.573 
+                                            2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 
+                                            0 0 1 .67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 
+                                            0 1 1-.671-1.34l.041-.022ZM12 
+                                            9a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z" 
+                                            clip-rule="evenodd" />
+                                    </svg>
+
+                                    <!-- Tooltip -->
+                                    <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block bg-gray-800 text-white text-xs rounded px-2 py-1 whitespace-nowrap z-20">
+                                        Completed ${humanRisk.completed_course} out of ${humanRisk.total_course} courses
+                                    </div>
+                                    </div>
+                                </div>
+                                    </td>
+                                <td class="p-4">${humanRisk.adjusted_risk}</td>
+                                
+
+                            </tr>
+                        `);
+                });
+            }
+            await showModal('show-all-employee-modal');
+
+
+
+
         }
     </script>
 

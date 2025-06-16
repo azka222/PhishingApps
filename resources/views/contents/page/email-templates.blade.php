@@ -120,7 +120,7 @@
                 $("#sender_name").val('');
                 $("#sender_email").val('');
                 $("#email_html").val('');
-                $("#title-add-email-templates-modal").text('Add Email Templates');
+                $("#title-add-email-templates-modal").text('Create Email Templates');
                 $("#button-for-email-template").text('Create');
                 $("#button-for-email-template").removeAttr('onclick').attr('onclick',
                     'createEmailTemplates()');
@@ -245,7 +245,7 @@
                                     button =
                                         `
                             <button onclick="showEditEmailTemplatesModal(${emailTemplate.id})"
-                                class="px-4 me-2 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">Edit</button>`;
+                                class="px-4 me-2 py-2 text-xs md:text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">Update</button>`;
                                 } else {
                                     button = `
                             <button onclick="ActivateEmailTemplate(${emailTemplate.id})"
@@ -294,7 +294,7 @@
 
             function showAttachmentFileNameCreate() {
                 let file = $("#email_attachment")[0].files[0];
-                console.log(file)
+                // console.log(file)
                 $("#attachment-file").empty();
                 $("#attachment-file").append(
                     `<div class="group-member flex items-center justify-between mb-4 shadow-md p-3 rounded-xl">
@@ -315,10 +315,11 @@
             }
 
             function showAttachmentFileNameEdit(value) {
-                console.log(value)
+                // console.log(value)
                 $("#attachment-file").empty();
-                $("#attachment-file").append(
-                    `<div class="group-member flex items-center justify-between mb-4 shadow-md p-3 rounded-xl">
+                if (value != null) {
+                    $("#attachment-file").append(
+                        `<div class="group-member flex items-center justify-between mb-4 shadow-md p-3 rounded-xl">
                             <input type="hidden" id="img-file" data-content="${value.content}" data-title="${value.name}" data-type="${value.type}">
                                     <div class="flex flex-col gap-1">
 
@@ -334,7 +335,8 @@
 
                                     </div>
                                 </div>`
-                );
+                    );
+                }
             }
 
             function separateEnvelope(sender) {
@@ -351,7 +353,7 @@
 
             function showEditEmailTemplatesModal(id) {
                 let emailTemplate = emailTemplates.find(x => x.id === id);
-                console.log(emailTemplate);
+                // console.log(emailTemplate);
                 $("#template_name").val(emailTemplate.name);
                 $("#email_subject").val(emailTemplate.subject);
                 $("#email_text").val(emailTemplate.text);
@@ -361,7 +363,7 @@
                 $("#sender_email").val(separateEnvelope(emailTemplate.envelope_sender).email);
                 $("#error_message_field").hide();
                 $("#email_status").prop('disabled', true);
-                $("#title-add-email-templates-modal").text('Edit Email Templates');
+                $("#title-add-email-templates-modal").text('Update Email Templates');
                 $("#button-for-email-template").text('Update');
                 $("#button-for-email-template").removeAttr('onclick').attr('onclick',
                     `editEmailTemplates(${id})`);
@@ -471,11 +473,12 @@
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#10b981',
-                    cancelButtonColor: '#d97706',
+                    reverseButtons: true,
                     confirmButtonText: 'Yes, remove it!',
+                    cancelButtonText: 'No, cancel!',
                     customClass: {
-                        confirmButton: 'bg-blue-500 text-white rounded-lg px-4 py-2',
-                        cancelButton: 'bg-red-500 text-white rounded-lg px-4 py-2'
+                        confirmButton: 'bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 ml-r',
+                        cancelButton: 'bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700'
                     }
                 }).then((result) => {
                     if (result.isConfirmed) {
@@ -519,7 +522,7 @@
             function ActivateEmailTemplate(id) {
                 Swal.fire({
                     title: 'Are you sure?',
-                    text: "You want to activate this email template!",
+                    text: "You want to activate this email template?",
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#10b981',
@@ -570,7 +573,7 @@
 
             function showEmailTemplateDetails(id) {
                 let emailTemplate = emailTemplates.find(x => x.id === id);
-                console.log(emailTemplate);
+                // console.log(emailTemplate);
             }
 
             function downloadAttachment() {
